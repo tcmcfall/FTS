@@ -1,7 +1,7 @@
 // dwt_template_popupDropdown.js
 // Purpose: Template module demonstrating a one-click pop-up (Roll Query) with dropdowns for Year / Month-or-Festival / Day / Time.
 // Relationship: Standalone DWT template. Integrates with dwt_core if present (adds a card & help). Publishes selections to dwt_mule_calendar.
-// Version: 1.0.0
+// Version: 5.1.0
 // Dependencies: Roll20 API sandbox. (Optional) dwt_core (for palette + log/help registry). (Optional) Meta-Toolbox for broader mule usage.
 //
 // === Help & Config (Template Reference)
@@ -16,7 +16,7 @@
 
   // === Constants & Version ====================================================
   var SCRIPT = 'dwt_tpl';              // command namespace
-  var VERSION = '1.0.0';
+  var VERSION = '5.1.0';
   var CORE_MULE = 'dwt_mule';
   var CAL_MULE  = 'dwt_mule';
   var TITLE     = 'Set Date';

@@ -1,9 +1,9 @@
 // name:        dwt_geo.js
-// version:     5.0.0
+// version:     5.1.0
 // description: Geolocation & Route module (core-aware). Reads mapMeta and token
 //              coordinates, builds per-map named routes and static map points,
 //              and stores data on dwt_mule as mapRoutes.* and mapPoints.*.
-// depends:     dwt_core_3.0.0+, dwt_mapMeta_4.3.0+, Meta-Toolbox, Roll20 Mod API
+// depends:     dwt_core_5.1.0+, dwt_mapMeta_5.1.0+, Roll20 Mod API
 // provides:    !dwt --geo list routes
 //              !dwt --geo start route <routeName>
 //              !dwt --geo set routepoint <pointName>
@@ -34,7 +34,7 @@ var dwt_geo = dwt_geo || (function () {
          : (typeof global!=='undefined')     ? global
          : this;
 
-      var VERSION    = 'geo_5.0.0';
+  var VERSION    = '5.1.0';
   var STATE_ROOT = 'geo';
   var DWT_MULE   = 'dwt_mule';
   var GEO_HANDOUT_NAME = 'Map Locations and Routes';
@@ -131,30 +131,8 @@ var dwt_geo = dwt_geo || (function () {
     return 'map'+String(meta.id||'0');
   }
 
-  function deriveRegionLocaleMapKey(meta){
-    if(!meta){
-      return 'unknown';
-    }
-    var parts = [];
-    if(meta.region_name){
-      parts.push(normalizeGeoKeyComponent(meta.region_name));
-    }
-    if(meta.locale_name){
-      parts.push(normalizeGeoKeyComponent(meta.locale_name));
-    }
-    // If we somehow had neither region nor locale, fall back to name.
-    if(!parts.length && (meta.name || meta.raw_name)){
-      parts.push(normalizeGeoKeyComponent(meta.name || meta.raw_name));
-    }
-    if(!parts.length){
-      parts.push('map'+String(meta.id||'0'));
-    }
-    return parts.join('.');
-  }
-
   function mapKeyFromMeta(meta){
-    // New canonical behavior: store geo data by map *name* only,
-    // so dwt_mule abilities are mapPoints.<pagename>, mapRoutes.<pagename>.
+    // Geo state keys route and point data directly to the canonical page name.
     return deriveNameMapKey(meta);
   }
 
@@ -171,56 +149,6 @@ var dwt_geo = dwt_geo || (function () {
       S.points[mapKey] = {};
     }
     return S.points[mapKey];
-  }
-
-function migrateGeoKeysForMeta(meta){
-    // One-way migration: if we previously stored routes/points under the
-    // legacy region/locale key (e.g., "swordcoast.inland"), but we now
-    // prefer the page-name key (e.g., "bridgeovertroubledwaters"), move
-    // any data from the old key into the new key and drop the old one.
-    try{
-      if(!meta){ return; }
-      var S = ensureGeoState();
-      var newKey = deriveNameMapKey(meta);
-      var oldKey = deriveRegionLocaleMapKey(meta);
-
-      if(!oldKey || !newKey || oldKey === newKey){
-        return;
-      }
-
-      // Merge routes
-      if(S.routes && S.routes[oldKey]){
-        if(!S.routes[newKey]){
-          S.routes[newKey] = S.routes[oldKey];
-        }else{
-          // Shallow merge; newKey wins on conflicts.
-          var rk;
-          for(rk in S.routes[oldKey]){
-            if(S.routes[oldKey].hasOwnProperty(rk) && !S.routes[newKey].hasOwnProperty(rk)){
-              S.routes[newKey][rk] = S.routes[oldKey][rk];
-            }
-          }
-        }
-        delete S.routes[oldKey];
-      }
-
-      // Merge points
-      if(S.points && S.points[oldKey]){
-        if(!S.points[newKey]){
-          S.points[newKey] = S.points[oldKey];
-        }else{
-          var pk;
-          for(pk in S.points[oldKey]){
-            if(S.points[oldKey].hasOwnProperty(pk) && !S.points[newKey].hasOwnProperty(pk)){
-              S.points[newKey][pk] = S.points[oldKey][pk];
-            }
-          }
-        }
-        delete S.points[oldKey];
-      }
-    }catch(e){
-      log('dwt_geo migrateGeoKeysForMeta err: '+e);
-    }
   }
 
 /* ========== Mule Helpers ========== */
@@ -320,14 +248,9 @@ function migrateGeoKeysForMeta(meta){
     var key = String(moduleKey || '').trim().toLowerCase().replace(/[^a-z0-9]+/g,'');
     if(!key) return;
     var root = parseVersionRoot(getAbilityAction(character, 'version'));
-    root[key] = key + '_' + String(moduleVersion || '').trim();
+    var version = String(moduleVersion || '').trim();
+    root[key] = version;
     upsertAbility(character, 'version', serializeVersionRoot(root));
-  }
-
-  function removeAttribute(character, name){
-    if(!character) return;
-    var attr = findObjs({ _type:'attribute', _characterid:character.id, name:name })[0];
-    if(attr){ attr.remove(); }
   }
 
   function syncGeoRootToMule(){
@@ -347,7 +270,6 @@ function migrateGeoKeysForMeta(meta){
     var mule = getOrCreateMule();
     if(!mule) return;
     mergeVersionEntry(mule, 'geo', VERSION);
-    removeAttribute(mule,'geo_version');
   }
 
 
@@ -925,13 +847,6 @@ function migrateGeoKeysForMeta(meta){
       var ability = abilities[i];
       var name    = ability.get('name');
 
-      // Remove legacy "routes" ability if present
-      if(name === 'routes'){
-        ability.remove();
-        removed++;
-        continue;
-      }
-
       // Remove mapRoutes.<key> for maps that no longer exist in state
       if(name.indexOf('mapRoutes.') === 0){
         var mapKey = name.substring('mapRoutes.'.length);
@@ -962,10 +877,8 @@ function migrateGeoKeysForMeta(meta){
 
   function refreshGeoForActivePage(){
     // Called on sandbox init and when the party ribbon (active page) changes.
-    // If mapMeta has been captured for the current ribbon page, we:
-    //   * prune any invalid geo entries,
-    //   * clean/sync geo abilities on the mule, and
-    //   * rebuild the Map Locations and Routes handout for that page.
+    // If mapMeta has been captured for the current ribbon page, we prune invalid
+    // geo entries, sync mule state, and rebuild the handout for that page.
     try{
       if('undefined' === typeof Campaign){ return; }
       var c = Campaign();
@@ -981,7 +894,6 @@ function migrateGeoKeysForMeta(meta){
       }
 
       pruneInvalidGeoEntries();
-      migrateGeoKeysForMeta(meta);
       cleanMuleGeoAbilitiesOnInit();
       ensureGeoHandout(meta);
 
@@ -1429,29 +1341,17 @@ function migrateGeoKeysForMeta(meta){
     }
 
     // Support optional index selection for direct point jumps (used by route bullets).
-    // Accepted forms:
-    //   "!dwt --geo goto route The Old Road::2"
+    // Accepted form:
     //   "!dwt --geo goto route The Old Road 2"
     var name  = raw;
     var index = 0;
 
-    // Legacy "::index" suffix
-    var m = raw.match(/^(.*)::(\d+)$/);
+    var m = raw.match(/^(.*)\s+(\d+)$/);
     if(m){
       name  = m[1].trim();
       index = parseInt(m[2], 10);
       if(isNaN(index) || index < 0){
         index = 0;
-      }
-    }else{
-      // New "<name> <index>" form to avoid conflicts with Meta-Toolbox syntax.
-      var m2 = raw.match(/^(.*)\s+(\d+)$/);
-      if(m2){
-        name  = m2[1].trim();
-        index = parseInt(m2[2], 10);
-        if(isNaN(index) || index < 0){
-          index = 0;
-        }
       }
     }
 
@@ -2441,3 +2341,4 @@ if(!(geoTail.indexOf('start route')===0 ||
     log('dwt_geo selection listener err: '+e);
   }
 });
+

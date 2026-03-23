@@ -1,5 +1,5 @@
 // name:        dwt_calendar.js
-// version:     5.0.4
+// version:     5.1.1
 // description: Campaign Calendar module (unified with Core UI). Ensures/updates 'Campaign Calendar' handout,
 //              mirrors state to dwt_mule, consolidates navigation under --calendar, exposes _ns for Core.
 //
@@ -25,7 +25,7 @@
 //              and actually fire as API commands instead of getting mangled.
 //
 // depends:     Meta-Toolbox (APILogic + Muler)
-// provides:    !dwt --calendar today | --calendar back <#d/m/y> | --calendar forward <#d/m/y> | --calendar set <hour|timeofday|day|month/festival|season|year> <value>
+// provides:    !dwt --calendar today | --calendar back <#d/m/y> | --calendar forward <#d/m/y> | --calendar set <hour|timeofday|day|month/festival|season|year> <value> | --calendar show <hour|timeofday|day|month/festival|season|year>
 // author:      tcm (AI-assisted)
 
 var dwt_calendar = dwt_calendar || (function () {
@@ -38,7 +38,7 @@ var dwt_calendar = dwt_calendar || (function () {
          : (typeof global!=='undefined')     ? global
          : this;
 
-  var VERSION='5.0.4', HANDOUT_NAME='Campaign Calendar', DWT_MULE='dwt_mule';
+  var VERSION='5.1.1', HANDOUT_NAME='Campaign Calendar', DWT_MULE='dwt_mule';
   var MIN_Y=1300, MAX_Y=1600;
   var _registered=false;
 
@@ -350,6 +350,21 @@ function festivalBgLayout(key){
     sendChat(gid?('player|'+gid):'dwt',line);
   }
 
+  function playerDisplayName(pid){
+    try{
+      var player = getObj('player', pid);
+      if(!player) return 'GM';
+      return String(player.get('_displayname') || player.get('displayname') || 'GM');
+    }catch(e){
+      return 'GM';
+    }
+  }
+
+  function whisperToPlayer(pid, line){
+    var target = String(playerDisplayName(pid) || 'GM').replace(/"/g, '\\"');
+    sendChat('DWT', '/w "' + target + '" ' + line);
+  }
+
   function buildSeq(y){
     var seq=[];
     for(var m=1;m<=12;m++){
@@ -636,18 +651,6 @@ function festivalBgLayout(key){
     var ability = findObjs({_type:'ability', _characterid:character.id, name:name})[0];
     return ability ? (ability.get('action')||'') : '';
   }
-  function removeAbility(character, name){
-    if(!character) return;
-    var ability = findObjs({_type:'ability', _characterid:character.id, name:name})[0];
-    if(ability){ try{ ability.remove(); }catch(e){} }
-  }
-  function normalizeModuleVersion(moduleKey, moduleVersion){
-    var key = String(moduleKey || '').toLowerCase().replace(/[^a-z0-9]+/g,'');
-    var version = String(moduleVersion || '').trim();
-    if(!key) return version;
-    if(version.indexOf(key + '_') === 0) return version;
-    return key + '_' + version.replace(/^_+/, '');
-  }
   function parseVersionRoot(raw){
     var root = {};
     var lines = String(raw || '').split('\n');
@@ -674,7 +677,9 @@ function festivalBgLayout(key){
   function mergeVersionEntry(character, moduleKey, moduleVersion){
     if(!character) return;
     var root = parseVersionRoot(getAbilityAction(character, 'version'));
-    root[String(moduleKey || '').toLowerCase().replace(/[^a-z0-9]+/g,'')] = normalizeModuleVersion(moduleKey, moduleVersion);
+    var key = String(moduleKey || '').toLowerCase().replace(/[^a-z0-9]+/g,'');
+    var version = String(moduleVersion || '').trim();
+    root[key] = version;
     upsertAbility(character, 'version', serializeVersionRoot(root));
   }
 
@@ -734,6 +739,16 @@ function festivalBgLayout(key){
     return h;
 }
 
+  function commitCalendarState(forceToday){
+    if(forceToday !== false){
+      var T = todayIndex();
+      state.dwt.view.year = T.year;
+      state.dwt.view.index = T.index;
+    }
+    updateHandout(forceToday !== false);
+    mirrorToMule();
+  }
+
   /* ========== Mule sync ========== */
   function mirrorToMule(){
     try{
@@ -767,9 +782,8 @@ function festivalBgLayout(key){
       if(!mule) return;
 
       mergeVersionEntry(mule, 'calendar', VERSION);
-      removeAbility(mule, 'calendarMeta');
       upsertAbility(mule, 'calendar', JSON.stringify({
-        meta: { version: normalizeModuleVersion('calendar', VERSION) },
+        meta: { version: VERSION },
         currentyear: year,
         currentseason: season,
         currentmonth: monthForMacro,
@@ -857,9 +871,13 @@ function festivalBgLayout(key){
       var now = state.dwt.now;
       var ord = nowToOrd(now) - Math.abs(st.days);
       var y = now.year; while(ord<=0){ y--; ord += yearLen(y); }
-      state.dwt.now = ordToNow(y, ord);
-      var T=todayIndex(); state.dwt.view.year=T.year; state.dwt.view.index=T.index;
-      updateHandout(true); mirrorToMule(); return;
+      var nextNow = ordToNow(y, ord);
+      nextNow.hour = (typeof now.hour === 'number') ? now.hour : 0;
+      nextNow.minute = (typeof now.minute === 'number') ? now.minute : 0;
+      nextNow.timeofday = now.timeofday || timeofdayFromHM(nextNow.hour, nextNow.minute);
+      state.dwt.now = nextNow;
+      commitCalendarState(true);
+      return;
     }
     if (st.months){
       var v=state.dwt.view, seq=buildSeq(v.year), n=Math.abs(st.months);
@@ -873,15 +891,19 @@ function festivalBgLayout(key){
       v2.index=0; updateHandout(); mirrorToMule(); return;
     }
   }
-    function handleForward(val){
+  function handleForward(val){
     var st = dwt_parseStep(val||'1m'); if(!st) return;
     if (st.days){
       var now = state.dwt.now;
       var ord = nowToOrd(now) + Math.abs(st.days);
       var y = now.year; while(ord>yearLen(y)){ ord -= yearLen(y); y++; }
-      state.dwt.now = ordToNow(y, ord);
-      var T=todayIndex(); state.dwt.view.year=T.year; state.dwt.view.index=T.index;
-      updateHandout(true); mirrorToMule(); return;
+      var nextNow = ordToNow(y, ord);
+      nextNow.hour = (typeof now.hour === 'number') ? now.hour : 0;
+      nextNow.minute = (typeof now.minute === 'number') ? now.minute : 0;
+      nextNow.timeofday = now.timeofday || timeofdayFromHM(nextNow.hour, nextNow.minute);
+      state.dwt.now = nextNow;
+      commitCalendarState(true);
+      return;
     }
     if (st.months){
       var v=state.dwt.view, seq=buildSeq(v.year), n=Math.abs(st.months);
@@ -897,7 +919,7 @@ function festivalBgLayout(key){
   }
 
   function handleToday(){
-    var t=todayIndex(); state.dwt.view.year=t.year; state.dwt.view.index=t.index; updateHandout(true); mirrorToMule();
+    commitCalendarState(true);
   }
 
   function handleCalendarNamespace(expr, pid){
@@ -922,6 +944,25 @@ function festivalBgLayout(key){
       return;
     }
 
+    if(/^show\b/i.test(s)){
+      var restShow = s.replace(/^show\b/i, '').trim();
+      var showFields = parseCalendarFieldList(restShow);
+      if(!showFields.length){
+        if(restShow){
+          whisperToPlayer(pid, '<b>Calendar</b><br>' + esc('Use !dwt --calendar show hour | timeofday | day | month/festival | season | year.'));
+        }else{
+          whisperToPlayer(pid, '<b>Calendar</b><br>' + esc(currentDateLine()));
+        }
+        return;
+      }
+      var showLines = [];
+      for(var sf=0; sf<showFields.length; sf++){
+        showLines.push(formatCalendarFieldLine(showFields[sf]));
+      }
+      whisperToPlayer(pid, '<b>Calendar</b><br>' + showLines.map(esc).join('<br>'));
+      return;
+    }
+
     // set (GM only)
     if(/^set\b/i.test(s)){
       try{
@@ -933,49 +974,21 @@ function festivalBgLayout(key){
       var rest = s.replace(/^set\b/i,'').trim();
       if(!rest){ return; }
 
-      var parts = rest.split(/\s+/g).filter(function(x){ return !!x; });
-
-      var FIELDS = {
-        'hour':1,
-        'timeofday':1,
-        'day':1,
-        'month':1,
-        'festival':1,
-        'monthfestival':1,
-        'season':1,
-        'year':1
-      };
-
-      function canonField(t){
-        var c = canonicalToken(t);
-        return c === 'monthfestival' ? 'monthfestival' : c;
-      }
-
-      function isFieldToken(t){
-        return !!FIELDS[canonField(t)];
-      }
-
-      var assigns = [];
-      var i = 0;
-      while(i < parts.length){
-        var fTok = parts[i++];
-        if(!isFieldToken(fTok)){ break; }
-
-        var key = canonField(fTok);
-        var vToks = [];
-        while(i < parts.length && !isFieldToken(parts[i])){
-          vToks.push(parts[i++]);
-        }
-        assigns.push({k:key, v:vToks.join(' ')});
-      }
+      var assigns = parseCalendarAssignments(rest);
 
       var errs = [];
 
+      var changed = false;
       for(var a=0; a<assigns.length; a++){
         var k = assigns[a].k;
         var v = assigns[a].v;
-        var r = setCalendarField(k, v);
+        var r = setCalendarField(k, v, { deferCommit:true });
         if(r && r.error){ errs.push(r.error); }
+        else if(r && r.ok && k !== 'season'){ changed = true; }
+      }
+
+      if(changed){
+        commitCalendarState(true);
       }
 
       if(typeof sendChat === 'function'){
@@ -1124,6 +1137,56 @@ function festivalBgLayout(key){
     return { hour:hh, minute:mm };
   }
 
+  function calendarFieldKeys(){
+    return {
+      'hour':1,
+      'timeofday':1,
+      'day':1,
+      'month':1,
+      'festival':1,
+      'monthfestival':1,
+      'season':1,
+      'year':1
+    };
+  }
+
+  function canonicalCalendarFieldToken(tok){
+    var c = canonicalToken(tok);
+    return c === 'monthfestival' ? 'monthfestival' : c;
+  }
+
+  function isCalendarFieldToken(tok){
+    return !!calendarFieldKeys()[canonicalCalendarFieldToken(tok)];
+  }
+
+  function parseCalendarAssignments(raw){
+    var parts = String(raw||'').trim().split(/\s+/g).filter(function(x){ return !!x; });
+    var assigns = [];
+    var i = 0;
+    while(i < parts.length){
+      var fTok = parts[i++];
+      if(!isCalendarFieldToken(fTok)){ break; }
+
+      var key = canonicalCalendarFieldToken(fTok);
+      var vToks = [];
+      while(i < parts.length && !isCalendarFieldToken(parts[i])){
+        vToks.push(parts[i++]);
+      }
+      assigns.push({k:key, v:vToks.join(' ')});
+    }
+    return assigns;
+  }
+
+  function parseCalendarFieldList(raw){
+    var parts = String(raw||'').trim().split(/\s+/g).filter(function(x){ return !!x; });
+    var fields = [];
+    for(var i=0;i<parts.length;i++){
+      if(!isCalendarFieldToken(parts[i])) break;
+      fields.push(canonicalCalendarFieldToken(parts[i]));
+    }
+    return fields;
+  }
+
   function festivalDisplayName(key){
     var k = String(key||'').toLowerCase();
     if(!k){ return ''; }
@@ -1169,8 +1232,38 @@ function festivalBgLayout(key){
     return line;
   }
 
-  function setCalendarField(kind, raw){
+  function formatCalendarFieldLine(kind){
     ensureCalendarState();
+    var now = state.dwt.now || { year:1492, month:1, day:1, hour:0, minute:0, timeofday:'early morning', festival:'' };
+    var hh = (typeof now.hour==='number' && now.hour>=0 && now.hour<24) ? now.hour : 0;
+    var mm = (typeof now.minute==='number' && now.minute>=0 && now.minute<60) ? now.minute : 0;
+    var hhmm = (hh<10?'0':'')+hh+''+(mm<10?'0':'')+mm;
+    var timeofday = timeofdayFromHM(hh, mm);
+    var monthName = '';
+    if(now.month>=1 && now.month<=12 && MONTHS[now.month-1]){
+      monthName = MONTHS[now.month-1].name || MONTHS[now.month-1].short || '';
+    }
+    kind = canonicalCalendarFieldToken(kind);
+
+    if(kind === 'hour') return 'Hour: ' + hhmm;
+    if(kind === 'timeofday') return 'Timeofday: ' + timeofday;
+    if(kind === 'day') return now.festival ? 'Day: festival date in progress' : ('Day: ' + now.day);
+    if(kind === 'month') return now.festival ? 'Month: festival date in progress' : ('Month: ' + monthName + ' (' + now.month + ')');
+    if(kind === 'festival') return 'Festival: ' + (now.festival ? festivalDisplayName(now.festival) : 'none');
+    if(kind === 'monthfestival') return now.festival
+      ? ('Month/Festival: ' + festivalDisplayName(now.festival))
+      : ('Month/Festival: ' + monthName + ' (' + now.month + ')');
+    if(kind === 'season'){
+      var season = now.festival ? seasonKeyFromFestival(now.festival) : seasonKeyFromMonth(now.month);
+      return 'Season: ' + season.charAt(0).toUpperCase() + season.slice(1);
+    }
+    if(kind === 'year') return 'Year: ' + now.year;
+    return currentDateLine();
+  }
+
+  function setCalendarField(kind, raw, opts){
+    ensureCalendarState();
+    opts = opts || {};
     var now = state.dwt.now || { year:1492, month:1, day:1, hour:0, minute:0, timeofday:'early morning', festival:'' };
     var newNow = {
       year: now.year,
@@ -1295,11 +1388,9 @@ function festivalBgLayout(key){
     }
 
     state.dwt.now = newNow;
-    var T = todayIndex();
-    state.dwt.view.year = T.year;
-    state.dwt.view.index = T.index;
-    updateHandout(true);
-    mirrorToMule();
+    if(!opts.deferCommit){
+      commitCalendarState(true);
+    }
 
     return { ok:true, text: formatTimestampLine(state.dwt.now) };
   }
@@ -1338,6 +1429,7 @@ function festivalBgLayout(key){
            '(day/month/year : !dwt --calendar back 4m would move calendar view back 4 months)',
            '',
            'Set current date/timeofday (GM only): !dwt --calendar set hour | timeofday | day | month/festival | season | year <value>',
+           'Show current date/timeofday fields: !dwt --calendar show hour | timeofday | day | month/festival | season | year',
            '',
            'Inputs are normalized to lower-case, no spaces (e.g. "Feast of the Moon" -> feastofthemoon).',
            'Months can be specified either by name or number. (!dwt --calendar set month 1 | hammer | Deep WinTER would all be acceptable).',
@@ -1348,23 +1440,8 @@ function festivalBgLayout(key){
     }catch(e){}
   }
 
-  function pruneLegacyCalendarMacros(){
-    // No backward-compatibility: remove legacy mule macros used by prior calendar versions.
-    // These were: currentYear, currentSeason, currentMonth, currentFestival, currentDay, currentTime, currentHour.
-    try{
-      var mule = (RT.dwt && typeof RT.dwt.ensureMule === 'function') ? RT.dwt.ensureMule() : null;
-      if(!mule){ return; }
-      var legacy = ['currentYear','currentSeason','currentMonth','currentFestival','currentDay','currentTime','currentHour'];
-      for(var i=0;i<legacy.length;i++){
-        var name = legacy[i];
-        var abs = findObjs({_type:'ability', _characterid:mule.id, name:name})[0];
-        if(abs){ abs.remove(); }
-      }
-    }catch(e){}
-  }
     function calendarStartup(){
     ensureCalendarState();
-    pruneLegacyCalendarMacros();
     updateHandout(true);
     mirrorToMule();
   }
@@ -1407,3 +1484,4 @@ on('ready', function(){ dwt_calendar.init(); });
 on('change:player:_online', function(p){
   try{ if(p && p.id){ dwt_calendar._refreshView(); } }catch(e){ log('calendar login refresh err: '+e); }
 });
+

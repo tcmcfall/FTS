@@ -1,24 +1,30 @@
+    var _dwtCoreSyncRoot = (typeof globalThis!=='undefined') ? globalThis
+                         : (typeof window!=='undefined')     ? window
+                         : (typeof self!=='undefined')       ? self
+                         : (typeof global!=='undefined')     ? global
+                         : this;
+
     // Auto-sync windsock + weather state when the active (player ribbon) page changes.
     // NOTE: Roll20 does not provide a reliable per-GM-viewer page-change event (GM can view any page).
     // This listens to player-page ribbon changes and party split changes.
     try{
       on('change:campaign:playerpageid', function(){
         try{
-          if(root.RT && RT.dwt && typeof RT.dwt.weatherVerifySyncActivePage==='function'){
+          if(_dwtCoreSyncRoot.RT && _dwtCoreSyncRoot.RT.dwt && typeof _dwtCoreSyncRoot.RT.dwt.weatherVerifySyncActivePage==='function'){
             var pid = (function(){ try{ return (Campaign().get('playerid')||''); }catch(e){ return ''; } })();
             // If pid cannot be derived, fall back to syncing by pageId only.
-            RT.dwt.weatherVerifySyncActivePage(pid || 'API', { silent:true, pageId: Campaign().get('playerpageid') });
+            _dwtCoreSyncRoot.RT.dwt.weatherVerifySyncActivePage(pid || 'API', { silent:true, pageId: Campaign().get('playerpageid') });
           }
         }catch(e2){ log('dwt core autosync playerpageid err: '+e2); }
       });
       on('change:campaign:playerspecificpages', function(){
         try{
           var psp = Campaign().get('playerspecificpages')||{};
-          if(root.RT && RT.dwt && typeof RT.dwt.weatherVerifySyncActivePage==='function'){
+          if(_dwtCoreSyncRoot.RT && _dwtCoreSyncRoot.RT.dwt && typeof _dwtCoreSyncRoot.RT.dwt.weatherVerifySyncActivePage==='function'){
             var keys = Object.keys(psp||{});
             for(var i=0;i<keys.length;i++){
               var pid2 = keys[i];
-              RT.dwt.weatherVerifySyncActivePage(pid2, { silent:true, pageId: psp[pid2] });
+              _dwtCoreSyncRoot.RT.dwt.weatherVerifySyncActivePage(pid2, { silent:true, pageId: psp[pid2] });
             }
           }
         }catch(e3){ log('dwt core autosync playerspecificpages err: '+e3); }
@@ -26,7 +32,7 @@
     }catch(e1){}
 
 // name:        dwt_core.js
-// version:     5.0.7
+// version:     5.1.0
 // description: unified Date | Weather | Trade shell: registry/router/help & unified Campaign Log, palette owner.
 // depends:     Meta-Toolbox (APILogic + Muler) : https://wiki.roll20.net/Meta-Toolbox
 // provides:    !dwt (unified panel), !dwt --help, dwt.addLogCard(...), dwt.cssVars() for modules
@@ -41,7 +47,7 @@
            : (typeof global!=='undefined')     ? global
            : {};
 
-  var VERSION   = 'core_5.0.7';
+  var VERSION   = '5.1.0';
   var CORE_MULE = 'dwt_mule';
 
   var dwt = { VERSION: VERSION, COMMANDS:{}, HELP_SECTIONS:[], LOG_CARDS:[] };
@@ -78,11 +84,75 @@
   }
 
 
+  function abilityActionLength(ability){
+    try{ return String((ability && ability.get('action')) || '').length; }catch(e){ return 0; }
+  }
+
+  function abilityText(ability){
+    try{ return String((ability && ability.get('action')) || ''); }catch(e){ return ''; }
+  }
+
+  function normalizeAbilityName(name){
+    return String(name || '').toLowerCase().replace(/\s+/g,'');
+  }
+
+  function safeParseJSON(text){
+    try{ return JSON.parse(String(text || '')); }catch(e){ return null; }
+  }
+
+  function regionsRootQuality(text){
+    var parsed = safeParseJSON(text);
+    if(!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return -1;
+    var score = (parsed.schema === 'dwt.regions.root.v1') ? 50 : 0;
+    var regions = parsed.regions;
+    if(!regions || typeof regions !== 'object' || Array.isArray(regions)) return score;
+    var keys = Object.keys(regions);
+    score += keys.length * 5;
+    for(var i=0;i<keys.length;i++){
+      var payload = regions[keys[i]];
+      if(!payload || typeof payload !== 'object' || Array.isArray(payload)) continue;
+      if(payload.schema === 'dwt.region.v4') score += 200;
+      if(payload.weather && typeof payload.weather === 'object' && !Array.isArray(payload.weather)) score += 100;
+      if(payload.region) score += 10;
+      if(payload.locales) score += 10;
+    }
+    return score;
+  }
+
+  function weatherRootQuality(text){
+    var parsed = safeParseJSON(text);
+    if(!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return -1;
+    var score = 0;
+    if(parsed.meta && parsed.meta.rootSchema === 'dwt.weather.root.v2') score += 200;
+    if(parsed.settings && (parsed.settings.units === 'imperial' || parsed.settings.units === 'metric')) score += 25;
+    if(parsed.current && typeof parsed.current === 'object' && !Array.isArray(parsed.current)) score += 25;
+    if(parsed.history && typeof parsed.history === 'object' && !Array.isArray(parsed.history)) score += 25;
+    return score;
+  }
+
+  function abilitySortScore(name, ability){
+    var text = abilityText(ability);
+    var key = normalizeAbilityName(name || (ability && ability.get && ability.get('name')) || '');
+    var base = abilityActionLength(ability);
+    if(key === 'regions') return regionsRootQuality(text) * 1000000 + base;
+    if(key === 'weather') return weatherRootQuality(text) * 1000000 + base;
+    return base;
+  }
+
+  function namedAbilities(character, name){
+    if(!character) return [];
+    var list = findObjs({ _type:'ability', _characterid:character.id, name:name }) || [];
+    list.sort(function(a, b){ return abilitySortScore(name, b) - abilitySortScore(name, a); });
+    return list;
+  }
+
   function upsertAbility(character, name, action){
     if(!character) return;
-    var ability = findObjs({ _type:'ability', _characterid:character.id, name:name })[0];
-    if(ability){
-      ability.set({ action:String(action||'') });
+    var abilities = namedAbilities(character, name);
+    if(abilities.length){
+      for(var i=0;i<abilities.length;i++){
+        abilities[i].set({ action:String(action||'') });
+      }
     }else{
       createObj('ability', {
         characterid: character.id,
@@ -95,7 +165,7 @@
 
   function getAbilityAction(character, name){
     if(!character) return '';
-    var ability = findObjs({ _type:'ability', _characterid:character.id, name:name })[0];
+    var ability = namedAbilities(character, name)[0];
     return ability ? String(ability.get('action')||'') : '';
   }
 
@@ -131,7 +201,8 @@
     var key = String(moduleKey || '').trim().toLowerCase().replace(/[^a-z0-9]+/g,'');
     if(!key) return;
     var root = parseVersionRoot(getAbilityAction(character, 'version'));
-    root[key] = key + '_' + String(moduleVersion || '').trim();
+    var version = String(moduleVersion || '').trim();
+    root[key] = version;
     upsertAbility(character, 'version', serializeVersionRoot(root));
   }
 
@@ -190,6 +261,18 @@
       return {
         container:'', title:'', card:'', link:'', btn:'',
         table:'', th:'', td:function(){ return ''; }, dayLine:'', dot:'',
+        helpColsTable:'width:100%;border-collapse:separate;border-spacing:10px 0;',
+        helpCol:'width:50%;vertical-align:top;',
+        helpSingleCol:'width:100%;max-width:720px;margin:0 auto;',
+        helpSectionCard:'margin-top:10px;border:1px solid #d0d0d0;background:#ffffff;color:#111;padding:0;overflow:hidden;',
+        helpHeaderBar:'padding:6px 10px;font-weight:bold;font-size:14px;background:#f1f1f1;color:#111;',
+        helpBody:'padding:10px 12px;color:#111;font-size:13px;line-height:1.35;',
+        helpRowsTable:'width:100%;border-collapse:collapse;table-layout:fixed;',
+        helpRowSep:'border-top:1px solid #d0d0d0;',
+        helpKey:'padding:6px 10px;vertical-align:top;width:55%;',
+        helpVal:'padding:6px 10px;vertical-align:top;width:45%;',
+        helpCode:'display:block;padding:6px 8px;border-radius:4px;border:1px solid #d0d0d0;background:#f7f7f7;color:#111;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;font-size:12px;white-space:pre-wrap;',
+        helpNote:'margin-top:6px;color:#111;opacity:0.92;font-size:12px;',
         esc:esc, hrefAttr:hrefAttr, literal:literal
       };
     }
@@ -244,7 +327,7 @@
       helpVal: 'padding:6px 10px;vertical-align:top;width:45%;',
       helpCode: 'display:block;padding:6px 8px;border-radius:4px;border:1px solid '+(currentPalette()==='dark' ? '#555' : '#d0d0d0')+';'
               + 'background:'+(currentPalette()==='dark' ? '#2b2b2b' : '#f1f1f1')+';'
-              + 'color:'+pal.fg+';font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-size:12px;white-space:pre-wrap;',
+              + 'color:'+pal.fg+';font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;font-size:12px;white-space:pre-wrap;',
       helpNote: 'margin-top:6px;color:'+pal.fg+';opacity:0.92;font-size:12px;',
 
       esc: esc, hrefAttr:hrefAttr, literal:literal
@@ -322,12 +405,16 @@
 
     function renderTextBlock(txt){
       if(!txt) return '';
-      return '<p style="margin:0 0 8px 0;">'+literal(txt)+'</p>';
+      return '<p style="margin:0 0 8px 0;">'+esc(txt)+'</p>';
     }
 
     function renderCodeBlock(codeLine){
       if(!codeLine) return '';
-      return '<div style="'+v.helpCode+'margin:0 0 8px 0;">'+literal(codeLine)+'</div>';
+      return '<div style="'+v.helpCode+'margin:0;">'+literal(codeLine)+'</div><div style="height:8px;"></div>';
+    }
+
+    function renderSpacer(){
+      return '<div style="height:8px;"></div>';
     }
 
     function renderHeading(label){
@@ -433,8 +520,115 @@
       return out;
     }
 
+    function weatherFormatter(sec){
+      var raw = dropRedundantTitleLine(sec.title, sec.lines||[]);
+      var bulletOpen = false;
+      function closeBullets(){
+        if(!bulletOpen) return '';
+        bulletOpen = false;
+        return '</ul>';
+      }
+
+      var out = '';
+      out += '<div style="'+v.helpSectionCard+'">';
+      out +=   '<div style="'+v.helpHeaderBar+'">'+esc(sec.title||'Weather')+'</div>';
+      out +=   '<div style="'+v.helpBody+'">';
+
+      for(var i=0;i<raw.length;i++){
+        var line = String(raw[i]||'').trim();
+        if(!line){
+          out += closeBullets();
+          out += renderSpacer();
+          continue;
+        }
+
+        if(/^commands$/i.test(line) || /^gm-only commands$/i.test(line)){
+          out += closeBullets();
+          out += renderHeading(line);
+          continue;
+        }
+
+        if(looksLikeCmd(line)){
+          out += closeBullets();
+          out += renderCodeBlock(line);
+          continue;
+        }
+
+        if(/^- /.test(line)){
+          if(!bulletOpen){
+            out += '<ul style="margin:0 0 8px 18px;padding:0;">';
+            bulletOpen = true;
+          }
+          out += '<li style="margin:0 0 4px 0;">'+esc(line.replace(/^- /, ''))+'</li>';
+          continue;
+        }
+
+        var ex = extractCommandsFromLine(line);
+        if(ex){
+          out += closeBullets();
+          if(ex.before) out += renderTextBlock(ex.before);
+          if(ex.cmds && ex.cmds[0]) out += renderCodeBlock(ex.cmds[0].trim());
+          continue;
+        }
+
+        out += closeBullets();
+        out += renderTextBlock(line);
+      }
+
+      out += closeBullets();
+      out +=   '</div>';
+      out += '</div>';
+      return out;
+    }
+
+    function hasExplicitHelpHeadings(lines){
+      for(var i=0;i<(lines||[]).length;i++){
+        var line = String(lines[i]||'').trim();
+        if(/^commands$/i.test(line) || /^gm-only commands$/i.test(line)) return true;
+      }
+      return false;
+    }
+
     function defaultFormatter(sec){
       var raw = dropRedundantTitleLine(sec.title, sec.lines||[]);
+
+      if(hasExplicitHelpHeadings(raw)){
+        var ordered = '';
+        ordered += '<div style="'+v.helpSectionCard+'">';
+        ordered +=   '<div style="'+v.helpHeaderBar+'">'+esc(sec.title||'')+'</div>';
+        ordered +=   '<div style="'+v.helpBody+'">';
+
+        for(var r=0;r<raw.length;r++){
+          var line0 = String(raw[r]||'').trim();
+          if(!line0){
+            ordered += renderSpacer();
+            continue;
+          }
+
+          if(/^commands$/i.test(line0) || /^gm-only commands$/i.test(line0)){
+            ordered += renderHeading(line0);
+            continue;
+          }
+
+          if(looksLikeCmd(line0)){
+            ordered += renderCodeBlock(line0);
+            continue;
+          }
+
+          var ex0 = extractCommandsFromLine(line0);
+          if(ex0){
+            if(ex0.before) ordered += renderTextBlock(ex0.before);
+            if(ex0.cmds && ex0.cmds[0]) ordered += renderCodeBlock(ex0.cmds[0].trim());
+            continue;
+          }
+
+          ordered += renderTextBlock(line0);
+        }
+
+        ordered +=   '</div>';
+        ordered += '</div>';
+        return ordered;
+      }
 
       var desc = [];
       var cmds = [];
@@ -504,6 +698,7 @@
       var k = helpKey(sec.title);
       if(k === 'core') return coreFormatter(sec);
       if(k === 'calendar') return calendarFormatter(sec);
+      if(k === 'weather') return weatherFormatter(sec);
       return defaultFormatter(sec);
     }
 
@@ -539,8 +734,42 @@
     return h;
   }
 
+  function refreshHelpHandout(pid){
+    try{
+      return upsertHelpHandout(helpPanel(pid||null));
+    }catch(e){
+      log('refreshHelpHandout err: '+e);
+      return null;
+    }
+  }
+
+  function muleScore(character){
+    if(!character) return -1;
+    var abilities = findObjs({_type:'ability', _characterid:character.id}) || [];
+    var score = 0;
+    for(var i=0;i<abilities.length;i++){
+      var ability = abilities[i];
+      var name = '';
+      try{ name = normalizeAbilityName(ability.get('name') || ''); }catch(e){}
+      var weighted = abilitySortScore(name, ability);
+      score += weighted;
+      if(name === 'mapmeta') score += weighted;
+      else if(name === 'version' || name === 'core') score += Math.max(0, weighted);
+    }
+    return score + abilities.length;
+  }
+
   function ensureMule(){
-    var ch = findObjs({_type:'character', name:CORE_MULE})[0];
+    var matches = findObjs({_type:'character', name:CORE_MULE}) || [];
+    var ch = null;
+    var bestScore = -1;
+    for(var i=0;i<matches.length;i++){
+      var score = muleScore(matches[i]);
+      if(score > bestScore){
+        bestScore = score;
+        ch = matches[i];
+      }
+    }
 
     if(!ch){
       ch = createObj('character', {
@@ -624,7 +853,7 @@
   }
 
   function campaignLogPanel(pid){
-    var v = cssVars(), html = shell('Campaign Log');
+    var v = cssVars(), html = shell('Campaign Menu');
     for (var i=0;i<dwt.LOG_CARDS.length;i++){
       try{ html += (dwt.LOG_CARDS[i].render(pid)||''); }catch(e){ log('dwt card err: '+e); }
     }
@@ -656,7 +885,7 @@
         //   <a href="!dwt --calendar today"><b>today</b></a>
         //   <a href="!dwt --calendar forward 1m">forward</a>
         //
-        // Supported surface (no backward-compatibility):
+        // Supported surface:
         //   today | back <#d/m/y> | forward <#d/m/y>
         //   set <hour|timeofday|day|month|festival|month/festival|season|year> <value...>
         //
@@ -719,8 +948,8 @@
       }
       // Auto-sync weather to the current calendar tick + active page context.
       try{
-        if(root.RT && RT.dwt && typeof RT.dwt.weatherSyncActivePage==='function'){
-          RT.dwt.weatherSyncActivePage(pid, { silent:true, pageId: Campaign().get('playerpageid') });
+        if(root.RT && root.RT.dwt && typeof root.RT.dwt.weatherSyncActivePage==='function'){
+          root.RT.dwt.weatherSyncActivePage(pid, { silent:true, pageId: Campaign().get('playerpageid') });
         }
       }catch(e3){ log('dwt core weatherSyncActivePage err: '+e3); }
       whisper(pid, campaignLogPanel(pid));
@@ -810,6 +1039,7 @@
 
 
   dwt.registerStartup    = registerStartup;
+  dwt.refreshHelpHandout = refreshHelpHandout;
   dwt.runStartupHooks    = runStartupHooks;
   dwt.esc                = esc;
   dwt.hrefAttr           = hrefAttr;
@@ -848,3 +1078,4 @@
   });
 
 })();
+

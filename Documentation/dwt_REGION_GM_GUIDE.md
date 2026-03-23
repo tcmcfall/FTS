@@ -1,0 +1,359 @@
+# DWT Region Module Guide
+
+This guide covers the `dwt.region.v4` format used by `dwt_weather`, `dwt_mapMeta`, and the shipped regional modules.
+
+## Overview
+
+Each region module now writes one authoritative entry into the `dwt_mule` character ability named `regions`.
+
+- Module key: `dwt_region.<regionKey>`
+- Storage path: `root.regions[<regionKey>]`
+- Schema: `dwt.region.v4`
+
+The region entry drives:
+
+- page-name parsing through region and locale keys
+- default locale and campaign location metadata
+- Harptos month and festival weather baselines
+- exact-clock diurnal temperature control inside each time-of-day band
+- seasonal ocean current patterns
+- locale drift and override behavior
+- governor caps for temperature, rain, skies, wind, and currents
+- activation windows for skies, precipitation, and critical events
+- critical-event weights and severity
+- GM manual weather tables
+
+## Canonical Sources
+
+The shipped modules do not rely on a single global dataset, because no one official product covers atmospheric climatology, sea-surface temperature, and subsurface current structure equally well.
+
+- ECMWF ERA5: monthly air temperature, precipitation, and prevailing-wind defaults
+- Copernicus Marine Global Ocean Physics: seasonal current direction, strength, and subsurface temperature structure
+- NOAA NCEI OISST: sea-surface temperature checks for ocean and coastline layers
+- USGS streamflow guidance: 20/60/80% sampling logic for inland and coastal water columns
+
+## Installation
+
+Load the shipped regional modules you want to use from `Modules/Region Modules/dwt_region.<regionKey>_5.1.0.js`, restart the Roll20 API sandbox, and run `!dwt --weather verify`.
+
+## Page Naming
+
+Pages now follow this pattern:
+
+- `region.locale.mapname`
+- `region.locale_<depth>.mapname`
+
+Examples:
+
+- `frozenfar.coastal.iceplains`
+- `moonshaes.underwater_90.sunkenhall`
+- `swordcoast.underdark_2mi.deeproad`
+- `swordcoast.coastal_+100.cliffwatch`
+
+Notes:
+
+- page names are case- and space-insensitive, and canonical output is lower-case with no spaces
+- the locale segment is the locale key
+- bare depth values use the current weather units
+- append `mi` or `km` to force large units
+- prefix `+` for elevation
+
+## Required Structure
+
+Every region entry must define:
+
+- `schema`
+- `region`
+- `displayName`
+- `defaultLocale`
+- `locales`
+- `campaignLocations`
+- `referenceSources`
+- `sourceNotes`
+- `localeDefinitions`
+- `weather.climateControl`
+- `weather.periods`
+- `weather.seasonalCurrents`
+
+The canonical locale keys still need to exist:
+
+- `offshore`
+- `coastal`
+- `inland`
+- `underwater`
+- `underdark`
+
+You can add extra locale keys for custom areas such as magical forests, volcanic badlands, or dead-magic lakes.
+
+## Weather Periods
+
+`weather.periods` is keyed by Harptos months and festivals:
+
+- `hammer`
+- `midwinter`
+- `alturiak`
+- `ches`
+- `tarsakh`
+- `greengrass`
+- `mirtul`
+- `kythorn`
+- `flamerule`
+- `midsummer`
+- `shieldmeet`
+- `eleasis`
+- `eleint`
+- `highharvestide`
+- `marpenoth`
+- `uktar`
+- `feastofthemoon`
+- `nightal`
+
+Each period must define:
+
+- `temperature.avgF`
+- `temperature.lowF`
+- `temperature.highF`
+- `precipitation.chancePct`
+- `precipitation.type`
+- `precipitation.intensityWeights`
+- `wind.directionWeights`
+- `wind.strengthWeights`
+- `critical.chancePct`
+- `critical.eventWeights`
+- `critical.severityWeights`
+- `drift.temperature`
+- `drift.precipitation`
+- `drift.skies`
+- `drift.wind`
+- `drift.directionChangePct`
+- `drift.timeofdaySegments`
+
+`drift.timeofdaySegments` is keyed by the eight DWT time-of-day segments:
+
+- `earlypredawn`
+- `latepredawn`
+- `earlymorning`
+- `latemorning`
+- `earlyafternoon`
+- `lateafternoon`
+- `earlyevening`
+- `lateevening`
+
+Each time-of-day segment block defines how the slowly-changing-weather rule should lean during that segment. The shipped modules use:
+
+- `temperatureSwingPct`
+- `temperatureDelta`
+- `precipitationDelta`
+- `skiesDelta`
+- `windDelta`
+- `windStrengthDeltaPct`
+- `directionChangePct`
+
+These period values are the regional baseline. Locale definitions can drift from them or fully override them.
+
+## Climate Control
+
+`weather.climateControl` is required in `dwt.region.v4`.
+
+It defines:
+
+- `diurnal.lowTimeHHMM`
+- `diurnal.highTimeHHMM`
+- `diurnal.riseCurve`
+- `diurnal.fallCurve`
+- `governor.temperatureMaxDeltaF`
+- `governor.rainMaxStep`
+- `governor.skyMaxStep`
+- `governor.windMaxStep`
+- `governor.currentStrengthMaxDeltaPct`
+- `governor.currentTemperatureMaxDeltaF`
+- `governor.currentDirectionMaxStep`
+- `governor.interpolateWindStrength`
+- `governor.interpolateCurrentStrength`
+- `governor.interpolateCurrentTemperature`
+- `activation.skyLeadMinutes`
+- `activation.precipitationDurationMinutes`
+- `activation.eventStartOffsetMinutes`
+- `activation.eventTailBufferMinutes`
+
+Locale definitions can optionally add `climateControl` to override those defaults for special places such as magical storms, volcanic vents, or sheltered inland basins.
+
+## Seasonal Currents
+
+`weather.seasonalCurrents` defines one current profile per season:
+
+- `winter`
+- `spring`
+- `summer`
+- `autumn`
+
+Each current block contains:
+
+- `direction`
+- `readings.surface`
+- `readings.shallow`
+- `readings.mid`
+- `readings.deep`
+
+Each reading contains:
+
+- `direction`
+- `temperatureF`
+- `strengthPct`
+
+The active locale supplies the sampling depth through `localeDefinitions.<locale>.waterProfile`.
+
+- Inland/coastal/lake/river-style water columns use the USGS three-point rule:
+  20%, 60%, and 80% of the total depth.
+- Open-ocean defaults use fixed fathom samples:
+  1, 5, and 10 fathoms.
+- The representative current used by the runtime is the mean of the shallow and deep strengths, with the mid-depth temperature used as the representative water temperature.
+
+Use this for offshore, coastal, or underwater locales whenever current patterns matter.
+
+## Locale Definitions
+
+`localeDefinitions` controls how each locale behaves on top of the region baseline.
+
+Useful fields:
+
+- `label`
+- `token` (optional display alias; page names use locale keys)
+- `environment`
+- `biome`
+- `climateMode`
+- `inherits`
+- `useSeasonalCurrent`
+- `waterProfile`
+- `periods`
+- `manualTables`
+
+`waterProfile` is required whenever `useSeasonalCurrent` is true. Useful fields:
+
+- `bodyType`
+- `totalDepthFeet`
+- `sampleMode`
+- `sampleFractions`
+- `sampleDepthsFathoms`
+
+The shipped defaults use `coastline` as the standard coastal biome.
+
+`climateMode` values:
+
+- `offset`
+  Use `avgDeltaF`, `chanceDeltaPct`, `strengthDeltaPct`, and similar delta fields.
+- `override`
+  Supply full `avgF`, `chancePct`, weights, or current values for that locale and period.
+
+This lets you keep ordinary locales close to the regional baseline while still supporting special locales such as enchanted swamps, ash-choked coasts, or magically warmed harbors.
+
+## Critical Events
+
+Critical events use four severity levels:
+
+- `light`
+- `moderate`
+- `heavy`
+- `severe`
+
+The weather module maps those severities onto the windsock critical layers:
+
+- `crit_light`
+- `crit_moderate`
+- `crit_heavy`
+- `crit_severe`
+
+Default event templates already exist for common hazards such as:
+
+- blizzards
+- ice storms
+- winter gales
+- thunderstorms
+- sea storms
+- rogue waves
+- hurricanes
+- tornadoes
+- sandstorms
+- heat waves
+- flash floods
+- wildfires
+- earthquakes
+- volcanic eruptions
+- ashfall
+- cave-ins
+- sinkholes
+- toxic fog
+- maelstroms
+
+You can also add `weather.customCriticalEvents` for region-specific hazards.
+
+## Manual Weather Tables
+
+The GM can roll weather manually with:
+
+- `!dwt --weather roll`
+- `!dwt --weather roll event`
+- `!dwt --weather roll event <eventKey> <severity>`
+
+Manual rolls now apply one immediate governed step at the current band. They obey the same caps as automatic drift instead of bypassing the governor.
+
+If you want custom manual tables, define them under:
+
+- `weather.manualTables`
+- `localeDefinitions.<localeKey>.manualTables`
+
+The runtime accepts either a direct table object or a period-scoped object with `default` and period keys.
+
+Useful manual-table fields:
+
+- `temperatureSteps`
+- `precipitationSteps`
+- `skySteps`
+- `windSteps`
+- `directionChangePct`
+- `criticalChancePct`
+- `eventWeights`
+- `severityWeights`
+
+## Authoring Workflow
+
+1. Start from [dwt_TEMPLATE_region.js](/V:/Programs/dwt/git/Documentation/dwt_TEMPLATE_region.js) or `!dwt --regionbuilder template`.
+2. Set `referenceSources` and `sourceNotes` first so the analogue, climatology source, and water-current source are explicit.
+3. Set `weather.climateControl` so low/high times, governor caps, and activation windows are explicit before you tune the monthly data.
+4. Choose the regional default locale first and fill `weather.periods` around that climate.
+5. Add `weather.seasonalCurrents` with seasonal current readings.
+6. Define canonical locale behavior in `localeDefinitions`, including `waterProfile` for every current-driven locale.
+7. Add optional locale `climateControl` overrides only where the locale truly behaves differently from the region.
+8. Add any custom locales and pick biome presets for them.
+9. Tune critical-event weights and manual tables.
+10. Upload the script and run `!dwt --weather verify`.
+11. Confirm a page name like `region.locale.mapname` resolves in both weather and map metadata.
+12. Run `python Tools/verify_region_modules.py` in the repo to verify every shipped region module against the live weather-module period set and required `dwt.region.v4` structure.
+
+## Validation Checklist
+
+- `region` matches the file/module name
+- all five canonical locales are present
+- `defaultLocale` exists in `locales`
+- every Harptos period exists in `weather.periods`
+- every season exists in `weather.seasonalCurrents`
+- every locale key is unique inside the region
+- every region lists `referenceSources`
+- every region defines `weather.climateControl`
+- every period defines temperature, precipitation, wind, critical, and drift data
+- every period defines all eight `drift.timeofdaySegments`
+- every current-driven locale defines `waterProfile`
+- every seasonal current defines `surface`, `shallow`, `mid`, and `deep` readings
+- every critical event key is either built-in or defined in `customCriticalEvents`
+- page names use `region.locale.mapname` or `region.locale_<depth>.mapname`
+
+## Test Flow
+
+1. Load `dwt_core`, `dwt_weather`, `dwt_mapMeta`, and the region module.
+2. Name a page with a valid region and locale.
+3. Run `!dwt --weather verify`.
+4. Run `!dwt --weather detail`.
+5. Run `!dwt --weather roll`.
+6. Run `!dwt --mapMeta`.
+7. Run `python Tools/verify_region_modules.py`.
+8. Advance time and confirm the active band reuses its stored snapshot while live temperature still moves with the exact clock.

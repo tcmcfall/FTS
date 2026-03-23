@@ -1,7 +1,7 @@
 // name:        dwt_quips.js
-// version:     5.0.0
+// version:     5.1.0
 // description: Quips corpus storage + read-only accessors (no selection logic). Persists all quips beneath the single dwt_mule ability 'quips'.
-// depends:     dwt_core_4.3.x+, Meta-Toolbox, Roll20 API
+// depends:     dwt_core_5.1.0+, Roll20 API
 // provides:    (none)
 // author:      tcm (AI-assisted)
 
@@ -10,7 +10,7 @@ var dwt_quips = dwt_quips || (function(){
 
   var RT = (typeof globalThis !== 'undefined') ? globalThis : this;
   var DWT_MULE = 'dwt_mule';
-  var VERSION = 'quips_5.0.0';
+  var VERSION = '5.1.0';
 
   // ---------------------------------------------------------------------------
   // Constants & corpus (authoritative source for mule population)
@@ -2095,28 +2095,6 @@ var dwt_quips = dwt_quips || (function(){
     try{ return ability.get('action'); }catch(e){ return null; }
   }
 
-  function removeAbility(character, name){
-    if(!character) return;
-    var ability = findObjs({
-      _type: 'ability',
-      _characterid: character.id,
-      name: name
-    })[0];
-    if(ability){
-      try{ ability.remove(); }catch(e){}
-    }
-  }
-
-  function normalizeModuleVersion(moduleKey, moduleVersion){
-    var key = String(moduleKey || '').toLowerCase().replace(/[^a-z0-9]+/g,'');
-    var version = String(moduleVersion || '').trim();
-    if(!key) return version;
-    if(version.indexOf(key + '_') === 0){
-      return version;
-    }
-    return key + '_' + version.replace(/^_+/, '');
-  }
-
   function parseVersionRoot(raw){
     var root = {};
     var lines = String(raw || '').split('\n');
@@ -2143,7 +2121,9 @@ var dwt_quips = dwt_quips || (function(){
   function mergeVersionEntry(character, moduleKey, moduleVersion){
     if(!character) return;
     var root = parseVersionRoot(readAbilityAction(character, 'version'));
-    root[String(moduleKey || '').toLowerCase().replace(/[^a-z0-9]+/g,'')] = normalizeModuleVersion(moduleKey, moduleVersion);
+    var key = String(moduleKey || '').toLowerCase().replace(/[^a-z0-9]+/g,'');
+    var version = String(moduleVersion || '').trim();
+    root[key] = version;
     upsertAbility(character, 'version', serializeVersionRoot(root));
   }
 
@@ -2210,17 +2190,9 @@ var dwt_quips = dwt_quips || (function(){
       data[k] = v;
     });
 
-    var abilities = findObjs({ _type:'ability', _characterid:M.id }) || [];
-    for(var i=0;i<abilities.length;i++){
-      var name = abilities[i].get('name') || '';
-      if(name === 'quips.version' || name === 'quips.meta.count' || (name.indexOf('quips.') === 0 && name !== 'quips')){
-        try{ abilities[i].remove(); }catch(e){}
-      }
-    }
-
     upsertAbility(M, 'quips', JSON.stringify({
       meta: {
-        version: normalizeModuleVersion('quips', VERSION),
+        version: VERSION,
         count: total,
         categories: keys
       },
@@ -2281,3 +2253,4 @@ var dwt_quips = dwt_quips || (function(){
     listCategories: listCategories
   };
 })();
+

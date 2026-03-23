@@ -1,221 +1,414 @@
-// name:        dwt_region_TEMPLATE.js
-// version:     4.3.1
-// description: TEMPLATE for defining a campaign region metadata module (metadata + real-world analogs).
+// name:        dwt_region.TEMPLATE.js
+// version:     5.1.0
+// description: Authoritative template for a DWT dwt.region.v4 module.
 //
-// -------------------------------------------------------------------------------------------------
-// WHAT THIS IS
-// -------------------------------------------------------------------------------------------------
-// This file is a developer template for authoring a region metadata module in the DWT suite.
+// Copy this file to:
+//   Modules/Region Modules/dwt_region.<regionKey>_5.1.0.js
 //
-// Unlike dwt_regionweather_* modules (which provide seasonal weather tables), a region module
-// is intended to hold mapping metadata:
+// Then replace REGION_KEY, MODULE_NAME, and REGION_ENTRY.
 //
-//   - Region identity (key, display name)
-//   - Canonical locales used by dwt_weather (offshore/coastal/inland)
-//   - Canonical campaign locations (cities, landmarks) belonging to the region
-//   - Real-world analog assignments (for weather data research, historic wind patterns, etc.)
-//   - Optional references to data sources and notes for maintainers
+// Canonical climate references used by the shipped modules:
+//   - ECMWF ERA5 Reanalysis: https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5
+//   - Copernicus Marine Global Ocean Physics Analysis and Forecast: https://data.marine.copernicus.eu/product/GLOBAL_ANALYSISFORECAST_PHY_001_024/description
+//   - NOAA NCEI OISST: https://www.ncei.noaa.gov/products/optimum-interpolation-sst
+//   - USGS Streamflow Measurement Guidance: https://www.usgs.gov/water-science-school/science/how-streamflow-measured
 //
-// The region module publishes its JSON into the shared dwt_mule Ability:
+// Page names use:
+//   region.locale.mapname
+//   region.locale_<depth>.mapname
 //
-//    regionMeta
-//
-// under:
-//
-//    root.regions[REGION_KEY]
-//
-// -------------------------------------------------------------------------------------------------
-// WHY THIS EXISTS
-// -------------------------------------------------------------------------------------------------
-// A regionWeather module answers: "How does weather behave here seasonally?"
-// A region module answers:        "What fictional places are in this region, and what real places
-//                                 do we treat as their analogs for research and calibration?"
-//
-// This supports:
-//   - consistent, documented real-world analog choices
-//   - future automation
-//   - developer onboarding
-//
-// -------------------------------------------------------------------------------------------------
-// QUICK START
-// -------------------------------------------------------------------------------------------------
-// 1) Pick a region key (lowercase, no spaces), e.g. "moonshaes".
-// 2) Copy this template and rename it:
-//       dwt_region_<regionKey>_<version>.js
-// 3) Set REGION_KEY and paste a JSON string into REGION_JSON.
-// 4) Upload into Roll20 API sandbox; it will write into dwt_mule on startup.
-//
-// -------------------------------------------------------------------------------------------------
-// JSON SCHEMA: dwt.region.v1
-// -------------------------------------------------------------------------------------------------
-// {
-//   "schema": "dwt.region.v1",
-//   "region": "<regionKey>",
-//   "displayName": "Moonshaes",
-//   "defaultLocale": "coastal",
-//   "locales": ["offshore","coastal","inland"],
-//   "campaignLocations": [
-//     {
-//       "name": "Caer Callidyrr",
-//       "locale": "coastal",
-//       "tags": ["capital","island"],
-//       "realWorldAnalog": {
-//         "name": "Edinburgh, Scotland",
-//         "lat": 55.9533,
-//         "lon": -3.1883,
-//         "notes": "Atlantic maritime; cool summers, mild winters, frequent rain and wind."
-//       },
-//       "sources": [
-//         "FR wiki / setting books / project notes"
-//       ],
-//       "notes": "Optional DM-facing notes."
-//     }
-//   ],
-//   "sourceNotes": [
-//     "Document your mapping logic, assumptions, and validation references."
-//   ]
-// }
-//
-// -------------------------------------------------------------------------------------------------
-// IMPLEMENTATION NOTES
-// -------------------------------------------------------------------------------------------------
-// This module does NOT require dwt_weather, but it registers with dwt_core if present.
-// It always writes into dwt_mule as a safety net.
+// Page names are case- and space-insensitive. Canonical generated names should be lower-case with no spaces.
 
 (function(){
   'use strict';
 
   var RT = (typeof globalThis !== 'undefined') ? globalThis : this;
-  var REGION_KEY = 'yourregionkey';
-  var VERSION = '4.3.1';
-  var MODULE_KEY = 'regionMeta';
+  var VERSION = '5.1.0';
+  var REGION_KEY = 'replacewithregionkey';
+  var MODULE_NAME = 'dwt_region.' + REGION_KEY;
   var _startupRegistered = false;
 
-  var REGION_JSON = [
-    '{',
-    '  "schema": "dwt.region.v1",',
-    '  "region": "yourregionkey",',
-    '  "displayName": "Your Region Name",',
-    '  "defaultLocale": "coastal",',
-    '  "locales": ["offshore","coastal","inland"],',
-    '  "campaignLocations": [],',
-    '  "sourceNotes": []',
-    '}'
-  ].join('\n');
-
-  function upsertAbility(character, name, action){
-    if(!character) return;
-    var ability = findObjs({ _type:'ability', _characterid:character.id, name:name })[0];
-    if(ability){
-      ability.set({ action:String(action) });
-    }else{
-      createObj('ability', {
-        characterid: character.id,
-        name: name,
-        action: String(action),
-        istokenaction: false
-      });
+  // Replace the object below with real data.
+  // The template is intentionally explicit so every editable area is visible.
+  var REGION_ENTRY = {
+    "schema": "dwt.region.v4",
+    "region": "replacewithregionkey",
+    "displayName": "Replace With Region Name",
+    "defaultLocale": "coastal",
+    "locales": [
+      "offshore",
+      "coastal",
+      "inland",
+      "underwater",
+      "underdark"
+    ],
+    "campaignLocations": [
+      {
+        "name": "Replace With Campaign Anchor",
+        "locale": "coastal",
+        "tags": ["harbor", "trade"],
+        "sources": ["Setting reference", "Campaign notes"],
+        "notes": "Why this place belongs to this locale."
+      }
+    ],
+    "referenceSources": [
+      {
+        "label": "ECMWF ERA5 Reanalysis",
+        "url": "https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5",
+        "usage": "Global atmospheric climatology for air temperature, prevailing winds, precipitation, and seasonal belt shifts."
+      },
+      {
+        "label": "Copernicus Marine Global Ocean Physics Analysis and Forecast",
+        "url": "https://data.marine.copernicus.eu/product/GLOBAL_ANALYSISFORECAST_PHY_001_024/description",
+        "usage": "Global current direction, current strength, and subsurface ocean temperature structure."
+      },
+      {
+        "label": "NOAA NCEI OISST",
+        "url": "https://www.ncei.noaa.gov/products/optimum-interpolation-sst",
+        "usage": "Sea-surface temperature sanity check for open-ocean and coastal surface layers."
+      },
+      {
+        "label": "USGS Streamflow Measurement Guidance",
+        "url": "https://www.usgs.gov/water-science-school/science/how-streamflow-measured",
+        "usage": "Three-point vertical sampling logic for rivers, lakes, and other non-ocean water columns."
+      }
+    ],
+    "sourceNotes": [
+      "Climate analogue: Replace this note with the real analogue.",
+      "Use ECMWF ERA5 for monthly air temperature, precipitation, and prevailing wind defaults.",
+      "Use Copernicus Marine global ocean physics and NOAA OISST to tune seasonal currents and water temperatures.",
+      "Use the USGS three-point method for inland and coastal water columns; open ocean defaults use 1, 5, and 10 fathoms."
+    ],
+    "localeDefinitions": {
+      "offshore": {
+        "label": "Offshore",
+        "token": "Offshore",
+        "environment": "surface",
+        "biome": "ocean",
+        "climateMode": "offset",
+        "inherits": "region",
+        "useSeasonalCurrent": true,
+        "waterProfile": {
+          "bodyType": "open_ocean",
+          "totalDepthFeet": 600,
+          "sampleMode": "fixed_fathoms",
+          "sampleFractions": { "shallow": 0.2, "mid": 0.6, "deep": 0.8 },
+          "sampleDepthsFathoms": { "shallow": 1, "mid": 5, "deep": 10 }
+        }
+      },
+      "coastal": {
+        "label": "Coastal",
+        "token": "Coastal",
+        "environment": "surface",
+        "biome": "coastline",
+        "climateMode": "offset",
+        "inherits": "region",
+        "useSeasonalCurrent": true,
+        "waterProfile": {
+          "bodyType": "coastline",
+          "totalDepthFeet": 90,
+          "sampleMode": "fractional_depth",
+          "sampleFractions": { "shallow": 0.2, "mid": 0.6, "deep": 0.8 },
+          "sampleDepthsFathoms": { "shallow": 1, "mid": 5, "deep": 10 }
+        }
+      },
+      "inland": {
+        "label": "Inland",
+        "token": "Inland",
+        "environment": "surface",
+        "biome": "plains",
+        "climateMode": "offset",
+        "inherits": "region",
+        "useSeasonalCurrent": false
+      },
+      "underwater": {
+        "label": "Underwater",
+        "token": "Underwater",
+        "environment": "underwater",
+        "biome": "reef",
+        "climateMode": "override",
+        "inherits": "region",
+        "useSeasonalCurrent": true,
+        "waterProfile": {
+          "bodyType": "reef",
+          "totalDepthFeet": 120,
+          "sampleMode": "fractional_depth",
+          "sampleFractions": { "shallow": 0.2, "mid": 0.6, "deep": 0.8 },
+          "sampleDepthsFathoms": { "shallow": 1, "mid": 5, "deep": 10 }
+        },
+        "periods": {
+          "hammer": {
+            "temperature": { "avgF": 48, "lowF": 44, "highF": 52 },
+            "precipitation": { "chancePct": 0, "type": "none", "intensityWeights": { "light": 100, "moderate": 0, "heavy": 0 } },
+            "wind": {
+              "directionWeights": [{ "value": "NW", "weight": 60 }, { "value": "W", "weight": 40 }],
+              "strengthWeights": [{ "value": 25, "weight": 30 }, { "value": 50, "weight": 45 }, { "value": 75, "weight": 20 }, { "value": 100, "weight": 5 }]
+            },
+            "critical": {
+              "chancePct": 8,
+              "eventWeights": [{ "value": "sea_storm", "weight": 60 }, { "value": "maelstrom", "weight": 40 }],
+              "severityWeights": { "light": 45, "moderate": 30, "heavy": 20, "severe": 5 }
+            },
+            "drift": {
+              "temperature": 1,
+              "precipitation": 1,
+              "skies": 1,
+              "wind": 2,
+              "directionChangePct": 25,
+              "timeofdaySegments": TIMEOFDAY_SEGMENTS_UNDERWATER
+            },
+            "current": {
+              "direction": "NW",
+              "readings": {
+                "surface": { "direction": "NW", "temperatureF": 50, "strengthPct": 43 },
+                "shallow": { "direction": "NW", "temperatureF": 49, "strengthPct": 63 },
+                "mid": { "direction": "NW", "temperatureF": 48, "strengthPct": 55 },
+                "deep": { "direction": "NW", "temperatureF": 45, "strengthPct": 47 }
+              }
+            }
+          }
+        }
+      },
+      "underdark": {
+        "label": "Underdark",
+        "token": "Underdark",
+        "environment": "subterranean",
+        "biome": "caverns",
+        "climateMode": "override",
+        "inherits": "region",
+        "useSeasonalCurrent": false,
+        "periods": {
+          "hammer": {
+            "temperature": { "avgF": 52, "lowF": 48, "highF": 56 },
+            "precipitation": { "chancePct": 20, "type": "drip", "intensityWeights": { "light": 70, "moderate": 25, "heavy": 5 } },
+            "wind": {
+              "directionWeights": [{ "value": "N", "weight": 50 }, { "value": "NW", "weight": 50 }],
+              "strengthWeights": [{ "value": 0, "weight": 25 }, { "value": 25, "weight": 40 }, { "value": 50, "weight": 25 }, { "value": 75, "weight": 10 }]
+            },
+            "critical": {
+              "chancePct": 6,
+              "eventWeights": [{ "value": "cave_in", "weight": 50 }, { "value": "toxic_fog", "weight": 50 }],
+              "severityWeights": { "light": 50, "moderate": 30, "heavy": 15, "severe": 5 }
+            },
+            "drift": {
+              "temperature": 1,
+              "precipitation": 1,
+              "skies": 1,
+              "wind": 1,
+              "directionChangePct": 20,
+              "timeofdaySegments": TIMEOFDAY_SEGMENTS_UNDERDARK
+            }
+          }
+        }
+      }
+    },
+    "weather": {
+      "climateControl": {
+        "diurnal": {
+          "lowTimeHHMM": "0559",
+          "highTimeHHMM": "1400",
+          "riseCurve": 2.0,
+          "fallCurve": 1.2
+        },
+        "governor": {
+          "temperatureMaxDeltaF": 3,
+          "rainMaxStep": 1,
+          "skyMaxStep": 1,
+          "windMaxStep": 1,
+          "currentStrengthMaxDeltaPct": 12,
+          "currentTemperatureMaxDeltaF": 3,
+          "currentDirectionMaxStep": 2,
+          "interpolateWindStrength": true,
+          "interpolateCurrentStrength": true,
+          "interpolateCurrentTemperature": true
+        },
+        "activation": {
+          "skyLeadMinutes": { "min": 30, "max": 90 },
+          "precipitationDurationMinutes": { "min": 45, "max": 165 },
+          "eventStartOffsetMinutes": { "min": 10, "max": 45 },
+          "eventTailBufferMinutes": { "min": 10, "max": 30 }
+        }
+      },
+      "periods": {
+        "hammer": PERIOD_BLOCK_HAMMER,
+        "midwinter": COPY_HAMMER_OR_BLEND_ADJACENT_MONTHS,
+        "alturiak": COPY_WINTER_MONTH_BLOCK,
+        "ches": COPY_SPRING_MONTH_BLOCK,
+        "tarsakh": COPY_SPRING_MONTH_BLOCK,
+        "greengrass": COPY_TARSKAH_MIRTUL_BLEND,
+        "mirtul": COPY_SPRING_MONTH_BLOCK,
+        "kythorn": COPY_SUMMER_MONTH_BLOCK,
+        "flamerule": COPY_SUMMER_MONTH_BLOCK,
+        "midsummer": COPY_FLAMERULE_ELEASIS_BLEND,
+        "shieldmeet": COPY_FLAMERULE_ELEASIS_BLEND,
+        "eleasis": COPY_SUMMER_MONTH_BLOCK,
+        "eleint": COPY_AUTUMN_MONTH_BLOCK,
+        "highharvestide": COPY_ELEINT_MARPENOTH_BLEND,
+        "marpenoth": COPY_AUTUMN_MONTH_BLOCK,
+        "uktar": COPY_AUTUMN_MONTH_BLOCK,
+        "feastofthemoon": COPY_UKTAR_NIGHTAL_BLEND,
+        "nightal": COPY_WINTER_MONTH_BLOCK
+      },
+      "seasonalCurrents": {
+        "winter": {
+          "direction": "NW",
+          "readings": {
+            "surface": { "direction": "NW", "temperatureF": 50, "strengthPct": 28 },
+            "shallow": { "direction": "NW", "temperatureF": 49, "strengthPct": 48 },
+            "mid": { "direction": "NW", "temperatureF": 48, "strengthPct": 40 },
+            "deep": { "direction": "NW", "temperatureF": 45, "strengthPct": 32 }
+          }
+        },
+        "spring": {
+          "direction": "W",
+          "readings": {
+            "surface": { "direction": "W", "temperatureF": 56, "strengthPct": 23 },
+            "shallow": { "direction": "W", "temperatureF": 55, "strengthPct": 43 },
+            "mid": { "direction": "W", "temperatureF": 54, "strengthPct": 35 },
+            "deep": { "direction": "W", "temperatureF": 51, "strengthPct": 27 }
+          }
+        },
+        "summer": {
+          "direction": "SW",
+          "readings": {
+            "surface": { "direction": "SW", "temperatureF": 66, "strengthPct": 18 },
+            "shallow": { "direction": "SW", "temperatureF": 64, "strengthPct": 38 },
+            "mid": { "direction": "SW", "temperatureF": 62, "strengthPct": 30 },
+            "deep": { "direction": "SW", "temperatureF": 58, "strengthPct": 22 }
+          }
+        },
+        "autumn": {
+          "direction": "W",
+          "readings": {
+            "surface": { "direction": "W", "temperatureF": 60, "strengthPct": 23 },
+            "shallow": { "direction": "W", "temperatureF": 58, "strengthPct": 43 },
+            "mid": { "direction": "W", "temperatureF": 56, "strengthPct": 35 },
+            "deep": { "direction": "W", "temperatureF": 52, "strengthPct": 27 }
+          }
+        }
+      },
+      "manualTables": {
+        "default": {
+          "temperatureSteps": [{ "value": -1, "weight": 20 }, { "value": 0, "weight": 60 }, { "value": 1, "weight": 20 }],
+          "precipitationSteps": [{ "value": -1, "weight": 20 }, { "value": 0, "weight": 60 }, { "value": 1, "weight": 20 }],
+          "skySteps": [{ "value": -1, "weight": 20 }, { "value": 0, "weight": 60 }, { "value": 1, "weight": 20 }],
+          "windSteps": [{ "value": -1, "weight": 20 }, { "value": 0, "weight": 60 }, { "value": 1, "weight": 20 }],
+          "directionChangePct": 25,
+          "criticalChancePct": 5,
+          "eventWeights": [{ "value": "winter_gale", "weight": 50 }, { "value": "thunderstorm", "weight": 50 }],
+          "severityWeights": { "light": 50, "moderate": 30, "heavy": 15, "severe": 5 }
+        }
+      },
+      "customCriticalEvents": {
+        "replace_this_key": {
+          "name": "Replace This Event",
+          "category": "weather",
+          "summary": "Explain what makes this event unique in the region.",
+          "environments": ["surface"],
+          "severities": {
+            "light": {
+              "durationSegments": 2,
+              "rangeMiles": 2,
+              "saveDc": 12,
+              "damage": "1d6",
+              "damageTypes": ["bludgeoning"],
+              "motionPercent": 85,
+              "tempDeltaF": -2,
+              "rainfall": "light",
+              "skies": "overcast",
+              "environmentalEffects": ["difficult terrain"]
+            },
+            "moderate": {
+              "durationSegments": 4,
+              "rangeMiles": 4,
+              "saveDc": 14,
+              "damage": "2d6",
+              "damageTypes": ["bludgeoning"],
+              "motionPercent": 90,
+              "tempDeltaF": -4,
+              "rainfall": "moderate",
+              "skies": "stormy",
+              "environmentalEffects": ["difficult terrain", "lightly obscured"]
+            },
+            "heavy": {
+              "durationSegments": 6,
+              "rangeMiles": 6,
+              "saveDc": 16,
+              "damage": "3d6",
+              "damageTypes": ["bludgeoning"],
+              "motionPercent": 95,
+              "tempDeltaF": -6,
+              "rainfall": "heavy",
+              "skies": "stormy",
+              "environmentalEffects": ["difficult terrain", "lightly obscured", "visibility reduced"]
+            },
+            "severe": {
+              "durationSegments": 8,
+              "rangeMiles": 10,
+              "saveDc": 18,
+              "damage": "4d6",
+              "damageTypes": ["bludgeoning"],
+              "motionPercent": 100,
+              "tempDeltaF": -8,
+              "rainfall": "heavy",
+              "skies": "stormy",
+              "environmentalEffects": ["difficult terrain", "lightly obscured", "visibility reduced", "travel routes become impassable"]
+            }
+          }
+        }
+      }
     }
+  };
+
+  // Replace PERIOD_BLOCK_HAMMER with concrete monthly data like this.
+  // TIMEOFDAY_SEGMENTS_COASTAL, TIMEOFDAY_SEGMENTS_UNDERWATER, and TIMEOFDAY_SEGMENTS_UNDERDARK
+  // are placeholders here for full eight-entry maps keyed by:
+  // earlypredawn, latepredawn, earlymorning, latemorning,
+  // earlyafternoon, lateafternoon, earlyevening, lateevening.
+  //
+  // weather.climateControl is required in dwt.region.v4.
+  // localeDefinitions.<locale>.climateControl and localeDefinitions.<locale>.periods.<period>.climateControl
+  // are optional overrides when a locale needs different diurnal timings, governor caps, or activation windows.
+  //
+  // Replace PERIOD_BLOCK_HAMMER with concrete monthly data like this:
+  //
+  // {
+  //   "temperature": { "avgF": 40, "lowF": 28, "highF": 49 },
+  //   "precipitation": {
+  //     "chancePct": 45,
+  //     "type": "rain",
+  //     "intensityWeights": { "light": 50, "moderate": 35, "heavy": 15 }
+  //   },
+  //   "wind": {
+  //     "directionWeights": [{ "value": "NW", "weight": 40 }, { "value": "W", "weight": 35 }, { "value": "SW", "weight": 25 }],
+  //     "strengthWeights": [{ "value": 0, "weight": 10 }, { "value": 25, "weight": 25 }, { "value": 50, "weight": 35 }, { "value": 75, "weight": 20 }, { "value": 100, "weight": 10 }]
+  //   },
+  //   "critical": {
+  //     "chancePct": 8,
+  //     "eventWeights": [{ "value": "winter_gale", "weight": 70 }, { "value": "blizzard", "weight": 30 }],
+  //     "severityWeights": { "light": 50, "moderate": 30, "heavy": 15, "severe": 5 }
+  //   },
+  //   "drift": {
+  //     "temperature": 1,
+  //     "precipitation": 1,
+  //     "skies": 1,
+  //     "wind": 2,
+  //     "directionChangePct": 25,
+  //     "timeofdaySegments": TIMEOFDAY_SEGMENTS_COASTAL
+  //   }
+  // }
+
+  function queueRegion(){
+    RT.dwtRegionQ = RT.dwtRegionQ || [];
+    RT.dwtRegionQ.push({ entry: REGION_ENTRY, moduleName: MODULE_NAME, version: VERSION });
   }
 
-  function getAbilityAction(character, name){
-    if(!character) return '';
-    var ability = findObjs({ _type:'ability', _characterid:character.id, name:name })[0];
-    return ability ? String(ability.get('action') || '') : '';
-  }
-
-  function getOrCreateMule(){
-    var ch = findObjs({ _type:'character', name:'dwt_mule' })[0];
-    if(!ch){
-      ch = createObj('character', {
-        name:'dwt_mule',
-        inplayerjournals:'',
-        controlledby:'all',
-        archived:false
-      });
+  function registerRegion(){
+    if(RT.dwt_weather && typeof RT.dwt_weather.registerRegionEntry === 'function'){
+      RT.dwt_weather.registerRegionEntry(REGION_ENTRY, MODULE_NAME, VERSION);
+      return;
     }
-    return ch;
-  }
-
-  function parseVersionRoot(raw){
-    var obj = {};
-    var lines = String(raw || '').split('\n');
-    for(var i=0;i<lines.length;i++){
-      var line = String(lines[i] || '').trim();
-      if(!line) continue;
-      var idx = line.indexOf('=');
-      if(idx < 1) continue;
-      var k = String(line.substring(0, idx) || '').trim();
-      var v = String(line.substring(idx + 1) || '').trim();
-      if(k) obj[k] = v;
-    }
-    return obj;
-  }
-
-  function serializeVersionRoot(obj){
-    var out = [];
-    Object.keys(obj || {}).sort().forEach(function(k){
-      out.push(k + '=' + obj[k]);
-    });
-    return out.join('\n');
-  }
-
-  function normalizeModuleVersion(moduleKey, moduleVersion){
-    var mk = String(moduleKey || '').trim();
-    var mv = String(moduleVersion || '').trim();
-    var m = mv.match(/(\d+\.\d+\.\d+)$/);
-    var ver = m ? m[1] : mv.replace(/^[^0-9]*/, '');
-    return mk + '_' + ver;
-  }
-
-  function mergeVersionEntry(character, moduleKey, moduleVersion){
-    if(!character) return;
-    var root = parseVersionRoot(getAbilityAction(character, 'version'));
-    root[moduleKey] = normalizeModuleVersion(moduleKey, moduleVersion);
-    upsertAbility(character, 'version', serializeVersionRoot(root));
-  }
-
-  function loadRegionMetaRoot(character){
-    var raw = getAbilityAction(character, MODULE_KEY);
-    if(!raw){
-      return { schema:'dwt.regionMeta.root.v1', regions:{} };
-    }
-    try{
-      var parsed = JSON.parse(raw);
-      if(!parsed || typeof parsed !== 'object') parsed = {};
-      if(parsed.schema !== 'dwt.regionMeta.root.v1') parsed.schema = 'dwt.regionMeta.root.v1';
-      if(!parsed.regions || typeof parsed.regions !== 'object') parsed.regions = {};
-      return parsed;
-    }catch(e){
-      return { schema:'dwt.regionMeta.root.v1', regions:{} };
-    }
-  }
-
-  function saveRegionMetaRoot(character, root){
-    upsertAbility(character, MODULE_KEY, JSON.stringify(root));
-  }
-
-  function validateRegion(obj){
-    if(!obj || typeof obj !== 'object') throw new Error('regionMeta: not an object');
-    if(obj.schema !== 'dwt.region.v1') throw new Error('regionMeta: schema mismatch');
-    if(String(obj.region || '') !== REGION_KEY) throw new Error('regionMeta: wrong region');
-    if(!Array.isArray(obj.locales)) throw new Error('regionMeta: missing locales');
-    if(!Array.isArray(obj.campaignLocations)) throw new Error('regionMeta: missing campaignLocations');
-  }
-
-  function moduleStartup(mule, reason){
-    mule = mule || getOrCreateMule();
-    var parsed = JSON.parse(REGION_JSON);
-    validateRegion(parsed);
-
-    var root = loadRegionMetaRoot(mule);
-    root.regions[REGION_KEY] = parsed;
-    saveRegionMetaRoot(mule, root);
-    mergeVersionEntry(mule, MODULE_KEY, VERSION);
-  }
-
-  function registerWithCore(){
-    // region modules are primarily data providers; no default commands required
+    queueRegion();
   }
 
   function registerStartupHooks(){
@@ -225,23 +418,20 @@
     RT.dwtQ = RT.dwtQ || [];
     RT.dwtQ.push(function(dwt){
       if(dwt && typeof dwt.registerStartup === 'function'){
-        dwt.registerStartup(MODULE_KEY + '.' + REGION_KEY, function(mule, reason){
-          moduleStartup(mule, reason);
+        dwt.registerStartup(MODULE_NAME, function(){
+          registerRegion();
         });
       }
-      registerWithCore();
     });
 
     if(RT.dwt && typeof RT.dwt.registerStartup === 'function'){
-      RT.dwt.registerStartup(MODULE_KEY + '.' + REGION_KEY, function(mule, reason){
-        moduleStartup(mule, reason);
+      RT.dwt.registerStartup(MODULE_NAME, function(){
+        registerRegion();
       });
     }
   }
 
   function init(){
-    moduleStartup(getOrCreateMule(), 'ready');
-    registerWithCore();
     registerStartupHooks();
   }
 
