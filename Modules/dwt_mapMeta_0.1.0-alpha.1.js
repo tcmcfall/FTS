@@ -1,9 +1,19 @@
 // name:        dwt_mapMeta.js
-// version:     5.1.1
+// version:     0.1.0-alpha.1
 // description: Unified map metadata capture for DWT.
-// depends:     dwt_core_5.1.0+ (optional but recommended), Roll20 Mod API
+// depends:     dwt_core >= 0.1.0-alpha.1 (optional but recommended), Roll20 Mod API
 // provides:    !dwt --mapMeta | !dwt --mapMeta all | !dwt --mapMeta set depth <value>
 // author:      tcm (AI-assisted)
+// Semantic Versioning (SemVer) Policy:
+// - DWT uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
+// - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
+// - Increment PATCH for backward-compatible bug fixes.
+// - Increment MINOR for new backward-compatible functionality.
+// - Increment MAJOR only when the public API becomes stable and/or incompatible breaking changes are introduced.
+// - Pre-release labels such as alpha, beta, or rc mark unstable builds and sort lower than the matching normal release.
+// - Once a version is released, its contents must not be changed; further edits require a new version.
+// - Header comments, internal VERSION constants, filenames, generated module text, and documentation references must stay aligned.
+// - Dependency notes should use SemVer-friendly wording such as ">= 0.1.0-alpha.1" rather than informal forms like "5.1.0+".
 
 var dwt_mapMeta = dwt_mapMeta || (function () {
   'use strict';
@@ -14,7 +24,7 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
          : (typeof global !== 'undefined')     ? global
          : this;
 
-  var VERSION = '5.1.1';
+  var VERSION = '0.1.0-alpha.1';
   var MODULE_KEY = 'mapmeta';
   var MULE_NAME = 'dwt_mule';
   var ROOT_ABILITY = 'regions';

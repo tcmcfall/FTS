@@ -1,9 +1,9 @@
 // name:        dwt_geo.js
-// version:     5.1.0
+// version:     0.1.0-alpha.1
 // description: Geolocation & Route module (core-aware). Reads mapMeta and token
 //              coordinates, builds per-map named routes and static map points,
 //              and stores data on dwt_mule as mapRoutes.* and mapPoints.*.
-// depends:     dwt_core_5.1.0+, dwt_mapMeta_5.1.0+, Roll20 Mod API
+// depends:     dwt_core >= 0.1.0-alpha.1, dwt_mapMeta >= 0.1.0-alpha.1, Roll20 Mod API
 // provides:    !dwt --geo list routes
 //              !dwt --geo start route <routeName>
 //              !dwt --geo set routepoint <pointName>
@@ -22,6 +22,16 @@
 //              !dwt --geo delete location <locationName>
 //              !dwt --geo rename location <oldName> <newName>
 // author:      tcm (AI-assisted)
+// Semantic Versioning (SemVer) Policy:
+// - DWT uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
+// - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
+// - Increment PATCH for backward-compatible bug fixes.
+// - Increment MINOR for new backward-compatible functionality.
+// - Increment MAJOR only when the public API becomes stable and/or incompatible breaking changes are introduced.
+// - Pre-release labels such as alpha, beta, or rc mark unstable builds and sort lower than the matching normal release.
+// - Once a version is released, its contents must not be changed; further edits require a new version.
+// - Header comments, internal VERSION constants, filenames, generated module text, and documentation references must stay aligned.
+// - Dependency notes should use SemVer-friendly wording such as ">= 0.1.0-alpha.1" rather than informal forms like "5.1.0+".
 
 var dwt_geo = dwt_geo || (function () {
   'use strict';
@@ -34,7 +44,7 @@ var dwt_geo = dwt_geo || (function () {
          : (typeof global!=='undefined')     ? global
          : this;
 
-  var VERSION    = '5.1.0';
+  var VERSION    = '0.1.0-alpha.1';
   var STATE_ROOT = 'geo';
   var DWT_MULE   = 'dwt_mule';
   var GEO_HANDOUT_NAME = 'Map Locations and Routes';

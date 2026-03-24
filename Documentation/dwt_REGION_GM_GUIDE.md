@@ -30,11 +30,17 @@ The shipped modules do not rely on a single global dataset, because no one offic
 - ECMWF ERA5: monthly air temperature, precipitation, and prevailing-wind defaults
 - Copernicus Marine Global Ocean Physics: seasonal current direction, strength, and subsurface temperature structure
 - NOAA NCEI OISST: sea-surface temperature checks for ocean and coastline layers
+- NOAA Ocean Service wave mechanics guidance plus the NWS wave glossary: local wind waves depend on wind speed, wind duration, and fetch, and should not be treated as distant swell
+- NOAA NDBC buoy climatology / Copernicus Marine wave reanalysis: wave-chop sanity checks and exposed-water reference baselines
+- NOAA World Ocean Atlas / NOAA Science On a Sphere depth-temperature guidance: colder water with depth and weaker seasonal swings below the upper ocean
+- NOAA Ocean Service light-depth guidance: sunlight zone to about 200 m, twilight to about 1,000 m, and aphotic darkness below that
+- NOAA CoastWatch Kd490 guidance: body-type clarity sanity check for how quickly water light attenuates in clear versus turbid water
+- U.S. National Park Service cave-climate guidance: underdark-style temperatures remain near the local annual mean, and airflow is usually dead calm to only a slight breeze
 - USGS streamflow guidance: 20/60/80% sampling logic for inland and coastal water columns
 
 ## Installation
 
-Load the shipped regional modules you want to use from `Modules/Region Modules/dwt_region.<regionKey>_5.1.0.js`, restart the Roll20 API sandbox, and run `!dwt --weather verify`.
+Load the shipped regional modules you want to use from `Modules/Region Modules/dwt_region.<regionKey>_0.1.0-alpha.1.js`, restart the Roll20 API sandbox, and run `!dwt --weather verify`.
 
 ## Page Naming
 
@@ -57,6 +63,9 @@ Notes:
 - bare depth values use the current weather units
 - append `mi` or `km` to force large units
 - prefix `+` for elevation
+- `underwater` pages drive the `dwt_windsock` token with the underwater layer family, and `underdark` pages use the underdark layer family
+- underwater depth tags also drive page-specific current sampling, temperature shift, and visibility falloff
+- underdark depth tags keep the locale in cave-air mode; visibility stays dark by default and airflow remains mostly still unless a draft or critical event is introduced
 
 ## Required Structure
 
@@ -211,6 +220,28 @@ The active locale supplies the sampling depth through `localeDefinitions.<locale
 
 Use this for offshore, coastal, or underwater locales whenever current patterns matter.
 
+## Subsurface Modeling
+
+Subsurface locales are intentionally not copies of the surface weather loop.
+
+- `underwater` locales still use `weather.seasonalCurrents`, but the active page now samples the current profile at the page depth when a depth token is present.
+- Water temperature gets colder with depth by shifting the rendered page temperature against the active seasonal current sample instead of reusing the same value at every depth.
+- Underwater visibility uses NOAA light-depth zones as the global baseline and then applies a conservative body-type penalty informed by Kd490 guidance, so reef, coastal, lake, and river water darken faster than clear open ocean.
+- The runtime does not fetch live clarity or Secchi-depth grids; the body-type visibility bands are fixed heuristics informed by those sources.
+- `underdark` locales are treated as cave climates. Their baseline temperatures are stabilized around the locale's annual mean instead of following open-air swings.
+- Underdark airflow is modeled as cave ventilation rather than surface wind. Stable passages default to `ud_dead_calm`, with only brief drafts reaching `ud_20%` and stronger airflow normally reserved for narratively introduced or critical conditions.
+- Ambient underdark visibility is dark by default unless the scene supplies its own light source, bioluminescence, or creature vision.
+
+## Surface Chop
+
+Surface chop is intentionally narrower than a full sea-state or swell model.
+
+- DWT currently models `chop` only on offshore and coastal surface locales.
+- Chop is treated as local short-period wind-wave roughness, not as total seas or distant swell.
+- The runtime derives chop directly from the live wind band, so dead calm always yields `none`.
+- `!dwt --weather set chop none|light|moderate|heavy|severe` is a convenience command that raises or lowers wind to the nearest compliant marine band.
+- Depth-tagged surface pages do not model chop, because those pages are already treated as subsurface views rather than exposed surface-water maps.
+
 ## Locale Definitions
 
 `localeDefinitions` controls how each locale behaves on top of the region baseline.
@@ -256,12 +287,13 @@ Critical events use four severity levels:
 - `heavy`
 - `severe`
 
-The weather module maps those severities onto the windsock critical layers:
+The active-page `dwt_windsock` token must contain 30 sides in this exact order:
 
-- `crit_light`
-- `crit_moderate`
-- `crit_heavy`
-- `crit_severe`
+`dead_calm`, `20%`, `40%`, `60%`, `80%`, `100%`, `crit_light`, `crit_moderate`, `crit_heavy`, `crit_severe`, `uw_dead_calm`, `uw_20%`, `uw_40%`, `uw_60%`, `uw_80%`, `uw_100%`, `uw_crit_light`, `uw_crit_moderate`, `uw_crit_heavy`, `uw_crit_severe`, `ud_dead_calm`, `ud_20%`, `ud_40%`, `ud_60%`, `ud_80%`, `ud_100%`, `ud_crit_light`, `ud_crit_moderate`, `ud_crit_heavy`, `ud_crit_severe`
+
+Surface pages use the original surface wind layers, `underwater` pages use the full `uw_*` current-strength and critical family, and `underdark` pages use the full `ud_*` airflow-strength and critical family.
+
+For normal cave conditions, expect `ud_dead_calm` to be the steady state. `ud_20%` represents a brief draft rather than a sustained open-air breeze.
 
 Default event templates already exist for common hazards such as:
 
@@ -318,7 +350,7 @@ Useful manual-table fields:
 ## Authoring Workflow
 
 1. Start from [dwt_TEMPLATE_region.js](/V:/Programs/dwt/git/Documentation/dwt_TEMPLATE_region.js) or `!dwt --regionbuilder template`.
-2. Set `referenceSources` and `sourceNotes` first so the analogue, climatology source, and water-current source are explicit.
+2. Set `referenceSources` and `sourceNotes` first so the analogue, climatology source, water-current source, underwater visibility source, and cave-climate source are explicit.
 3. Set `weather.climateControl` so low/high times, governor caps, and activation windows are explicit before you tune the monthly data.
 4. Choose the regional default locale first and fill `weather.periods` around that climate.
 5. Add `weather.seasonalCurrents` with seasonal current readings.

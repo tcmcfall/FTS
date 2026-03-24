@@ -32,11 +32,21 @@
     }catch(e1){}
 
 // name:        dwt_core.js
-// version:     5.1.0
+// version:     0.1.0-alpha.1
 // description: unified Date | Weather | Trade shell: registry/router/help & unified Campaign Log, palette owner.
 // depends:     Meta-Toolbox (APILogic + Muler) : https://wiki.roll20.net/Meta-Toolbox
 // provides:    !dwt (unified panel), !dwt --help, dwt.addLogCard(...), dwt.cssVars() for modules
 // author:      tcm (AI-assisted)
+// Semantic Versioning (SemVer) Policy:
+// - DWT uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
+// - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
+// - Increment PATCH for backward-compatible bug fixes.
+// - Increment MINOR for new backward-compatible functionality.
+// - Increment MAJOR only when the public API becomes stable and/or incompatible breaking changes are introduced.
+// - Pre-release labels such as alpha, beta, or rc mark unstable builds and sort lower than the matching normal release.
+// - Once a version is released, its contents must not be changed; further edits require a new version.
+// - Header comments, internal VERSION constants, filenames, generated module text, and documentation references must stay aligned.
+// - Dependency notes should use SemVer-friendly wording such as ">= 0.1.0-alpha.1" rather than informal forms like "5.1.0+".
 
 (function(){
   'use strict';
@@ -47,7 +57,7 @@
            : (typeof global!=='undefined')     ? global
            : {};
 
-  var VERSION   = '5.1.0';
+  var VERSION   = '0.1.0-alpha.1';
   var CORE_MULE = 'dwt_mule';
 
   var dwt = { VERSION: VERSION, COMMANDS:{}, HELP_SECTIONS:[], LOG_CARDS:[] };

@@ -1,8 +1,18 @@
 // dwt_template_popupDropdown.js
 // Purpose: Template module demonstrating a one-click pop-up (Roll Query) with dropdowns for Year / Month-or-Festival / Day / Time.
 // Relationship: Standalone DWT template. Integrates with dwt_core if present (adds a card & help). Publishes selections to dwt_mule_calendar.
-// Version: 5.1.0
+// Version: 0.1.0-alpha.1
 // Dependencies: Roll20 API sandbox. (Optional) dwt_core (for palette + log/help registry). (Optional) Meta-Toolbox for broader mule usage.
+// Semantic Versioning (SemVer) Policy:
+// - DWT uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
+// - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
+// - Increment PATCH for backward-compatible bug fixes.
+// - Increment MINOR for new backward-compatible functionality.
+// - Increment MAJOR only when the public API becomes stable and/or incompatible breaking changes are introduced.
+// - Pre-release labels such as alpha, beta, or rc mark unstable builds and sort lower than the matching normal release.
+// - Once a version is released, its contents must not be changed; further edits require a new version.
+// - Header comments, internal VERSION constants, filenames, generated module text, and documentation references must stay aligned.
+// - Dependency notes should use SemVer-friendly wording such as ">= 0.1.0-alpha.1" rather than informal forms like "5.1.0+".
 //
 // === Help & Config (Template Reference)
 // Category: Pop-up Dropdown Pattern
@@ -16,7 +26,7 @@
 
   // === Constants & Version ====================================================
   var SCRIPT = 'dwt_tpl';              // command namespace
-  var VERSION = '5.1.0';
+  var VERSION = '0.1.0-alpha.1';
   var CORE_MULE = 'dwt_mule';
   var CAL_MULE  = 'dwt_mule';
   var TITLE     = 'Set Date';

@@ -1,5 +1,5 @@
 // name:        dwt_weather.js
-// version:     5.1.1
+// version:     0.1.0-alpha.1
 // description: Core-aware weather engine for the DWT (Date-Weather-Trade) Roll20 API suite.
 //              - Stores weather settings, metadata, current weather, and history beneath a single
 //                root dwt_mule ability named weather.
@@ -7,14 +7,24 @@
 //              - Updates weather in Harptos timeofday segments (early/late predawn, morning, afternoon, evening).
 //              - Loads regional profiles from the shared dwt_mule ability named regions.
 //              - Provides !dwt --weather controls and injects a weather line + short quip into the unified Campaign Log.
-// depends:     dwt_core_5.1.0+, dwt_calendar_5.1.1+ (state.dwt.now), Roll20 API.
+// depends:     dwt_core >= 0.1.0-alpha.1, dwt_calendar >= 0.1.0-alpha.1 (state.dwt.now), Roll20 API.
 // author:      TC McFall (AI-assisted)
+// Semantic Versioning (SemVer) Policy:
+// - DWT uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
+// - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
+// - Increment PATCH for backward-compatible bug fixes.
+// - Increment MINOR for new backward-compatible functionality.
+// - Increment MAJOR only when the public API becomes stable and/or incompatible breaking changes are introduced.
+// - Pre-release labels such as alpha, beta, or rc mark unstable builds and sort lower than the matching normal release.
+// - Once a version is released, its contents must not be changed; further edits require a new version.
+// - Header comments, internal VERSION constants, filenames, generated module text, and documentation references must stay aligned.
+// - Dependency notes should use SemVer-friendly wording such as ">= 0.1.0-alpha.1" rather than informal forms like "5.1.0+".
 
 var dwt_weather = dwt_weather || (function(){
   'use strict';
 
   var RT = (typeof globalThis !== 'undefined') ? globalThis : this;
-  var VERSION = '5.1.1';
+  var VERSION = '0.1.0-alpha.1';
   var MODULE_KEY = 'weather';
   var MULE_NAME = 'dwt_mule';
   var REGION_PROFILE_SCHEMA = 'dwt.region.v4';
@@ -38,11 +48,64 @@ var dwt_weather = dwt_weather || (function(){
   //   7: crit_moderate
   //   8: crit_heavy
   //   9: crit_severe
+  //   10: uw_dead_calm
+  //   11: uw_20%
+  //   12: uw_40%
+  //   13: uw_60%
+  //   14: uw_80%
+  //   15: uw_100%
+  //   16: uw_crit_light
+  //   17: uw_crit_moderate
+  //   18: uw_crit_heavy
+  //   19: uw_crit_severe
+  //   20: ud_dead_calm
+  //   21: ud_20%
+  //   22: ud_40%
+  //   23: ud_60%
+  //   24: ud_80%
+  //   25: ud_100%
+  //   26: ud_crit_light
+  //   27: ud_crit_moderate
+  //   28: ud_crit_heavy
+  //   29: ud_crit_severe
   //
   // Animation cadence: milliseconds per step for BOTH rotation and side changes.
   // Requested default: 0.05 seconds per step.
   var WINDSOCK_NAME = 'dwt_windsock';
   var WINDSOCK_STEP_MS = 50; // Milliseconds between rotation/side animation steps.
+  var WINDSOCK_SIDE_MAX = 29;
+  var WINDSOCK_SIDES = {
+    dead_calm: 0,
+    surface_20: 1,
+    surface_40: 2,
+    surface_60: 3,
+    surface_80: 4,
+    surface_100: 5,
+    surface_crit_light: 6,
+    surface_crit_moderate: 7,
+    surface_crit_heavy: 8,
+    surface_crit_severe: 9,
+    uw_dead_calm: 10,
+    uw_20: 11,
+    uw_40: 12,
+    uw_60: 13,
+    uw_80: 14,
+    uw_100: 15,
+    uw_crit_light: 16,
+    uw_crit_moderate: 17,
+    uw_crit_heavy: 18,
+    uw_crit_severe: 19,
+    ud_dead_calm: 20,
+    ud_20: 21,
+    ud_40: 22,
+    ud_60: 23,
+    ud_80: 24,
+    ud_100: 25,
+    ud_crit_light: 26,
+    ud_crit_moderate: 27,
+    ud_crit_heavy: 28,
+    ud_crit_severe: 29
+  };
 
   var COMPASS_16 = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
   var COMPASS_WORDS_16 = {
@@ -145,9 +208,9 @@ var dwt_weather = dwt_weather || (function(){
     _wsClear(pageId);
 
     var curDir = clamp(+fromDirIdx||0, 0, 15);
-    var curSide = clamp(+fromSideIdx||0, 0, 9);
+    var curSide = clamp(+fromSideIdx||0, 0, WINDSOCK_SIDE_MAX);
     toDirIdx = clamp(+toDirIdx||0, 0, 15);
-    toSideIdx = clamp(+toSideIdx||0, 0, 9);
+    toSideIdx = clamp(+toSideIdx||0, 0, WINDSOCK_SIDE_MAX);
 
     function stepDir(){
       if(curDir === toDirIdx) return;
@@ -183,7 +246,7 @@ var dwt_weather = dwt_weather || (function(){
 
   function _wsApplyImmediate(tok, dirIdx, sideIdx){
     dirIdx = clamp(+dirIdx||0, 0, 15);
-    sideIdx = clamp(+sideIdx||0, 0, 9);
+    sideIdx = clamp(+sideIdx||0, 0, WINDSOCK_SIDE_MAX);
     try{ tok.set('rotation', dirIdx * 22.5); }catch(e){}
     try{ tok.set('currentSide', sideIdx); }catch(e2){}
     try{
@@ -244,6 +307,15 @@ var dwt_weather = dwt_weather || (function(){
       sampleFractions:{ shallow:0.2, mid:0.6, deep:0.8 },
       sampleDepthsFathoms:{ shallow:1, mid:5, deep:10 }
     }
+  };
+  // NOAA light-depth zones are adapted by body type using Kd490-style clarity guidance so
+  // underwater pages can darken faster in turbid water without changing the region schema.
+  var UNDERWATER_VISIBILITY_MODELS = {
+    open_ocean:{ sunlitMaxMeters:200, twilightMaxMeters:1000, baseRangeMeters:30, bodyLabel:'open-ocean water' },
+    reef:{ sunlitMaxMeters:140, twilightMaxMeters:500, baseRangeMeters:20, bodyLabel:'reef water' },
+    coastline:{ sunlitMaxMeters:100, twilightMaxMeters:300, baseRangeMeters:12, bodyLabel:'coastal water' },
+    lake:{ sunlitMaxMeters:60, twilightMaxMeters:180, baseRangeMeters:8, bodyLabel:'lake water' },
+    river:{ sunlitMaxMeters:20, twilightMaxMeters:60, baseRangeMeters:4, bodyLabel:'river water' }
   };
   var PERIOD_ORDER = [
     'hammer','midwinter','alturiak','ches','tarsakh','greengrass','mirtul','kythorn',
@@ -1279,6 +1351,132 @@ var dwt_weather = dwt_weather || (function(){
       return clamp(currentSampleDepthFeet(profile, sampleKey) / Math.max(1, profile.totalDepthFeet), 0, 1);
     }
     return clamp(+((profile.sampleFractions || {})[sampleKey] || 0), 0, 1);
+  }
+
+  function weightedAverageNumeric(weights, fallback){
+    weights = Array.isArray(weights) ? weights : [];
+    var totalWeight = 0;
+    var totalValue = 0;
+    for(var i=0;i<weights.length;i++){
+      var row = weights[i] || {};
+      var value = +row.value;
+      var weight = +row.weight;
+      if(!isFinite(value) || !isFinite(weight) || weight <= 0) continue;
+      totalWeight += weight;
+      totalValue += (value * weight);
+    }
+    return totalWeight ? (totalValue / totalWeight) : (+fallback || 0);
+  }
+
+  function averagePeriodTemperatureF(periods, fallback){
+    periods = (periods && typeof periods === 'object' && !Array.isArray(periods)) ? periods : {};
+    var total = 0;
+    var count = 0;
+    for(var i=0;i<PERIOD_ORDER.length;i++){
+      var block = periods[PERIOD_ORDER[i]] || {};
+      var temp = block.temperature || {};
+      if(temp.avgF == null || !isFinite(+temp.avgF)) continue;
+      total += +temp.avgF;
+      count++;
+    }
+    return count ? Math.round(total / count) : Math.round(+fallback || 55);
+  }
+
+  function interpolateCompass16(fromDir, toDir, progress){
+    progress = clamp(+progress || 0, 0, 1);
+    var fromIdx = _dirToIdx16(fromDir || 'N');
+    var toIdx = _dirToIdx16(toDir || 'N');
+    var diff = (toIdx - fromIdx + 16) % 16;
+    if(diff > 8) diff -= 16;
+    return COMPASS_16[(fromIdx + Math.round(diff * progress) + 16) % 16] || 'N';
+  }
+
+  function waterProfileForLocation(rl, pattern){
+    if(pattern && pattern.measurementProfile){
+      return normalizeWaterProfile(pattern.measurementProfile);
+    }
+    if(rl && rl.localeDef && rl.localeDef.waterProfile){
+      return normalizeWaterProfile(rl.localeDef.waterProfile);
+    }
+    return normalizeWaterProfile(DEFAULT_WATER_PROFILES.underwater);
+  }
+
+  function locationDepthMetersForWater(rl, pattern){
+    var depthMeters = Math.round(+((rl && rl.depthMeters) || 0));
+    if(depthMeters <= 0){
+      depthMeters = Math.round((+((pattern || {}).depthFeet) || 0) * 0.3048);
+    }
+    return Math.max(0, depthMeters);
+  }
+
+  function currentReadingAtLocationDepth(pattern, rl){
+    pattern = pattern ? normalizeSeasonalCurrent(pattern, pattern.measurementProfile || {}) : null;
+    if(!pattern) return null;
+    var profile = waterProfileForLocation(rl, pattern);
+    var targetDepthMeters = locationDepthMetersForWater(rl, pattern);
+    var totalDepthMeters = Math.max(1, Math.round((+profile.totalDepthFeet || 0) * 0.3048));
+    var samples = [];
+    for(var i=0;i<CURRENT_SAMPLE_KEYS.length;i++){
+      var sampleKey = CURRENT_SAMPLE_KEYS[i];
+      var reading = pattern.readings[sampleKey];
+      if(!reading) continue;
+      samples.push({
+        sampleKey:sampleKey,
+        depthMeters:Math.round(+reading.depthMeters || 0),
+        direction:normalizeDir16(reading.direction || pattern.direction || 'N'),
+        temperatureF:Math.round((reading.temperatureF != null) ? +reading.temperatureF : +pattern.temperatureF || 50),
+        strengthPct:clamp(Math.round((reading.strengthPct != null) ? +reading.strengthPct : +pattern.strengthPct || 0), 0, 100)
+      });
+    }
+    if(!samples.length){
+      return {
+        sampleKey:'mid',
+        depthMeters:targetDepthMeters,
+        depthFeet:Math.round(targetDepthMeters / 0.3048),
+        depthFraction:clamp(targetDepthMeters / totalDepthMeters, 0, 1),
+        direction:normalizeDir16(pattern.direction || 'N'),
+        temperatureF:Math.round(+pattern.temperatureF || 50),
+        strengthPct:clamp(Math.round(+pattern.strengthPct || 0), 0, 100)
+      };
+    }
+    samples.sort(function(a, b){ return a.depthMeters - b.depthMeters; });
+    if(targetDepthMeters <= samples[0].depthMeters){
+      return {
+        sampleKey:samples[0].sampleKey,
+        depthMeters:targetDepthMeters,
+        depthFeet:Math.round(targetDepthMeters / 0.3048),
+        depthFraction:clamp(targetDepthMeters / totalDepthMeters, 0, 1),
+        direction:samples[0].direction,
+        temperatureF:samples[0].temperatureF,
+        strengthPct:samples[0].strengthPct
+      };
+    }
+    for(var si=1;si<samples.length;si++){
+      var prev = samples[si - 1];
+      var next = samples[si];
+      if(targetDepthMeters > next.depthMeters) continue;
+      var span = Math.max(1, next.depthMeters - prev.depthMeters);
+      var ratio = clamp((targetDepthMeters - prev.depthMeters) / span, 0, 1);
+      return {
+        sampleKey:next.sampleKey,
+        depthMeters:targetDepthMeters,
+        depthFeet:Math.round(targetDepthMeters / 0.3048),
+        depthFraction:clamp(targetDepthMeters / totalDepthMeters, 0, 1),
+        direction:interpolateCompass16(prev.direction, next.direction, ratio),
+        temperatureF:Math.round(lerpNumber(prev.temperatureF, next.temperatureF, ratio)),
+        strengthPct:clamp(Math.round(lerpNumber(prev.strengthPct, next.strengthPct, ratio)), 0, 100)
+      };
+    }
+    var deepest = samples[samples.length - 1];
+    return {
+      sampleKey:deepest.sampleKey,
+      depthMeters:targetDepthMeters,
+      depthFeet:Math.round(targetDepthMeters / 0.3048),
+      depthFraction:clamp(targetDepthMeters / totalDepthMeters, 0, 1),
+      direction:deepest.direction,
+      temperatureF:deepest.temperatureF,
+      strengthPct:deepest.strengthPct
+    };
   }
 
   function seasonFromMonth(m){
@@ -2473,6 +2671,43 @@ var dwt_weather = dwt_weather || (function(){
     return 5;
   }
 
+  function normalizeChopBand(v){
+    v = canonicalKey(v||'');
+    if(v === 'none') return 'none';
+    if(v === 'light') return 'light';
+    if(v === 'moderate') return 'moderate';
+    if(v === 'heavy') return 'heavy';
+    if(v === 'severe') return 'severe';
+    return '';
+  }
+
+  function chopBandFromStep(step){
+    step = clamp(Math.round(+step||0), 0, 4);
+    return ['none','light','moderate','heavy','severe'][step];
+  }
+
+  function chopStepFromBand(v){
+    v = normalizeChopBand(v);
+    if(v === 'light') return 1;
+    if(v === 'moderate') return 2;
+    if(v === 'heavy') return 3;
+    if(v === 'severe') return 4;
+    return 0;
+  }
+
+  function windPercentForChopBand(v){
+    return [0,20,40,60,80][chopStepFromBand(v)];
+  }
+
+  function chopBandFromWindPercent(percent){
+    var step = windStepFromPercent(percent);
+    if(step <= 0) return 'none';
+    if(step === 1) return 'light';
+    if(step === 2) return 'moderate';
+    if(step === 3) return 'heavy';
+    return 'severe';
+  }
+
   function normalizeCurrentReading(raw, fallback, defaultDir){
     raw = (raw && typeof raw === 'object' && !Array.isArray(raw)) ? raw : {};
     fallback = (fallback && typeof fallback === 'object' && !Array.isArray(fallback)) ? fallback : {};
@@ -2602,6 +2837,35 @@ var dwt_weather = dwt_weather || (function(){
       directionChangePct: localDrift.directionChangePct != null ? localDrift.directionChangePct : baseDrift.directionChangePct,
       timeofdaySegments: localDrift.timeofdaySegments || baseDrift.timeofdaySegments
     });
+    if(localeDef.environment === 'subterranean'){
+      var subterraneanAnchorF = averagePeriodTemperatureF(localeDef.periods, resolvedTemp.avgF);
+      var subterraneanAvgF = Math.round(lerpNumber(subterraneanAnchorF, resolvedTemp.avgF, 0.35));
+      var subterraneanSwingF = clamp(Math.round(Math.abs((resolvedTemp.highF || subterraneanAvgF) - (resolvedTemp.lowF || subterraneanAvgF)) * 0.35), 2, 6);
+      var subterraneanLowHalf = Math.floor(subterraneanSwingF / 2);
+      resolvedTemp = {
+        avgF: subterraneanAvgF,
+        lowF: subterraneanAvgF - subterraneanLowHalf,
+        highF: subterraneanAvgF + Math.max(1, subterraneanSwingF - subterraneanLowHalf)
+      };
+      resolvedDrift.temperature = 1;
+      resolvedDrift.wind = 1;
+      resolvedDrift.directionChangePct = Math.min(resolvedDrift.directionChangePct, 10);
+      var subterraneanSegments = {};
+      for(var di=0;di<TIMEOFDAY_SEGMENT_KEYS.length;di++){
+        var segKey = TIMEOFDAY_SEGMENT_KEYS[di];
+        var seg = normalizeTimeofdayDriftEntry(segKey, (resolvedDrift.timeofdaySegments || {})[segKey]);
+        subterraneanSegments[segKey] = {
+          temperatureSwingPct: Math.round(seg.temperatureSwingPct * 0.25),
+          temperatureDelta: clamp(Math.round(seg.temperatureDelta * 0.25), -1, 1),
+          precipitationDelta: seg.precipitationDelta,
+          skiesDelta: seg.skiesDelta,
+          windDelta: 0,
+          windStrengthDeltaPct: clamp(Math.round(seg.windStrengthDeltaPct * 0.25), -5, 5),
+          directionChangePct: Math.min(seg.directionChangePct, 10)
+        };
+      }
+      resolvedDrift.timeofdaySegments = subterraneanSegments;
+    }
 
     var currentBase = (weather.seasonalCurrents || {})[season];
     var localCurrent = localPeriod.current || {};
@@ -2808,6 +3072,13 @@ var dwt_weather = dwt_weather || (function(){
       if(roll >= 83) return clamp(base + 20 + segment.windStrengthDeltaPct, 0, 100);
       return clamp(base + segment.windStrengthDeltaPct, 0, 100);
     }
+    if(ctx && ctx.locale && ctx.locale.environment === 'subterranean'){
+      var draftBias = weightedAverageNumeric((ctx && ctx.wind && ctx.wind.strengthWeights) || [], 10);
+      var draftChancePct = clamp(Math.round(draftBias / 4), 2, 12);
+      var draftRoll = r1_100();
+      if(draftRoll > draftChancePct) return 0;
+      return (draftRoll <= Math.max(1, Math.round(draftChancePct * 0.15))) ? 40 : 20;
+    }
     return clamp(rollFromWeights((ctx && ctx.wind && ctx.wind.strengthWeights) || [], 20) + segment.windStrengthDeltaPct, 0, 100);
   }
 
@@ -2819,6 +3090,9 @@ var dwt_weather = dwt_weather || (function(){
       if(roll <= 70) return baseDir;
       if(roll <= 85) return COMPASS_16[(idx + 1) % 16];
       return COMPASS_16[(idx + 15) % 16];
+    }
+    if(ctx && ctx.locale && ctx.locale.environment === 'subterranean'){
+      return normalizeDir16(rollFromWeights((ctx && ctx.wind && ctx.wind.directionWeights) || [], 'N'));
     }
     return normalizeDir16(rollFromWeights((ctx && ctx.wind && ctx.wind.directionWeights) || [], 'N'));
   }
@@ -2962,13 +3236,62 @@ var dwt_weather = dwt_weather || (function(){
     return 0;
   }
 
-  function criticalWindSide(v){
+  function criticalWindSide(v, windsockMode){
     v = canonicalWindCritical(v);
-    if(v==='crit_light') return 6;
-    if(v==='crit_moderate') return 7;
-    if(v==='crit_heavy') return 8;
-    if(v==='crit_severe') return 9;
+    windsockMode = canonicalKey(windsockMode || 'surface');
+    if(windsockMode === 'underwater'){
+      if(v==='crit_light') return WINDSOCK_SIDES.uw_crit_light;
+      if(v==='crit_moderate') return WINDSOCK_SIDES.uw_crit_moderate;
+      if(v==='crit_heavy') return WINDSOCK_SIDES.uw_crit_heavy;
+      if(v==='crit_severe') return WINDSOCK_SIDES.uw_crit_severe;
+      return WINDSOCK_SIDES.uw_dead_calm;
+    }
+    if(windsockMode === 'underdark'){
+      if(v==='crit_light') return WINDSOCK_SIDES.ud_crit_light;
+      if(v==='crit_moderate') return WINDSOCK_SIDES.ud_crit_moderate;
+      if(v==='crit_heavy') return WINDSOCK_SIDES.ud_crit_heavy;
+      if(v==='crit_severe') return WINDSOCK_SIDES.ud_crit_severe;
+      return WINDSOCK_SIDES.ud_dead_calm;
+    }
+    if(v==='crit_light') return WINDSOCK_SIDES.surface_crit_light;
+    if(v==='crit_moderate') return WINDSOCK_SIDES.surface_crit_moderate;
+    if(v==='crit_heavy') return WINDSOCK_SIDES.surface_crit_heavy;
+    if(v==='crit_severe') return WINDSOCK_SIDES.surface_crit_severe;
     return -1;
+  }
+
+  function windsockModeForLocation(rl){
+    var environment = activeEnvironment(rl);
+    if(environment === 'underwater') return 'underwater';
+    if(environment === 'subterranean') return 'underdark';
+    return 'surface';
+  }
+
+  function baseWindsockSide(percent, windsockMode){
+    percent = clamp(+percent||0, 0, 100);
+    windsockMode = canonicalKey(windsockMode || 'surface');
+    if(windsockMode === 'underwater'){
+      if(percent <= 0) return WINDSOCK_SIDES.uw_dead_calm;
+      if(percent <= 20) return WINDSOCK_SIDES.uw_20;
+      if(percent <= 40) return WINDSOCK_SIDES.uw_40;
+      if(percent <= 60) return WINDSOCK_SIDES.uw_60;
+      if(percent <= 80) return WINDSOCK_SIDES.uw_80;
+      return WINDSOCK_SIDES.uw_100;
+    }
+    if(windsockMode === 'underdark'){
+      if(percent <= 0) return WINDSOCK_SIDES.ud_dead_calm;
+      if(percent <= 20) return WINDSOCK_SIDES.ud_20;
+      if(percent <= 40) return WINDSOCK_SIDES.ud_40;
+      if(percent <= 60) return WINDSOCK_SIDES.ud_60;
+      if(percent <= 80) return WINDSOCK_SIDES.ud_80;
+      return WINDSOCK_SIDES.ud_100;
+    }
+    if(percent <= 0) return WINDSOCK_SIDES.dead_calm;
+    if(percent <= 20) return WINDSOCK_SIDES.surface_20;
+    if(percent <= 40) return WINDSOCK_SIDES.surface_40;
+    if(percent <= 60) return WINDSOCK_SIDES.surface_60;
+    if(percent <= 80) return WINDSOCK_SIDES.surface_80;
+    return WINDSOCK_SIDES.surface_100;
   }
 
   function normalizeCriticalSeverity(v){
@@ -3882,6 +4205,27 @@ var dwt_weather = dwt_weather || (function(){
     return 'surface';
   }
 
+  function locationSupportsSurfaceChop(rl){
+    var localeKey = canonicalKey((rl && rl.locale) || ((rl && rl.localeDef && rl.localeDef.key) || ''));
+    var biomeKey = canonicalKey((rl && rl.localeDef && rl.localeDef.biome) || '');
+    if(activeEnvironment(rl) !== 'surface') return false;
+    if(rl && rl.depthToken && !rl.depthIsElevation) return false;
+    if(localeKey === 'offshore' || localeKey === 'coastal') return true;
+    return biomeKey === 'ocean' || biomeKey === 'coastline';
+  }
+
+  function chopBandFromWeather(cur, rl){
+    if(!locationSupportsSurfaceChop(rl)) return 'none';
+    cur = normalizeCurrentWeather(cur || {});
+    return chopBandFromWindPercent((cur && cur.wind && cur.wind.percent) || 0);
+  }
+
+  function chopNarrativeSentence(chopBand){
+    chopBand = normalizeChopBand(chopBand);
+    if(chopBand === 'none') return 'The sea surface is smooth, with no chop.';
+    return 'Sea chop is ' + chopBand + '.';
+  }
+
   function buildVerticalIntro(locale, units, rl){
     var hasDepth = !!(rl && rl.depthToken);
     if(!hasDepth){
@@ -3899,6 +4243,27 @@ var dwt_weather = dwt_weather || (function(){
     return 'At a depth of ' + preferred + ' below the surface';
   }
 
+  function renderWeatherForLocation(cur, rl){
+    var render = normalizeCurrentWeather(deepCloneJSON(cur || {}));
+    if(!render || !rl) return render;
+    if(activeEnvironment(rl) !== 'underwater') return render;
+    var depthReading = currentReadingAtLocationDepth(render.currentPattern, rl);
+    if(!depthReading) return render;
+    var representativeTempF = Math.round((render.currentPattern && render.currentPattern.temperatureF != null)
+      ? +render.currentPattern.temperatureF
+      : +render.tempF || 55);
+    render.tempF = clamp(Math.round(render.tempF + (depthReading.temperatureF - representativeTempF)), -40, 140);
+    render.tempC = toC(render.tempF);
+    render.tempBand = tempBandFromF(render.tempF);
+    if(!render.wind.critical){
+      render.wind.percent = clamp(Math.round(+depthReading.strengthPct || 0), 0, 100);
+      render.wind.dir = normalizeDir16(depthReading.direction || render.wind.dir || 'N');
+      render.windStep = windStepFromPercent(render.wind.percent);
+    }
+    render.locationDepthReading = depthReading;
+    return render;
+  }
+
   function describeCurrentStrength(percent, critical){
     critical = canonicalWindCritical(critical||'');
     percent = clamp(+percent||0, 0, 100);
@@ -3912,6 +4277,80 @@ var dwt_weather = dwt_weather || (function(){
     if(percent <= 60) return 'moderate';
     if(percent <= 80) return 'strong';
     return 'heavy';
+  }
+
+  function describeSubterraneanAirflow(percent, critical){
+    critical = canonicalWindCritical(critical||'');
+    percent = clamp(+percent||0, 0, 100);
+    if(percent === 0) return 'dead calm';
+    if(critical === 'crit_severe') return 'violent';
+    if(critical === 'crit_heavy') return 'severe';
+    if(critical === 'crit_moderate') return 'heavy';
+    if(critical === 'crit_light') return 'strong';
+    if(percent <= 20) return 'a faint draft';
+    if(percent <= 40) return 'a steady draft';
+    if(percent <= 60) return 'a moderate draft';
+    if(percent <= 80) return 'a strong draft';
+    return 'a heavy draft';
+  }
+
+  function formatVisibilityRangeLabel(rangeMeters, units){
+    rangeMeters = Math.max(1, Math.round(+rangeMeters || 0));
+    if((units || 'imperial') === 'metric') return rangeMeters + ' m';
+    return Math.round(rangeMeters * 3.28084) + ' ft';
+  }
+
+  function underwaterVisibilityProfile(cur, units, rl){
+    var pattern = cur && cur.currentPattern;
+    var profile = waterProfileForLocation(rl, pattern);
+    var modelKey = canonicalKey((profile && profile.bodyType) || 'reef');
+    var model = UNDERWATER_VISIBILITY_MODELS[modelKey] || UNDERWATER_VISIBILITY_MODELS.reef;
+    var requestedDepthMeters = Math.max(0, Math.round(+((rl && rl.depthMeters) || ((pattern && pattern.depthFeet) ? (+pattern.depthFeet * 0.3048) : 0))));
+    var critical = canonicalWindCritical((cur && cur.wind && cur.wind.critical) || '');
+    var zoneKey = 'sunlit';
+    if(requestedDepthMeters > model.twilightMaxMeters) zoneKey = 'aphotic';
+    else if(requestedDepthMeters > model.sunlitMaxMeters) zoneKey = 'twilight';
+    var zoneFactor = (zoneKey === 'aphotic') ? 0.15 : (zoneKey === 'twilight' ? 0.5 : 1);
+    var criticalFactor = 1;
+    if(critical === 'crit_light') criticalFactor = 0.8;
+    else if(critical === 'crit_moderate') criticalFactor = 0.6;
+    else if(critical === 'crit_heavy') criticalFactor = 0.4;
+    else if(critical === 'crit_severe') criticalFactor = 0.25;
+    var rangeMeters = Math.max(1, Math.round(model.baseRangeMeters * zoneFactor * criticalFactor));
+    var zoneLabel = 'sunlit';
+    var narrative = 'Ambient light still reaches this depth, and visibility remains workable.';
+    if(zoneKey === 'twilight'){
+      zoneLabel = 'blue-green twilight';
+      narrative = 'Ambient light has fallen into a blue-green twilight, and visibility is short.';
+    }else if(zoneKey === 'aphotic'){
+      zoneLabel = 'aphotic darkness';
+      narrative = 'Ambient light is effectively gone here, leaving the water dark unless a light source is carried.';
+    }else if(model.baseRangeMeters <= 8){
+      zoneLabel = 'sunlit but turbid water';
+      narrative = 'Ambient light still reaches this depth, but suspended matter keeps visibility short.';
+    }
+    if(critical){
+      narrative += ' The current disturbance cuts it down further.';
+    }
+    return {
+      zoneKey:zoneKey,
+      zoneLabel:zoneLabel,
+      rangeMeters:rangeMeters,
+      rangeLabel:formatVisibilityRangeLabel(rangeMeters, units),
+      bodyLabel:model.bodyLabel,
+      narrative:narrative
+    };
+  }
+
+  function underdarkVisibilityProfile(cur){
+    var narrative = 'Ambient visibility is dark by default, and only carried light or darkvision pushes beyond it.';
+    if(cur && cur.event){
+      narrative += ' The active hazard further obscures the passages.';
+    }
+    return {
+      narrative:narrative,
+      detail:'Ambient visibility is dark by default; only carried light, bioluminescence, or darkvision pushes beyond it.'
+    };
   }
 
   function formatSecondarySpeedLabel(mph, units){
@@ -3973,9 +4412,17 @@ var dwt_weather = dwt_weather || (function(){
     }else if(environment === 'underwater'){
       line += ' and the current is ' + describeCurrentStrength(percent, critical) + '.';
     }else if(environment === 'subterranean'){
-      line += '. The airflow is ' + describeCurrentStrength(percent, critical) + '.';
+      line += '. The airflow is ' + describeSubterraneanAirflow(percent, critical) + '.';
     }else{
       line += '. Wind is coming from the ' + dirToWords16(dir) + ' at about ' + formatKnotsFirstSpeedLabel(mph, units) + '.';
+    }
+    if(locationSupportsSurfaceChop(rl)){
+      line += ' ' + chopNarrativeSentence(chopBandFromWeather(cur, rl));
+    }
+    if(environment === 'underwater'){
+      line += ' ' + underwaterVisibilityProfile(cur, units, rl).narrative;
+    }else if(environment === 'subterranean'){
+      line += ' ' + underdarkVisibilityProfile(cur).narrative;
     }
 
     if(cur.event){
@@ -4060,6 +4507,32 @@ var dwt_weather = dwt_weather || (function(){
     ];
   }
 
+  function subsurfaceObservationLines(cur, units, rl){
+    var environment = activeEnvironment(rl);
+    if(environment === 'underwater'){
+      var render = renderWeatherForLocation(cur, rl);
+      var reading = render && render.locationDepthReading ? render.locationDepthReading : currentReadingAtLocationDepth(render && render.currentPattern, rl);
+      var visibility = underwaterVisibilityProfile(render, units, rl);
+      var lines = [];
+      if(reading){
+        lines.push('Page-depth estimate: ' + formatFathomsWithPreferredLabel(reading.depthMeters, units)
+          + ', water temperature about ' + formatTemperatureLabel(render.tempF, units)
+          + ', current ' + describeCurrentStrength((render.wind || {}).percent, (render.wind || {}).critical)
+          + ' from the ' + dirToWords16((render.wind || {}).dir || 'N') + '.');
+      }
+      lines.push('Ambient light: ' + visibility.zoneLabel + '; visibility about ' + visibility.rangeLabel + ' in ' + visibility.bodyLabel + '.');
+      return lines;
+    }
+    if(environment === 'subterranean'){
+      var visibilityNote = underdarkVisibilityProfile(cur);
+      return [
+        visibilityNote.detail + (cur && cur.event ? ' Active hazards can reduce it further.' : ''),
+        'Airflow model: stable passages default to dead calm, with only brief pressure-driven drafts outside of critical events.'
+      ];
+    }
+    return [];
+  }
+
   function activeEventLine(cur){
     cur = normalizeCurrentWeather(cur);
     if(!cur.event) return 'Critical event: none active.';
@@ -4085,12 +4558,47 @@ var dwt_weather = dwt_weather || (function(){
   function buildWeatherDetails(profile, rl, cur, units){
     var nw = now();
     var ctx = resolveClimateContext(profile, rl.locale, nw);
+    var environment = activeEnvironment(rl);
+    var renderCur = renderWeatherForLocation(cur, rl);
     var diurnal = normalizeDiurnalConfig((ctx.climateControl || {}).diurnal);
     var governor = normalizeGovernorConfig((ctx.climateControl || {}).governor);
     var avgLabel = (units === 'metric') ? (toC(ctx.temperature.avgF) + ' C') : (Math.round(ctx.temperature.avgF) + ' F');
     var lowLabel = (units === 'metric') ? (toC(ctx.temperature.lowF) + ' C') : (Math.round(ctx.temperature.lowF) + ' F');
     var highLabel = (units === 'metric') ? (toC(ctx.temperature.highF) + ' C') : (Math.round(ctx.temperature.highF) + ' F');
     var periodMeta = periodInfo(ctx.periodKey) || { label:ctx.periodKey };
+    var flowSection;
+    if(environment === 'underwater'){
+      flowSection = {
+        title:'Current Model',
+        items:[
+          'Underwater locales derive current strength and direction from seasonal current readings and the locale waterProfile rather than from the surface wind table.',
+          'When a page includes a depth token, the weather line, detail panel, and windsock render against the active depth sample instead of the representative locale midpoint.'
+        ]
+      };
+    }else if(environment === 'subterranean'){
+      flowSection = {
+        title:'Airflow',
+        items:[
+          'Underdark airflow is modeled as cave ventilation rather than open-air wind. Stable passages default to dead calm, and only brief drafts or critical events lift the windsock above ud_dead_calm.',
+          'Draft direction bias: ' + weightedValuesLabel(ctx.wind.directionWeights, function(v){ return dirToWords16(normalizeDir16(v)); }) + '.',
+          'Legacy strength table: ' + weightedValuesLabel(ctx.wind.strengthWeights, function(v){ return windPercentFromStep(windStepFromPercent(v)) + '%'; }) + ' (interpreted as draft bias, not as open-air wind speed).'
+        ]
+      };
+    }else{
+      flowSection = {
+        title:'Wind',
+        items:[
+          'Prevailing wind: ' + weightedValuesLabel(ctx.wind.directionWeights, function(v){ return dirToWords16(normalizeDir16(v)); }) + '.',
+          'Wind strength table: ' + weightedValuesLabel(ctx.wind.strengthWeights, function(v){ return windPercentFromStep(windStepFromPercent(v)) + '%'; }) + '.'
+        ]
+      };
+      if(locationSupportsSurfaceChop(rl)){
+        flowSection.items.push(
+          'Chop: ' + titleCaseWords(chopBandFromWeather(renderCur, rl))
+            + ' (derived from the live local wind band; dead calm forces none, and setting chop raises or lowers wind to the nearest compliant band).'
+        );
+      }
+    }
     var sections = [
       {
         title:'Climate',
@@ -4114,14 +4622,15 @@ var dwt_weather = dwt_weather || (function(){
             + '%, direction shift ' + ctx.timeofday.directionChangePct + '%.'
         ]
       },
-      {
-        title:'Wind',
-        items:[
-          'Prevailing wind: ' + weightedValuesLabel(ctx.wind.directionWeights, function(v){ return dirToWords16(normalizeDir16(v)); }) + '.',
-          'Wind strength table: ' + weightedValuesLabel(ctx.wind.strengthWeights, function(v){ return windPercentFromStep(windStepFromPercent(v)) + '%'; }) + '.'
-        ]
-      }
+      flowSection
     ];
+    var subsurfaceItems = subsurfaceObservationLines(cur, units, rl);
+    if(subsurfaceItems.length){
+      sections.push({
+        title:'Subsurface',
+        items:subsurfaceItems
+      });
+    }
     if(cur && cur.activation){
       sections.push({
         title:'Activation Windows',
@@ -4143,7 +4652,7 @@ var dwt_weather = dwt_weather || (function(){
       items:[activeEventLine(cur)]
     });
     return {
-      summary:buildNarrative(cur, units, rl),
+      summary:buildNarrative(renderCur, units, rl),
       sections:sections
     };
   }
@@ -4178,7 +4687,7 @@ var dwt_weather = dwt_weather || (function(){
 
   function buildWeatherLine(cur, units, rl){
     if(!cur) return '';
-    return buildNarrative(cur, units||'imperial', rl||null);
+    return buildNarrative(renderWeatherForLocation(cur, rl||null), units||'imperial', rl||null);
   }
 
   function weatherLine(mule, region, locale, cur, units, rl){
@@ -4213,32 +4722,25 @@ var dwt_weather = dwt_weather || (function(){
   // Windsock mapping and updates
   // ----------------------------
   function depthTaggedPageForcesCalmWindsock(rl){
-    return !!(rl && rl.depthToken && !rl.depthIsElevation);
+    return windsockModeForLocation(rl) === 'surface'
+      && !!(rl && rl.depthToken && !rl.depthIsElevation);
   }
 
   function windsockTargetsFromWeather(cur, rl){
-    cur = normalizeCurrentWeather(cur);
-    // Depth-tagged pages represent subsurface positions, so the surface windsock stays calm.
+    cur = renderWeatherForLocation(cur, rl);
+    // Depth-tagged surface pages keep the windsock calm; underwater and underdark pages
+    // use their environment-specific side families instead.
     if(depthTaggedPageForcesCalmWindsock(rl)){
-      return { dirIdx:0, sideIdx:0 };
+      return { dirIdx:0, sideIdx:WINDSOCK_SIDES.dead_calm };
     }
-    var sideIdx = 0;
+    var windsockMode = windsockModeForLocation(rl);
     var p = clamp(+((cur&&cur.wind&&cur.wind.percent)||0),0,100);
-    if(p <= 0){
-      return { dirIdx:0, sideIdx:0 };
-    }
+    if(p <= 0) return { dirIdx:0, sideIdx:baseWindsockSide(0, windsockMode) };
     var dirIdx = _dirToIdx16((cur&&cur.wind&&cur.wind.dir)||'N');
     var criticalWind = canonicalWindCritical((cur&&cur.wind&&cur.wind.critical)||'');
-    if(criticalWind){
-      sideIdx = criticalWindSide(criticalWind);
-    }else{
-      if(p<=20) sideIdx = 1;
-      else if(p<=40) sideIdx = 2;
-      else if(p<=60) sideIdx = 3;
-      else if(p<=80) sideIdx = 4;
-      else sideIdx = 5;
-    }
-
+    var sideIdx = criticalWind
+      ? criticalWindSide(criticalWind, windsockMode)
+      : baseWindsockSide(p, windsockMode);
     return { dirIdx:dirIdx, sideIdx:sideIdx };
   }
 
@@ -4261,7 +4763,7 @@ var dwt_weather = dwt_weather || (function(){
 
     var fromDirIdx = 0, fromSideIdx = 0;
     try{ fromDirIdx = (Math.round((+tok.get('rotation')||0)/22.5)%16+16)%16; }catch(e){}
-    try{ fromSideIdx = clamp(+tok.get('currentSide')||0, 0, 9); }catch(e2){}
+    try{ fromSideIdx = clamp(+tok.get('currentSide')||0, 0, WINDSOCK_SIDE_MAX); }catch(e2){}
 
     if(forceImmediate){
       _wsClear(pageId);
@@ -4707,7 +5209,7 @@ var dwt_weather = dwt_weather || (function(){
 
   function isWeatherSetKey(tok){
     tok = canonicalKey(tok||'');
-    return tok==='temp' || tok==='rainfall' || tok==='skies' || tok==='wind' || tok==='current';
+    return tok==='temp' || tok==='rainfall' || tok==='skies' || tok==='wind' || tok==='current' || tok==='chop';
   }
 
   function parseWeatherSkyValue(v){
@@ -4740,6 +5242,10 @@ var dwt_weather = dwt_weather || (function(){
     }
 
     return null;
+  }
+
+  function parseWeatherChopValue(v){
+    return normalizeChopBand(v||'');
   }
 
   function summarizeList(items, limit){
@@ -4958,6 +5464,21 @@ var dwt_weather = dwt_weather || (function(){
       return { changed:false };
     }
 
+    if(tokens[0]==='show'){
+      if(tokens.length !== 2 || tokens[1] !== 'chop'){
+        return { error:'Use !dwt --weather show chop.', changed:false };
+      }
+      var showWeather = refreshActiveWeather(mule, pid);
+      if(showWeather.error) return { error:showWeather.error, changed:false };
+      if(!locationSupportsSurfaceChop(showWeather.rl)){
+        return { error:'Chop is only modeled on offshore and coastal surface locales.', changed:false };
+      }
+      var showCur = renderWeatherForLocation(showWeather.cur, showWeather.rl);
+      var chopBand = chopBandFromWeather(showCur, showWeather.rl);
+      whisper(pid, '<div>Chop: <b>' + esc(titleCaseWords(chopBand)) + '</b> (derived from the current wind band).</div>');
+      return { changed:false };
+    }
+
     if(tokens[0]==='update'){
       if(tokens.length !== 1) return { error:'Use !dwt --weather update with no additional arguments.', changed:false };
       if(!isGM(pid)) return { error:'Only the GM may update weather.', changed:false };
@@ -5074,6 +5595,7 @@ var dwt_weather = dwt_weather || (function(){
         windPct:null,
         windDir:'',
         windCritical:'',
+        chopTouched:false,
         currentTouched:false,
         currentPct:null,
         currentDir:''
@@ -5176,8 +5698,21 @@ var dwt_weather = dwt_weather || (function(){
             return { error:'Use !dwt --weather set wind <speed> [dir] or !dwt --weather set wind <dir>.', changed:false };
           }
           pending.windDir = windDir;
-          pending.windPct = null;
           pending.windCritical = '';
+          j++;
+          continue;
+        }
+
+        if(key==='chop'){
+          var chopToken = parseWeatherChopValue(value||'');
+          if(!chopToken){
+            return { error:'Invalid chop value. Use none, light, moderate, heavy, or severe.', changed:false };
+          }
+          pending.chopTouched = true;
+          pending.windTouched = true;
+          pending.windPct = windPercentForChopBand(chopToken);
+          pending.windCritical = '';
+          if(chopToken === 'none') pending.windDir = 'N';
           j++;
           continue;
         }
@@ -5226,7 +5761,6 @@ var dwt_weather = dwt_weather || (function(){
             return { error:'Use !dwt --weather set current <speed> [dir] or !dwt --weather set current <dir>.', changed:false };
           }
           pending.currentDir = currentDir;
-          pending.currentPct = null;
           j++;
           continue;
         }
@@ -5256,6 +5790,9 @@ var dwt_weather = dwt_weather || (function(){
       var profileS = loadRegionProfile(mule, rlS.region);
       if(profileS){
         var ctxS = resolveClimateContext(profileS, rlS.locale, nw);
+        if(pending.chopTouched && !locationSupportsSurfaceChop(rlS)){
+          return { error:'Chop can only be set on offshore and coastal surface locales.', changed:false };
+        }
         var bandS = bandWindowForNow(nw);
         var nextS = reconcileCurrentAgainstContext(curS, ctxS, nw);
         var originS = snapshotOriginState(curS);
@@ -5368,12 +5905,22 @@ var dwt_weather = dwt_weather || (function(){
       '!dwt --weather set skies clear|partly_cloudy|cloudy|overcast|stormy',
       'Set wind strength and/or direction for the current map at the current timeofday tick:',
       '!dwt --weather set wind <pct|dead_calm|crit_light|crit_moderate|crit_heavy|crit_severe> [dir]',
+      'Set marine surface chop for the current map by dragging wind to the nearest compliant band:',
+      '!dwt --weather set chop none|light|moderate|heavy|severe',
       'Set current strength and/or direction for the current map at the current timeofday tick when the locale uses seasonal currents:',
       '!dwt --weather set current <pct|dead_calm|crit_light|crit_moderate|crit_heavy|crit_severe> [dir]',
+      'Show the derived chop value for the current map when the locale models surface chop:',
+      '!dwt --weather show chop',
       'Page naming rule:',
       'Pages use region.locale.mapname or region.locale_depth.mapname.',
       'Depth token rule:',
       'Bare depth values use the current weather units (feet for imperial, meters for metric). Append mi or km to force large units, and prefix with a "+" for elevation. Case and spaces are ignored; canonical names are lower-case with no spaces.',
+      'Windsock rule:',
+      'The active-page dwt_windsock token uses the surface layer family for surface locales, the uw_* layer family for underwater locales, and the ud_* layer family for underdark locales. The token must include the documented 30-side order.',
+      'Chop rule:',
+      'Chop is modeled only on offshore and coastal surface locales. It represents local short-period wind waves, so dead calm always yields chop none, and setting chop raises or lowers wind to the nearest compliant wind band.',
+      'Subsurface rule:',
+      'Underwater pages sample current strength, direction, temperature shift, and visibility from the locale waterProfile and the active page depth. Underdark pages treat airflow as mostly dead-calm cave ventilation, with only brief drafts or critical events pushing the ud_* tiers.',
       'Set keys may be stacked in a single command. The command writes the current map weather for the current timeofday tick and clears any active critical event on that map. Example:',
       '!dwt --weather set temp cold rainfall light',
       'Manual weather rolls and automatic drift both obey the same governor caps. Temperature anomalies are capped in absolute degrees per segment, rain/skies/wind move one step per segment unless a critical event overrides them, and current direction/strength/temperature ease toward their targets.',

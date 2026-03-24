@@ -1,9 +1,19 @@
 // name:        dwt_region.TEMPLATE.js
-// version:     5.1.0
+// version:     0.1.0-alpha.1
 // description: Authoritative template for a DWT dwt.region.v4 module.
+// Semantic Versioning (SemVer) Policy:
+// - DWT uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
+// - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
+// - Increment PATCH for backward-compatible bug fixes.
+// - Increment MINOR for new backward-compatible functionality.
+// - Increment MAJOR only when the public API becomes stable and/or incompatible breaking changes are introduced.
+// - Pre-release labels such as alpha, beta, or rc mark unstable builds and sort lower than the matching normal release.
+// - Once a version is released, its contents must not be changed; further edits require a new version.
+// - Header comments, internal VERSION constants, filenames, generated module text, and documentation references must stay aligned.
+// - Dependency notes should use SemVer-friendly wording such as ">= 0.1.0-alpha.1" rather than informal forms like "5.1.0+".
 //
 // Copy this file to:
-//   Modules/Region Modules/dwt_region.<regionKey>_5.1.0.js
+//   Modules/Region Modules/dwt_region.<regionKey>_0.1.0-alpha.1.js
 //
 // Then replace REGION_KEY, MODULE_NAME, and REGION_ENTRY.
 //
@@ -11,6 +21,14 @@
 //   - ECMWF ERA5 Reanalysis: https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5
 //   - Copernicus Marine Global Ocean Physics Analysis and Forecast: https://data.marine.copernicus.eu/product/GLOBAL_ANALYSISFORECAST_PHY_001_024/description
 //   - NOAA NCEI OISST: https://www.ncei.noaa.gov/products/optimum-interpolation-sst
+//   - NOAA World Ocean Atlas 2023 Data: https://www.ncei.noaa.gov/access/world-ocean-atlas-2023/
+//   - NOAA Ocean Service light-depth guidance: https://oceanservice.noaa.gov/facts/light_travel.html
+//   - NOAA Ocean Service wave mechanics guidance: https://oceanservice.noaa.gov/education/tutorial_currents/03coastal1.html
+//   - NOAA CoastWatch Kd490 guidance: https://eastcoast.coastwatch.noaa.gov/cw_k490.php
+//   - NOAA NDBC Climatic Summary Plots and Table Descriptions: https://www.ndbc.noaa.gov/climatedesc.shtml
+//   - Copernicus Marine Global Ocean Waves Reanalysis: https://data.marine.copernicus.eu/product/GLOBAL_MULTIYEAR_WAV_001_032/description
+//   - National Weather Service wave glossary: https://www.weather.gov/ggw/GlossaryW
+//   - NPS Great Basin cave climate guidance: https://www.nps.gov/grba/learn/nature/airflow-and-cave-climate.htm
 //   - USGS Streamflow Measurement Guidance: https://www.usgs.gov/water-science-school/science/how-streamflow-measured
 //
 // Page names use:
@@ -23,7 +41,7 @@
   'use strict';
 
   var RT = (typeof globalThis !== 'undefined') ? globalThis : this;
-  var VERSION = '5.1.0';
+  var VERSION = '0.1.0-alpha.1';
   var REGION_KEY = 'replacewithregionkey';
   var MODULE_NAME = 'dwt_region.' + REGION_KEY;
   var _startupRegistered = false;
@@ -68,6 +86,46 @@
         "usage": "Sea-surface temperature sanity check for open-ocean and coastal surface layers."
       },
       {
+        "label": "NOAA World Ocean Atlas 2023 Data",
+        "url": "https://www.ncei.noaa.gov/access/world-ocean-atlas-2023/",
+        "usage": "Depth-aware ocean temperature sanity check and seasonal damping reference below the upper ocean."
+      },
+      {
+        "label": "NOAA Ocean Service Light-Depth Guidance",
+        "url": "https://oceanservice.noaa.gov/facts/light_travel.html",
+        "usage": "Sunlight, twilight, and aphotic depth bands used to darken underwater visibility with depth."
+      },
+      {
+        "label": "NOAA Ocean Service Wave Mechanics Guidance",
+        "url": "https://oceanservice.noaa.gov/education/tutorial_currents/03coastal1.html",
+        "usage": "Wind-wave reference showing that local wave height depends on wind speed, wind duration, and fetch rather than wind speed alone."
+      },
+      {
+        "label": "NOAA CoastWatch Kd490 Guidance",
+        "url": "https://eastcoast.coastwatch.noaa.gov/cw_k490.php",
+        "usage": "Water-clarity check used to make coastal, lake, river, and reef water attenuate light faster than clear open ocean."
+      },
+      {
+        "label": "NOAA NDBC Climatic Summary Plots and Table Descriptions",
+        "url": "https://www.ndbc.noaa.gov/climatedesc.shtml",
+        "usage": "Monthly and seasonal buoy climatology for significant wave height, average wave period, and joint wind-versus-wave distributions."
+      },
+      {
+        "label": "Copernicus Marine Global Ocean Waves Reanalysis",
+        "url": "https://data.marine.copernicus.eu/product/GLOBAL_MULTIYEAR_WAV_001_032/description",
+        "usage": "Regional open-ocean wave climatology and wind-wave fields for monthly chop baselines where buoy coverage is sparse."
+      },
+      {
+        "label": "National Weather Service Wave Glossary",
+        "url": "https://www.weather.gov/ggw/GlossaryW",
+        "usage": "Terminology reference for wind waves, swell, significant wave height, wind-wave height, and wave period."
+      },
+      {
+        "label": "NPS Great Basin Cave Climate Guidance",
+        "url": "https://www.nps.gov/grba/learn/nature/airflow-and-cave-climate.htm",
+        "usage": "Cave-temperature stability and mostly dead-calm airflow reference for underdark locales."
+      },
+      {
         "label": "USGS Streamflow Measurement Guidance",
         "url": "https://www.usgs.gov/water-science-school/science/how-streamflow-measured",
         "usage": "Three-point vertical sampling logic for rivers, lakes, and other non-ocean water columns."
@@ -77,6 +135,11 @@
       "Climate analogue: Replace this note with the real analogue.",
       "Use ECMWF ERA5 for monthly air temperature, precipitation, and prevailing wind defaults.",
       "Use Copernicus Marine global ocean physics and NOAA OISST to tune seasonal currents and water temperatures.",
+      "Use NOAA World Ocean Atlas plus NOAA Ocean Service light-depth guidance to keep underwater temperatures colder and darker with depth.",
+      "Use NOAA wave mechanics guidance plus the NWS wave glossary to treat chop as local short-period wind waves, not as total seas or distant swell.",
+      "Use NDBC climatic summaries where a real-world analogue buoy exists, and fall back to Copernicus wave reanalysis to set monthly or seasonal chop baselines for exposed offshore and coastal locales.",
+      "Use NOAA CoastWatch Kd490 guidance as a conservative clarity check when deciding how quickly non-ocean water should lose visibility.",
+      "Use NPS cave-climate guidance to keep underdark temperatures near the regional annual mean and airflow near dead calm except at entrances, faults, or critical events.",
       "Use the USGS three-point method for inland and coastal water columns; open ocean defaults use 1, 5, and 10 fathoms."
     ],
     "localeDefinitions": {
@@ -179,14 +242,14 @@
         "useSeasonalCurrent": false,
         "periods": {
           "hammer": {
-            "temperature": { "avgF": 52, "lowF": 48, "highF": 56 },
+            "temperature": { "avgF": 52, "lowF": 50, "highF": 54 },
             "precipitation": { "chancePct": 20, "type": "drip", "intensityWeights": { "light": 70, "moderate": 25, "heavy": 5 } },
             "wind": {
               "directionWeights": [{ "value": "N", "weight": 50 }, { "value": "NW", "weight": 50 }],
-              "strengthWeights": [{ "value": 0, "weight": 25 }, { "value": 25, "weight": 40 }, { "value": 50, "weight": 25 }, { "value": 75, "weight": 10 }]
+              "strengthWeights": [{ "value": 0, "weight": 90 }, { "value": 25, "weight": 9 }, { "value": 50, "weight": 1 }]
             },
             "critical": {
-              "chancePct": 6,
+              "chancePct": 4,
               "eventWeights": [{ "value": "cave_in", "weight": 50 }, { "value": "toxic_fog", "weight": 50 }],
               "severityWeights": { "light": 50, "moderate": 30, "heavy": 15, "severe": 5 }
             },
@@ -195,7 +258,7 @@
               "precipitation": 1,
               "skies": 1,
               "wind": 1,
-              "directionChangePct": 20,
+              "directionChangePct": 10,
               "timeofdaySegments": TIMEOFDAY_SEGMENTS_UNDERDARK
             }
           }

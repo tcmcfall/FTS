@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-WEATHER_MODULE = ROOT / "Modules" / "dwt_weather_5.1.1.js"
+WEATHER_MODULE = ROOT / "Modules" / "dwt_weather_0.1.0-alpha.1.js"
 REGION_DIR = ROOT / "Modules" / "Region Modules"
 CANONICAL_LOCALES = ["offshore", "coastal", "inland", "underwater", "underdark"]
 SEASONS = ["winter", "spring", "summer", "autumn"]

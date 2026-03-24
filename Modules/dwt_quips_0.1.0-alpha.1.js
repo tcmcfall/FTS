@@ -1,16 +1,26 @@
 // name:        dwt_quips.js
-// version:     5.1.0
+// version:     0.1.0-alpha.1
 // description: Quips corpus storage + read-only accessors (no selection logic). Persists all quips beneath the single dwt_mule ability 'quips'.
-// depends:     dwt_core_5.1.0+, Roll20 API
+// depends:     dwt_core >= 0.1.0-alpha.1, Roll20 API
 // provides:    (none)
 // author:      tcm (AI-assisted)
+// Semantic Versioning (SemVer) Policy:
+// - DWT uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
+// - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
+// - Increment PATCH for backward-compatible bug fixes.
+// - Increment MINOR for new backward-compatible functionality.
+// - Increment MAJOR only when the public API becomes stable and/or incompatible breaking changes are introduced.
+// - Pre-release labels such as alpha, beta, or rc mark unstable builds and sort lower than the matching normal release.
+// - Once a version is released, its contents must not be changed; further edits require a new version.
+// - Header comments, internal VERSION constants, filenames, generated module text, and documentation references must stay aligned.
+// - Dependency notes should use SemVer-friendly wording such as ">= 0.1.0-alpha.1" rather than informal forms like "5.1.0+".
 
 var dwt_quips = dwt_quips || (function(){
   'use strict';
 
   var RT = (typeof globalThis !== 'undefined') ? globalThis : this;
   var DWT_MULE = 'dwt_mule';
-  var VERSION = '5.1.0';
+  var VERSION = '0.1.0-alpha.1';
 
   // ---------------------------------------------------------------------------
   // Constants & corpus (authoritative source for mule population)

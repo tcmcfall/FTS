@@ -1,9 +1,19 @@
-// name:        dwt_regionBuilder_5.1.1.js
-// version:     5.1.1
+// name:        dwt_regionBuilder_0.1.0-alpha.1.js
+// version:     0.1.0-alpha.1
 // description: GM-only generator for dwt.region.v4 modules and locale snippets.
-// depends:     dwt_core_5.1.0+ (optional but recommended), Roll20 Mod API
+// depends:     dwt_core >= 0.1.0-alpha.1 (optional but recommended), Roll20 Mod API
 // provides:    !dwt --regionbuilder
 // author:      tcm (AI-assisted)
+// Semantic Versioning (SemVer) Policy:
+// - DWT uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
+// - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
+// - Increment PATCH for backward-compatible bug fixes.
+// - Increment MINOR for new backward-compatible functionality.
+// - Increment MAJOR only when the public API becomes stable and/or incompatible breaking changes are introduced.
+// - Pre-release labels such as alpha, beta, or rc mark unstable builds and sort lower than the matching normal release.
+// - Once a version is released, its contents must not be changed; further edits require a new version.
+// - Header comments, internal VERSION constants, filenames, generated module text, and documentation references must stay aligned.
+// - Dependency notes should use SemVer-friendly wording such as ">= 0.1.0-alpha.1" rather than informal forms like "5.1.0+".
 
 var dwt_regionBuilder = dwt_regionBuilder || (function(){
   'use strict';
@@ -14,7 +24,7 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
          : (typeof global !== 'undefined') ? global
          : this;
 
-  var VERSION = '5.1.1';
+  var VERSION = '0.1.0-alpha.1';
   var MODULE_KEY = 'regionbuilder';
   var MODULE_NAME = 'dwt_regionBuilder';
   var DWT_MULE = 'dwt_mule';
@@ -725,11 +735,21 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
     var json = JSON.stringify(entry, null, 2);
     return (
       "// name:        dwt_region." + regionKey + ".js\n" +
-      "// version:     5.1.1\n" +
+      "// version:     0.1.0-alpha.1\n" +
       "// description: Unified " + displayName + " region module for dwt_weather and dwt_mapMeta.\n" +
-      "// provides:    dwt_mule ability: regions (root JSON; regions." + regionKey + "), version entry dwt_region." + regionKey + "_5.1.1\n" +
-      "// depends:     dwt_weather_5.1.1+ (recommended), dwt_core_5.1.0+ (optional startup registration), Roll20 API.\n" +
+      "// provides:    dwt_mule ability: regions (root JSON; regions." + regionKey + "), version entry dwt_region." + regionKey + "_0.1.0-alpha.1\n" +
+      "// depends:     dwt_weather >= 0.1.0-alpha.1 (recommended), dwt_core >= 0.1.0-alpha.1 (optional startup registration), Roll20 API.\n" +
       "// author:      tcm (AI-assisted)\n" +
+      "// Semantic Versioning (SemVer) Policy:\n" +
+      "// - DWT uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].\n" +
+      "// - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.\n" +
+      "// - Increment PATCH for backward-compatible bug fixes.\n" +
+      "// - Increment MINOR for new backward-compatible functionality.\n" +
+      "// - Increment MAJOR only when the public API becomes stable and/or incompatible breaking changes are introduced.\n" +
+      "// - Pre-release labels such as alpha, beta, or rc mark unstable builds and sort lower than the matching normal release.\n" +
+      "// - Once a version is released, its contents must not be changed; further edits require a new version.\n" +
+      "// - Header comments, internal VERSION constants, filenames, generated module text, and documentation references must stay aligned.\n" +
+      "// - Dependency notes should use SemVer-friendly wording such as \">= 0.1.0-alpha.1\" rather than informal forms like \"5.1.0+\".\n" +
       "// canonical references:\n" +
       "//   - ECMWF ERA5 Reanalysis: https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5\n" +
       "//   - Copernicus Marine Global Ocean Physics Analysis and Forecast: https://data.marine.copernicus.eu/product/GLOBAL_ANALYSISFORECAST_PHY_001_024/description\n" +
@@ -738,7 +758,7 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
       "(function(){\n" +
       "  'use strict';\n\n" +
       "  var RT = (typeof globalThis !== 'undefined') ? globalThis : this;\n" +
-      "  var VERSION = '5.1.1';\n" +
+      "  var VERSION = '0.1.0-alpha.1';\n" +
       "  var REGION_KEY = '" + regionKey + "';\n" +
       "  var MODULE_NAME = 'dwt_region.' + REGION_KEY;\n" +
       "  var _startupRegistered = false;\n\n" +
