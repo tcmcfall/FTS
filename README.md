@@ -1,4 +1,4 @@
-# dwt
+# DWT
 Date | Weather | Trade
 
 What It Is
