@@ -58,6 +58,7 @@ var dwt_calendar = dwt_calendar || (function () {
               {name:'Flamerule (Summertide)',short:'Flamerule'},{name:'Eleasis (Highsun)',short:'Eleasis'},
               {name:'Eleint (The Fading)',short:'Eleint'},{name:'Marpenoth (Leafall)',short:'Marpenoth'},
               {name:'Uktar (The Rotting)',short:'Uktar'},{name:'Nightal (The Drawing Down)',short:'Nightal'}];
+  var MONTH_KEYS=['hammer','alturiak','ches','tarsakh','mirtul','kythorn','flamerule','eleasis','eleint','marpenoth','uktar','nightal'];
 
   var BETWEEN=[{key:'midwinter',afterMonth:1,label:'Midwinter (between Hammer & Alturiak)'},
                {key:'greengrass',afterMonth:4,label:'Greengrass (between Tarsakh & Mirtul)'},
@@ -191,153 +192,405 @@ function festivalBgLayout(key){
     };
 }
 
-
-  // >>> SET FESTIVAL “QUIP” OVERLAY TEXT HERE <<<
-  var FESTIVAL_QUIP = {
-    midwinter:      'The longest night; the hearth burns brighter.',
-    greengrass:     'Old oaths awaken in new leaves.',
-    midsummer:      'Sun at its crown—nothing stays hidden.',
-    shieldmeet:     'Once in four years, the world holds its breath.',
-    highharvestide: 'The reaping comes; so do the debts.',
-    feastofthemoon: 'The moon counts what mortals misplace.'
-  };
-
-  // >>> ADJUST IMAGE DARKENING (OPACITY) HERE <<<
-  // Range: 0.00 (no darkening) to 0.80+ (very dark). Increase for readability.
-  var FESTIVAL_BG_DARKEN = {
-    midwinter:      0.50,  // <-- ADJUST OPACITY HERE
-    greengrass:     0.25,  // <-- ADJUST OPACITY HERE
-    midsummer:      0.20,  // <-- ADJUST OPACITY HERE
-    shieldmeet:     0.25,  // <-- ADJUST OPACITY HERE
-    highharvestide: 0.30,  // <-- ADJUST OPACITY HERE
-    feastofthemoon: 0.35   // <-- ADJUST OPACITY HERE
-  };
-
   function festivalBgUrl(key){
     var nk = normFestivalKey(key);
     return FESTIVAL_BG_URL[nk] || '';
   }
-  function festivalQuip(key){
-    var nk = normFestivalKey(key);
-    return FESTIVAL_QUIP[nk] || '';
-  }
-  function festivalDarken(key){
-    var nk = normFestivalKey(key);
-    var v = FESTIVAL_BG_DARKEN[nk];
-    return (typeof v === 'number' && v >= 0 && v <= 0.95) ? v : 0.28;
-  }
-
-
-  // =============================================================
-  // Festival Quips (Functional Test)
-  // -------------------------------------------------------------
-  // Goal: display a RANDOM long quip for each festival.
-  // Order of precedence:
-  //  1) If dwt_quips is loaded, use: dwt_quips.getQuips('quips.festival.<key>.long')
-  //  2) Otherwise, fall back to 4 calendar-local long quips per festival (below)
-  //  3) Otherwise, fall back to 4 generic long quips
-  //
-  // NOTE: This is intentionally "thin" integration. Navigation logic is untouched.
-  // =============================================================
-
-  // >>> DEFAULT (FALLBACK) LONG FESTIVAL QUIPS HERE <<<
-  // Maintainers: Edit the arrays below (4 per festival). These are used ONLY if dwt_quips is not loaded
-  // or if it returns no usable pool for the requested path.
-  var FESTIVAL_QUIP_FALLBACK_LONG = {
-    midwinter: [
-      'The longest night; the hearth burns brighter.\nEven old grudges thaw a little when the door is shut.\nIf you must make a vow, make it softly.\nTomorrow is earned by staying warm tonight.',
-      'Ice in the gutters, fire in the bones.\nA shared cup counts for more than a shared sword.\nSpeak the names you miss, then let them rest.\nThe year turns when the last ember refuses to die.',
-      'Snow keeps counsel and shutters keep secrets.\nBread is broken, not promises.\nThe brave endure the dark by tending light.\nMidwinter teaches patience to all who listen.',
-	        'When the wind howls, the city leans inward.\nA table becomes a fortress, laughter its guard.\nLet the cold take what it can—never your kindness.\nMidwinter passes; what you keep remains.'
-    ],
-    greengrass: [
-      'New leaves, old oaths.\nWhat slept beneath the frost remembers how to rise.\nPlant one honest thing and guard it well.\nGreengrass rewards the patient hand.',
-      'The ground softens, and so do hard hearts.\nEven stone streets smell faintly of green.\nBegin small; the year will carry it.\nGreengrass is permission to try again.',
-      'Rains rinse the soot from winter’s edges.\nPromises sprout where doubt once sat.\nShare seed, share story, share time.\nGreengrass makes room for mercy.',
-      'A bud is a bargain with the future.\nYou do not need certainty to begin.\nTie your hopes to living things.\nGreengrass will do the rest.'
-    ],
-    midsummer: [
-      'Sun at its crown—nothing stays hidden.\nLanterns and laughter crowd out careful silence.\nSpend your joy while the night is long.\nMidsummer remembers those who dared to dance.',
-      'Torches flare, and shadows surrender.\nThe city forgets its measured pace for one bright span.\nSay what you mean before dawn returns.\nMidsummer does not wait for permission.',
-      'Heat hangs thick, but spirits run light.\nA kiss can be a treaty for a night.\nLet the music carry what words cannot.\nMidsummer makes boldness feel easy.',
-      'The longest day lends courage to fools and sages alike.\nDrink deep, then tell the truth.\nJoy is a kind of strength when shared.\nMidsummer proves it.'
-    ],
-    shieldmeet: [
-      'Once in four years, the world holds its breath.\nCharters are read where all may hear.\nA promise spoken plainly is a shield.\nShieldmeet weighs the city’s soul.',
-      'No feast outruns the law tonight.\nHands are raised, not blades.\nLegitimacy is built in daylight.\nShieldmeet remembers who stood accountable.',
-      'The bells ring, and the crowd answers—steady, not loud.\nJustice prefers clear words over sharp steel.\nChoose carefully; the year will quote you.\nShieldmeet binds what you decide.',
-      'Open doors, open records, open eyes.\nPower is safest when it can be questioned.\nLet governance be seen to be believed.\nShieldmeet makes the hidden visible.'
-    ],
-    highharvestide: [
-      'The reaping comes; so do the debts.\nCount what you gained and what it cost.\nSet aside a share for storms you cannot name.\nHighharvestide honors honest accounting.',
-      'Full barns, full hearts—if you keep them that way.\nGratitude is measured in portions given away.\nClose the ledgers with clean hands.\nHighharvestide rewards restraint.',
-      'Bread on the table is victory enough.\nThe year was heavy; let the harvest be kind.\nPay your tithes, then feed your neighbors.\nHighharvestide steadies the coming cold.',
-      'Markets quiet after the last tally.\nYou cannot eat coin, but you can share food.\nStore wisely; celebrate gently.\nHighharvestide teaches the difference.'
-    ],
-    feastofthemoon: [
-      'The moon counts what mortals misplace.\nSet a chair for those who will not return.\nTell their stories until they feel near again.\nThe Feast of the Moon is gentleness made ritual.',
-      'A quiet table holds more than a loud hall.\nNames are spoken like prayers and passed like bread.\nGrief sits down, and comfort follows.\nThe Feast of the Moon keeps families whole.',
-      'Candlelight does not banish loss, but it makes room to breathe.\nShare what you remember, not what you regret.\nLet the sea keep its secrets; keep your love.\nThe Feast of the Moon asks nothing more.',
-      'Moonlight on the floor, warm hands in the dark.\nNo bargains tonight—only belonging.\nThe year slows long enough to listen.\nThe Feast of the Moon is that pause.'
-    ],
-    uktar: [
-      'Rot settles in where warmth once lay.\nThe year exhales its final breath without apology.\nWhat spoils now will feed what comes next.\nUktar teaches endings without cruelty.',
-      'Fog thickens, cellars dampen, and patience becomes a skill.\nDo not curse decay; it is honest work.\nClear what must be cleared before the frost.\nUktar makes room for renewal.',
-      'Leaves collapse to paste and roads turn slick.\nThe world shows its under-side: worms, mold, and root.\nPrepare, preserve, and do not pretend.\nUktar is truth in brown and gray.',
-      'Nothing stays sweet forever.\nThe wise learn when to seal the jar and bank the fire.\nDecay is a messenger, not a verdict.\nUktar’s lesson is readiness.'
-    ],
-    midwinters_eve: [
-      'A breath between what was and will.\nNo oaths demanded, no banners raised.\nRelease the old year gently and keep only what matters.\nMidwinter’s Eve lets the turning happen.',
-      'The lamps burn low and the city listens.\nForgive what you can; remember what you must.\nTomorrow arrives whether invited or not.\nYear’s Turning is humility made visible.',
-      'Time pauses long enough to be felt.\nSet down the weight you carried and pick up something kinder.\nThe circle closes, then begins.\nMidwinter’s Eve is the hinge.',
-      'The old year steps back without ceremony.\nThe new year waits without a name.\nBetween them lies one quiet night to breathe.\nYear’s Turning belongs to everyone.'
-    ]
-  };
-
-  // Generic fallback: used if an unknown festival key is passed in.
-  var FESTIVAL_QUIP_FALLBACK_DEFAULT = [
-    'The calendar turns, and the world turns with it.\nSome nights are for noise; some are for noticing.\nHold what matters and let the rest pass.\nThe year will make room.',
-    'A festival is a stitch in time.\nIt holds the days together when they threaten to fray.\nShare a word, share a fire, share a moment.\nThat is enough.',
-    'Old seasons end; new ones arrive.\nRitual gives shape to change.\nStand with others and breathe through the turning.\nThe world continues.',
-    'Whether the streets roar or the hearth whispers, the meaning is the same.\nRemember, repair, rejoice, renew.\nThe day is marked because you marked it.\nCarry that forward.'
-  ];
-
   function _pickRandom(arr){
     if(!arr || !arr.length) return '';
     return arr[Math.floor(Math.random() * arr.length)];
   }
 
-  function _getQuipsModule(){
-    // Global object name per project convention: dwt_quips
-    // Safe read only; no dependency required.
-    return RT && RT.dwt_quips ? RT.dwt_quips : null;
+  function makeQuips(entries){
+    var out = [];
+    entries = Array.isArray(entries) ? entries : [];
+    for(var i=0;i<entries.length;i++){
+      var text = String(entries[i] || '').split('|').join('\n').trim();
+      if(text) out.push(text);
+    }
+    return out;
   }
 
-  function resolveFestivalLongQuip(key){
-    var nk = normFestivalKey(key);
+  function makeCalendarQuipSet(shortEntries, mediumEntries, longEntries){
+    return {
+      short:makeQuips(shortEntries),
+      medium:makeQuips(mediumEntries),
+      long:makeQuips(longEntries)
+    };
+  }
 
-    // 1) Prefer dwt_quips module if present.
-    var Q = _getQuipsModule();
-    if(Q && typeof Q.getQuips === 'function'){
-      try{
-        var path = 'quips.festival.' + nk + '.medium';
-        var pool = Q.getQuips(path);
-        if(Array.isArray(pool) && pool.length){
-          return _pickRandom(pool);
-        }
-      }catch(e){
-        // Fall through to calendar-local fallback.
+  function normalizeQuipPool(arr){
+    var out = [];
+    arr = Array.isArray(arr) ? arr : [];
+    for(var i=0;i<arr.length;i++){
+      var text = String(arr[i] || '').trim();
+      if(text) out.push(text);
+    }
+    return out;
+  }
+
+  function splitQuipLines(q){
+    if(q === null || q === undefined) return [];
+    if(Array.isArray(q)) q = q.join('\n');
+    q = String(q).replace(/\\n/g, '\n');
+    var parts = q.split(/\r\n|\r|\n|\u2028|\u2029/);
+    var out = [];
+    for(var i=0;i<parts.length;i++){
+      var line = String(parts[i] || '').trim();
+      if(line) out.push(line);
+    }
+    return out;
+  }
+
+  function renderQuipBlocks(q, lineStyle){
+    var lines = splitQuipLines(q);
+    var out = '';
+    lineStyle = String(lineStyle || 'display:block;margin:0;padding:0;line-height:1.50;');
+    for(var i=0;i<lines.length;i++){
+      out += '<div style="' + lineStyle + '">' + esc(lines[i]) + '</div>';
+    }
+    return out;
+  }
+
+  function flattenShortQuipInline(q){
+    return splitQuipLines(q).join(', ');
+  }
+
+  function normalizeQuipLength(length){
+    length = String(length || '').toLowerCase().trim();
+    if(length === 'medium' || length === 'long') return length;
+    return 'short';
+  }
+
+  function monthKeyFromValue(value){
+    if(typeof value === 'string' && /^[a-z]+$/i.test(String(value || '').trim())){
+      var idx = monthIndexFromToken(value);
+      if(idx >= 1 && idx <= 12) return MONTH_KEYS[idx - 1];
+    }
+    var n = parseInt(value, 10);
+    if(!isNaN(n) && n >= 1 && n <= 12) return MONTH_KEYS[n - 1];
+    return '';
+  }
+
+  function festivalMonthFallback(key){
+    key = normFestivalKey(key);
+    for(var i=0;i<BETWEEN.length;i++){
+      if(normFestivalKey(BETWEEN[i].key) === key) return BETWEEN[i].afterMonth;
+    }
+    return 1;
+  }
+
+  function currentMonthIndexForQuips(now){
+    now = now || ((state.dwt && state.dwt.now) || {});
+    var month = parseInt(now.month, 10);
+    if(!isNaN(month) && month >= 1 && month <= 12) return month;
+    if(now.festival) return festivalMonthFallback(now.festival);
+    return 1;
+  }
+
+  function appendQuips(out, arr){
+    var pool = normalizeQuipPool(arr);
+    for(var i=0;i<pool.length;i++) out.push(pool[i]);
+  }
+
+  function loadCalendarRegionEntries(){
+    var raw = String(getAbilityAction(getOrCreateMule(), 'regions') || '').trim();
+    if(!raw) return [];
+    try{
+      var parsed = JSON.parse(raw);
+      var regions = (parsed && parsed.regions && typeof parsed.regions === 'object' && !Array.isArray(parsed.regions)) ? parsed.regions : {};
+      var out = [];
+      var keys = Object.keys(regions);
+      for(var i=0;i<keys.length;i++){
+        var entry = regions[keys[i]];
+        if(entry && typeof entry === 'object' && !Array.isArray(entry)) out.push(entry);
       }
+      return out;
+    }catch(e){
+      return [];
     }
+  }
 
-    // 2) Calendar-local festival fallback pools (4 per festival).
-    var fb = FESTIVAL_QUIP_FALLBACK_LONG[nk];
-    if(Array.isArray(fb) && fb.length){
-      return _pickRandom(fb);
+  var CALENDAR_QUIPS = {
+    months:{
+      hammer:makeCalendarQuipSet([
+        "Hammer shuts the harbor tight with glassy night|Still watch-bells call the quay to lantern light",
+        "Deepwinter locks the pilings fast in iron frost|Yet captains grin and swear no honest tide is lost",
+        "The nets hang stiff as chapel boards in salted white|But Saint Velen keeps a coal for every boat tonight"
+      ],[
+        "Hammer locks the harbor stones|with pilings rimed in white|a dockhand cups Saint Velen's coal|and swears the frost burns bright",
+        "Deepwinter leans on quay and bell|and hushes half the town|yet every tavern window glows|when blue dusk settles down",
+        "The gulls stand still on frozen rope|as if they feared the sky|a ferryman just grins at them|and lets the black tide sigh"
+      ],[
+        "Hammer comes with iron dawn|and pilings glazed in white|the chapel bell sounds small and thin|yet hearths answer bright|a ferryman with frozen beard|still blesses stew and flame|for Deepwinter may tax the bones|but never tame his name",
+        "The nets hang hard as chapel boards|beneath a moon of glass|a watchman walks the harbor wall|and hears the night-wind pass|inside the inn the kettles hum|beside the patient fire|so Hammer teaches weathered souls|the worth of small desire",
+        "By dawn the harbor stones are blue|by noon the sea is lead|Saint Velen's shrine wears candles thick|for crews the ice might dread|a widow spreads her woolen shawl|across the bench for three|for Hammer tells the whole cold coast|that kindness outlasts sea"
+      ]),
+      alturiak:makeCalendarQuipSet([
+        "Alturiak bites the knuckles raw on rope and rail|Yet crews still hum to keep some heart inside the gale",
+        "The Claw of Winter scrapes the surf with sleet and spray|And every tavern swears the storm will spend itself by day",
+        "Cold moon on frozen casks, cold stars on harbor black|Still smugglers bless a silent oar and pray the tide turns back"
+      ],[
+        "Alturiak claws mast and cheek|with sleet against the pane|a captain knots his scarf once more|and dares the cutting rain",
+        "The Claw of Winter scrapes the bay|with iron on the pane|a tavern maid bars one more door|then laughs to hear the rain",
+        "Black water heaves below the wharf|while north winds comb the foam|a smuggler smiles through salted teeth|and rows the hard tide home"
+      ],[
+        "Alturiak comes claw in hand|with sleet against the pane|the piers go black, the rigging sings|and ropes drink iron rain|a captain pulls his collar high|and trusts his boat and prayer|for Winter's Claw respects no pride|but yields to patient care",
+        "The harbor shrinks to lamp and hood|beneath a needling sky|the gulls fly low above the surf|as if they would not cry|inside the inn the dice roll warm|and cider runs like gold|so Alturiak learns the quay|still carries hearts too bold",
+        "By dawn the stairs are glass with sleet|by dusk the wind is steel|a ferryman still takes his pole|and says the cold is real|Saint Velen's shrine wears wool and wax|against the black and salted foam|for in the Claw of Winter folk|make stubborn weather home"
+      ]),
+      ches:makeCalendarQuipSet([
+        "In Ches the thaw runs brown with bark along the pier|And every gull cries news of trade and brighter weather near",
+        "The river shrugs its winter skin and starts to shine|So coopers roll their freshest casks and call the season fine",
+        "Soft rain on roof and rope, soft light on mud and mast|A sailor says the kindest wind's the one that comes at last"
+      ],[
+        "In Ches the thaw begins to talk|beneath the eaves with rain|a cooper rolls his empty casks|and blesses mud again",
+        "Brown water runs from roof to quay|and softens all the clay|a fishwife lifts her sleeves and laughs|for spring has found the bay",
+        "The river shrugs its winter coat|and starts to shine at noon|a dockhand says the kindest winds|arrive a little soon"
+      ],[
+        "Ches arrives in dripping shoes|with mud along the lane|the ice lets go the harbor stairs|and roofs begin to rain|a cooper rolls the casks outside|to taste the softer air|for Ches reminds the working coast|that spring is almost there",
+        "The river wakes from winter sleep|and shoulders brown with foam|the gulls return to louder work|and make the wharves their home|a chandlers' boy forgets his scarf|to watch the sunlit mast|for Ches can make a cautious heart|believe in thaw at last",
+        "In Ches the chapel steps grow slick|with rain and tracked-in clay|the harbor smells of rope and bark|instead of frost all day|a widow puts geranium seeds|beside the kitchen stone|for Ches persuades the coldest soul|not to remain alone"
+      ]),
+      tarsakh:makeCalendarQuipSet([
+        "Tarsakh sends a drum of rain on shingle, sail, and slate|Yet every child along the docks still dares the thunder gate",
+        "The storm month snaps the pennants hard above the foam|Then leaves a washed and shining quay that almost looks like home",
+        "Saint bells ring through weather black and lantern-yellow dark|While ferrymen make jokes at squalls and nose from mark to mark"
+      ],[
+        "Tarsakh beats the rooftops hard|with thunder over slate|a harbor boy runs bare of hood|and calls the weather great",
+        "The storm month snaps the pennants straight|and salts the chapel door|a ferryman just squints at squalls|and rows the louder roar",
+        "Rain writes its quick gray scripture down|on shingle, mast, and rail|a tavern maid lights every lamp|to spite the storming gale"
+      ],[
+        "Tarsakh comes on drumming feet|with thunder over slate|the harbor ropes all leap at once|as if they heard their fate|a ferryman with rain-blind eyes|still laughs against the gale|for Storm Month teaches every quay|to bend and yet not fail",
+        "The gutters roar, the signboards swing|beneath a bruised sky|the sea throws white against the wall|and gulls forget to fly|inside the inn the candles bow|but keep their stubborn flame|for Tarsakh tests the harbor hard|yet cannot shame its name",
+        "By dusk the town is washed to tar|by dawn it shines like glass|the squalls have worried every mast|and let no sleeper pass|a child counts seconds after thunder|from the window seat|for Tarsakh makes the fiercest dark|feel wild and oddly sweet"
+      ]),
+      mirtul:makeCalendarQuipSet([
+        "Mirtul smells of wet green rope and markets after rain|The sort of month that coaxes luck through every crack again",
+        "The pilings steam at dawn awhile, the tide runs clean and bright|And even old men at the wharf talk kindly in the light",
+        "New grass beyond the seawall shines like cloth beside the bay|A dockhand says the year's gone soft enough to earn its pay"
+      ],[
+        "Mirtul smells of wet green rope|and pilings after rain|an old man on the harbor bench|decides the year seems sane",
+        "New grass beyond the seawall shines|with light enough for play|a fishwife wipes her hands and smiles|to see the brighter bay",
+        "Warm drizzle beads the market awns|and darkens cart and mast|a sailor says the kindest wind|is often one that lasts"
+      ],[
+        "Mirtul comes in polished rain|with green beyond the wall|the pilings steam at break of day|the gulls grow keen and call|a dockhand lingers by the slips|to watch the clean tide pass|for Mirtul makes a weathered town|feel washed like chapel glass",
+        "The gardens climb the harbor steps|in herb and daisy leaf|the sea goes mild, the roofs go bright|the inns mislay their grief|a cooper leaves his shutters wide|to taste the greener air|for Mirtul teaches even toil|that gentler days are there",
+        "By noon the quay smells half of tar|and half of growing thyme|the ferry ropes lie dark and soft|and seem to keep good time|a widow sets her laundry out|and watches white sheets fly|for Mirtul coaxes hope from boards|beneath a rinsed blue sky"
+      ]),
+      kythorn:makeCalendarQuipSet([
+        "Kythorn hangs flowers from the eaves and salt upon the breeze|The harbor keeps one tune for saints and one for easy seas",
+        "Warm mornings find the trawlers out before the bells can chime|And lovers linger by the slips as if the tide kept time",
+        "The Time of Flowers sweetens tar, wet planks, and open ale|Till even hard-eyed harbor wives look pleased to watch a sail"
+      ],[
+        "Kythorn hangs flowers from the eaves|and salt upon the breeze|the harbor keeps one hymn for saints|and one for easy seas",
+        "Warm mornings spill from Kythorn's bells|through blossom, foam, and light|a trawler leaves before the noon|while sweethearts linger bright",
+        "The Time of Flowers softens tar|and coaxes ale to cheer|even the hardest harbor wife|looks pleased to watch sails near"
+      ],[
+        "Kythorn comes garlanded in bloom|with salt upon the breeze|the harbor sings two different songs|for saints and easy seas|a florist pins white bells to rope|above a painted door|for Time of Flowers makes the quay|look younger than before",
+        "Warm dawn goes gold on fisher sails|and roses on the wall|the market smells of pears and tar|the swifts dip low and call|a lover waits beside the slips|pretending not to care|for Kythorn makes the patient heart|believe that luck is fair",
+        "By dusk the lanterns bloom like fruit|along the mooring posts|the ale runs cool, the air runs soft|the sea forgets its boasts|a widow laughs to hear the fiddles|under the clear sky|for Kythorn lets the sternest soul|remember how to sigh"
+      ]),
+      flamerule:makeCalendarQuipSet([
+        "Flamerule lays copper heat on cobble, rope, and spar|The beer goes thin, the tempers quick, the gossip carries far",
+        "At noon the harbor blinks like brass beneath a brazen sky|Then evening cools the lantern glass and draws the singers nigh",
+        "Hot wind and bright salt make the masts hum low at noon|A sailor swears the moon will rise as red as copper soon"
+      ],[
+        "Flamerule lays a copper hand|on cobble, rope, and spar|a barkeep thins the tavern ale|because the day burns far",
+        "At noon the harbor blinks like brass|beneath a brazen sky|a captain seeks the narrow shade|and lets the gulls go by",
+        "Hot wind makes all the rigging hum|and stills the dogs at noon|yet evening brings one cooler breath|and every bench fills soon"
+      ],[
+        "Flamerule comes with copper noon|on cobble, rope, and spar|the harbor blinks in molten light|the tavern talk drifts far|a barkeep keeps the ale half-cool|with cloth around the cask|for Summertide can wilt a town|before men drop the mask",
+        "The awnings droop above the quay|the dogs lie still in shade|the gulls wheel slow beyond the masts|as if the heat were made|to test the patient and the proud|until the sun sits low|then evening spills a softer wind|and lets the whole town glow",
+        "Hot weather hums through every line|and turns the tar to scent|a ferryman poles carefully|as if the day were bent|but when the moon comes up at last|above the darkening bar|Flamerule gives the night a breeze|and mends the temper's scar"
+      ]),
+      eleasis:makeCalendarQuipSet([
+        "Eleasis ripens figs and rumors by the quay|The sort of month when every smile looks honest for a day",
+        "Highsun turns tar to velvet black and shutters half the town|Till sunset wakes the dice again and spills the laughter down",
+        "The gulls grow lazy in the blaze, the bells ring soft at noon|And every captain prays for wind to reach the harbor soon"
+      ],[
+        "Eleasis ripens fig and grape|and shutters half the square|the gulls grow lazy over foam|and noon sits heavy there",
+        "Highsun turns every cobble bright|and every rumor sweet|a merchant fans his ledger slow|while dogs dream in the heat",
+        "The harbor waits for evening wind|through bells gone soft and small|then laughter wakes with candlelight|and spills from every wall"
+      ],[
+        "Eleasis ripens quay and vine|beneath a white-hot sky|the gulls drift slow above the masts|too drowsy yet to cry|a merchant shades his careful books|with one embroidered fan|for Highsun teaches even greed|to soften where it can",
+        "By noon the harbor lanes go still|except for sandals, flies|the figs grow dark, the shutters close|against the glaring skies|but evening brings the dice awake|and cools the market glow|so Eleasis proves that heat|must always soften slow",
+        "The sea lies bright as polished tin|the roofs lie pale as bone|a fishwife keeps her awning low|and leaves the shade alone|then after dusk the fiddles start|beneath a patient moon|for Highsun makes the longest tales|wait kindly until soon"
+      ]),
+      eleint:makeCalendarQuipSet([
+        "Eleint puts an amber edge on rope, leaf, wave, and field|A gentle warning summer's purse has nearly made its yield",
+        "The Fading teaches tavern fires to matter after dusk|And sends the first keen weather through the nets with apple musk",
+        "Cool dawn along the harbor wall, cool wine in shaded stone|A sailor counts the quieter birds and feels the year turn bone"
+      ],[
+        "Eleint lays amber on the ropes|and cool along the lane|a sailor counts the quieter gulls|and feels the year begin to wane",
+        "The Fading wakes the tavern fires|a little after dusk|and sends one sharper weather note|through net, through leaf, through musk",
+        "First apples scent the harbor carts|and first geese cross the foam|a dockhand says the autumn wind|already thinks of home"
+      ],[
+        "Eleint comes trimmed in amber light|with cool upon the lane|the gulls grow fewer on the roofs|the nights remember rain|a tavern lights its hearth too soon|and no one calls it wrong|for Fading teaches summer's end|in smoke and slower song",
+        "The apples reach the harbor carts|the nets smell leaf and musk|the sea stays blue by afternoon|and silver after dusk|a sailor lingers by the wall|to watch the swallows roam|for Eleint makes the whole wide world|lean gently toward home",
+        "By dawn the quay smells sweet with pears|by dusk the light turns thin|the first brown leaves ride through the slips|where summer lately had been|a widow folds one woolen shawl|beside the chapel door|for Eleint tells the weathered heart|to gather in once more"
+      ]),
+      marpenoth:makeCalendarQuipSet([
+        "Marpenoth shakes the yellow leaves through rigging, lane, and yard|The tide grows stern, the shutters early, and the bread grows hard",
+        "Leafall comes whispering over roofs with chimney smoke and rain|And every inn keeps closer chairs against the dark again",
+        "The harbor ducks its head a bit beneath the cawing crows|As if the whole long coast already hears the winter blows"
+      ],[
+        "Marpenoth shakes the yellow leaves|through rigging, lane, and yard|the tide grows stern, the shutters early|and the bread grows hard",
+        "Leafall comes whispering with smoke|and crows above the quay|an innkeeper brings closer chairs|and lights the lamps by three",
+        "Rain worries roof and harbor wall|while dark arrives too soon|a sailor blesses mulled black ale|and any honest room"
+      ],[
+        "Marpenoth comes with leaf and smoke|through rigging, lane, and yard|the tide turns stern, the bread turns crust|the benches all grow hard|an innkeep pulls the chairs in close|before the crows can call|for Leafall teaches every town|to gather from the squall",
+        "Yellow leaves skate across the quay|and stick to tar and rain|the chimneys start their evening work|before the bells again|a sailor warms his hands on stew|and watches dusk draw near|for Marpenoth makes comfort seem|a wiser thing than cheer",
+        "By noon the harbor smells of wood|by dusk of soup and clove|the gulls all quarrel over scraps|while crows patrol above|a widow bars the weather side|of every rattling door|for Leafall says the long cold road|is closer than before"
+      ]),
+      uktar:makeCalendarQuipSet([
+        "Uktar bruises fruit and reed and turns the earth to brown|Yet soup smells rich in every court where evening settles down",
+        "The Rotting month puts honest rot in apple, leaf, and net|A wise one mends what still can mend and pays the debts unmet",
+        "Wet fog along the quay at dawn, wet mud along the lane|And every merchant counts his casks, then counts them all again"
+      ],[
+        "Uktar bruises leaf and reed|and turns the path to brown|yet every kitchen by the quay|smells twice as rich by sundown",
+        "The Rotting month puts honest rot|in apple, leaf, and lane|a wise one mends what still may last|before the soaking rain",
+        "Wet fog along the harbor stairs|turns every bell half-blind|a fishwife laughs and stirs the pot|for cold is close behind"
+      ],[
+        "Uktar comes with bruised brown leaves|and fog along the quay|the apples sink, the net cords stink|the crows all disagree|a merchant checks his cellar latch|before the dark and rain|for Rotting teaches prudent souls|to count their stores again",
+        "The roads grow slick, the gardens soft|the last pears lose their shine|the harbor smells of dampened rope|and soup with clove and wine|a widow dries the herbs inside|above the kitchen stone|for Uktar says what keeps through cold|must now be kept alone",
+        "By dawn the fog has taken half|the masts along the bar|by dusk the lamps glow thicker there|and warmer than they are|a ferryman mends oar and hook|before the frost comes near|for Uktar tells the wise to mend|what winter soon will wear"
+      ]),
+      nightal:makeCalendarQuipSet([
+        "Nightal draws the lantern close and leaves the harbor spare|The sea grows black as widow silk, the saints feel nearer there",
+        "Cold stars above the anchored masts, cold lamps below the pale|Yet every window by the docks keeps faith against the gale",
+        "The Drawing Down pulls voices low in chapel, inn, and yard|But those who share a fire and song can face the dark unscarred"
+      ],[
+        "Nightal draws the lantern close|and sets the sea to glass|the saints feel near beyond the dark|while black tides whisper past",
+        "Cold stars above the anchored masts|look sharp as chapel nails|a tavern girl feeds cedar fire|against the outside gales",
+        "The Drawing Down makes voices low|in chapel, inn, and yard|yet those who share a fire and song|find winter less hard"
+      ],[
+        "Nightal comes with lantern hands|and stars like frozen nails|the harbor blackens into silk|beneath the chanting gales|a chapel keeps its candles trim|against the outer foam|for Drawing Down reminds the lost|how warm one room is home",
+        "The sea goes dark as widow cloth|the bells go thin and clear|the shutters take the weather's knock|as winter edges near|inside the inn the benches fill|with clove and cedar smoke|for Nightal makes a tender feast|of every kindly joke",
+        "By dusk the quay is mostly lamp|by dawn the roofs are white|a ferryman still checks the chain|and thanks the stubborn light|Saint Velen's shrine keeps watchful wax|beside the harbor flame|for Drawing Down can deepen dark|but never take its name"
+      ])
+    },
+    festivals:{
+      midwinter:makeCalendarQuipSet([
+        "Midwinter heaps the hearth with flame against the night|And every oath sounds warmer said by ember light",
+        "The longest dark makes cider dear and kin seem right|Even grudges lose a little edge by candlelight",
+        "Snow at the sill, song in the hall, and shutters tight|A good cup makes the year turn softer by the light"
+      ],[
+        "Midwinter draws the benches near|And heaps the hearth with light|Even old grudges thaw a little there|When cups go warm all night",
+        "The longest dark sits at the door|But candles answer bright|A wise one keeps the gentlest vows|Upon a winter night",
+        "Snow hushes lane and harbor roof|The saints seem close in frost|Midwinter teaches quiet hearts|What kindness weather costs"
+      ],[
+        "Midwinter lays its longest dark|Against the shuttered pane|But hearthlight makes the benches glow|And warms the room again|An old man names the dead with care|Then fills the waiting cup|For winter turns most gentle when|The living gather up",
+        "Snow settles white on rope and sill|And stills the harbor bell|The wind may worry roof and eave|But indoors all is well|A baker shares the final loaf|A widow shares the wine|For Midwinter reminds a town|That kindness outlasts time",
+        "When Midwinter comes to quay and court|The lamps are trimmed with care|Even grudges lose their sharpest edge|In such a firelit air|A promise spoken softly then|Can hold through frost and foam|For on the longest night of all|Warm hearts make truer home"
+      ]),
+      greengrass:makeCalendarQuipSet([
+        "Greengrass lifts the harbor weed and paints the hedges green|The world looks washed and willing as if sorrow had not been",
+        "Fresh leaves on shrine and fisher skiff, fresh mud along the lane|A kindly spring can make a hard heart bloom again",
+        "Greengrass puts blossom on the wall and hope in every hand|Even the tide comes in tonight as though it knew the land"
+      ],[
+        "Greengrass wakes the harbor wall|With blossom, mud, and rain|A hard heart feels its hinges lift|And tries for spring again",
+        "Fresh leaves on shrine and fisher skiff|Hang bright above the lane|A neighbor who said little all of winter|Finds room for speech again",
+        "The first soft weather on the bay|Coaxes weeds along the quay|Greengrass reminds the careful soul|That mercy learns to stay"
+      ],[
+        "Greengrass comes with tender rain|And green along the stones|The harbor wall takes root in cracks|The winter leaves its bones|A child hangs blossoms on a shrine|A sailor mends his net|For spring can ask a wounded world|To risk beginning yet",
+        "Fresh leaves appear on yard and hedge|And mud returns the lane|The gulls grow loud, the grass grows bold|And hope grows back again|A fishwife laughs to smell the earth|Beneath the salt and spray|For Greengrass tells the doubting heart|Not all dead things must stay",
+        "When Greengrass stirs the harbor weed|And paints the hedges new|Even the oldest dockside oath|Feels easier to renew|A ferryman sets out young herbs|Beside his weathered door|For spring does not erase the scars|But teaches something more"
+      ]),
+      midsummer:makeCalendarQuipSet([
+        "Midsummer crowns the quay with fire and fiddlers after noon|The dark comes late and leaves the town still singing to the moon",
+        "Bright lanterns swing from mast to mast till even rogues look fair|A warm night makes old widows smile and salt seem sweet as air",
+        "On Midsummer the bells ring bold and every cup runs bright|You tell the truth or kiss a lie before the end of night"
+      ],[
+        "Midsummer crowns the harbor masts|With lantern, song, and fire|A timid heart will risk the truth|When fiddles climb the higher",
+        "The longest day refuses hush|And makes the shoreline bright|Even careful widows smile a bit|At such a reckless night",
+        "On Midsummer the bells ring bold|And torches gild the foam|A lie may kiss before it slips away|But truth walks laughing home"
+      ],[
+        "Midsummer lifts the lantern poles|And fires the harbor bright|The fiddles chase the dark away|Though dawn delays the night|A shy man dares a truer word|A widow dares a dance|For under such a brazen moon|Even caution grants a chance",
+        "The longest day leans toward the sea|And will not quickly die|The torches answer mast to mast|Beneath a copper sky|A rogue looks honest in that light|A saint looks young and warm|For Midsummer can gild a town|Beyond its weekday form",
+        "When Midsummer bells shake the quay|And cups go gold with flame|The bold kiss truth, the shy kiss luck|And both speak love's near name|A captain leaves his ledgers closed|A fishwife leaves her stall|For on that hot and laughing night|Joy makes the measure small"
+      ]),
+      shieldmeet:makeCalendarQuipSet([
+        "Shieldmeet sets the charter out where all can read the ink|A wise lord fears the silent room far more than alehouse drink",
+        "Once in four years the market stops and even captains wait|For law to stand in open sun and speak the weight of state",
+        "On Shieldmeet every promise wants a witness in the square|A city keeps its honor best when all can see it there"
+      ],[
+        "Shieldmeet lays the charter plain|Beneath the open sun|A city's honor grows the most|When public work is done",
+        "Once in four years the market stills|So law may take the square|A promise sounds most solid then|When witnesses are there",
+        "No lord looks grand on Shieldmeet long|If questions crowd the gate|The feast belongs to honest speech|And daylight over state"
+      ],[
+        "Shieldmeet sets the charter forth|Where all the square may read|No whispered law nor shuttered room|Can serve a public need|A promise weighed in open day|Will either stand or fail|For cities keep their honor best|When sunlight tips the scale",
+        "Once in four years the market waits|And gathers in the square|The feast is less for song and ale|Than witness gathered there|A lord may wear his richest cloak|Yet still speak plain and straight|For Shieldmeet loves the honest tongue|More than the pomp of state",
+        "The bells ring out for Shieldmeet day|And shutters open wide|Accounts are read, old questions asked|And none may safely hide|A city learns what strength it owns|When every eye may see|For law grows stoutest in the sun|Not in secrecy"
+      ]),
+      highharvestide:makeCalendarQuipSet([
+        "Highharvestide fills net and cart and bids the cellar swell|A richer table counts for less if neighbors hunger well",
+        "The granary smells of grain and dust, the presses stain the floor|You thank the year by sharing bread and locking no one's door",
+        "At harvest even harbor men look kindly on the field|For salt and soil both earn a purse when honest hands will yield"
+      ],[
+        "Highharvestide fills cart and loft|With grain, with fruit, with cheer|Yet bread tastes best when shared abroad|Before the lean draws near",
+        "The granary smells of dust and wheat|The presses stain the floor|A harvest is a blessing only|If no one bars the door",
+        "At Highharvestide the ledgers close|And soup begins to steam|The wise give thanks in loaves and ale|Not in a trader's dream"
+      ],[
+        "Highharvestide fills cart and loft|With grain and apples red|The presses stain the cellar floor|The ovens scent with bread|A prudent hand counts what was gained|Then sets a portion wide|For harvest thanks ring truest where|No hungry folk are denied",
+        "The granary smells of dust and wheat|The vines run thick with stain|The market hums with tally and laugh|After the labor's pain|A farmer lifts a loaf and cup|A sailor lifts the same|For Highharvestide joins salt and soil|At one forgiving flame",
+        "When Highharvestide meets the quay|The barns are full and sound|Even harbor folk look kindly then|On every inland ground|A merchant closes careful books|A widow stirs the stew|For autumn's richest blessing is|Enough to share with you"
+      ]),
+      feastofthemoon:makeCalendarQuipSet([
+        "Feast of the Moon lays quiet plates beside the lamplit room|And every name we speak with love pushes a little at the gloom",
+        "The tide runs hush, the candles low, the bread is passed in grace|Loss sits close, yet so does love, and neither leaves its place",
+        "Moonlight on the empty chair, warm hands around the spoon|The dead feel near and gentle on the Feast beneath the moon"
+      ],[
+        "Feast of the Moon sets quiet plates|In lamplit room and hall|The dead come nearest when the living|Speak their names with all",
+        "Moonlight rests on empty chairs|And candles keep the room|A gentle tale can hold back grief|Though not entirely the gloom",
+        "The tide runs hush beyond the wall|While bread goes hand to hand|The ones we miss sit close that night|As if they understand"
+      ],[
+        "Feast of the Moon sets quiet chairs|Beside the lamplit room|The living speak the missing names|And push against the gloom|A child asks after one long gone|An elder tells the tale|For moonlit grief grows easier borne|When memory does not fail",
+        "Moonlight lies on empty bowls|And silver on the floor|The hands that pass the bread that night|Remember who passed before|A widow smiles through patient tears|A sailor bows his head|For Feast of the Moon keeps love alive|Among the living and dead",
+        "The tide runs hush beyond the wall|The candles bend but low|Each story told for absent kin|Makes warmer all the glow|No bargain's struck, no boast is made|Only the names are sown|For on that tender autumn feast|No heart need grieve alone"
+      ])
     }
+  };
 
-    // 3) Generic fallback.
-    return _pickRandom(FESTIVAL_QUIP_FALLBACK_DEFAULT);
+  function builtinCalendarQuips(kind, key, length){
+    kind = (String(kind || '').toLowerCase() === 'festival') ? 'festival' : 'month';
+    length = normalizeQuipLength(length);
+    key = (kind === 'festival') ? normFestivalKey(key) : monthKeyFromValue(key);
+    var out = [];
+    var bucketName = (kind === 'festival') ? 'festivals' : 'months';
+    var bucket = (CALENDAR_QUIPS[bucketName] && CALENDAR_QUIPS[bucketName][key]) || null;
+    if(bucket && Array.isArray(bucket[length])) appendQuips(out, bucket[length]);
+    return out;
+  }
+
+  function regionCalendarQuips(kind, key, length){
+    kind = (String(kind || '').toLowerCase() === 'festival') ? 'festival' : 'month';
+    length = normalizeQuipLength(length);
+    key = (kind === 'festival') ? normFestivalKey(key) : monthKeyFromValue(key);
+    var out = [];
+    var bucketName = (kind === 'festival') ? 'festivals' : 'months';
+    var regions = loadCalendarRegionEntries();
+    for(var i=0;i<regions.length;i++){
+      var quips = (((regions[i] || {}).quips || {}).calendar || {});
+      var bucket = (((quips[bucketName] || {})[key]) || {});
+      appendQuips(out, bucket[length]);
+    }
+    return out;
+  }
+
+  function collectCalendarQuips(kind, key, length){
+    var out = builtinCalendarQuips(kind, key, length);
+    var extra = regionCalendarQuips(kind, key, length);
+    for(var i=0;i<extra.length;i++) out.push(extra[i]);
+    return out;
+  }
+
+  function resolveMonthQuip(month, length){
+    return _pickRandom(collectCalendarQuips('month', month, length));
+  }
+
+  function resolveFestivalQuip(key, length){
+    return _pickRandom(collectCalendarQuips('festival', key, length));
   }
 
   // >>> SET FESTIVAL MINIMUM CELL HEIGHT HERE <<<
@@ -347,19 +600,6 @@ function festivalBgLayout(key){
 
 
   /* ========== Sequencing/Render ========== */
-  function gmId(){
-    var ps=findObjs({_type:'player'})||[];
-    for(var i=0;i<ps.length;i++){
-      try{ if(playerIsGM(ps[i].id)) return ps[i].id; }catch(e){}
-    }
-    return null;
-  }
-
-  function sendAsGM(line){
-    var gid=gmId();
-    sendChat(gid?('player|'+gid):'dwt',line);
-  }
-
   function playerDisplayName(pid){
     try{
       var player = getObj('player', pid);
@@ -432,8 +672,12 @@ function festivalBgLayout(key){
   }
 
   // Only tint the specific Solstice/Equinox day cell (not the whole month)
-  function renderMonthTable(year, month, highlightDay){
+  function renderMonthTable(year, month){
     var v=cssVars(), built=headerCal(MONTHS[month-1].name);
+    var monthQuip = flattenShortQuipInline(resolveMonthQuip(month, 'short'));
+    if(monthQuip){
+      built+='<div style="margin:8px 0;"><span style="font-style:italic;">'+esc(monthQuip)+'</span></div>';
+    }
 
     // SECOND LINE: show season + year, e.g. "Spring 1492 DR" instead of "Mirtul — 1492 DR"
     var seasonKey = seasonKeyFromMonth(month);
@@ -493,7 +737,7 @@ function festivalBgLayout(key){
     built += '<div><span style="font-weight:bold;">'+esc(year+' DR')+'</span></div>';
 
     var bgUrl = festivalBgUrl(key);
-    var quip  = resolveFestivalLongQuip(key);
+    var quip  = resolveFestivalQuip(key, 'short');
     var bgLayout = festivalBgLayout(key);
     var _minH = (bgLayout && typeof bgLayout.minHeightPx === 'number') ? bgLayout.minHeightPx : FESTIVAL_MIN_CELL_HEIGHT_PX;
 // IMPORTANT: Preserve month-table scaffold to avoid fragile sanitizer/nav regressions.
@@ -566,32 +810,9 @@ function festivalBgLayout(key){
 
     // Quip only, centered. No title, no overlay panels.
 
-    // Render quips as enforced 4-line blocks (Option A):
-    // - Normalize arrays-of-lines -> single string
-    // - Convert literal "\\n" sequences -> real newlines
-    // - Split into lines BEFORE escaping, then render each line as a block element
-    // This avoids Roll20 newline/whitespace collapsing behavior.
+    // Render the selected festival quip as explicit line blocks so Roll20 preserves the stanza layout.
     function renderFestivalQuipBlocks(q){
-      try{
-        if(q === null || q === undefined) return '';
-        if(Array.isArray(q)) { q = q.join('\n'); }
-        q = ''+q;
-        // Convert literal "\n" to real newlines without regex literals (Roll20-sandbox safe).
-        if(q.indexOf('\\n') !== -1){ q = q.split('\\n').join('\n'); }
-        // Split on CRLF / CR / LF and Unicode line separators.
-        var reSplit = new RegExp('\\r\\n|\\r|\\n|\\u2028|\\u2029');
-        var lines = q.split(reSplit);
-        var out = '';
-        for(var i=0;i<lines.length;i++){
-          var line = lines[i];
-          // Preserve intentional blank lines if present.
-          out += '<div style="display:block;margin:0;padding:0;line-height:1.50;">' + esc(line) + '</div>';
-        }
-        return out;
-      }catch(e){
-        // Fail safe: return escaped text
-        return esc((''+q));
-      }
+      return renderQuipBlocks(q, 'display:block;margin:0;padding:0;line-height:1.50;');
     }
 
     // Minimum height keeps the pop-up stable across month ↔ festival.
@@ -644,21 +865,93 @@ function festivalBgLayout(key){
         return RT.dwt.ensureMule();
       }
     }catch(e){}
-    var mule = findObjs({_type:'character', name:DWT_MULE})[0];
+    var matches = findObjs({_type:'character', name:DWT_MULE}) || [];
+    var mule = null;
+    var bestScore = -1;
+    for(var i=0;i<matches.length;i++){
+      var score = muleScore(matches[i]);
+      if(score > bestScore){
+        bestScore = score;
+        mule = matches[i];
+      }
+    }
     if(!mule){
       mule = createObj('character', { name:DWT_MULE, archived:false, inplayerjournals:'', controlledby:'' });
     }
     return mule;
   }
+  function abilityActionLength(ability){
+    try{ return String((ability && ability.get('action')) || '').length; }catch(e){ return 0; }
+  }
+  function abilityText(ability){
+    try{ return String((ability && ability.get('action')) || ''); }catch(e){ return ''; }
+  }
+  function normalizeAbilityName(name){
+    return String(name || '').toLowerCase().replace(/\s+/g,'');
+  }
+  function safeParseJSON(text){
+    try{ return JSON.parse(String(text || '')); }catch(e){ return null; }
+  }
+  function regionsRootQuality(text){
+    var parsed = safeParseJSON(text);
+    if(!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return -1;
+    var score = (parsed.schema === 'dwt.regions.root.v1') ? 50 : 0;
+    var regions = parsed.regions;
+    if(!regions || typeof regions !== 'object' || Array.isArray(regions)) return score;
+    var keys = Object.keys(regions);
+    score += keys.length * 5;
+    for(var i=0;i<keys.length;i++){
+      var payload = regions[keys[i]];
+      if(!payload || typeof payload !== 'object' || Array.isArray(payload)) continue;
+      if(payload.schema === 'dwt.region.v4') score += 200;
+      if(payload.weather && typeof payload.weather === 'object' && !Array.isArray(payload.weather)) score += 100;
+      if(payload.region) score += 10;
+      if(payload.locales) score += 10;
+    }
+    return score;
+  }
+  function abilitySortScore(name, ability){
+    var text = abilityText(ability);
+    var key = normalizeAbilityName(name || (ability && ability.get && ability.get('name')) || '');
+    var base = abilityActionLength(ability);
+    if(key === 'regions') return regionsRootQuality(text) * 1000000 + base;
+    return base;
+  }
+  function muleScore(character){
+    if(!character) return -1;
+    var abilities = findObjs({_type:'ability', _characterid:character.id}) || [];
+    var score = abilities.length;
+    for(var i=0;i<abilities.length;i++){
+      var ability = abilities[i];
+      var name = '';
+      try{ name = normalizeAbilityName(ability.get('name') || ''); }catch(e){}
+      var weighted = abilitySortScore(name, ability);
+      score += weighted;
+      if(name === 'mapmeta') score += weighted;
+      else if(name === 'version' || name === 'core') score += Math.max(0, weighted);
+    }
+    return score;
+  }
+  function namedAbilities(character, name){
+    if(!character) return [];
+    var list = findObjs({_type:'ability', _characterid:character.id, name:name}) || [];
+    list.sort(function(a, b){ return abilitySortScore(name, b) - abilitySortScore(name, a); });
+    return list;
+  }
   function upsertAbility(character, name, action){
     if(!character) return;
-    var ability = findObjs({_type:'ability', _characterid:character.id, name:name})[0];
-    if(ability) ability.set({action:String(action||'')});
-    else createObj('ability',{characterid:character.id,name:name,action:String(action||''),istokenaction:false});
+    var abilities = namedAbilities(character, name);
+    if(abilities.length){
+      for(var i=0;i<abilities.length;i++){
+        try{ abilities[i].set({action:String(action||'')}); }catch(e){}
+      }
+    }else{
+      createObj('ability',{characterid:character.id,name:name,action:String(action||''),istokenaction:false});
+    }
   }
   function getAbilityAction(character, name){
     if(!character) return '';
-    var ability = findObjs({_type:'ability', _characterid:character.id, name:name})[0];
+    var ability = namedAbilities(character, name)[0];
     return ability ? (ability.get('action')||'') : '';
   }
   function parseVersionRoot(raw){
@@ -725,7 +1018,7 @@ function festivalBgLayout(key){
     var now=state.dwt.now, y=now.year, seq=buildSeq(y);
     if(now.festival){
       var i=idxForFest(seq, now.festival); if(i>=0) return {year:y,index:i};
-      return {year:y,index:idxForFest(seq,'midsummer')};
+      return {year:y,index:idxForMonth(seq, currentMonthIndexForQuips(now))};
     }
     return {year:y,index:idxForMonth(seq, now.month)};
   }
@@ -739,8 +1032,7 @@ function festivalBgLayout(key){
     var i=v.index; if(i<0||i>=seq.length) i=idxForMonth(seq, now.month);
     var tok=seq[i], built;
     if(tok.t==='month'){
-      var startDay = (v.year===now.year && tok.m===now.month) ? now.day : 1;
-      built = renderMonthTable(v.year, tok.m, startDay);
+      built = renderMonthTable(v.year, tok.m);
     }else{
       built = renderFestival(v.year, tok.key, tok.label);
     }
@@ -880,7 +1172,16 @@ function festivalBgLayout(key){
     if (st.days){
       var now = state.dwt.now;
       var ord = nowToOrd(now) - Math.abs(st.days);
-      var y = now.year; while(ord<=0){ y--; ord += yearLen(y); }
+      var y = now.year;
+      while(ord<=0){
+        if(y<=MIN_Y){
+          y = MIN_Y;
+          ord = 1;
+          break;
+        }
+        y--;
+        ord += yearLen(y);
+      }
       var nextNow = ordToNow(y, ord);
       nextNow.hour = (typeof now.hour === 'number') ? now.hour : 0;
       nextNow.minute = (typeof now.minute === 'number') ? now.minute : 0;
@@ -906,7 +1207,16 @@ function festivalBgLayout(key){
     if (st.days){
       var now = state.dwt.now;
       var ord = nowToOrd(now) + Math.abs(st.days);
-      var y = now.year; while(ord>yearLen(y)){ ord -= yearLen(y); y++; }
+      var y = now.year;
+      while(ord>yearLen(y)){
+        if(y>=MAX_Y){
+          y = MAX_Y;
+          ord = yearLen(y);
+          break;
+        }
+        ord -= yearLen(y);
+        y++;
+      }
       var nextNow = ordToNow(y, ord);
       nextNow.hour = (typeof now.hour === 'number') ? now.hour : 0;
       nextNow.minute = (typeof now.minute === 'number') ? now.minute : 0;
@@ -1485,7 +1795,12 @@ function festivalBgLayout(key){
     _ns:handleCalendarNamespace,
     _refreshView:function(){ try{ updateHandout(true); mirrorToMule(); }catch(e){} },
     _setField:setCalendarField,
-    _dateLine: currentDateLine
+    _dateLine: currentDateLine,
+    _pickMonthQuip: resolveMonthQuip,
+    _pickFestivalQuip: resolveFestivalQuip,
+    _pickCurrentMonthQuip: function(length){
+      return resolveMonthQuip(currentMonthIndexForQuips(), normalizeQuipLength(length));
+    }
   };
 }());
 

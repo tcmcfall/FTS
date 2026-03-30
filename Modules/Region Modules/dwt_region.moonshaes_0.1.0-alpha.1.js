@@ -18,7 +18,21 @@
 //   - ECMWF ERA5 Reanalysis: https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5
 //   - Copernicus Marine Global Ocean Physics Analysis and Forecast: https://data.marine.copernicus.eu/product/GLOBAL_ANALYSISFORECAST_PHY_001_024/description
 //   - NOAA NCEI OISST: https://www.ncei.noaa.gov/products/optimum-interpolation-sst
+//   - NOAA World Ocean Atlas 2023 Data: https://www.ncei.noaa.gov/access/world-ocean-atlas-2023/
+//   - NOAA Ocean Service light-depth guidance: https://oceanservice.noaa.gov/facts/light_travel.html
+//   - NOAA Ocean Service wave mechanics guidance: https://oceanservice.noaa.gov/education/tutorial_currents/03coastal1.html
+//   - NOAA CoastWatch Kd490 guidance: https://eastcoast.coastwatch.noaa.gov/cw_k490.php
+//   - NOAA NDBC Climatic Summary Plots and Table Descriptions: https://www.ndbc.noaa.gov/climatedesc.shtml
+//   - Copernicus Marine Global Ocean Waves Reanalysis: https://data.marine.copernicus.eu/product/GLOBAL_MULTIYEAR_WAV_001_032/description
+//   - National Weather Service wave glossary: https://www.weather.gov/ggw/GlossaryW
+//   - NPS Great Basin cave climate guidance: https://www.nps.gov/grba/learn/nature/airflow-and-cave-climate.htm
 //   - USGS Streamflow Measurement Guidance: https://www.usgs.gov/water-science-school/science/how-streamflow-measured
+//
+// Page names use:
+//   region.locale.mapname
+//   region.locale_<depth>.mapname
+//
+// Page names are case- and space-insensitive. Canonical generated names should be lower-case with no spaces.
 (function(){
   'use strict';
 
@@ -27,6 +41,13 @@
   var REGION_KEY = 'moonshaes';
   var MODULE_NAME = 'dwt_region.' + REGION_KEY;
   var _startupRegistered = false;
+
+  // Tolkien-inspired quip scaffold:
+  // - short: 2 lines, AA
+  // - medium: 4 lines, ACBC
+  // - long: 8 lines, ABCBDEFE
+  // Keep the voice conversational, lightly rhythmic, and maritime where possible.
+  // Calendar month keys use Harptos month names (hammer..nightal); festival keys use between-month festival keys.
 
   var REGION_ENTRY = {
   "schema": "dwt.region.v4",
@@ -113,6 +134,138 @@
     "Water-column sampling uses surface plus 20/60/80% depths for inland and coastal columns, while offshore defaults use 1, 5, and 10 fathoms.",
     "Exact-clock diurnal controls follow a North Atlantic maritime regime, with long-lived fronts offshore and muted subterranean variance below ground."
   ],
+  "quips": {
+    "calendar": {
+      "months": {
+        "hammer": { "short": [], "medium": [], "long": [] },
+        "alturiak": { "short": [], "medium": [], "long": [] },
+        "ches": { "short": [], "medium": [], "long": [] },
+        "tarsakh": { "short": [], "medium": [], "long": [] },
+        "mirtul": { "short": [], "medium": [], "long": [] },
+        "kythorn": { "short": [], "medium": [], "long": [] },
+        "flamerule": { "short": [], "medium": [], "long": [] },
+        "eleasis": { "short": [], "medium": [], "long": [] },
+        "eleint": { "short": [], "medium": [], "long": [] },
+        "marpenoth": { "short": [], "medium": [], "long": [] },
+        "uktar": { "short": [], "medium": [], "long": [] },
+        "nightal": { "short": [], "medium": [], "long": [] }
+      },
+      "festivals": {
+        "midwinter": { "short": [], "medium": [], "long": [] },
+        "greengrass": { "short": [], "medium": [], "long": [] },
+        "midsummer": { "short": [], "medium": [], "long": [] },
+        "shieldmeet": { "short": [], "medium": [], "long": [] },
+        "highharvestide": { "short": [], "medium": [], "long": [] },
+        "feastofthemoon": { "short": [], "medium": [], "long": [] }
+      }
+    },
+    "weather": {
+      "region": {
+        "short": [
+          "Moonshae weather smells of peat, of kelp, of rain-swept stone|And every cliff-road learns to bend before the western groan",
+          "Where mist climbs heather and old stones stare outward over foam|A wiser folk light lamps at dusk and call the weather home",
+          "In Moonshae seas the gulls cry low, the clouds ride wide and gray|Yet every crofter reads the rain as part of living day"
+        ],
+        "medium": [
+          "The Moonshae weather shifts with mist|And lays gray wool on cliff and bay|A sailor trusts the standing stones|Almost as much as break of day",
+          "There rain can sweeten peat and thatch|And wind can comb the heather plain|Yet island folk keep easy pace|As if they long expected rain",
+          "On Moonshae coasts the clouds sit low|The surf runs white, the grass runs dark|A druid says the weather there|Can bless a man and test his bark"
+        ],
+        "long": [
+          "The Moonshaes wear a shawl of mist|And rain along the stone|The sea comes gray beneath the cliffs|The hills keep peat and bone|A crofter reads the western cloud|Before he trusts the day|For island weather turns as quick|As seals beneath the spray",
+          "Where standing stones and heather meet|Above the foaming shore|The wind can sing through gorse and grass|Like some old island lore|A druid lifts his face to rain|And listens for its tune|For Moonshae weather speaks in mist|From dawn until the moon",
+          "The Moonshae rain comes soft at first|Then harder off the sea|It darkens roof and brightens peat|And scents the hawthorn tree|Yet island folk set lamps and soup|For all who beat it home|Because the weather there asks less|Of fear than patience grown"
+        ]
+      },
+      "locales": {
+        "offshore": {
+          "short": [
+            "Off Moonshae coasts the swells breathe long beneath a sky of lead|And every seal-dark wave suggests old shipwrecks of the dead",
+            "The outer water wears a mist as faithful as a cloak|A helmsman there trusts bell and gull more than a stranger spoke",
+            "Far offshore west of Moonshae cliffs the weather broods and sings|And every wake is quickly lost beneath the gray wind's wings"
+          ],
+          "medium": [
+            "Beyond the islands long swells roll|And fog can take the cliffs from sight|A pilot learns the offshore way|By bell and current more than light",
+            "The western weather comes with weight|Through mist, through brine, through driving foam|Moonshae crews reef early there|And never boast of getting home",
+            "Offshore the sky and sea grow one|In pewter, slate, and woolen gray|A mariner reads weather there|By how the seals refuse to play"
+          ],
+          "long": [
+            "Offshore beyond the Moonshae cliffs|The swells come deep and slow|The mist can close around a mast|Before the crew can know|A lookout strains for bell and bird|Where sight will not suffice|For offshore weather there is old|And patient as sea-ice",
+            "The outer lanes of Moonshae seas|Run cold beneath the gray|The waves breathe long, the fog hangs near|And blurs the headlands away|A captain trusts the pull below|And keeps his canvas spare|For offshore weather west of there|Can empty pride with air",
+            "Far offshore Moonshae weather broods|In seal-dark swell and rain|The islands fade, the bells go thin|The compass feels like chain|Yet crews that know the western routes|Hold steady through the foam|For offshore weather honors those|Who make no boasts of home"
+          ]
+        },
+        "coastal": {
+          "short": [
+            "Along Moonshae cliffs the surf climbs white below the dripping stone|And weather hangs from every ledge as if the isle had grown",
+            "The coastal rain smells half of peat and half of bitter brine|A harbor there grows dearer still whenever lamps align",
+            "On Moonshae quays the gulls cry low and mist invades the lane|A fisher knows the hour by taste of salt and coming rain"
+          ],
+          "medium": [
+            "The coastal weather brings gray mist|To cliff, to cove, to chapel wall|A fishwife reads the coming wind|By how the harbor lights burn small",
+            "White surf below and peat smoke up|Make Moonshae coasts a weather chart|The wise tie twice, speak once, and wait|Before they trust the sea's soft heart",
+            "Along the piers the spray runs cold|The gulls fly low, the heather bends|Moonshae coastal weather tests|How well a steady lantern tends"
+          ],
+          "long": [
+            "Along the Moonshae coastal roads|The rain comes in from west|It beads the wool, it salts the rail|It lets no stone keep rest|A fisher hauls the final creel|Before the squall grows near|For coastal weather there can turn|From blessing into fear",
+            "The cliffs stand dark above the foam|The coves lie gray below|The mist can fold a harbor in|Before the bells all know|Yet coastal folk keep fire and broth|For any driven home|Because the weather takes enough|Without the adding of their own",
+            "When Moonshae surf climbs white and hard|Against the harbor stair|The ropes grow black, the dogs stay in|The wet gets in the air|A widow trims the chapel lamp|A boy runs in the net|For coastal weather there reminds|What duty must not forget"
+          ]
+        },
+        "inland": {
+          "short": [
+            "Inland on Moonshae moors the rain moves sideways through the heath|And every stone circle listens as the weather breathes beneath",
+            "Peat smoke, bent grass, and dripping thorn make inland weather plain|A traveler there counts standing stones the way a sailor counts the rain",
+            "Across the inland heather-land the wind runs dark and free|And every crofter thanks the wall, the hearth, the thatch, the tree"
+          ],
+          "medium": [
+            "Inland the heather takes the rain|And turns the moor to purple black|A shepherd reads the weather there|By which sheep refuse the track",
+            "The inland air smells peat and fern|And wet stone older than the hall|Moonshae folk learn patient weather|By how the curlews rise and call",
+            "Where standing stones hold mist at dawn|And gorse keeps bright against the gray|The inland weather teaches hearts|To bend, endure, and bide the day"
+          ],
+          "long": [
+            "Across the Moonshae inland moors|The weather walks in rain|It darkens heather, wets the stone|And brightens fern again|A shepherd counts his flock by sound|When mist takes half the hill|For inland weather there rewards|The folk who learn to still",
+            "The peat-smoke climbs from croft and fold|Beneath a woolen sky|The wind moves low through heather roots|And never hurries by|A druid stands beside old stones|And lets the rainfall run|For inland weather there belongs|To moon, to root, to sun",
+            "When moorland rain comes thin and slant|And hides the farther sheep|The world grows close to wall and fire|And older vows to keep|Yet inland hearts on Moonshae hills|Do not grow hard with weather|They learn instead to bind their days|Like gorse and stone together"
+          ]
+        },
+        "underwater": {
+          "short": [
+            "Below Moonshae seas the kelp runs long through green and pewter light|And currents turn like seal-slick thoughts before they come to sight",
+            "Under the islands wrecks lie furred with weed and silver sand|A diver there feels weather most by how the shoals all stand",
+            "Moonshae water under cliffs is cold, is clear, is deep|And every cave-mouth under surf keeps weather in its sleep"
+          ],
+          "medium": [
+            "Below the isles the daylight falls|Through kelp, through wreck, through seal-dark green|A diver learns the turning tide|Before he knows what it may mean",
+            "The underwater roads run cold|Beneath the cliffs and weeping stone|Moonshae currents teach the skin|To trust no seeming calm alone",
+            "Below the coves the weed bows slow|And silver fish move thin as mail|A swimmer reads the underwater weather|By where the quieter waters fail"
+          ],
+          "long": [
+            "Below the Moonshae coastal cliffs|The daylight travels green|It paints the kelp, it finds old wrecks|It slips through seams unseen|A diver feels the turning tide|Before his eyes can tell|For underwater weather there|Keeps patient warnings well",
+            "The sea-caves under Moonshae rock|Lie cold beneath the foam|The currents breathe in hidden ways|That never quite seem home|A swimmer spares his breath and strength|Where weed and shadow meet|For underwater weather there|Can turn a cove to sleet",
+            "Where seal-shapes pass above the weed|And wrecked masts whiten slow|The water keeps an island mood|Of beauty edged with woe|A pearl-diver minds the tug below|And watches silt unroll|For underwater weather there|Can trouble even soul"
+          ]
+        },
+        "underdark": {
+          "short": [
+            "Below the Moonshae hills the caves keep dripping root and stone|And every draft through buried halls sounds older than the bone",
+            "The underdark beneath the isles smells half of moss and brine|A traveler there can read the deep by how the torch-flames line",
+            "In Moonshae deep roads weather moves by whisper, damp, and seam|And wise folk heed the smallest chill as if it were a dream"
+          ],
+          "medium": [
+            "Below the moors the caverns breathe|With damp that never leaves the wall|Moonshae underdark weather turns|By hidden vents too small to call",
+            "Dripstone, root, and briny draft|Make weather under islands strange|A scout there watches torch and dust|To see when all the stillness change",
+            "The deep roads under Moonshae hills|Can hold dead calm for half a day|Then one cold breath through worked old stone|Will send the wiser folk away"
+          ],
+          "long": [
+            "Beneath the Moonshae standing stones|The deeper tunnels wind|With root-hung roofs and briny damp|And weather of their kind|A lantern flares at one blind turn|Where hidden drafts descend|For underdark weather there can speak|Before the stone will bend",
+            "The caverns under island peat|Lie wet with seep and hush|No gull is heard, no surf is seen|Yet damp winds start to rush|A scout lays hand on dripping wall|And watches lamplight lean|For underdark weather Moonshae-born|Moves sideways and unseen",
+            "In buried roads below the crofts|The silence carries brine|The air stays still until some crack|Lets through a thinner line|A traveler trusts that smallest breath|More than the brightest map|For underdark weather under isles|Can close a careless gap"
+          ]
+        }
+      }
+    }
+  },
   "localeDefinitions": {
     "offshore": {
       "label": "Offshore",

@@ -4,28 +4,24 @@
                          : (typeof global!=='undefined')     ? global
                          : this;
 
-    // Auto-sync windsock + weather state when the active (player ribbon) page changes.
-    // NOTE: Roll20 does not provide a reliable per-GM-viewer page-change event (GM can view any page).
-    // This listens to player-page ribbon changes and party split changes.
+    // Page-change handling is delegated into core once it has initialized.
     try{
-      on('change:campaign:playerpageid', function(){
+      on('change:campaign:playerpageid', function(obj, prev){
         try{
-          if(_dwtCoreSyncRoot.RT && _dwtCoreSyncRoot.RT.dwt && typeof _dwtCoreSyncRoot.RT.dwt.weatherVerifySyncActivePage==='function'){
-            var pid = (function(){ try{ return (Campaign().get('playerid')||''); }catch(e){ return ''; } })();
-            // If pid cannot be derived, fall back to syncing by pageId only.
-            _dwtCoreSyncRoot.RT.dwt.weatherVerifySyncActivePage(pid || 'API', { silent:true, pageId: Campaign().get('playerpageid') });
+          if(_dwtCoreSyncRoot.RT && _dwtCoreSyncRoot.RT.dwt && typeof _dwtCoreSyncRoot.RT.dwt.autoOpenCampaignMenuForPageChange==='function'){
+            _dwtCoreSyncRoot.RT.dwt.autoOpenCampaignMenuForPageChange('ribbon', {
+              campaign: (typeof Campaign === 'function') ? Campaign() : null
+            });
           }
         }catch(e2){ log('dwt core autosync playerpageid err: '+e2); }
       });
-      on('change:campaign:playerspecificpages', function(){
+      on('change:campaign:playerspecificpages', function(obj, prev){
         try{
-          var psp = Campaign().get('playerspecificpages')||{};
-          if(_dwtCoreSyncRoot.RT && _dwtCoreSyncRoot.RT.dwt && typeof _dwtCoreSyncRoot.RT.dwt.weatherVerifySyncActivePage==='function'){
-            var keys = Object.keys(psp||{});
-            for(var i=0;i<keys.length;i++){
-              var pid2 = keys[i];
-              _dwtCoreSyncRoot.RT.dwt.weatherVerifySyncActivePage(pid2, { silent:true, pageId: psp[pid2] });
-            }
+          if(_dwtCoreSyncRoot.RT && _dwtCoreSyncRoot.RT.dwt && typeof _dwtCoreSyncRoot.RT.dwt.autoOpenCampaignMenuForPageChange==='function'){
+            _dwtCoreSyncRoot.RT.dwt.autoOpenCampaignMenuForPageChange('split', {
+              campaign: (typeof Campaign === 'function') ? Campaign() : null,
+              prev: prev || {}
+            });
           }
         }catch(e3){ log('dwt core autosync playerspecificpages err: '+e3); }
       });
@@ -224,6 +220,172 @@
   function esc(s){ return String(s||'').replace(/[<>&"']/g,function(c){return c=='<'?'&lt;':c=='>'?'&gt;':c=='&'?'&amp;':c=='"'?'&quot;':'&#39;';}); }
   function hrefAttr(s){ return String(s||'').replace(/"/g,'&quot;'); }
   function literal(s){ return '<code>'+esc(s)+'</code>'; }
+
+  function uniqueIds(ids){
+    var out = [];
+    var seen = {};
+    ids = Array.isArray(ids) ? ids : [];
+    for(var i=0;i<ids.length;i++){
+      var pid = String(ids[i] || '');
+      if(!pid || seen[pid]) continue;
+      seen[pid] = true;
+      out.push(pid);
+    }
+    return out;
+  }
+
+  function playerIds(includeGMs){
+    var out = [];
+    var players = findObjs({_type:'player'}) || [];
+    for(var i=0;i<players.length;i++){
+      var pid = String((players[i] && players[i].id) || '');
+      if(!pid) continue;
+      var isGM = false;
+      try{ isGM = !!playerIsGM(pid); }catch(e){}
+      if(!includeGMs && isGM) continue;
+      out.push(pid);
+    }
+    return uniqueIds(out);
+  }
+
+  function gmPlayerIds(){
+    var out = [];
+    var players = findObjs({_type:'player'}) || [];
+    for(var i=0;i<players.length;i++){
+      var pid = String((players[i] && players[i].id) || '');
+      if(!pid) continue;
+      try{
+        if(playerIsGM(pid)) out.push(pid);
+      }catch(e){}
+    }
+    return uniqueIds(out);
+  }
+
+  function ribbonPlayerIds(playerspecificpages){
+    var split = {};
+    var out = [];
+    playerspecificpages = (playerspecificpages && typeof playerspecificpages === 'object') ? playerspecificpages : {};
+    for(var pid in playerspecificpages){
+      if(playerspecificpages.hasOwnProperty(pid) && pid){
+        split[String(pid)] = true;
+      }
+    }
+    var players = playerIds(false);
+    for(var i=0;i<players.length;i++){
+      if(!split[players[i]]) out.push(players[i]);
+    }
+    return uniqueIds(out);
+  }
+
+  function effectivePageIdForPlayer(pid, playerspecificpages, ribbonPageId){
+    playerspecificpages = (playerspecificpages && typeof playerspecificpages === 'object') ? playerspecificpages : {};
+    if(pid && playerspecificpages[pid]) return String(playerspecificpages[pid] || '');
+    return String(ribbonPageId || '');
+  }
+
+  function changedPlayerspecificPageIds(prevPSP, nowPSP){
+    var out = [];
+    var seen = {};
+    prevPSP = (prevPSP && typeof prevPSP === 'object') ? prevPSP : {};
+    nowPSP = (nowPSP && typeof nowPSP === 'object') ? nowPSP : {};
+    var pid;
+    for(pid in prevPSP){ if(prevPSP.hasOwnProperty(pid)) seen[String(pid)] = true; }
+    for(pid in nowPSP){ if(nowPSP.hasOwnProperty(pid)) seen[String(pid)] = true; }
+    for(pid in seen){
+      if(!seen.hasOwnProperty(pid)) continue;
+      if(String(prevPSP[pid] || '') !== String(nowPSP[pid] || '')){
+        out.push(String(pid));
+      }
+    }
+    return uniqueIds(out);
+  }
+
+  function syncMapMetaForPlayer(pid, pageId){
+    try{
+      if(root.RT && root.RT.dwt && typeof root.RT.dwt.mapMetaSyncActivePage === 'function'){
+        return root.RT.dwt.mapMetaSyncActivePage(pid, { pageId: pageId });
+      }
+    }catch(e){}
+    try{
+      if(root.dwt_mapMeta && typeof root.dwt_mapMeta.syncPageMeta === 'function'){
+        return root.dwt_mapMeta.syncPageMeta(pid, { pageId: pageId });
+      }
+    }catch(e2){}
+    return null;
+  }
+
+  function syncCampaignContextForPlayer(pid, opts){
+    opts = opts || {};
+    var pageId = String(opts.pageId || dwt.getEffectivePageId(pid) || '');
+    if(!pageId) return { ok:false, error:'No page resolved for sync.' };
+    try{ syncMapMetaForPlayer(pid, pageId); }catch(e){}
+    try{
+      if(root.RT && root.RT.dwt && typeof root.RT.dwt.weatherSyncActivePage === 'function'){
+        root.RT.dwt.weatherSyncActivePage(pid || 'API', { silent:true, pageId: pageId });
+      }else if(root.RT && root.RT.dwt && typeof root.RT.dwt.weatherVerifySyncActivePage === 'function'){
+        root.RT.dwt.weatherVerifySyncActivePage(pid || 'API', { silent:true, pageId: pageId });
+      }
+    }catch(e2){}
+    return { ok:true, pageId:pageId };
+  }
+
+  function whisperCampaignMenuBatch(pids, opts){
+    pids = uniqueIds(pids);
+    opts = opts || {};
+    if(!pids.length) return;
+    try{ ensureGlobalCampaignLogMacro(); }catch(e){}
+    for(var i=0;i<pids.length;i++){
+      try{ ensureCampaignLogMacroForPlayer(pids[i]); }catch(e2){}
+    }
+    if(opts.runStartup){
+      try{ runStartupHooks(opts.reason || 'command'); }catch(e3){ log('dwt core runStartupHooks ['+(opts.reason||'menu')+'] err: '+e3); }
+    }
+    try{ syncCampaignContextForPlayer(pids[0], { pageId: opts.pageId }); }catch(e4){ log('dwt core context sync err: '+e4); }
+    if(opts.refreshGeo){
+      try{
+        if(root.dwt_geo && typeof root.dwt_geo.refreshGeoForActivePage === 'function'){
+          root.dwt_geo.refreshGeoForActivePage();
+        }
+      }catch(e5){ log('dwt core geo page refresh err: '+e5); }
+    }
+    for(var j=0;j<pids.length;j++){
+      whisper(pids[j], campaignLogPanel(pids[j]));
+    }
+  }
+
+  function autoOpenCampaignMenuForPageChange(kind, opts){
+    opts = opts || {};
+    var campaign = opts.campaign || null;
+    if(!campaign){
+      try{ campaign = Campaign(); }catch(e){}
+    }
+    if(!campaign) return;
+
+    var ribbonPageId = String(campaign.get('playerpageid') || '');
+    var nowPSP = campaign.get('playerspecificpages') || {};
+
+    if(kind === 'split'){
+      var prevPSP = (opts.prev && opts.prev.playerspecificpages) || {};
+      var changed = changedPlayerspecificPageIds(prevPSP, nowPSP);
+      var grouped = {};
+      for(var i=0;i<changed.length;i++){
+        var pid = changed[i];
+        var pageId = effectivePageIdForPlayer(pid, nowPSP, ribbonPageId);
+        if(!pageId) continue;
+        grouped[pageId] = grouped[pageId] || [];
+        grouped[pageId].push(pid);
+      }
+      for(var pageKey in grouped){
+        if(grouped.hasOwnProperty(pageKey)){
+          whisperCampaignMenuBatch(grouped[pageKey], { pageId: pageKey });
+        }
+      }
+      return;
+    }
+
+    var targets = ribbonPlayerIds(nowPSP).concat(gmPlayerIds());
+    whisperCampaignMenuBatch(targets, { pageId: ribbonPageId, refreshGeo:true });
+  }
 
   function addHelpSection(order, title, linesFn){
     dwt.HELP_SECTIONS.push({ order:(order|0), title:String(title||'Help'), lines:linesFn });
@@ -763,7 +925,7 @@
       try{ name = normalizeAbilityName(ability.get('name') || ''); }catch(e){}
       var weighted = abilitySortScore(name, ability);
       score += weighted;
-      if(name === 'mapmeta') score += weighted;
+      if(name === 'regions' || name === 'weather' || name === 'mapmeta') score += weighted;
       else if(name === 'version' || name === 'core') score += Math.max(0, weighted);
     }
     return score + abilities.length;
@@ -799,9 +961,14 @@
   }
 
   function setAttrDirect(ch, name, value){
-    var a = findObjs({_type:'attribute', _characterid:ch.id, name:name})[0];
-    if (a) a.set('current', String(value));
-    else   createObj('attribute', { _characterid:ch.id, name:name, current:String(value) });
+    var attrs = findObjs({_type:'attribute', _characterid:ch.id, name:name}) || [];
+    if(attrs.length){
+      for(var i=0;i<attrs.length;i++){
+        try{ attrs[i].set('current', String(value)); }catch(e){}
+      }
+    }else{
+      createObj('attribute', { _characterid:ch.id, name:name, current:String(value) });
+    }
   }
   function mirrorCoreToMule(){
     var S = ensureCoreState(), palette = (S.ui&&S.ui.palette)||'none';
@@ -942,27 +1109,11 @@
     }
 
     if (!anyFlags){
-      // Bare !dwt: (re)provision Campaign.Log macros, refresh module startup, then show the panel.
-      try{
-        ensureGlobalCampaignLogMacro();
-        if (pid){
-          ensureCampaignLogMacroForPlayer(pid);
-        }
-      }catch(e){
-        log('dwt core macro provision on !dwt err: '+e);
-      }
-      try{
-        runStartupHooks('command');
-      }catch(e2){
-        log('dwt core runStartupHooks on !dwt err: '+e2);
-      }
-      // Auto-sync weather to the current calendar tick + active page context.
-      try{
-        if(root.RT && root.RT.dwt && typeof root.RT.dwt.weatherSyncActivePage==='function'){
-          root.RT.dwt.weatherSyncActivePage(pid, { silent:true, pageId: Campaign().get('playerpageid') });
-        }
-      }catch(e3){ log('dwt core weatherSyncActivePage err: '+e3); }
-      whisper(pid, campaignLogPanel(pid));
+      whisperCampaignMenuBatch([pid], {
+        pageId: dwt.getEffectivePageId(pid) || (function(){ try{ return String(Campaign().get('playerpageid') || ''); }catch(e){ return ''; } })(),
+        runStartup: true,
+        reason: 'command'
+      });
       return;
     }
 
@@ -1051,6 +1202,7 @@
   dwt.registerStartup    = registerStartup;
   dwt.refreshHelpHandout = refreshHelpHandout;
   dwt.runStartupHooks    = runStartupHooks;
+  dwt.autoOpenCampaignMenuForPageChange = autoOpenCampaignMenuForPageChange;
   dwt.esc                = esc;
   dwt.hrefAttr           = hrefAttr;
   dwt.literal            = literal;
