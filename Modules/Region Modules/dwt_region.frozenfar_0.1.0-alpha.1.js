@@ -18,7 +18,21 @@
 //   - ECMWF ERA5 Reanalysis: https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5
 //   - Copernicus Marine Global Ocean Physics Analysis and Forecast: https://data.marine.copernicus.eu/product/GLOBAL_ANALYSISFORECAST_PHY_001_024/description
 //   - NOAA NCEI OISST: https://www.ncei.noaa.gov/products/optimum-interpolation-sst
+//   - NOAA World Ocean Atlas 2023 Data: https://www.ncei.noaa.gov/access/world-ocean-atlas-2023/
+//   - NOAA Ocean Service light-depth guidance: https://oceanservice.noaa.gov/facts/light_travel.html
+//   - NOAA Ocean Service wave mechanics guidance: https://oceanservice.noaa.gov/education/tutorial_currents/03coastal1.html
+//   - NOAA CoastWatch Kd490 guidance: https://eastcoast.coastwatch.noaa.gov/cw_k490.php
+//   - NOAA NDBC Climatic Summary Plots and Table Descriptions: https://www.ndbc.noaa.gov/climatedesc.shtml
+//   - Copernicus Marine Global Ocean Waves Reanalysis: https://data.marine.copernicus.eu/product/GLOBAL_MULTIYEAR_WAV_001_032/description
+//   - National Weather Service wave glossary: https://www.weather.gov/ggw/GlossaryW
+//   - NPS Great Basin cave climate guidance: https://www.nps.gov/grba/learn/nature/airflow-and-cave-climate.htm
 //   - USGS Streamflow Measurement Guidance: https://www.usgs.gov/water-science-school/science/how-streamflow-measured
+//
+// Page names use:
+//   region.locale.mapname
+//   region.locale_<depth>.mapname
+//
+// Page names are case- and space-insensitive. Canonical generated names should be lower-case with no spaces.
 (function(){
   'use strict';
 
@@ -27,6 +41,13 @@
   var REGION_KEY = 'frozenfar';
   var MODULE_NAME = 'dwt_region.' + REGION_KEY;
   var _startupRegistered = false;
+
+  // Tolkien-inspired quip scaffold:
+  // - short: 2 lines, AA
+  // - medium: 4 lines, ACBC
+  // - long: 8 lines, ABCBDEFE
+  // Keep the voice conversational, lightly rhythmic, and maritime where possible.
+  // Calendar month keys use Harptos month names (hammer..nightal); festival keys use between-month festival keys.
 
   var REGION_ENTRY = {
   "schema": "dwt.region.v4",
@@ -113,6 +134,138 @@
     "Water-column sampling uses surface plus 20/60/80% depths for inland and coastal columns, while offshore defaults use 1, 5, and 10 fathoms.",
     "Exact-clock diurnal controls follow arctic daylight compression and expansion, while marine and under-ice locales damp drift to reflect polar water inertia."
   ],
+  "quips": {
+    "calendar": {
+      "months": {
+        "hammer": { "short": [], "medium": [], "long": [] },
+        "alturiak": { "short": [], "medium": [], "long": [] },
+        "ches": { "short": [], "medium": [], "long": [] },
+        "tarsakh": { "short": [], "medium": [], "long": [] },
+        "mirtul": { "short": [], "medium": [], "long": [] },
+        "kythorn": { "short": [], "medium": [], "long": [] },
+        "flamerule": { "short": [], "medium": [], "long": [] },
+        "eleasis": { "short": [], "medium": [], "long": [] },
+        "eleint": { "short": [], "medium": [], "long": [] },
+        "marpenoth": { "short": [], "medium": [], "long": [] },
+        "uktar": { "short": [], "medium": [], "long": [] },
+        "nightal": { "short": [], "medium": [], "long": [] }
+      },
+      "festivals": {
+        "midwinter": { "short": [], "medium": [], "long": [] },
+        "greengrass": { "short": [], "medium": [], "long": [] },
+        "midsummer": { "short": [], "medium": [], "long": [] },
+        "shieldmeet": { "short": [], "medium": [], "long": [] },
+        "highharvestide": { "short": [], "medium": [], "long": [] },
+        "feastofthemoon": { "short": [], "medium": [], "long": [] }
+      }
+    },
+    "weather": {
+      "region": {
+        "short": [
+          "Frozenfar keeps its weather hard in rime, in salt, in stone|Yet folk there laugh with red-bit lips and call the cold their own",
+          "Where auroras stain the harbor green and pack-ice grips the bar|A weather-wise soul reads the sky as if it were a scar",
+          "In Frozenfar the sea bites white and cliffs bite black above|A tighter knot, a deeper fire, and both will pass for love"
+        ],
+        "medium": [
+          "Cold weather rules the northern quay|Where floes grind slow below the light|A pilot trusts his beard for truth|Before the dawn admits he's right",
+          "In Frozenfar the lamps burn low|And rime takes hold of spar and bone|Yet harbor folk keep working still|As if the gale were kin well known",
+          "The cliffs stand black, the surf stands white|The sky turns green in winter's glass|A northman says the clever thrive|By letting colder weather pass"
+        ],
+        "long": [
+          "Frozenfar keeps an iron coast|With floes along the bar|The sea breathes mist, the cliffs breathe cold|Beneath the northern star|A pilot reads the wind by pain|That stiffens hand and cheek|For weather there speaks plain enough|To all who know its speech",
+          "When auroras lean above the bay|And ice begins to ring|The harbor shrinks to lamp and oath|And every board to spring|Yet folk of Frozenfar endure|With seal-oil fire and song|For in that hard and bitter land|Stout hearts have winter long",
+          "The snow comes slant in Frozenfar|The surf comes dark and steep|The dead are named beside the stove|Before the folk can sleep|A captain banks the embers high|And checks the frozen chain|For northland weather favors those|Who reckon twice with pain"
+        ]
+      },
+      "locales": {
+        "offshore": {
+          "short": [
+            "Off Frozenfar the pack-ice knocks like knuckles on a door|And every swell seems old enough to ask for one year more",
+            "The offshore dark runs black and green beneath a glassy cold|A sailor there keeps speech cut short and both hands hard and bold",
+            "Far offshore in Frozenfar the wind comes clean as pain|And even gulls look built of bone above the iron main"
+          ],
+          "medium": [
+            "Beyond the headlands floes drift slow|And grind in dull and patient time|A helmsman listens more than speaks|For offshore weather talks in rime",
+            "The outer swells are dark as ore|The sky sits low, the cold bites through|A northern mate will bless no chart|Until the gulls agree it true",
+            "Offshore in Frozenfar the wind|Can skin the boast from any lip|A prudent soul reefs early there|And learns humility from ship"
+          ],
+          "long": [
+            "Offshore the ice fields shift and groan|Beyond the harbor light|The swells rise black, the foam burns pale|Against the polar night|A lookout names the moving floes|Like kin he used to know|For offshore weather there can kill|The hand that learns too slow",
+            "The outer sea of Frozenfar|Is dark as hammered lead|The wind can flay the cheek to bone|Before the clouds have spread|A captain trusts a smaller sail|A tighter lash, a prayer|For offshore weather keeps no room|For fools or borrowed air",
+            "When pack-ice drifts across the lanes|And closes half the way|The bells ashore grow faint and small|Against the iron spray|Yet crews that know the northern deeps|Go on with steady hands|For offshore weather crowns the folk|Who bend before commands"
+          ]
+        },
+        "coastal": {
+          "short": [
+            "On Frozenfar's black coastal stones the surf leaves silver lace|And weather writes in salt and rime across the harbor face",
+            "The coastal wind tastes half of snow and half of iron foam|Yet every lamp beside the pier insists the quay is home",
+            "Along that coast the tide runs hard beneath a frost-bit sky|A fisher mends by lantern glow and lets the long squalls cry"
+          ],
+          "medium": [
+            "The coastal bells ring sharp with frost|The piers are white by dawn's first light|A harbor wife can smell bad weather|Long before the surf turns white",
+            "Black stone, white foam, and iron cold|Make Frozenfar's coast plain to read|A careful crew trusts lamp and reef|And never more than winter's speed",
+            "Along the coastal walls the spray|Turns rope and rail to salted glass|The wise step slow, speak low, and wait|For harsher weather yet to pass"
+          ],
+          "long": [
+            "The coastal rocks of Frozenfar|Wear rime instead of green|The surf strikes hard, the gulls fly low|The sky stays iron lean|A dockhand lifts the lantern shield|And squints into the foam|For coastal weather there makes clear|How dearly folk earn home",
+            "By black stone piers and frozen slips|The tide keeps up its war|It salts the rail, it stiffens net|It rattles every spar|Yet coastal folk keep soup and fire|For all who reach the quay|Because the weather takes enough|Without their help that day",
+            "When coastal spray comes knife and white|Across the harbor wall|The bells ring thin, the shutters shake|The saint-lamps burn though small|A fisher rows the last skiff in|And ties with numbing hands|For coastal weather honors most|The one who understands"
+          ]
+        },
+        "inland": {
+          "short": [
+            "Inland in Frozenfar the snow lies wide as judgment laid|And every sled-track looks like script the winter itself made",
+            "The tundra wind combs birch and moss till both bow white and low|A traveler there trusts smoke at dusk more than the drifted road",
+            "Far inland all the weather speaks through antler, snow, and hide|And those who live by northern trails keep patience at their side"
+          ],
+          "medium": [
+            "Inland the snowfields take the moon|And throw it back in patient blue|A trapper reads the weather there|By what the reindeer choose to do",
+            "The birches crack, the sled-runners sing|The sky goes pale from end to end|In Frozenfar the inland wise|Make weather into working friend",
+            "Where road is drift and hill is white|A chimney means more than a crown|The inland folk of Frozenfar know|How fast proud weather knocks men down"
+          ],
+          "long": [
+            "Far inland Frozenfar lies wide|In drift and birch and bone|The sky can arch for half a day|And still leave travelers lone|A trapper watches fox and deer|Before he shifts his line|For inland weather teaches most|The folk who read its sign",
+            "The tundra takes the snowfall first|And holds it without end|A sledge track lasts until the gale|Decides it needs to bend|Yet inland hearts burn slow and sure|Beside the evening flame|For Frozenfar rewards the ones|Who greet hard weather same",
+            "When daylight thins on inland drifts|And birches darken blue|The old trails vanish one by one|Though each was plain and true|A hunter banks his little fire|And waits the squall to tire|For inland weather loves the soul|That wastes no step nor fire"
+          ]
+        },
+        "underwater": {
+          "short": [
+            "Below Frozenfar the water glows like bottle-glass and steel|And every current carries cold enough for bone to feel",
+            "Under the ice the green light bends on kelp and broken spar|The sea keeps quieter weather there, but never kinder far",
+            "Frozenfar below the waves is black, is green, is slow|A diver learns the weight of cold in every muted flow"
+          ],
+          "medium": [
+            "Below the floes the daylight sifts|In green along the broken kelp|A diver knows the colder currents|Need no words to ask for help",
+            "The underwater roads run dark|Beneath the ice and whaling ground|In Frozenfar even the sea|Makes weather with a quieter sound",
+            "Cold water folds through reef and wreck|And presses thought to slower pace|A swimmer there learns northern calm|From every seal-dark passing face"
+          ],
+          "long": [
+            "Below the ice of Frozenfar|The daylight travels green|It finds the wrecks, it finds the weed|It shows what cold can mean|A diver moves with careful hands|Where silence rules the bar|For underwater weather there|Is slower, not less hard",
+            "The currents under Frozenfar|Run dark beneath the floe|They turn the kelp, they stir the silt|They pull the long weeds low|A swimmer reads them by the skin|Before the eye can tell|For underwater weather keeps|Its warnings mute but well",
+            "Where broken spars lie furred with weed|And seal-shapes pass above|The sea keeps house in northern green|Too cold for haste or love|A diver learns to spare his breath|And move with quieter art|For underwater weather there|Can seize a reckless heart"
+          ]
+        },
+        "underdark": {
+          "short": [
+            "Beneath Frozenfar the old dwarf roads wear rime instead of rain|And every draft comes cold enough to wake the rock to pain",
+            "The deep halls keep a frost-bit hush where lantern echoes roam|A traveler there trusts heated stone more than he trusts a home",
+            "In Frozenfar's underdark the air moves thin, then still, then wrong|And wise folk heed the smallest draft before it grows too strong"
+          ],
+          "medium": [
+            "Below the cliffs the caverns breathe|With cold that never learns the day|A miner says the deeper drafts|Can turn a brave man's will away",
+            "Rime on chain and dripstone white|Mark routes the unwary should not choose|The underdark of Frozenfar|Makes weather out of little clues",
+            "The deep roads hold their silence long|Till one thin draft disturbs the flame|Then every wiser traveler knows|The cave has shifted all the same"
+          ],
+          "long": [
+            "Beneath Frozenfar the stone goes cold|And keeps the cold it won|No tide is seen, no gull is heard|No memory of the sun|A lantern flickers at one turn|Where hidden drafts conspire|For underdark weather there can speak|By one uneasy fire",
+            "The old dwarf roads run dark and hard|With rime on rail and chain|A traveler hears the weather there|In whisper, not in rain|One colder breath along the wall|One sudden dying flame|These are the signs the deep earth gives|Before it shifts its frame",
+            "In caverns far below the quay|The silence carries weight|The air stays still until it stirs|And then the wise men wait|A scout lays palm to frozen stone|To see how lamplights bend|For underdark weather under Frozenfar|Can change before the end"
+          ]
+        }
+      }
+    }
+  },
   "localeDefinitions": {
     "offshore": {
       "label": "Offshore",

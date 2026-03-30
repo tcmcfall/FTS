@@ -139,15 +139,7 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
         }
       }
     } catch (e) {}
-
-    try {
-      var raw = getAbilityAction(mule, 'weather.settings');
-      if (!raw) return 'imperial';
-      var parsed = JSON.parse(raw);
-      return (parsed && parsed.units === 'metric') ? 'metric' : 'imperial';
-    } catch (e2) {
-      return 'imperial';
-    }
+    return 'imperial';
   }
 
   function formatFathomsDepth(meters) {
@@ -169,21 +161,19 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
     return preferred + ' below the surface';
   }
 
-  function parseDepthUnit(rawUnit) {
-    var unit = lower(rawUnit).replace(/\s+/g, '');
-    if (unit === 'ft' || unit === 'foot' || unit === 'feet') {
-      return { token: 'ft', family: 'imperial' };
+  function formatApproximateDepthDisplay(meters, units, isElevation) {
+    meters = Math.max(0, Math.round(+meters || 0));
+    if (units === 'metric') {
+      if (meters >= 1000) {
+        return 'approximately ' + trimNumberString(meters / 1000, 1) + ' km' + (isElevation ? '' : ' below the surface');
+      }
+      return 'approximately ' + trimNumberString(Math.max(10, Math.round(meters / 10) * 10), 0) + ' m' + (isElevation ? '' : ' below the surface');
     }
-    if (unit === 'mi' || unit === 'mile' || unit === 'miles') {
-      return { token: 'mi', family: 'imperial' };
+    var feet = Math.max(0, roundTo(metersToFeet(meters), 0));
+    if (feet >= 5280) {
+      return 'approximately ' + trimNumberString(feet / 5280, 1) + ' mi' + (isElevation ? '' : ' below the surface');
     }
-    if (unit === 'm' || unit === 'meter' || unit === 'metre' || unit === 'meters' || unit === 'metres') {
-      return { token: 'm', family: 'metric' };
-    }
-    if (unit === 'km' || unit === 'kilometer' || unit === 'kilometers') {
-      return { token: 'km', family: 'metric' };
-    }
-    return null;
+    return 'approximately ' + trimNumberString(Math.max(10, Math.round(feet / 10) * 10), 0) + ' ft' + (isElevation ? '' : ' below the surface');
   }
 
   function parseDepthSpec(raw, units) {
@@ -400,7 +390,7 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
         try { name = normalizeAbilityName(ability.get('name') || ''); } catch (e0) {}
         var weighted = abilitySortScore(name, ability);
         score += weighted;
-        if (name === 'mapmeta') score += weighted;
+        if (name === 'regions' || name === 'weather' || name === 'mapmeta') score += weighted;
         else if (name === 'version' || name === 'core') score += Math.max(0, weighted);
       }
       if (score > bestScore) {
@@ -844,6 +834,13 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
 
   function depthDisplay(meta, mule) {
     if (!meta || !meta.depth_valid) return '';
+    if (meta.locale_key === 'underwater' || meta.locale_key === 'underdark') {
+      return formatApproximateDepthDisplay(
+        meta.depth_meters,
+        getWeatherUnits(mule || getOrCreateMule()),
+        !!meta.depth_is_elevation
+      );
+    }
     return formatDepthDisplay(
       meta.depth_meters,
       meta.locale_key,
@@ -1010,6 +1007,24 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
     return { meta: meta, page: page };
   }
 
+  function syncPageMeta(pid, opts) {
+    opts = opts || {};
+    var page = null;
+    if (opts.pageId) {
+      page = getObj('page', String(opts.pageId || ''));
+    }
+    if (!page) {
+      page = getActivePageForPlayer(pid) || getDefaultBookmarkPage();
+    }
+    if (!page) return { error: 'Could not resolve an active page for you.' };
+
+    var meta = collectPageMeta(page);
+    storeMeta(meta);
+    storeMetaToMule(meta);
+    maybeWhisperNamingIssues(pid, meta || {});
+    return { meta: meta, page: page };
+  }
+
   function captureDefaultPageAtInit() {
     try {
       var page = getDefaultBookmarkPage();
@@ -1096,7 +1111,7 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
           '/w gm Map name "' + esc(meta.raw_name || '') + '" does not use '
             + 'region.locale.mapname or region.locale_depth.mapname.'
             + '<br><br>Rename appropriately to enable regional and locale-based weather. '
-            + 'Use bare depth values for feet/meters in the current weather units, append mi/km for large units, and prefix with a "+" for elevation.'
+            + 'Use bare depth values for feet/meters in the current weather units, append mi/km for large-unit input, and prefix with a "+" for elevation.'
             + '<br><br>Case and spaces are ignored; canonical names are lower-case with no spaces.'
         );
         return;
@@ -1137,7 +1152,9 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
       delete stateRoot.namingWarn[pid];
       return;
     }
-    stateRoot.namingWarn[pid] = namingWarningFingerprint(meta);
+    var fingerprint = namingWarningFingerprint(meta);
+    if (stateRoot.namingWarn[pid] === fingerprint) return;
+    stateRoot.namingWarn[pid] = fingerprint;
     whisperNamingIssues(meta || {});
   }
 
@@ -1233,6 +1250,7 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
       });
 
       RT.dwt.addHelpSection(20, 'Map Information', helpLines);
+      RT.dwt.mapMetaSyncActivePage = syncPageMeta;
       if (typeof RT.dwt.refreshHelpHandout === 'function') {
         RT.dwt.refreshHelpHandout(null);
       }
@@ -1289,7 +1307,8 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
   return {
     init: init,
     collectPageMeta: collectPageMeta,
-    parsePageName: parsePageName
+    parsePageName: parsePageName,
+    syncPageMeta: syncPageMeta
   };
 })();
 

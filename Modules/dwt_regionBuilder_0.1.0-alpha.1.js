@@ -32,6 +32,8 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
   var _registered = false;
 
   var CANONICAL_LOCALES = ['offshore','coastal','inland','underwater','underdark'];
+  var CALENDAR_MONTH_KEYS = ['hammer','alturiak','ches','tarsakh','mirtul','kythorn','flamerule','eleasis','eleint','marpenoth','uktar','nightal'];
+  var CALENDAR_FESTIVAL_KEYS = ['midwinter','greengrass','midsummer','shieldmeet','highharvestide','feastofthemoon'];
   var PERIOD_ORDER = [
     'hammer','midwinter','alturiak','ches','tarsakh','greengrass','mirtul','kythorn',
     'flamerule','midsummer','shieldmeet','eleasis','eleint','highharvestide',
@@ -146,6 +148,46 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
       label:'NOAA NCEI OISST',
       url:'https://www.ncei.noaa.gov/products/optimum-interpolation-sst',
       usage:'Sea-surface temperature sanity check for open-ocean and coastal surface layers.'
+    },
+    {
+      label:'NOAA World Ocean Atlas 2023 Data',
+      url:'https://www.ncei.noaa.gov/access/world-ocean-atlas-2023/',
+      usage:'Depth-aware ocean temperature sanity check and seasonal damping reference below the upper ocean.'
+    },
+    {
+      label:'NOAA Ocean Service Light-Depth Guidance',
+      url:'https://oceanservice.noaa.gov/facts/light_travel.html',
+      usage:'Sunlight, twilight, and aphotic depth bands used to darken underwater visibility with depth.'
+    },
+    {
+      label:'NOAA Ocean Service Wave Mechanics Guidance',
+      url:'https://oceanservice.noaa.gov/education/tutorial_currents/03coastal1.html',
+      usage:'Wind-wave reference showing that local wave height depends on wind speed, wind duration, and fetch rather than wind speed alone.'
+    },
+    {
+      label:'NOAA CoastWatch Kd490 Guidance',
+      url:'https://eastcoast.coastwatch.noaa.gov/cw_k490.php',
+      usage:'Water-clarity check used to make coastal, lake, river, and reef water attenuate light faster than clear open ocean.'
+    },
+    {
+      label:'NOAA NDBC Climatic Summary Plots and Table Descriptions',
+      url:'https://www.ndbc.noaa.gov/climatedesc.shtml',
+      usage:'Monthly and seasonal buoy climatology for significant wave height, average wave period, and joint wind-versus-wave distributions.'
+    },
+    {
+      label:'Copernicus Marine Global Ocean Waves Reanalysis',
+      url:'https://data.marine.copernicus.eu/product/GLOBAL_MULTIYEAR_WAV_001_032/description',
+      usage:'Regional open-ocean wave climatology and wind-wave fields for monthly chop baselines where buoy coverage is sparse.'
+    },
+    {
+      label:'National Weather Service Wave Glossary',
+      url:'https://www.weather.gov/ggw/GlossaryW',
+      usage:'Terminology reference for wind waves, swell, significant wave height, wind-wave height, and wave period.'
+    },
+    {
+      label:'NPS Great Basin Cave Climate Guidance',
+      url:'https://www.nps.gov/grba/learn/nature/airflow-and-cave-climate.htm',
+      usage:'Cave-temperature stability and mostly dead-calm airflow reference for underdark locales.'
     },
     {
       label:'USGS Streamflow Measurement Guidance',
@@ -523,11 +565,98 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
     });
   }
 
+  function abilityActionLength(ability){
+    try{ return String((ability && ability.get('action')) || '').length; }catch(e){ return 0; }
+  }
+
+  function abilityText(ability){
+    try{ return String((ability && ability.get('action')) || ''); }catch(e){ return ''; }
+  }
+
+  function normalizeAbilityName(name){
+    return String(name || '').toLowerCase().replace(/\s+/g,'');
+  }
+
+  function safeParseJSON(text){
+    try{ return JSON.parse(String(text || '')); }catch(e){ return null; }
+  }
+
+  function regionsRootQuality(text){
+    var parsed = safeParseJSON(text);
+    if(!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return -1;
+    var score = (parsed.schema === 'dwt.regions.root.v1') ? 50 : 0;
+    var regions = parsed.regions;
+    if(!regions || typeof regions !== 'object' || Array.isArray(regions)) return score;
+    var keys = Object.keys(regions);
+    score += keys.length * 5;
+    for(var i=0;i<keys.length;i++){
+      var payload = regions[keys[i]];
+      if(!payload || typeof payload !== 'object' || Array.isArray(payload)) continue;
+      if(payload.schema === 'dwt.region.v4') score += 200;
+      if(payload.weather && typeof payload.weather === 'object' && !Array.isArray(payload.weather)) score += 100;
+      if(payload.region) score += 10;
+      if(payload.locales) score += 10;
+    }
+    return score;
+  }
+
+  function weatherRootQuality(text){
+    var parsed = safeParseJSON(text);
+    if(!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return -1;
+    var score = 0;
+    if(parsed.meta && parsed.meta.rootSchema === 'dwt.weather.root.v2') score += 200;
+    if(parsed.settings && (parsed.settings.units === 'imperial' || parsed.settings.units === 'metric')) score += 25;
+    if(parsed.current && typeof parsed.current === 'object' && !Array.isArray(parsed.current)) score += 25;
+    if(parsed.history && typeof parsed.history === 'object' && !Array.isArray(parsed.history)) score += 25;
+    return score;
+  }
+
+  function abilitySortScore(name, ability){
+    var text = abilityText(ability);
+    var key = normalizeAbilityName(name || (ability && ability.get && ability.get('name')) || '');
+    var base = abilityActionLength(ability);
+    if(key === 'regions') return regionsRootQuality(text) * 1000000 + base;
+    if(key === 'weather') return weatherRootQuality(text) * 1000000 + base;
+    return base;
+  }
+
+  function namedAbilities(character, name){
+    if(!character) return [];
+    var list = findObjs({ _type:'ability', _characterid:character.id, name:name }) || [];
+    list.sort(function(a, b){ return abilitySortScore(name, b) - abilitySortScore(name, a); });
+    return list;
+  }
+
+  function muleScore(character){
+    if(!character) return -1;
+    var abilities = findObjs({_type:'ability', _characterid:character.id}) || [];
+    var score = abilities.length;
+    for(var i=0;i<abilities.length;i++){
+      var ability = abilities[i];
+      var name = '';
+      try{ name = normalizeAbilityName(ability.get('name') || ''); }catch(e){}
+      var weighted = abilitySortScore(name, ability);
+      score += weighted;
+      if(name === 'mapmeta') score += weighted;
+      else if(name === 'version' || name === 'core') score += Math.max(0, weighted);
+    }
+    return score;
+  }
+
   function getOrCreateMule(){
     try{
       if(RT.dwt && typeof RT.dwt.ensureMule === 'function') return RT.dwt.ensureMule();
     }catch(e){}
-    var mule = findObjs({ _type:'character', name:DWT_MULE })[0];
+    var matches = findObjs({ _type:'character', name:DWT_MULE }) || [];
+    var mule = null;
+    var bestScore = -1;
+    for(var i=0;i<matches.length;i++){
+      var score = muleScore(matches[i]);
+      if(score > bestScore){
+        bestScore = score;
+        mule = matches[i];
+      }
+    }
     if(!mule){
       mule = createObj('character', {
         name: DWT_MULE,
@@ -541,15 +670,17 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
 
   function getAbilityAction(character, name){
     if(!character) return '';
-    var ability = findObjs({ _type:'ability', _characterid:character.id, name:name })[0];
+    var ability = namedAbilities(character, name)[0];
     return ability ? String(ability.get('action') || '') : '';
   }
 
   function upsertAbility(character, name, action){
     if(!character) return;
-    var ability = findObjs({ _type:'ability', _characterid:character.id, name:name })[0];
-    if(ability){
-      ability.set({ action:String(action || '') });
+    var abilities = namedAbilities(character, name);
+    if(abilities.length){
+      for(var i=0;i<abilities.length;i++){
+        try{ abilities[i].set({ action:String(action || '') }); }catch(e){}
+      }
     }else{
       createObj('ability', {
         characterid: character.id,
@@ -705,6 +836,8 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
       periods[PERIOD_ORDER[pi]] = basePeriodForKey(PERIOD_ORDER[pi]);
     }
 
+    var localeQuips = buildWeatherLocaleQuipScaffold();
+
     return {
       schema:'dwt.region.v4',
       region:regionKey,
@@ -717,8 +850,20 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
         'Climate analogue: Replace with the real-world or setting analogue.',
         'Use ECMWF ERA5 for monthly air temperature, precipitation, and prevailing wind defaults.',
         'Use Copernicus Marine global ocean physics and NOAA OISST to tune seasonal currents and water temperatures.',
-        'Use the USGS three-point current-meter method for inland, lake, and river sampling depths; open ocean defaults to 1, 5, and 10 fathoms.'
+        'Use NOAA World Ocean Atlas plus NOAA Ocean Service light-depth guidance to keep underwater temperatures colder and darker with depth.',
+        'Use NOAA wave mechanics guidance plus the NWS wave glossary to treat chop as local short-period wind waves, not as total seas or distant swell.',
+        'Use NDBC climatic summaries where a real-world analogue buoy exists, and fall back to Copernicus wave reanalysis to set monthly or seasonal chop baselines for exposed offshore and coastal locales.',
+        'Use NOAA CoastWatch Kd490 guidance as a conservative clarity check when deciding how quickly non-ocean water should lose visibility.',
+        'Use NPS cave-climate guidance to keep underdark temperatures near the regional annual mean and airflow near dead calm except at entrances, faults, or critical events.',
+        'Use the USGS three-point method for inland and coastal water columns; open ocean defaults use 1, 5, and 10 fathoms.'
       ],
+      quips:{
+        calendar:buildCalendarQuipScaffold(),
+        weather:{
+          region:buildEmptyQuipLengths(),
+          locales:localeQuips
+        }
+      },
       localeDefinitions:localeDefinitions,
       weather:{
         climateControl:cloneJSON(DEFAULT_CLIMATE_CONTROL),
@@ -728,6 +873,33 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
         customCriticalEvents:{}
       }
     };
+  }
+
+  function buildEmptyQuipLengths(){
+    return { short:[], medium:[], long:[] };
+  }
+
+  function buildCalendarQuipMap(keys){
+    var out = {};
+    for(var i=0;i<keys.length;i++){
+      out[keys[i]] = buildEmptyQuipLengths();
+    }
+    return out;
+  }
+
+  function buildCalendarQuipScaffold(){
+    return {
+      months:buildCalendarQuipMap(CALENDAR_MONTH_KEYS),
+      festivals:buildCalendarQuipMap(CALENDAR_FESTIVAL_KEYS)
+    };
+  }
+
+  function buildWeatherLocaleQuipScaffold(){
+    var out = {};
+    for(var i=0;i<CANONICAL_LOCALES.length;i++){
+      out[CANONICAL_LOCALES[i]] = buildEmptyQuipLengths();
+    }
+    return out;
   }
 
   function buildRegionModuleSource(regionKey, displayName, defaultLocale){
@@ -754,7 +926,21 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
       "//   - ECMWF ERA5 Reanalysis: https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5\n" +
       "//   - Copernicus Marine Global Ocean Physics Analysis and Forecast: https://data.marine.copernicus.eu/product/GLOBAL_ANALYSISFORECAST_PHY_001_024/description\n" +
       "//   - NOAA NCEI OISST: https://www.ncei.noaa.gov/products/optimum-interpolation-sst\n" +
-      "//   - USGS Streamflow Measurement Guidance: https://www.usgs.gov/water-science-school/science/how-streamflow-measured\n\n" +
+      "//   - NOAA World Ocean Atlas 2023 Data: https://www.ncei.noaa.gov/access/world-ocean-atlas-2023/\n" +
+      "//   - NOAA Ocean Service light-depth guidance: https://oceanservice.noaa.gov/facts/light_travel.html\n" +
+      "//   - NOAA Ocean Service wave mechanics guidance: https://oceanservice.noaa.gov/education/tutorial_currents/03coastal1.html\n" +
+      "//   - NOAA CoastWatch Kd490 guidance: https://eastcoast.coastwatch.noaa.gov/cw_k490.php\n" +
+      "//   - NOAA NDBC Climatic Summary Plots and Table Descriptions: https://www.ndbc.noaa.gov/climatedesc.shtml\n" +
+      "//   - Copernicus Marine Global Ocean Waves Reanalysis: https://data.marine.copernicus.eu/product/GLOBAL_MULTIYEAR_WAV_001_032/description\n" +
+      "//   - National Weather Service wave glossary: https://www.weather.gov/ggw/GlossaryW\n" +
+      "//   - NPS Great Basin cave climate guidance: https://www.nps.gov/grba/learn/nature/airflow-and-cave-climate.htm\n" +
+      "//   - USGS Streamflow Measurement Guidance: https://www.usgs.gov/water-science-school/science/how-streamflow-measured\n" +
+      "//\n" +
+      "// Page names use:\n" +
+      "//   region.locale.mapname\n" +
+      "//   region.locale_<depth>.mapname\n" +
+      "//\n" +
+      "// Page names are case- and space-insensitive. Canonical generated names should be lower-case with no spaces.\n\n" +
       "(function(){\n" +
       "  'use strict';\n\n" +
       "  var RT = (typeof globalThis !== 'undefined') ? globalThis : this;\n" +
@@ -762,6 +948,12 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
       "  var REGION_KEY = '" + regionKey + "';\n" +
       "  var MODULE_NAME = 'dwt_region.' + REGION_KEY;\n" +
       "  var _startupRegistered = false;\n\n" +
+      "  // Tolkien-inspired quip scaffold:\n" +
+      "  // - short: 2 lines, AA\n" +
+      "  // - medium: 4 lines, ACBC\n" +
+      "  // - long: 8 lines, ABCBDEFE\n" +
+      "  // Keep the voice conversational, lightly rhythmic, and maritime where possible.\n" +
+      "  // Calendar month keys use Harptos month names (hammer..nightal); festival keys use between-month festival keys.\n\n" +
       "  var REGION_ENTRY = " + json + ";\n\n" +
       "  function queueRegion(){\n" +
       "    RT.dwtRegionQ = RT.dwtRegionQ || [];\n" +

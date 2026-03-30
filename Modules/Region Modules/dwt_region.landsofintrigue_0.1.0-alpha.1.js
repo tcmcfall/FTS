@@ -18,7 +18,21 @@
 //   - ECMWF ERA5 Reanalysis: https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5
 //   - Copernicus Marine Global Ocean Physics Analysis and Forecast: https://data.marine.copernicus.eu/product/GLOBAL_ANALYSISFORECAST_PHY_001_024/description
 //   - NOAA NCEI OISST: https://www.ncei.noaa.gov/products/optimum-interpolation-sst
+//   - NOAA World Ocean Atlas 2023 Data: https://www.ncei.noaa.gov/access/world-ocean-atlas-2023/
+//   - NOAA Ocean Service light-depth guidance: https://oceanservice.noaa.gov/facts/light_travel.html
+//   - NOAA Ocean Service wave mechanics guidance: https://oceanservice.noaa.gov/education/tutorial_currents/03coastal1.html
+//   - NOAA CoastWatch Kd490 guidance: https://eastcoast.coastwatch.noaa.gov/cw_k490.php
+//   - NOAA NDBC Climatic Summary Plots and Table Descriptions: https://www.ndbc.noaa.gov/climatedesc.shtml
+//   - Copernicus Marine Global Ocean Waves Reanalysis: https://data.marine.copernicus.eu/product/GLOBAL_MULTIYEAR_WAV_001_032/description
+//   - National Weather Service wave glossary: https://www.weather.gov/ggw/GlossaryW
+//   - NPS Great Basin cave climate guidance: https://www.nps.gov/grba/learn/nature/airflow-and-cave-climate.htm
 //   - USGS Streamflow Measurement Guidance: https://www.usgs.gov/water-science-school/science/how-streamflow-measured
+//
+// Page names use:
+//   region.locale.mapname
+//   region.locale_<depth>.mapname
+//
+// Page names are case- and space-insensitive. Canonical generated names should be lower-case with no spaces.
 (function(){
   'use strict';
 
@@ -27,6 +41,13 @@
   var REGION_KEY = 'landsofintrigue';
   var MODULE_NAME = 'dwt_region.' + REGION_KEY;
   var _startupRegistered = false;
+
+  // Tolkien-inspired quip scaffold:
+  // - short: 2 lines, AA
+  // - medium: 4 lines, ACBC
+  // - long: 8 lines, ABCBDEFE
+  // Keep the voice conversational, lightly rhythmic, and maritime where possible.
+  // Calendar month keys use Harptos month names (hammer..nightal); festival keys use between-month festival keys.
 
   var REGION_ENTRY = {
   "schema": "dwt.region.v4",
@@ -113,6 +134,138 @@
     "Water-column sampling uses surface plus 20/60/80% depths for inland and coastal columns, while offshore defaults use 1, 5, and 10 fathoms.",
     "Exact-clock diurnal controls follow a dry-summer maritime regime, with coastal damping, inland heating, and underwater inertia separated through locale overrides."
   ],
+  "quips": {
+    "calendar": {
+      "months": {
+        "hammer": { "short": [], "medium": [], "long": [] },
+        "alturiak": { "short": [], "medium": [], "long": [] },
+        "ches": { "short": [], "medium": [], "long": [] },
+        "tarsakh": { "short": [], "medium": [], "long": [] },
+        "mirtul": { "short": [], "medium": [], "long": [] },
+        "kythorn": { "short": [], "medium": [], "long": [] },
+        "flamerule": { "short": [], "medium": [], "long": [] },
+        "eleasis": { "short": [], "medium": [], "long": [] },
+        "eleint": { "short": [], "medium": [], "long": [] },
+        "marpenoth": { "short": [], "medium": [], "long": [] },
+        "uktar": { "short": [], "medium": [], "long": [] },
+        "nightal": { "short": [], "medium": [], "long": [] }
+      },
+      "festivals": {
+        "midwinter": { "short": [], "medium": [], "long": [] },
+        "greengrass": { "short": [], "medium": [], "long": [] },
+        "midsummer": { "short": [], "medium": [], "long": [] },
+        "shieldmeet": { "short": [], "medium": [], "long": [] },
+        "highharvestide": { "short": [], "medium": [], "long": [] },
+        "feastofthemoon": { "short": [], "medium": [], "long": [] }
+      }
+    },
+    "weather": {
+      "region": {
+        "short": [
+          "In Lands of Intrigue noon burns white on plaster, sail, and stair|Then evening sends a kinder wind to lift the copper air",
+          "The southern weather smells of lime, hot stone, and market spice|It flatters first with painted light, then bargains with a price",
+          "Blue water laughs below the walls till sundown shifts the sky|A coast so bright teaches the wise to love it carefully"
+        ],
+        "medium": [
+          "The southern light strikes hard at noon|And whitens court and quay and dome|A trader says the clever thrive|By keeping shade and patience home",
+          "Warm weather on those painted coasts|Can smile at dawn and sting by dusk|So captains bless the evening breeze|And markets bloom with spice and musk",
+          "In Lands of Intrigue the sea runs blue|The plazas ring, the awnings lean|A sailor learns the weather best|By how the harbor stones stay keen"
+        ],
+        "long": [
+          "The Lands of Intrigue wear bright coasts|Of whitewashed wall and bay|The noon comes hot on tiled roofs|The dusk brings wind to stay|A captain sleeps through little there|Without one ear to sky|For southern weather flatters first|And only later lies",
+          "Where citrus scent and tar mingle|Along the harbor lane|The sea looks blue enough to trust|Until it shifts again|A market hums beneath the awnings|A sailcloth snaps above|For southern weather teaches folk|To pair caution with love",
+          "In Lands of Intrigue the evening breeze|Arrives like answered prayer|It lifts the heat from quay and court|And stirs the lantern air|Yet those who trade those sunny coasts|Do not grow soft or blind|For beauty is the weather's mask|Before the change of wind"
+        ]
+      },
+      "locales": {
+        "offshore": {
+          "short": [
+            "Offshore the southern water shines like coin beneath the sun|But late winds off the outer blue can leave fast work undone",
+            "Beyond those coasts the swells run slow and bright as beaten glass|A mariner there watches dusk and lets no omen pass",
+            "Far offshore warm blue weather smiles as smooth as polished ore|Yet helmsmen still reef one line more before they trust it sure"
+          ],
+          "medium": [
+            "The outer sea lies broad and blue|And noon can dazzle mast and eye|A prudent hand still marks the west|For evening weather alters sly",
+            "Offshore the heat can linger long|Till sunset frees the waiting breeze|A captain times his turning then|By how the gulls begin to ease",
+            "Beyond the scented harbor lanes|The deeper water looks too mild|But southern offshore weather hides|A temper bright, abrupt, and wild"
+          ],
+          "long": [
+            "Offshore the sea of intrigue glows|Like hammered blue all day|The canvas hangs in patient light|Until the dusk says sway|A helmsman studies cloud and swell|Before he trusts the calm|For offshore weather south of there|Can change from grace to qualm",
+            "The outer lanes run bright and warm|Beyond the harbor foam|The coast falls white behind the stern|The sky seems all of home|Yet offshore winds arrive at dusk|With sharper teeth than noon|So seasoned crews make ready long|Before the rise of moon",
+            "Far offshore southern weather smiles|Through heat and level swell|It paints the sea a kindly blue|And casts a sleepy spell|But those who know the outer routes|Reef early and wait more|For calm that glitters prettiest|Has fooled the proud before"
+          ]
+        },
+        "coastal": {
+          "short": [
+            "Along those coasts white houses blaze above a blue-bright foam|And every shaded harbor lane pretends the heat is home",
+            "The coastal breeze smells half of salt and half of orange rind|A lovely lie that often means a harder turn of wind",
+            "On painted quays the awnings snap when evening starts to climb|And coastal weather proves itself by changing right on time"
+          ],
+          "medium": [
+            "White walls, blue surf, and tiled roofs|Make southern coasts too fair by half|A fisher knows bad weather soon|By how the quiet gulls all laugh",
+            "Along the coast the heat holds court|Till sea-wind shakes the hanging cloth|Then every harbor wakes again|With bells, with trade, with weather's oath",
+            "The coastal stones keep daytime fire|Long after sunset cools the foam|A pilot there reads weather best|By how the lamps lean seaward home"
+          ],
+          "long": [
+            "Along the coasts of intrigue lands|White walls confront the glare|The noon lays fire on quay and dome|The dusk unbinds the air|A fisher waits the evening turn|Before he trusts his sail|For coastal weather there is swift|To flatter, then to fail",
+            "Blue surf beneath the cliffside towns|Looks sweet as minted glass|The awnings droop, the dogs lie still|The bright hours barely pass|Then coastal winds arrive at once|And clap the shutters wide|So harbor folk tie all things down|Before they bless the tide",
+            "Where citrus carts and ropeyards meet|Beside the southern sea|The heat can make the harbor seem|Too soft, too kind, too free|Yet coastal weather keeps its edge|Behind the painted foam|And teaches every wise soul there|To reef before going home"
+          ]
+        },
+        "inland": {
+          "short": [
+            "Inland the heat rides olive hills and whitens road and thorn|A traveler blesses every well as if the saints were born",
+            "Dry weather in those southern lands can sing through cane and stone|And make a patch of patient shade feel grander than a throne",
+            "Far inland dust and cicadas speak the weather plain by noon|The wise walk early, rest at blaze, and thank the dusk comes soon"
+          ],
+          "medium": [
+            "Inland the road runs hard and pale|The noon strikes white on wall and thorn|A wiser traveler breaks his pace|Long before the fiercest morn",
+            "The southern inland weather dries|The cistern lip, the fig, the field|Yet evening breezes crossing there|Can soften all the daylight sealed",
+            "Dust, bright stone, and leaning pines|Tell half the inland weather's mind|The rest is learned by waiting still|To see what dusk leaves close behind"
+          ],
+          "long": [
+            "Far inland through intrigue lands|The roads run white and spare|The sun can hammer ridge and well|And bake the standing air|A rider counts the shade by trees|And water by the skin|For inland weather south of there|Rewards the slow and thin",
+            "The olive hills hold heat all day|The thorn-scrub keeps no dew|The distances grow long at noon|And farther than they do|Yet inland breezes wake at dusk|And move through vine and wall|So patient folk endure the blaze|And answer evening's call",
+            "Where cistern, shrine, and market road|Lie far from harbor spray|The weather writes in dust and glare|What seafarers miss by bay|A muleteer starts well before dawn|And keeps the midday still|For inland weather grants its grace|To those who bend to will"
+          ]
+        },
+        "underwater": {
+          "short": [
+            "Below those coasts the water runs as clear as tinted glass|And every reef-shadow reminds the quick to let it pass",
+            "Warm southern currents comb the weed through amber, blue, and green|A diver there learns calmer arts where sunken walls are seen",
+            "Under those seas bright fish and light make weather of their own|Yet deepward cold can seize a hand as quick as quarried stone"
+          ],
+          "medium": [
+            "Below the bright southern bays|The daylight pours on reef and sand|A diver feels the turning currents|Before he sees the weed all bend",
+            "Warm water over broken walls|Can shine so clear it looks like air|Yet southern underwater weather|Still asks a cautious measure there",
+            "The reef roads drift with living light|And silver shoals move bright and fast|A swimmer learns the water's mood|By how long the quiet patches last"
+          ],
+          "long": [
+            "Beneath intrigue's blue coastal seas|The sunlight travels far|It paints the reef, it finds old stone|It gilds the broken spar|A diver moves with patient hands|And minds the pull below|For underwater weather there|Can change though light still show",
+            "Warm currents slip through reef and wreck|Like silk around the keel|Yet cooler tongues from deeper dark|Can teach the skin to feel|A pearl-diver reads those hidden turns|Before he risks the sand|For underwater weather south of there|Can move a careless hand",
+            "Below the painted harbor walls|The sea keeps gardens bright|With weed like banners, fish like coins|And ruins full of light|But even there the currents shift|By ledge and reef and seam|So underwater weather teaches slow|Within a lovely dream"
+          ]
+        },
+        "underdark": {
+          "short": [
+            "Below those southern hills the deep keeps warm stone, dust, and hush|Yet one wrong draft through smugglers' ways can make a torchlight blush",
+            "The underdark there smells of chalk, old cistern damp, and spice|And every whisper of a draft is weather's small advice",
+            "In hidden roads beneath intrigue the air lies still as trade|Till some thin breath through cracked old stone reminds how caves are made"
+          ],
+          "medium": [
+            "Below the bright and noisy coasts|The caverns keep a drier day|A smuggler learns the smallest drafts|Can tell which passage lies away",
+            "Warm stone and dust remember heat|Long after sunset leaves the land|The underdark there makes its weather|By breath through crack and buried sand",
+            "In southern deeps the torch burns straight|Until one narrow draft says late|The wiser folk attend to that|And turn before the roof can grate"
+          ],
+          "long": [
+            "Beneath intrigue's bright market towns|The hidden roads run dry|The stone keeps heat from older days|And shuts away the sky|A smuggler feels the first thin draft|Before he sees it bend|For underdark weather south of there|Can warn before the end",
+            "The cistern caves and buried halls|Lie warm beneath the plain|No gull is heard, no surf is seen|No memory of rain|Yet underdark weather speaks in breath|That chills a lantern flame|And those who heed that whispered turn|Walk out the way they came",
+            "In passages below the south|The dust can sit all day|Then rise at once when hidden vents|Begin to breathe their say|A scout lays palm to worked old stone|And watches torchlight sway|For underdark weather under there|Will move before you may"
+          ]
+        }
+      }
+    }
+  },
   "localeDefinitions": {
     "offshore": {
       "label": "Offshore",

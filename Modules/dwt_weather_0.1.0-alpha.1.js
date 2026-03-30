@@ -6,7 +6,7 @@
 //              - Writes the module version to the root dwt_mule ability named version.
 //              - Updates weather in Harptos timeofday segments (early/late predawn, morning, afternoon, evening).
 //              - Loads regional profiles from the shared dwt_mule ability named regions.
-//              - Provides !dwt --weather controls and injects a weather line + short quip into the unified Campaign Log.
+//              - Provides !dwt --weather controls plus Tolkien-inspired weather quips for direct whisper use.
 // depends:     dwt_core >= 0.1.0-alpha.1, dwt_calendar >= 0.1.0-alpha.1 (state.dwt.now), Roll20 API.
 // author:      TC McFall (AI-assisted)
 // Semantic Versioning (SemVer) Policy:
@@ -692,89 +692,103 @@ var dwt_weather = dwt_weather || (function(){
   };
   var HISTORY_ENTRY_LIMIT = 160;
 
-  // Built-in fallback weather quips. These provide a minimal usable pool when no quip module or mule data is present:
-  // one editable default array per region.locale. More specific quips can still be
-  // supplied through the quips mule/module using season and weather-specific paths.
-  var FALLBACK_WEATHER_QUIPS = {
-    'quips.weather.frozenfar.offshore': [
-      'Pack ice grinds through dark water and the wind bites through every layer.'
-    ],
-    'quips.weather.frozenfar.coastal': [
-      'Snow crusts the shore, smoke hangs low, and the cold reaches straight through stone.'
-    ],
-    'quips.weather.frozenfar.inland': [
-      'Hard frost grips the road, the pines creak, and every breath comes out white.'
-    ],
-    'quips.weather.frozenfar.underwater': [
-      'Ice-muted water presses in from every side, and every current feels sharper than the last.'
-    ],
-    'quips.weather.frozenfar.underdark': [
-      'Stone sweats in the dark, distant drafts move through the tunnels, and the cold never truly leaves.'
-    ],
+  function makeWeatherQuips(entries){
+    var out = [];
+    entries = Array.isArray(entries) ? entries : [];
+    for(var i=0;i<entries.length;i++){
+      var text = String(entries[i] || '').split('|').join('\n').trim();
+      if(text) out.push(text);
+    }
+    return out;
+  }
 
-    'quips.weather.swordcoastnorth.offshore': [
-      'Cold gray swells roll under a sharp salt wind and the horizon stays iron-colored.'
-    ],
-    'quips.weather.swordcoastnorth.coastal': [
-      'Wet wind drives in from the sea and the harbor smells of rain, rope, and cold timber.'
-    ],
-    'quips.weather.swordcoastnorth.inland': [
-      'Chill air moves through the high country and the weather turns fast between pine, rock, and road.'
-    ],
-    'quips.weather.swordcoastnorth.underwater': [
-      'The water is dark, cold, and restless, with currents that feel stronger than they look.'
-    ],
-    'quips.weather.swordcoastnorth.underdark': [
-      'Deep passages breathe damp air through old stone, and every echo makes the caverns feel larger.'
-    ],
+  function makeWeatherQuipSet(shortEntries, mediumEntries, longEntries){
+    return {
+      short:makeWeatherQuips(shortEntries),
+      medium:makeWeatherQuips(mediumEntries),
+      long:makeWeatherQuips(longEntries)
+    };
+  }
 
-    'quips.weather.swordcoast.offshore': [
-      'Sea mist rides the swells, gulls wheel overhead, and the weather never feels settled for long.'
-    ],
-    'quips.weather.swordcoast.coastal': [
-      'Salt air and harbor noise carry on the breeze while clouds gather and break without warning.'
-    ],
-    'quips.weather.swordcoast.inland': [
-      'Rolling fields and trade roads sit under broad skies where rain and wind arrive in steady turns.'
-    ],
-    'quips.weather.swordcoast.underwater': [
-      'Green water shifts around wreck-stone and reef, and the tide carries a constant uneasy pull.'
-    ],
-    'quips.weather.swordcoast.underdark': [
-      'The deep air is still but never dead, carrying mineral damp and the hint of unseen chambers ahead.'
-    ],
-
-    'quips.weather.moonshaes.offshore': [
-      'Restless green water, fast weather, and hard wind make every sail feel one gust from trouble.'
-    ],
-    'quips.weather.moonshaes.coastal': [
-      'Rain-dark stone and brine-soaked air frame a shore where the sea is never quiet for long.'
-    ],
-    'quips.weather.moonshaes.inland': [
-      'The hills stay damp, the woods hold mist, and the weather feels old and heavy with rain.'
-    ],
-    'quips.weather.moonshaes.underwater': [
-      'Kelp-dark water folds over rock and ruin while the current tugs at everything not anchored fast.'
-    ],
-    'quips.weather.moonshaes.underdark': [
-      'The deep earth holds a wet chill here, with drifting mist and cavern winds that never quite settle.'
-    ],
-
-    'quips.weather.landsofintrigue.offshore': [
-      'Warm bright water flashes under the sun until a sudden squall sweeps over it.'
-    ],
-    'quips.weather.landsofintrigue.coastal': [
-      'Sea wind carries heat, spice, and dust through ports where sunshine and storms share the same sky.'
-    ],
-    'quips.weather.landsofintrigue.inland': [
-      'Dry heat settles over courtyards and roads until the air shifts and distant thunder promises relief.'
-    ],
-    'quips.weather.landsofintrigue.underwater': [
-      'Warm water lies heavy over the shelf, hazed by silt and bright with sudden shifts in the current.'
-    ],
-    'quips.weather.landsofintrigue.underdark': [
-      'The heat softens in the deep, but the stone still holds a dry pressure broken by rare cool drafts.'
-    ]
+  var WEATHER_DEFAULT_QUIPS = {
+    clear:makeWeatherQuipSet([
+      "Clear weather lays the harbor gold beneath the morning light|And every mast looks twice as tall when gulls wheel clean and white",
+      "Blue weather smooths the outer bay to hammered glass by day|So even careful captains grin and swear the world means stay",
+      "A clean sky rings the saint-bells far above the shining foam|Such weather makes a wandering heart half think the sea is home"
+    ],[
+      "The dawn comes clean above the bay|And light runs bright on spar and bell|A ferryman grows almost kind to all|Because fair skies can charm him well",
+      "Blue weather opens every sail|And makes the painted prows look new|Even the oldest dockside grumbler smiles|When sun lays coins on boards and dew",
+      "A clear sky leaves no place for doubt|The headlands stand in patient gold|A captain says the finest chart is this|A far horizon, sharp and bold"
+    ],[
+      "The morning breaks with copper light|Across the sleeping bay|The gulls turn white above the masts|And sweep the dark away|A mate who cursed the world at dawn|Finds cheer before noon's high|For clear weather can make a stern man think|The saints still walk the sky",
+      "Blue weather lays the pilings bare|And gilds the harbor chain|The town looks washed of all its spite|And honest after rain|A fishwife laughs to see such light|Upon her market stall|For under clear skies even eels|Seem silver, clean, and small",
+      "When noon comes bright on open water|And far cliffs answer gold|The youngest hand will stand too long|And forget what he was told|But clear skies breed a gentle pride|That steadies rope and oar|As if the world were built that day|And broken nevermore"
+    ]),
+    cloudy:makeWeatherQuipSet([
+      "Gray weather stoops above the roofs and dulls the harbor slate|Yet folk still work the piers by feel and call the dark too late",
+      "Low cloud puts wool upon the sea and hush upon the town|The sort of sky that keeps a lamp lit early, shutters down",
+      "An overcast will press the gulls and flatten all the blue|Till every rope and cobble wears the same old weather hue"
+    ],[
+      "Gray morning leans upon the quay|The gulls fly low beside the bell|A fishwife says such woolen skies hide rain|Though for an hour they hold it well",
+      "The bay wears cloud from lip to lip|And daylight thins on rope and stone|A sailor spits and says the sun's not dead|It simply minds its business lone",
+      "An overcast can hush a street|Till cart and boot sound twice as plain|The harbor keeps its patient face through all|And waits to see if dark means rain"
+    ],[
+      "Gray weather lowers on the town|And flattens all to slate|The harbor bells sound farther off|As if the hour grew late|A cooper works with patient hands|And keeps a patient tune|For cloudy days ask less of cheer|Than labor done by noon",
+      "Low cloud can wrap the outer bay|And hide the headland seam|Till every mast becomes a mark|Half memory, half dream|A pilot trusts the gulls instead|Of distance, sun, or star|For cloudy weather teaches folk|How near true instincts are",
+      "An overcast upon the quay|Makes noon feel near to dusk|The ropes smell dark, the planks smell wet|The nets smell tar and musk|Yet trade goes on with lowered voice|And doors stand half ajar|For cloudy weather does not end the day|It only draws it far"
+    ]),
+    rain:makeWeatherQuipSet([
+      "Rain weather drums the tarred boards hard and beads on cap and sleeve|Yet harbor folk walk easy still, for wet is what they weave",
+      "A rainy wind combs silver threads along the dockside rail|And every knot is tested twice before the harbor sail",
+      "Soft rain will darken plank and stone and sweeten rope with brine|A ferryman says weather wet can keep a boat in line"
+    ],[
+      "Rain starts its tune on roof and rail|And beads the rope in silver thread|A deckhand laughs and pulls his cap down low|Because wet days still keep the table fed",
+      "Soft rain can blur the outer pier|And turn the cobbles dark as ale|Yet every cart still finds the fish-market|By smell, by shout, by habit's trail",
+      "A harder rain will drum the bay|Till talk grows short in hood and shawl|But those who live by net and oar just shrug|For weather wet has fed them all"
+    ],[
+      "Rain starts in whispers on the slate|Then drums along the pier|It threads the ropes and darkens wood|And brings the harbor near|A ferryman pulls tighter knots|And laughs beneath his hood|For rainy days make honest work|Look saltier, not less good",
+      "Soft rain can blur the outer buoys|And silver every stair|The market smells of fish and fennel|And damp wool everywhere|A sailor lifts his face to it|As if it were old wine|For rain that does not break to storm|Can make hard weather fine",
+      "Hard rain will pound the anchored decks|And race from roof to drain|Yet still the harbor keeps its pace|Through bucket, boot, and chain|The wise keep tinder oiled and dry|And soup set near the flame|For rainy weather tests a folk|Yet feeds and proves the same"
+    ]),
+    snow:makeWeatherQuipSet([
+      "Snow weather turns the harbor white and mutes the cursing quay|Till every mast stands thin and black like script on winter day",
+      "Sleet and snow will salt the beard and sting the watchman's face|Yet hearth-smoke makes a lanterned road of every narrow place",
+      "A snow sky sifts the rigging pale and powders rope and spar|The sea grows hushed, but every inn burns twice as warm and far"
+    ],[
+      "Snow comes in thin across the tide|And whitens rope and shrine and stair|A watchman stamps and names the saints in turn|To keep some warmth alive in air",
+      "Sleet rattles sharp on shuttered glass|And salts the beard of boat and man|Yet harbor wives keep broth and lamp prepared|For winter works by patient plan",
+      "A snow sky dims the far black cliffs|And lays a hush on mast and bell|The sea seems gentler for an hour or two|Though every old hand knows it well"
+    ],[
+      "Snow sifts in pale across the bay|And softens rope and spar|The curses on the dock come small|As lanterns bloom afar|A watchman stamps to wake his blood|And breathes in clouds of white|For snow can make the harshest quay|Seem gentler for a night",
+      "Sleet rattles hard on shutter boards|And salts the harbor stair|The sea turns black beneath the flakes|The roofs turn ghostly fair|A widow banks the tavern fire|And sets more broth to warm|For snowy weather teaches towns|To answer cold with form",
+      "When snow lies thin on coiled rope|And bright on chapel stone|Even the gulls fly slower there|As if the sky were bone|A captain checks the mooring twice|Then calls his people in|For winter weather asks no pride|Only dry hands and skin"
+    ]),
+    wind:makeWeatherQuipSet([
+      "Wind weather sets the halyards mad and snaps them sharp with spite|So every loose-tied soul aboard learns humble knots tonight",
+      "A hard wind combs the harbor flat and drives the gulls to sea|The wise keep one hand on the rope and one braced hard at knee",
+      "When weather comes in all by wind, the shutters talk and groan|And every captain trusts the rope more than the weather-stone"
+    ],[
+      "The harbor hums beneath a gale|And every spar begins to yell|A captain checks the knots he praised at dawn|For wind makes liars of them well",
+      "Hard weather comes by breath alone|No drop need fall to prove its will|One gust can teach the quay more fear than rain|When shutters clap and lamps burn still",
+      "The gulls are blown like scraps of cloth|And waves show teeth along the mole|A pilot says the wind is not our foe|Unless we hand it too much soul"
+    ],[
+      "The wind comes first as halyard song|Then harder through the shrouds|It combs the harbor into lines|And drives the gulls like clouds|A pilot sets his jaw and feet|And leans against the lee|For windy weather favors most|The soul that bends at sea",
+      "Hard wind can make the harbor speak|In shutters, bells, and wire|It snaps the pennants east and west|And stirs the chimney fire|A mate grows modest in such gusts|And answers every call|For windy days are kindest to|The crew that trims with all",
+      "No rain need fall for weather hard|To trouble mast and bone|A stiff wind off the water can|Make any harbor groan|The wise keep hands to rope and rail|And words a little spare|For windy days reward the crew|That wastes less breath than air"
+    ]),
+    storm:makeWeatherQuipSet([
+      "Storm weather heaps the water black and hammers mast and pane|A prudent soul counts saints by name and lets the harbor reign",
+      "A storm will turn the bell to bronze and whip the quay to foam|Then every tavern near the docks feels holier than home",
+      "Black squalls march west to east and blot the headland light|The wise reef early, drink late, and thank the dawn if bright"
+    ],[
+      "Storm rides in dark above the head|And bells go blunt in rain and foam|A harbor learns its truest prayers at once|When every lantern calls folk home",
+      "The quay goes black, the shutters slam|And thunder walks from squall to squall|Even the boldest captain lowers his voice|When stormlight writes along the wall",
+      "A hard storm bends the harbor down|Till masts and chimneys groan as one|Then every tavern proves its worth in full|By light, by bread, by dry ground won"
+    ],[
+      "Storm gathers black beyond the bar|And shouldered waves come near|The harbor bells turn thick and dull|For half the town to hear|A captain reeks of salt and fear|Yet keeps his orders plain|For stormy weather breaks the proud|Before it breaks the chain",
+      "The squall arrives with iron rain|And thunder under sail|It smites the pane, it whitens foam|It makes the boldest pale|A tavern door swings wide that night|To every dripping form|For stormy weather teaches towns|No soul should face the storm",
+      "When stormlight walks the outer sea|And blackens mast and spire|The wise reef early, lash the loose|And draw the benches nigher|The gale may roar through rope and prayer|Till midnight rings its bell|But stormy weather praises most|The folk who shelter well"
+    ])
   };
 
   // ----------------------------
@@ -844,7 +858,7 @@ var dwt_weather = dwt_weather || (function(){
         try{ name = normalizeAbilityName(ability.get('name') || ''); }catch(e0){}
         var weighted = abilitySortScore(name, ability);
         score += weighted;
-        if(name === 'mapmeta') score += weighted;
+        if(name === 'regions' || name === 'weather' || name === 'mapmeta') score += weighted;
         else if(name === 'version' || name === 'core') score += Math.max(0, weighted);
       }
       if(score > bestScore){
@@ -1144,37 +1158,19 @@ var dwt_weather = dwt_weather || (function(){
     if(!Array.isArray(arr)) return [];
     var out = [];
     for(var i=0;i<arr.length;i++){
-      var line = String(arr[i]||'').trim();
+      var line = String(arr[i]||'').split('|').join('\n').trim();
       if(line) out.push(line);
     }
     return out;
   }
 
-  function getQuipsArray(path){
-    path = String(path||'').trim().toLowerCase();
-    if(!path) return [];
-    try{
-      if(RT.dwt_quips && typeof RT.dwt_quips.getQuips === 'function'){
-        var fromModule = RT.dwt_quips.getQuips(path);
-        fromModule = normalizeQuipArray(fromModule);
-        if(fromModule.length) return fromModule;
-      }
-    }catch(e){}
-    try{
-      var mule = ensureMule();
-      var rawRoot = (getAbilityAction(mule, 'quips') || '').trim();
-      if(rawRoot){
-        var parsedRoot = JSON.parse(rawRoot);
-        if(parsedRoot && parsedRoot.data && Array.isArray(parsedRoot.data[path])){
-          var fromMule = normalizeQuipArray(parsedRoot.data[path]);
-          if(fromMule.length) return fromMule;
-        }
-      }
-    }catch(e2){}
-    var fallback = normalizeQuipArray(FALLBACK_WEATHER_QUIPS[path]);
-    if(fallback.length) return fallback;
-    var raw = getJSON(ensureMule(), path);
-    return normalizeQuipArray(raw);
+  function renderMultilineWhisperHtml(text){
+    var lines = String(text || '').replace(/\r/g, '').split('\n');
+    var out = [];
+    for(var i=0;i<lines.length;i++){
+      out.push(esc(lines[i]));
+    }
+    return '<div>' + out.join('<br>') + '</div>';
   }
 
   function canonicalKey(s){
@@ -1592,14 +1588,8 @@ var dwt_weather = dwt_weather || (function(){
   }
 
   // ----------------------------
-  // Weather root paths (canonical logical paths beneath the single "weather" mule root)
-  // ----------------------------
-  function AB_SETTINGS(){ return 'weather.settings'; }
-  function AB_CUR(region, locale){ return 'weather.current.'+region+'.'+locale; }
-  function AB_HIST(region, locale){ return 'weather.history.'+region+'.'+locale; }
-
   function ensureSettings(mule){
-    var s = getJSON(mule, AB_SETTINGS());
+    var s = getJSON(mule, 'settings');
     var changed = false;
     if(!s || s.schema!=='dwt.weather.settings.v1'){
       s = defaultWeatherSettings();
@@ -1613,7 +1603,7 @@ var dwt_weather = dwt_weather || (function(){
       delete s.override;
       changed = true;
     }
-    if(changed) setJSON(mule, AB_SETTINGS(), s);
+    if(changed) setJSON(mule, 'settings', s);
     return s;
   }
 
@@ -1647,22 +1637,6 @@ var dwt_weather = dwt_weather || (function(){
 
   function saveRegionsRoot(mule, root){
     upsertAbility(mule, 'regions', JSON.stringify(normalizeRegionsRoot(root)));
-  }
-
-  function findRegionPayload(root, region){
-    region = canonicalKey(region);
-    if(!region) return null;
-
-    var regions = regionPayloads(root);
-    if(regions[region]) return regions[region];
-
-    var keys = Object.keys(regions);
-    for(var i=0;i<keys.length;i++){
-      var payload = regions[keys[i]];
-      var candidate = canonicalKey((payload && payload.region) || keys[i]);
-      if(candidate === region) return payload;
-    }
-    return null;
   }
 
   function canonicalPeriodKey(v){
@@ -2385,11 +2359,6 @@ var dwt_weather = dwt_weather || (function(){
     return narratedUnitLabel(trimNumber(feet, 0), 'foot', 'feet');
   }
 
-  function formatNarratedDepthFathomsLabel(meters){
-    var feet = Math.max(0, Math.round((+meters||0) / 0.3048));
-    return narratedUnitLabel(trimNumber((feet / 6), 0), 'fathom', 'fathoms');
-  }
-
   function formatNarratedPreferredDepthLabel(meters, units){
     return (units === 'metric')
       ? formatNarratedDepthMetricLabel(meters)
@@ -2400,23 +2369,23 @@ var dwt_weather = dwt_weather || (function(){
     return formatDepthFathomsLabel(meters) + ' (' + formatPreferredDepthLabel(meters, units) + ')';
   }
 
-  function formatNarratedFathomsWithPreferredLabel(meters, units){
-    return formatNarratedDepthFathomsLabel(meters) + ' (' + formatNarratedPreferredDepthLabel(meters, units) + ')';
-  }
-
-  function formatNarratedSubterraneanDepthLabel(meters, units){
+  function formatNarratedApproximateSubsurfaceDepthLabel(meters, units){
     meters = Math.max(0, Math.round(+meters||0));
     if((units||'imperial') === 'metric'){
       if(meters >= 1000){
-        return narratedUnitLabel(trimNumber((meters / 1000), 2), 'kilometer', 'kilometers');
+        return narratedUnitLabel(trimNumber((meters / 1000), 1), 'kilometer', 'kilometers');
       }
-      return narratedUnitLabel(String(Math.max(50, Math.round(meters / 50) * 50)), 'meter', 'meters');
+      return narratedUnitLabel(String(Math.max(10, Math.round(meters / 10) * 10)), 'meter', 'meters');
     }
     var feet = Math.max(0, Math.round(meters / 0.3048));
     if(feet >= 5280){
-      return narratedUnitLabel(trimNumber((feet / 5280), 2), 'mile', 'miles');
+      return narratedUnitLabel(trimNumber((feet / 5280), 1), 'mile', 'miles');
     }
-    return narratedUnitLabel(String(Math.max(50, Math.round(feet / 50) * 50)), 'foot', 'feet');
+    return narratedUnitLabel(String(Math.max(10, Math.round(feet / 10) * 10)), 'foot', 'feet');
+  }
+
+  function formatNarratedSubterraneanDepthLabel(meters, units){
+    return formatNarratedApproximateSubsurfaceDepthLabel(meters, units);
   }
 
   function parseDepthTokenStrict(raw, units){
@@ -2588,24 +2557,6 @@ var dwt_weather = dwt_weather || (function(){
     return Math.round((range.minF + range.maxF) / 2);
   }
 
-  function tempBandRangeSummary(){
-    function span(band){
-      var range = tempBandRange(band);
-      var minC = toC(range.minF);
-      var maxC = toC(range.maxF);
-      if(band === 'frigid') return 'frigid ('+range.minF+' to '+range.maxF+'F / '+minC+' to '+maxC+'C)';
-      if(band === 'hot') return 'hot ('+range.minF+' to '+range.maxF+'F / '+minC+' to '+maxC+'C)';
-      return band+' ('+range.minF+' to '+range.maxF+'F / '+minC+' to '+maxC+'C)';
-    }
-    return [
-      span('frigid'),
-      span('cold'),
-      span('mild'),
-      span('warm'),
-      span('hot')
-    ].join(', ');
-  }
-
   function tempBandRangeBulletLines(){
     function span(band){
       var range = tempBandRange(band);
@@ -2679,11 +2630,6 @@ var dwt_weather = dwt_weather || (function(){
     if(v === 'heavy') return 'heavy';
     if(v === 'severe') return 'severe';
     return '';
-  }
-
-  function chopBandFromStep(step){
-    step = clamp(Math.round(+step||0), 0, 4);
-    return ['none','light','moderate','heavy','severe'][step];
   }
 
   function chopStepFromBand(v){
@@ -3528,27 +3474,197 @@ var dwt_weather = dwt_weather || (function(){
   // ----------------------------
   // Quips
   // ----------------------------
-  function weatherQuipKey(region, locale, cur){
-    var season = lower(String(cur.season||''));
-    var skies  = canonicalSkyState(cur.skies) || 'clear';
-    var rain   = normalizeRainfallBand(cur.rainfall) || 'none';
-    var bucket = (rain !== 'none') ? rain : skies;
-
-    var path0 = 'quips.weather.'+canonicalKey(region)+'.'+canonicalKey(locale);
-    var path1 = path0 + '.' + season;
-    var path2 = path1 + '.' + bucket;
-    return { locale:path0, general:path1, specific:path2 };
+  function weatherQuipLengthFromToken(token){
+    token = canonicalKey(token || '');
+    if(!token) return 'short';
+    if(token === 'short' || token === 'medium' || token === 'long') return token;
+    return '';
   }
 
-  function pickQuip(region, locale, cur){
-    var paths = weatherQuipKey(region, locale, cur);
-    var a = getQuipsArray(paths.specific);
-    if(a && a.length) return pickOne(a);
-    var b = getQuipsArray(paths.general);
-    if(b && b.length) return pickOne(b);
-    var c = getQuipsArray(paths.locale);
-    if(c && c.length) return pickOne(c);
+  function weatherShowKeyFromToken(token){
+    token = canonicalKey(token || '');
+    if(!token) return '';
+    if(token === 'units') return 'units';
+    if(token === 'temp') return 'temp';
+    if(token === 'rainfall') return 'rainfall';
+    if(token === 'skies') return 'skies';
+    if(token === 'wind') return 'wind';
+    if(token === 'chop') return 'chop';
+    if(token === 'current') return 'current';
     return '';
+  }
+
+  function weatherQuipCategoryFromCurrent(cur, rl){
+    cur = normalizeCurrentWeather(cur || {});
+    rl = rl || {};
+    var environment = activeEnvironment(rl);
+    var rain = normalizeRainfallBand(cur.rainfall) || 'none';
+    var sky = canonicalSkyState(cur.skies) || 'clear';
+    var precip = canonicalKey(cur.precipType || '');
+    var windPct = clamp(+((((cur || {}).wind || {}).percent) || 0), 0, 100);
+    var windCritical = canonicalWindCritical((((cur || {}).wind || {}).critical) || '');
+
+    if(cur.event && (windCritical || sky === 'stormy' || rain === 'heavy')) return 'storm';
+    if(sky === 'stormy' || windCritical === 'crit_heavy' || windCritical === 'crit_severe') return 'storm';
+    if(rain !== 'none'){
+      if(environment !== 'subterranean' && (precip === 'snow' || precip === 'sleet' || ((precip === 'auto' || precip === 'none' || !precip) && (+cur.tempF || 0) <= 36))){
+        return 'snow';
+      }
+      if(rain === 'heavy' || windPct >= 55) return 'storm';
+      return 'rain';
+    }
+    if(windCritical || windPct >= 55) return 'wind';
+    if(sky === 'clear' || sky === 'partly_cloudy') return 'clear';
+    return 'cloudy';
+  }
+
+  function calendarMonthFallbackQuip(){
+    try{
+      if(RT.dwt_calendar && typeof RT.dwt_calendar._pickCurrentMonthQuip === 'function'){
+        return String(RT.dwt_calendar._pickCurrentMonthQuip('short') || '').split('|').join('\n').trim();
+      }
+    }catch(e){}
+    return '';
+  }
+
+  function collectWeatherQuips(mule, region, locale, cur, length){
+    length = weatherQuipLengthFromToken(length) || 'short';
+    locale = canonicalKey(locale || '');
+    var out = [];
+    var profile = loadRegionProfile(mule, region);
+    var localeDef = (((profile || {}).localeDefinitions || {})[locale]) || null;
+    var category = weatherQuipCategoryFromCurrent(cur, { region:region, locale:locale, localeDef:localeDef });
+    appendQuipsToPool(out, (((WEATHER_DEFAULT_QUIPS[category] || {})[length]) || []));
+    if(profile){
+      var weatherQuips = (((profile || {}).quips || {}).weather || {});
+      appendQuipsToPool(out, ((weatherQuips.region || {})[length]));
+      appendQuipsToPool(out, ((((weatherQuips.locales || {})[locale]) || {})[length]));
+    }
+    return out;
+  }
+
+  function appendQuipsToPool(out, arr){
+    arr = normalizeQuipArray(arr);
+    for(var i=0;i<arr.length;i++) out.push(arr[i]);
+  }
+
+  function pickQuip(region, locale, cur, length){
+    var mule = ensureMule();
+    var pool = collectWeatherQuips(mule, region, locale, cur, length);
+    if(pool.length) return pickOne(pool) || '';
+    return calendarMonthFallbackQuip();
+  }
+
+  function weatherShowTemperatureLine(cur, units, rl){
+    var render = renderWeatherForLocation(cur, rl);
+    var environment = activeEnvironment(rl);
+    var label = 'Temperature';
+    if(environment === 'underwater') label = 'Water temperature';
+    else if(environment === 'subterranean') label = 'Air temperature';
+    return label + ': <b>' + esc(describeNarratedTemperature(render, units)) + '</b> (' + esc(describeTempAdj(render)) + ').';
+  }
+
+  function weatherShowRainfallLine(cur, rl){
+    var environment = activeEnvironment(rl);
+    var label = (environment === 'surface') ? 'Rainfall band' : 'Surface rainfall band';
+    var band = normalizeRainfallBand((cur || {}).rainfall) || 'none';
+    var precipitation = describePrecipitation(cur, null);
+    var text = titleCaseWords(band);
+    var precipType = '';
+    if(precipitation){
+      precipType = String(precipitation).slice(String(band).length).trim();
+      if(precipType){
+        text += ' (' + precipType + ')';
+      }
+    }
+    return label + ': <b>' + esc(text) + '</b>.';
+  }
+
+  function weatherShowSkiesLine(cur, rl){
+    var environment = activeEnvironment(rl);
+    var label = (environment === 'surface') ? 'Skies' : 'Surface skies';
+    return label + ': <b>' + esc(titleCaseWords(describeSkies(cur))) + '</b>.';
+  }
+
+  function weatherWindSpeedMph(cur){
+    var percent = clamp(+((((cur || {}).wind || {}).percent) || 0), 0, 100);
+    var critical = canonicalWindCritical((((cur || {}).wind || {}).critical) || '');
+    var mph = criticalWindMph(critical);
+    if(!mph){
+      if(percent===0) mph = 0;
+      else if(percent<=20) mph = 3;
+      else if(percent<=40) mph = 6;
+      else if(percent<=60) mph = 9;
+      else if(percent<=80) mph = 12;
+      else mph = 15;
+    }
+    return mph;
+  }
+
+  function weatherShowWindLine(cur, units, rl){
+    var environment = activeEnvironment(rl);
+    var percent = clamp(+((((cur || {}).wind || {}).percent) || 0), 0, 100);
+    var dir = dirToWords16(normalizeDir16((((cur || {}).wind || {}).dir) || 'N'));
+    var mph = weatherWindSpeedMph(cur);
+    var airflow;
+    if(environment === 'subterranean'){
+      airflow = describeSubterraneanAirflow(percent, (((cur || {}).wind || {}).critical) || '');
+      if(percent === 0) return 'Airflow: <b>Dead calm</b>.';
+      return 'Airflow: <b>' + esc(capitalizeLeading(airflow)) + '</b> from the <b>' + esc(dir) + '</b>.';
+    }
+    if(percent === 0){
+      return ((environment === 'underwater') ? 'Surface wind' : 'Wind') + ': <b>Dead calm</b>.';
+    }
+    return ((environment === 'underwater') ? 'Surface wind' : 'Wind')
+      + ': <b>' + esc(dir) + '</b> at about <b>' + esc(formatKnotsFirstSpeedLabel(mph, units)) + '</b>.';
+  }
+
+  function weatherShowChopLine(cur, rl){
+    var render = renderWeatherForLocation(cur, rl);
+    var chopBand = chopBandFromWeather(render, rl);
+    return 'Chop: <b>' + esc(titleCaseWords(chopBand)) + '</b> (derived from the current wind band).';
+  }
+
+  function weatherShowCurrentLine(mule, cur, units, rl){
+    var ctx, pattern, render, reading, text;
+    if(!(rl && rl.localeDef && rl.localeDef.useSeasonalCurrent)){
+      return '';
+    }
+    ctx = resolveClimateContext(loadRegionProfile(mule, rl.region), rl.locale, now());
+    pattern = (cur && cur.currentPattern) ? normalizeSeasonalCurrent(cur.currentPattern, (cur.currentPattern || {}).measurementProfile || {}) : (ctx && ctx.currentPattern);
+    if(!pattern || !(pattern.strengthPct > 0)){
+      return 'Current: <b>Dead calm</b>.';
+    }
+    if(activeEnvironment(rl) === 'underwater'){
+      render = renderWeatherForLocation(cur, rl);
+      reading = render && render.locationDepthReading ? render.locationDepthReading : currentReadingAtLocationDepth(pattern, rl);
+      if(reading){
+        text = describeCurrentStrength((render.wind || {}).percent, (render.wind || {}).critical);
+        return 'Current: <b>' + esc(titleCaseWords(text)) + '</b> from the <b>' + esc(dirToWords16((render.wind || {}).dir || 'N')) + '</b> at page depth (<b>' + esc(formatFathomsWithPreferredLabel(reading.depthMeters, units)) + '</b>).';
+      }
+    }
+    return 'Current: <b>' + esc(titleCaseWords(describeCurrentStrength(pattern.strengthPct, ''))) + '</b> from the <b>' + esc(dirToWords16(pattern.direction)) + '</b>.';
+  }
+
+  function weatherShowHtml(mule, settings, key, rl, cur){
+    var body = '';
+    if(key === 'units'){
+      body = 'Units: <b>' + esc(titleCaseWords(settings.units || 'imperial')) + '</b>.';
+    }else if(key === 'temp'){
+      body = weatherShowTemperatureLine(cur, settings.units, rl);
+    }else if(key === 'rainfall'){
+      body = weatherShowRainfallLine(cur, rl);
+    }else if(key === 'skies'){
+      body = weatherShowSkiesLine(cur, rl);
+    }else if(key === 'wind'){
+      body = weatherShowWindLine(cur, settings.units, rl);
+    }else if(key === 'chop'){
+      if(!locationSupportsSurfaceChop(rl)) return '';
+      body = weatherShowChopLine(cur, rl);
+    }else if(key === 'current'){
+      body = weatherShowCurrentLine(mule, cur, settings.units, rl);
+    }
+    return body ? ('<div>' + body + '</div>') : '';
   }
 
   // ----------------------------
@@ -3575,7 +3691,6 @@ var dwt_weather = dwt_weather || (function(){
       origin:snapshotOriginState({}),
       activation:defaultActivationState(),
       event:null,
-      quip:'',
       stamp:'',
       tick:null
     };
@@ -3723,10 +3838,10 @@ var dwt_weather = dwt_weather || (function(){
   }
 
   function ensureHistory(mule, region, locale){
-    var h = getJSON(mule, AB_HIST(region, locale));
+    var h = getJSON(mule, rootHistPath(region, locale));
     if(!h || h.schema!=='dwt.weather.history.v1'){
       h = { schema:'dwt.weather.history.v1', entries:[] };
-      setJSON(mule, AB_HIST(region, locale), h);
+      setJSON(mule, rootHistPath(region, locale), h);
     }
     if(!Array.isArray(h.entries)) h.entries = [];
     return h;
@@ -3735,11 +3850,11 @@ var dwt_weather = dwt_weather || (function(){
   function appendHistory(mule, region, locale, cur){
     var h = ensureHistory(mule, region, locale);
     h.entries = upsertHistoryEntries(h.entries, cur);
-    setJSON(mule, AB_HIST(region, locale), h);
+    setJSON(mule, rootHistPath(region, locale), h);
   }
 
   function storeCurrentAndHistory(mule, region, locale, cur){
-    setJSON(mule, AB_CUR(region, locale), cur);
+    setJSON(mule, rootCurPath(region, locale), cur);
     appendHistory(mule, region, locale, cur);
   }
 
@@ -3911,7 +4026,6 @@ var dwt_weather = dwt_weather || (function(){
     }
     cur.activation = buildActivationForSnapshot(origin, cur, ctx, nw, band.startHHMM, false);
     cur = finalizeStoredSnapshot(cur, ctx, nw, band.endHHMM);
-    cur.quip = pickQuip(region, locale, materializeLiveWeather(cur, ctx, nw)) || '';
     cur.stamp = stamp(nw);
     cur.tick = tick(nw);
     return cur;
@@ -4081,7 +4195,6 @@ var dwt_weather = dwt_weather || (function(){
     cur.origin = snapshotOriginState(cur);
     cur.activation = buildActivationForSnapshot(cur.origin, cur, ctx, nw, band.startHHMM, false);
     cur = finalizeStoredSnapshot(cur, ctx, nw, band.endHHMM);
-    cur.quip = pickQuip(region, locale, materializeLiveWeather(cur, ctx, nw)) || '';
     cur.stamp = stamp(nw);
     cur.tick = tick(nw);
     return cur;
@@ -4144,7 +4257,6 @@ var dwt_weather = dwt_weather || (function(){
 
     cur.activation = buildActivationForSnapshot(origin, cur, ctx, nw, band.startHHMM, false);
     cur = finalizeStoredSnapshot(cur, ctx, nw, band.endHHMM);
-    cur.quip = pickQuip(region, locale, materializeLiveWeather(cur, ctx, nw)) || '';
     cur.stamp = stamp(nw);
     cur.tick = tick(nw);
     return cur;
@@ -4155,9 +4267,9 @@ var dwt_weather = dwt_weather || (function(){
   // ----------------------------
   function describeNarratedTemperature(cur, units){
     if((units||'imperial') === 'metric'){
-      return cur.tempC + ' degrees celsius';
+      return cur.tempC + '\u00B0';
     }
-    return cur.tempF + ' degrees fahrenheit';
+    return cur.tempF + '\u00B0';
   }
 
   function describeTempAdj(cur){
@@ -4197,11 +4309,11 @@ var dwt_weather = dwt_weather || (function(){
 
   function activeEnvironment(rl){
     var localeKey = canonicalKey((rl&&rl.locale)||'');
+    if(localeKey === 'underwater') return 'underwater';
+    if(localeKey === 'underdark') return 'subterranean';
     if(rl && rl.localeDef && rl.localeDef.environment){
       return canonicalKey(rl.localeDef.environment);
     }
-    if(localeKey === 'underwater') return 'underwater';
-    if(localeKey === 'underdark') return 'subterranean';
     return 'surface';
   }
 
@@ -4220,10 +4332,22 @@ var dwt_weather = dwt_weather || (function(){
     return chopBandFromWindPercent((cur && cur.wind && cur.wind.percent) || 0);
   }
 
-  function chopNarrativeSentence(chopBand){
+  function chopNarrativeSentence(chopBand, seedParts){
     chopBand = normalizeChopBand(chopBand);
-    if(chopBand === 'none') return 'The sea surface is smooth, with no chop.';
-    return 'Sea chop is ' + chopBand + '.';
+    seedParts = (Array.isArray(seedParts) ? seedParts.slice() : [seedParts || 'surface-chop']);
+    seedParts.push(chopBand);
+    if(chopBand === 'none'){
+      return stableNarrativeChoice(seedParts, [
+        'The water lies smooth.',
+        'The sea lies smooth, with no chop.',
+        'The surface is smooth, with no chop.'
+      ]);
+    }
+    return stableNarrativeChoice(seedParts, [
+      'The sea is running in ' + chopBand + ' chop.',
+      capitalizeLeading(chopBand) + ' chop is running on the water.',
+      'The water is up in ' + chopBand + ' chop.'
+    ]);
   }
 
   function buildVerticalIntro(locale, units, rl){
@@ -4235,7 +4359,7 @@ var dwt_weather = dwt_weather || (function(){
     var preferred = formatNarratedPreferredDepthLabel((rl && rl.depthMeters) || 0, units);
     if(rl && rl.depthIsElevation) return 'At an elevation of ' + preferred;
     if(locale === 'underwater'){
-      return 'At a depth of ' + formatNarratedFathomsWithPreferredLabel((rl && rl.depthMeters) || 0, units);
+      return 'At approximately ' + formatNarratedApproximateSubsurfaceDepthLabel((rl && rl.depthMeters) || 0, units) + ' below';
     }
     if(locale === 'underdark' || locale === 'subterranean'){
       return 'At approximately ' + formatNarratedSubterraneanDepthLabel((rl && rl.depthMeters) || 0, units) + ' below the surface';
@@ -4294,6 +4418,311 @@ var dwt_weather = dwt_weather || (function(){
     return 'a heavy draft';
   }
 
+  // Keep weather prose atmospheric without changing the underlying weather logic.
+  function capitalizeLeading(s){
+    s = String(s || '');
+    return s ? (s.charAt(0).toUpperCase() + s.slice(1)) : '';
+  }
+
+  function decapitalizeLeading(s){
+    s = String(s || '').trim();
+    return s ? (s.charAt(0).toLowerCase() + s.slice(1)) : '';
+  }
+
+  function stableNarrativeChoice(seedParts, options){
+    seedParts = Array.isArray(seedParts) ? seedParts : [seedParts];
+    options = Array.isArray(options) ? options.filter(function(v){ return !!String(v || '').trim(); }) : [];
+    if(!options.length) return '';
+    var seed = seedParts.join('|');
+    var hash = 0;
+    for(var i=0;i<seed.length;i++){
+      hash = (((hash << 5) - hash) + seed.charCodeAt(i)) >>> 0;
+    }
+    return options[hash % options.length];
+  }
+
+  function joinNarrativeClauses(left, right){
+    var connector = ', and ';
+    left = String(left || '').trim();
+    right = String(right || '').trim();
+    if(!left) return right;
+    if(!right) return left;
+    left = left.replace(/[.!?]\s*$/, '');
+    right = decapitalizeLeading(right.replace(/[.!?]\s*$/, ''));
+    if(/\band\b/i.test(left) || /,\s*(with|while|as)\b/i.test(left)) connector = '; ';
+    return left + connector + right + '.';
+  }
+
+  function surfaceConditionNarrative(cur, units, rl, intro){
+    var temp = describeNarratedTemperature(cur, units);
+    var adj = describeTempAdj(cur);
+    var skies = describeSkies(cur);
+    var precipitation = describePrecipitation(cur, rl);
+    var hasPrecip = !!precipitation;
+    var seed = [
+      'surface-condition',
+      canonicalKey((rl && rl.locale) || ''),
+      intro || '',
+      cur.period || '',
+      cur.tempBand || '',
+      cur.skies || '',
+      cur.rainfall || '',
+      canonicalKey(cur.precipType || '')
+    ];
+    if(intro){
+      if(hasPrecip){
+        return stableNarrativeChoice(seed, [
+          intro + ', the air lies ' + adj + ' at ' + temp + ' beneath ' + skies + ' skies, with ' + precipitation + ' working through it.',
+          intro + ', the air feels ' + adj + ' at ' + temp + ' under ' + skies + ' skies, and ' + precipitation + ' is working through the day.',
+          intro + ', the day lies ' + adj + ' at ' + temp + ' beneath ' + skies + ' skies, with ' + precipitation + ' in it.'
+        ]);
+      }
+      return stableNarrativeChoice(seed, [
+        intro + ', the air lies ' + adj + ' at ' + temp + ' beneath ' + skies + ' skies.',
+        intro + ', the air feels ' + adj + ' at ' + temp + ' under ' + skies + ' skies.',
+        intro + ', the day lies ' + adj + ' at ' + temp + ' beneath ' + skies + ' skies.'
+      ]);
+    }
+    if(hasPrecip){
+      return stableNarrativeChoice(seed, [
+        'At ' + temp + ', the air lies ' + adj + ' beneath ' + skies + ' skies, with ' + precipitation + ' working through it.',
+        'At ' + temp + ', the air feels ' + adj + ' under ' + skies + ' skies, and ' + precipitation + ' is working through the day.',
+        'At ' + temp + ', the day lies ' + adj + ' beneath ' + skies + ' skies, with ' + precipitation + ' in it.'
+      ]);
+    }
+    return stableNarrativeChoice(seed, [
+      'At ' + temp + ', the air lies ' + adj + ' beneath ' + skies + ' skies.',
+      'At ' + temp + ', the air feels ' + adj + ' under ' + skies + ' skies.',
+      'At ' + temp + ', the day lies ' + adj + ' beneath ' + skies + ' skies.'
+    ]);
+  }
+
+  function surfaceWindNarrative(cur, units, rl){
+    var percent = clamp(+((((cur || {}).wind || {}).percent) || 0), 0, 100);
+    var dir = normalizeDir16((((cur || {}).wind || {}).dir) || 'N');
+    var critical = canonicalWindCritical((((cur || {}).wind || {}).critical) || '');
+    var mph = criticalWindMph(critical);
+    if(!mph){
+      if(percent===0) mph = 0;
+      else if(percent<=20) mph = 3;
+      else if(percent<=40) mph = 6;
+      else if(percent<=60) mph = 9;
+      else if(percent<=80) mph = 12;
+      else mph = 15;
+    }
+    var speed = formatKnotsFirstSpeedLabel(mph, units);
+    var dirWords = dirToWords16(dir);
+    var seed = [
+      'surface-wind',
+      canonicalKey((rl && rl.locale) || ''),
+      cur.period || '',
+      String(percent),
+      critical || '',
+      dir || ''
+    ];
+    if(percent === 0){
+      return stableNarrativeChoice(seed, [
+        'There is no wind to speak of.',
+        'The wind has fallen away.',
+        'The air is dead still.'
+      ]);
+    }
+    return stableNarrativeChoice(seed, [
+      'The wind is out of the ' + dirWords + ' at about ' + speed + '.',
+      'Wind is running from the ' + dirWords + ' at about ' + speed + '.',
+      'The wind is coming from the ' + dirWords + ' at about ' + speed + '.'
+    ]);
+  }
+
+  function underwaterConditionNarrative(cur, units, rl, intro){
+    var adj = describeTempAdj(cur);
+    var seed = [
+      'underwater-condition',
+      canonicalKey((rl && rl.locale) || ''),
+      intro || '',
+      cur.period || '',
+      cur.tempBand || '',
+      cur.rainfall || '',
+      canonicalKey(cur.precipType || '')
+    ];
+    intro = intro || 'At an unknown depth';
+    return stableNarrativeChoice(seed, [
+      intro + ', the water feels ' + adj + '.',
+      intro + ', the water is ' + adj + '.',
+      intro + ', the water runs ' + adj + ' against the skin.'
+    ]);
+  }
+
+  function underwaterCurrentNarrative(cur, rl){
+    var percent = clamp(+((((cur || {}).wind || {}).percent) || 0), 0, 100);
+    var critical = canonicalWindCritical((((cur || {}).wind || {}).critical) || '');
+    var strength = describeCurrentStrength(percent, critical);
+    var seed = [
+      'underwater-current',
+      canonicalKey((rl && rl.locale) || ''),
+      cur.period || '',
+      String(percent),
+      critical || '',
+      strength
+    ];
+    if(percent === 0){
+      return stableNarrativeChoice(seed, [
+        'The current is dead calm.',
+        'The water is holding dead calm here.',
+        'The pull has fallen away to dead calm.'
+      ]);
+    }
+    return stableNarrativeChoice(seed, [
+      'The current is ' + strength + '.',
+      'A ' + strength + ' current is running here.',
+      'The water is under a ' + strength + ' pull.'
+    ]);
+  }
+
+  function subterraneanMoistureNarrative(cur, rl){
+    var precipitation = describePrecipitation(cur, rl);
+    if(!precipitation) return '';
+    var band = normalizeRainfallBand(cur && cur.rainfall);
+    var typeKey = canonicalKey((cur && cur.precipType) || '');
+    if(!typeKey || typeKey === 'auto' || typeKey === 'none') typeKey = 'drip';
+    var type = String(typeKey || 'drip').replace(/_/g, ' ').trim() || 'drip';
+    if(type === 'drip'){
+      if(band === 'light') return 'A thin damp clings to the passage walls.';
+      if(band === 'moderate') return 'Moisture beads along the passage walls.';
+      return 'Water beads and runs along the passage walls.';
+    }
+    if(band === 'light') return 'The passages hold a light trace of ' + type + '.';
+    if(band === 'moderate') return 'The passages are thick with ' + type + '.';
+    return 'The passages are heavy with ' + type + '.';
+  }
+
+  function subterraneanAirflowNarrative(percent, critical){
+    var airflow = describeSubterraneanAirflow(percent, critical);
+    if(airflow === 'dead calm') return 'The air is still.';
+    if(airflow.indexOf('a ') === 0 && airflow.indexOf('draft') >= 0){
+      return capitalizeLeading(airflow) + ' is moving through.';
+    }
+    if(airflow === 'severe' || airflow === 'violent'){
+      return 'A ' + airflow + ' rush of air is moving through.';
+    }
+    return 'A ' + airflow + ' draft is moving through.';
+  }
+
+  function subterraneanVisibilityBaseNarrative(cur, rl){
+    cur = normalizeCurrentWeather(cur || {});
+    var percent = clamp(+((((cur || {}).wind || {}).percent) || 0), 0, 100);
+    var critical = canonicalWindCritical((((cur || {}).wind || {}).critical) || '');
+    var hasPrecip = !!describePrecipitation(cur, rl);
+    var seed = [
+      'subterranean-visibility',
+      cur.period || '',
+      cur.tempBand || '',
+      cur.rainfall || '',
+      String(percent),
+      critical || '',
+      canonicalKey((((cur || {}).event || {}).key) || (((cur || {}).event || {}).name))
+    ];
+    if(critical){
+      return stableNarrativeChoice(seed, [
+        'The dark is in motion here, and even carried light struggles to keep the passage plain.',
+        'Shadow and driven grit crowd the tunnel together here; only carried light or darkvision wins any distance.',
+        'The passage is all churn and blackness; beyond carried light or darkvision, sight dies almost at once.'
+      ]);
+    }
+    if(hasPrecip){
+      return stableNarrativeChoice(seed, [
+        'These damp walls drink the light, and only carried light or darkvision keeps the tunnel from vanishing.',
+        'Moisture and shadow swallow the passage together here; beyond carried light or darkvision, sight dies fast.',
+        'Wet stone throws little back to the eye here, and only carried light or darkvision wins any distance.'
+      ]);
+    }
+    if(percent === 0){
+      return stableNarrativeChoice(seed, [
+        'The still dark stands close here, and only carried light or darkvision keeps the passage from being lost.',
+        'In this breathless dark, sight dies quickly beyond carried light or darkvision.',
+        'The passage gives little back to the eye; only carried light or darkvision holds the dark at bay.'
+      ]);
+    }
+    return stableNarrativeChoice(seed, [
+      'The dark runs close along these tunnels, and only carried light or darkvision wins any distance here.',
+      'These passages close to shadow quickly; beyond carried light or darkvision, sight is short.',
+      'The tunnel dark crowds near, and only carried light or darkvision keeps the way from vanishing.'
+    ]);
+  }
+
+  function weatherEventNarrative(cur){
+    if(!cur || !cur.event) return '';
+    var severity = normalizeCriticalSeverity(cur.event.severity);
+    var eventKey = canonicalKey(cur.event.key || cur.event.name);
+    var eventName = lower(String(cur.event.name || 'critical event')).replace(/_/g, ' ');
+    var lead = stableNarrativeChoice(['event-lead', severity, eventKey], (
+      severity === 'severe' ? [' Take heed now: ', ' Take heed at once: ', ' By all saints, take heed: '] :
+      severity === 'heavy' ? [' Take heed: ', ' Take warning now: ', ' Best take heed: '] :
+      severity === 'moderate' ? [' Take care: ', ' Take warning: ', ' Mind yourself: '] :
+      [' Take care: ', ' Mark it: ', ' Mind it: ']
+    ));
+    var predicate = 'is rising hard around you.';
+    if(eventKey === 'blizzard') predicate = 'is closing the world to snow and blind wind.';
+    else if(eventKey === 'icestorm') predicate = 'is glazing the ground in hail and sleet.';
+    else if(eventKey === 'wintergale') predicate = 'is cutting across the water with hard cold force.';
+    else if(eventKey === 'thunderstorm') predicate = 'is breaking overhead in thunder and hard rain.';
+    else if(eventKey === 'seastorm') predicate = 'is bearing down in black water and heavy weather.';
+    else if(eventKey === 'roguewave') predicate = 'is rising out of the water without warning.';
+    else if(eventKey === 'hurricane') predicate = 'is grinding down the coast in wind and water.';
+    else if(eventKey === 'tornado') predicate = 'is tearing across the open ground.';
+    else if(eventKey === 'sandstorm') predicate = 'is scouring the open ground raw.';
+    else if(eventKey === 'heatwave') predicate = 'is bearing down in punishing heat.';
+    else if(eventKey === 'flashflood') predicate = 'is coming fast through the low ground.';
+    else if(eventKey === 'wildfire') predicate = 'is running the dry ground in flame and smoke.';
+    else if(eventKey === 'earthquake') predicate = 'is shaking the ground underfoot.';
+    else if(eventKey === 'volcaniceruption') predicate = 'is throwing ash and fire across the land.';
+    else if(eventKey === 'ashfall') predicate = 'is choking the air with hot ash.';
+    else if(eventKey === 'cavein') predicate = 'is breaking loose overhead.';
+    else if(eventKey === 'sinkhole') predicate = 'is opening underfoot.';
+    else if(eventKey === 'toxicfog') predicate = 'is thickening through the air.';
+    else if(eventKey === 'maelstrom') predicate = 'is opening in the water and dragging at the current.';
+    return lead + 'a ' + severity + ' ' + eventName + ' ' + predicate;
+  }
+
+  function weatherEventSummarySentence(cur){
+    var summary = String((((cur || {}).event || {}).summary) || '').trim();
+    if(!summary) return '';
+    if(/[.!?]$/.test(summary)) return summary;
+    return summary + '.';
+  }
+
+  function subterraneanEventPressureSentence(cur){
+    var eventKey = canonicalKey((((cur || {}).event || {}).key) || (((cur || {}).event || {}).name));
+    var severity = normalizeCriticalSeverity((((cur || {}).event || {}).severity) || 'light');
+    var seed = ['subterranean-event', eventKey, severity];
+    if(eventKey === 'cavein') return stableNarrativeChoice(seed, [
+      'Stone and dust are coming down somewhere ahead.',
+      'Rock is breaking loose ahead, and the dust is already rolling through.',
+      'Somewhere ahead the roof is starting to come apart.'
+    ]);
+    if(eventKey === 'toxicfog') return stableNarrativeChoice(seed, [
+      'The vapor is thickening through the passage.',
+      'A choking vapor is pooling thick in the tunnel ahead.',
+      'The fog is gathering low in the dark and biting at the breath.'
+    ]);
+    if(eventKey === 'sinkhole') return stableNarrativeChoice(seed, [
+      'The ground is giving way somewhere underfoot.',
+      'Stone is dropping hollow somewhere ahead.',
+      'Something below is opening where the floor should hold.'
+    ]);
+    if(eventKey === 'earthquake') return stableNarrativeChoice(seed, [
+      'The stone is still shifting in the deep.',
+      'The rock is moving underfoot and through the walls.',
+      'The whole deep is shuddering through the stone.'
+    ]);
+    if(eventKey === 'heatwave') return stableNarrativeChoice(seed, [
+      'The heat is pressing harder through the rock.',
+      'The stone is holding heat like a kiln wall.',
+      'The tunnels are turning close and oven-hot.'
+    ]);
+    return weatherEventSummarySentence(cur) || 'The danger is closing in through the passage.';
+  }
+
   function formatVisibilityRangeLabel(rangeMeters, units){
     rangeMeters = Math.max(1, Math.round(+rangeMeters || 0));
     if((units || 'imperial') === 'metric') return rangeMeters + ' m';
@@ -4318,19 +4747,48 @@ var dwt_weather = dwt_weather || (function(){
     else if(critical === 'crit_severe') criticalFactor = 0.25;
     var rangeMeters = Math.max(1, Math.round(model.baseRangeMeters * zoneFactor * criticalFactor));
     var zoneLabel = 'sunlit';
-    var narrative = 'Ambient light still reaches this depth, and visibility remains workable.';
+    var seed = [
+      'underwater-visibility',
+      canonicalKey((rl && rl.locale) || ''),
+      cur && cur.period || '',
+      cur && cur.tempBand || '',
+      modelKey,
+      zoneKey,
+      critical || ''
+    ];
+    var narrative = stableNarrativeChoice(seed, [
+      'Ambient light still reaches this depth, and visibility remains workable.',
+      'Light still reaches this depth, and sight remains workable in the water.',
+      'There is still enough light at this depth to keep the water workable to the eye.'
+    ]);
     if(zoneKey === 'twilight'){
       zoneLabel = 'blue-green twilight';
-      narrative = 'Ambient light has fallen into a blue-green twilight, and visibility is short.';
+      narrative = stableNarrativeChoice(seed, [
+        'Ambient light has fallen into a blue-green twilight, and visibility is short.',
+        'The light has thinned to a blue-green twilight, and sight is short.',
+        'Only a blue-green twilight remains at this depth, and visibility is short.'
+      ]);
     }else if(zoneKey === 'aphotic'){
       zoneLabel = 'aphotic darkness';
-      narrative = 'Ambient light is effectively gone here, leaving the water dark unless a light source is carried.';
+      narrative = stableNarrativeChoice(seed, [
+        'Ambient light is effectively gone here, leaving the water dark unless a light source is carried.',
+        'The natural light is spent here; without a carried light, the water is black.',
+        'No useful natural light reaches this depth, and the water stays dark unless a light is carried.'
+      ]);
     }else if(model.baseRangeMeters <= 8){
       zoneLabel = 'sunlit but turbid water';
-      narrative = 'Ambient light still reaches this depth, but suspended matter keeps visibility short.';
+      narrative = stableNarrativeChoice(seed, [
+        'Ambient light still reaches this depth, but suspended matter keeps visibility short.',
+        'Light reaches this depth, but stirred silt keeps sight short.',
+        'There is still light here, though suspended matter cuts visibility short.'
+      ]);
     }
     if(critical){
-      narrative += ' The current disturbance cuts it down further.';
+      narrative += stableNarrativeChoice(seed.concat(['critical-tail']), [
+        ' The current disturbance cuts it down further.',
+        ' The driven water shortens it further still.',
+        ' The surge tears that sight down even shorter.'
+      ]);
     }
     return {
       zoneKey:zoneKey,
@@ -4343,9 +4801,9 @@ var dwt_weather = dwt_weather || (function(){
   }
 
   function underdarkVisibilityProfile(cur){
-    var narrative = 'Ambient visibility is dark by default, and only carried light or darkvision pushes beyond it.';
+    var narrative = subterraneanVisibilityBaseNarrative(cur, { locale:'underdark' });
     if(cur && cur.event){
-      narrative += ' The active hazard further obscures the passages.';
+      narrative += ' ' + subterraneanEventPressureSentence(cur);
     }
     return {
       narrative:narrative,
@@ -4365,9 +4823,6 @@ var dwt_weather = dwt_weather || (function(){
 
   function buildNarrative(cur, units, rl){
     cur = normalizeCurrentWeather(cur);
-    var temp = describeNarratedTemperature(cur, units);
-    var adj  = describeTempAdj(cur);
-    var skies = describeSkies(cur);
     var precipitation = describePrecipitation(cur, rl);
     var hasPrecip = !!precipitation;
     var environment = activeEnvironment(rl);
@@ -4375,49 +4830,39 @@ var dwt_weather = dwt_weather || (function(){
     var line = '';
 
     if(environment === 'underwater'){
-      line = (intro || 'At an unknown depth') + ', the water feels ' + adj;
+      line = underwaterConditionNarrative(cur, units, rl, intro || 'At an unknown depth');
     }else if(environment === 'subterranean'){
-      line = (intro || 'At an unknown depth') + ', the air feels ' + adj;
+      line = (intro || 'At an unknown depth') + ', the air feels ' + describeTempAdj(cur) + '.';
     }else{
-      if(intro){
-        line = intro + ', the temperature is ' + temp + ', the air feels ' + adj + ', and the skies are ' + skies;
-      }else{
-        line = 'At ' + temp + ', the temperature is ' + adj + ', and the skies are ' + skies;
-      }
-      if(hasPrecip){
-        line += ' with ' + precipitation;
-      }
-    }
-
-    if(environment === 'subterranean' && hasPrecip){
-      line += ', and ' + precipitation + ' clings to the passages';
+      line = surfaceConditionNarrative(cur, units, rl, intro);
     }
 
     var percent = clamp(+((cur&&cur.wind&&cur.wind.percent)||0),0,100);
-    var dir = normalizeDir16((cur&&cur.wind&&cur.wind.dir)||'N');
     var critical = canonicalWindCritical((cur&&cur.wind&&cur.wind.critical)||'');
-    var mph = criticalWindMph(critical);
-    if(!mph){
-      if(percent===0) mph = 0;
-      else if(percent<=20) mph = 3;
-      else if(percent<=40) mph = 6;
-      else if(percent<=60) mph = 9;
-      else if(percent<=80) mph = 12;
-      else mph = 15;
-    }
     if(percent===0){
-      if(environment === 'underwater') line += ' and the current is dead calm.';
-      else if(environment === 'subterranean') line += '. The airflow is dead calm.';
-      else line += '. Wind is dead calm.';
+      if(environment === 'underwater') line = joinNarrativeClauses(line, underwaterCurrentNarrative(cur, rl));
+      else if(environment === 'subterranean') line = joinNarrativeClauses(line, subterraneanAirflowNarrative(percent, critical));
+      else line = joinNarrativeClauses(line, surfaceWindNarrative(cur, units, rl));
     }else if(environment === 'underwater'){
-      line += ' and the current is ' + describeCurrentStrength(percent, critical) + '.';
+      line = joinNarrativeClauses(line, underwaterCurrentNarrative(cur, rl));
     }else if(environment === 'subterranean'){
-      line += '. The airflow is ' + describeSubterraneanAirflow(percent, critical) + '.';
+      line = joinNarrativeClauses(line, subterraneanAirflowNarrative(percent, critical));
     }else{
-      line += '. Wind is coming from the ' + dirToWords16(dir) + ' at about ' + formatKnotsFirstSpeedLabel(mph, units) + '.';
+      line = joinNarrativeClauses(line, surfaceWindNarrative(cur, units, rl));
+    }
+
+    if(environment === 'subterranean' && hasPrecip){
+      line += ' ' + subterraneanMoistureNarrative(cur, rl);
     }
     if(locationSupportsSurfaceChop(rl)){
-      line += ' ' + chopNarrativeSentence(chopBandFromWeather(cur, rl));
+      line += ' ' + chopNarrativeSentence(chopBandFromWeather(cur, rl), [
+        'surface-chop',
+        canonicalKey((rl && rl.locale) || ''),
+        cur.period || '',
+        cur.skies || '',
+        cur.rainfall || '',
+        String(percent)
+      ]);
     }
     if(environment === 'underwater'){
       line += ' ' + underwaterVisibilityProfile(cur, units, rl).narrative;
@@ -4426,9 +4871,9 @@ var dwt_weather = dwt_weather || (function(){
     }
 
     if(cur.event){
-      line += ' A ' + normalizeCriticalSeverity(cur.event.severity) + ' ' + lower(String(cur.event.name||'critical event')).replace(/_/g,' ') + ' is in progress.';
+      line += weatherEventNarrative(cur);
     }
-    return line;
+    return capitalizeLeading(line.trim());
   }
 
   function weightedValuesLabel(weights, formatter){
@@ -4581,7 +5026,7 @@ var dwt_weather = dwt_weather || (function(){
         items:[
           'Underdark airflow is modeled as cave ventilation rather than open-air wind. Stable passages default to dead calm, and only brief drafts or critical events lift the windsock above ud_dead_calm.',
           'Draft direction bias: ' + weightedValuesLabel(ctx.wind.directionWeights, function(v){ return dirToWords16(normalizeDir16(v)); }) + '.',
-          'Legacy strength table: ' + weightedValuesLabel(ctx.wind.strengthWeights, function(v){ return windPercentFromStep(windStepFromPercent(v)) + '%'; }) + ' (interpreted as draft bias, not as open-air wind speed).'
+          'Draft strength table: ' + weightedValuesLabel(ctx.wind.strengthWeights, function(v){ return windPercentFromStep(windStepFromPercent(v)) + '%'; }) + ' (interpreted as draft bias, not as open-air wind speed).'
         ]
       };
     }else{
@@ -4599,46 +5044,50 @@ var dwt_weather = dwt_weather || (function(){
         );
       }
     }
-    var sections = [
-      {
-        title:'Climate',
-        items:[
-          'Climate anchor: ' + periodMeta.label + ' baseline ' + avgLabel + ' average'
-            + ' (' + lowLabel + ' to ' + highLabel + '), precipitation chance '
-            + Math.round(ctx.precipitation.chancePct) + '%.',
-          'Diurnal control: low near ' + diurnal.lowTimeHHMM + ', high near ' + diurnal.highTimeHHMM
-            + '; exact clock time drives the live temperature inside the current band.',
-          'Drift per segment: temperature ' + ctx.drift.temperature + ', precipitation ' + ctx.drift.precipitation
-            + ', skies ' + ctx.drift.skies + ', wind ' + ctx.drift.wind + ', direction shift ' + ctx.drift.directionChangePct + '%.',
-          'Governor caps: temperature ' + governor.temperatureMaxDeltaF + 'F, rain ' + governor.rainMaxStep
-            + ' step, skies ' + governor.skyMaxStep + ' step, wind ' + governor.windMaxStep
-            + ' step, current strength ' + governor.currentStrengthMaxDeltaPct + '%, current temperature '
-            + governor.currentTemperatureMaxDeltaF + 'F, current direction ' + governor.currentDirectionMaxStep + ' compass step(s).',
-          'Current segment drift (' + titleCaseWords(ctx.timeofday.label) + '): temp drift ' + formatSignedInteger(ctx.timeofday.raw.temperatureDelta)
-            + ', precip drift ' + formatSignedInteger(ctx.timeofday.raw.precipitationDelta)
-            + ', sky drift ' + formatSignedInteger(ctx.timeofday.raw.skiesDelta)
-            + ', wind drift ' + formatSignedInteger(ctx.timeofday.raw.windDelta)
-            + ', wind strength ' + formatSignedInteger(ctx.timeofday.windStrengthDeltaPct)
-            + '%, direction shift ' + ctx.timeofday.directionChangePct + '%.'
-        ]
-      },
-      flowSection
-    ];
+    var surfaceSectionTitle = (environment === 'surface') ? 'Climate' : 'Surface Climate';
+    var activationSectionTitle = (environment === 'surface') ? 'Activation Windows' : 'Surface Activation Windows';
+    var surfaceClimateSection = {
+      title:surfaceSectionTitle,
+      items:[
+        'Climate anchor: ' + periodMeta.label + ' baseline ' + avgLabel + ' average'
+          + ' (' + lowLabel + ' to ' + highLabel + '), precipitation chance '
+          + Math.round(ctx.precipitation.chancePct) + '%.',
+        'Diurnal control: low near ' + diurnal.lowTimeHHMM + ', high near ' + diurnal.highTimeHHMM
+          + '; exact clock time drives the live temperature inside the current band.',
+        'Drift per segment: temperature ' + ctx.drift.temperature + ', precipitation ' + ctx.drift.precipitation
+          + ', skies ' + ctx.drift.skies + ', wind ' + ctx.drift.wind + ', direction shift ' + ctx.drift.directionChangePct + '%.',
+        'Governor caps: temperature ' + governor.temperatureMaxDeltaF + 'F, rain ' + governor.rainMaxStep
+          + ' step, skies ' + governor.skyMaxStep + ' step, wind ' + governor.windMaxStep
+          + ' step, current strength ' + governor.currentStrengthMaxDeltaPct + '%, current temperature '
+          + governor.currentTemperatureMaxDeltaF + 'F, current direction ' + governor.currentDirectionMaxStep + ' compass step(s).',
+        'Current segment drift (' + titleCaseWords(ctx.timeofday.label) + '): temp drift ' + formatSignedInteger(ctx.timeofday.raw.temperatureDelta)
+          + ', precip drift ' + formatSignedInteger(ctx.timeofday.raw.precipitationDelta)
+          + ', sky drift ' + formatSignedInteger(ctx.timeofday.raw.skiesDelta)
+          + ', wind drift ' + formatSignedInteger(ctx.timeofday.raw.windDelta)
+          + ', wind strength ' + formatSignedInteger(ctx.timeofday.windStrengthDeltaPct)
+          + '%, direction shift ' + ctx.timeofday.directionChangePct + '%.'
+      ]
+    };
+    var surfaceActivationSection = cur && cur.activation ? {
+      title:activationSectionTitle,
+      items:[
+        'Skies: ' + windowLabel(cur.activation.skies) + '.',
+        'Precipitation: ' + windowLabel(cur.activation.precipitation) + '.',
+        'Critical event: ' + windowLabel(cur.activation.event) + '.'
+      ]
+    } : null;
+    var sections = [];
+    if(environment === 'surface'){
+      sections.push(surfaceClimateSection);
+      sections.push(flowSection);
+    }else{
+      sections.push(flowSection);
+    }
     var subsurfaceItems = subsurfaceObservationLines(cur, units, rl);
     if(subsurfaceItems.length){
       sections.push({
         title:'Subsurface',
         items:subsurfaceItems
-      });
-    }
-    if(cur && cur.activation){
-      sections.push({
-        title:'Activation Windows',
-        items:[
-          'Skies: ' + windowLabel(cur.activation.skies) + '.',
-          'Precipitation: ' + windowLabel(cur.activation.precipitation) + '.',
-          'Critical event: ' + windowLabel(cur.activation.event) + '.'
-        ]
       });
     }
     if(ctx.locale && ctx.locale.useSeasonalCurrent){
@@ -4647,14 +5096,252 @@ var dwt_weather = dwt_weather || (function(){
         items:currentPatternLines(cur.currentPattern || ctx.currentPattern, units, rl)
       });
     }
+    if(environment !== 'surface'){
+      sections.push(surfaceClimateSection);
+    }
+    if(surfaceActivationSection){
+      sections.push(surfaceActivationSection);
+    }
     sections.push({
       title:'Critical Event',
       items:[activeEventLine(cur)]
     });
     return {
+      profile:profile || null,
       summary:buildNarrative(renderCur, units, rl),
-      sections:sections
+      sections:sections,
+      sourceGroups:buildWeatherSourceGroups(profile, rl)
     };
+  }
+
+  function appendUniqueWeatherSource(out, seen, raw){
+    var text = '';
+    var key;
+    if(raw && typeof raw === 'object' && !Array.isArray(raw)){
+      text = String(raw.label || raw.title || raw.name || raw.url || '').trim();
+    }else{
+      text = String(raw || '').trim();
+    }
+    if(!text) return;
+    key = lower(text).replace(/\s+/g, ' ').trim();
+    if(!key || seen[key]) return;
+    seen[key] = true;
+    out.push(text);
+  }
+
+  function localeSourceItems(profile, rl){
+    var out = [];
+    var seen = {};
+    var localeKey = canonicalKey((rl && rl.locale) || '');
+    var mapKey = normalizeMapNameForCompare((rl && rl.mapname) || '');
+    var locations = Array.isArray(profile && profile.campaignLocations) ? profile.campaignLocations : [];
+    var exactMatches = [];
+    var fallbackMatches = [];
+    var i, loc, locNameKey;
+
+    if(rl && rl.localeDef && Array.isArray(rl.localeDef.sources)){
+      for(i=0;i<rl.localeDef.sources.length;i++){
+        appendUniqueWeatherSource(out, seen, rl.localeDef.sources[i]);
+      }
+    }
+
+    for(i=0;i<locations.length;i++){
+      loc = locations[i] || {};
+      if(canonicalKey(loc.locale) !== localeKey) continue;
+      locNameKey = normalizeMapNameForCompare(loc.name || '');
+      if(mapKey && locNameKey && locNameKey === mapKey) exactMatches.push(loc);
+      else fallbackMatches.push(loc);
+    }
+
+    locations = exactMatches.length ? exactMatches : fallbackMatches;
+    for(i=0;i<locations.length;i++){
+      loc = locations[i] || {};
+      if(Array.isArray(loc.sources)){
+        for(var j=0;j<loc.sources.length;j++){
+          appendUniqueWeatherSource(out, seen, loc.sources[j]);
+        }
+      }
+    }
+    return out;
+  }
+
+  function buildWeatherSourceGroups(profile, rl){
+    var groups = [];
+    var regionRefs = [];
+    var regionSeen = {};
+    var localeRefs;
+    var i;
+
+    if(profile && Array.isArray(profile.referenceSources)){
+      for(i=0;i<profile.referenceSources.length;i++){
+        appendUniqueWeatherSource(regionRefs, regionSeen, profile.referenceSources[i]);
+      }
+    }
+    if(regionRefs.length){
+      groups.push({
+        title:'Regional References',
+        items:regionRefs
+      });
+    }
+
+    localeRefs = localeSourceItems(profile, rl);
+    if(localeRefs.length){
+      groups.push({
+        title:'Locale Inputs',
+        items:localeRefs
+      });
+    }
+
+    return groups;
+  }
+
+  function extractClimateAnalogueFromNotes(notes){
+    var list = Array.isArray(notes) ? notes : [];
+    var i, text, match;
+    for(i=0;i<list.length;i++){
+      text = String(list[i] || '').trim();
+      if(!text) continue;
+      match = text.match(/^Climate analogue:\s*(.+?)(?:,\s*per\s+.+)?\.?$/i);
+      if(match && String(match[1] || '').trim()){
+        return String(match[1]).trim();
+      }
+    }
+    return '';
+  }
+
+  function weatherAnchorValue(raw){
+    if(!raw) return '';
+    if(typeof raw === 'string') return String(raw).trim();
+    if(Array.isArray(raw)) return extractClimateAnalogueFromNotes(raw);
+    if(typeof raw === 'object'){
+      return String(
+        raw.earthenAnchor ||
+        raw.realWorldAnchor ||
+        raw.climateAnalogue ||
+        raw.climateAnalog ||
+        raw.analogue ||
+        raw.analog ||
+        raw.anchor ||
+        ''
+      ).trim();
+    }
+    return '';
+  }
+
+  function buildWeatherAnchorItems(profile, rl){
+    var items = [];
+    var regionAnchor = weatherAnchorValue(profile) || extractClimateAnalogueFromNotes((profile && profile.sourceNotes) || []);
+    var localeAnchor = weatherAnchorValue(rl && rl.localeDef) || extractClimateAnalogueFromNotes(((rl && rl.localeDef && rl.localeDef.sourceNotes) || []));
+    if(regionAnchor){
+      items.push('Regional anchor: ' + regionAnchor + '.');
+    }
+    if(localeAnchor){
+      items.push('Locale anchor: ' + localeAnchor + '.');
+    }
+    return items;
+  }
+
+  function weatherDetailLabelKey(label){
+    return canonicalKey(String(label || '').replace(/\([^)]*\)/g, ' '));
+  }
+
+  function splitWeatherDetailLabelValue(item){
+    var text = String(item || '').trim();
+    var idx = text.indexOf(':');
+    var label, value;
+    if(idx <= 0) return null;
+    label = text.slice(0, idx).trim();
+    value = text.slice(idx + 1).trim();
+    if(!label || !value || label.length > 48) return null;
+    if(!/^[A-Za-z0-9][A-Za-z0-9()\/&,\- %]+$/.test(label)) return null;
+    return { label:label, value:value };
+  }
+
+  function splitWeatherDetailTopLevel(text, delimiter){
+    var out = [];
+    var buf = '';
+    var depth = 0;
+    var i, ch;
+    text = String(text || '');
+    for(i=0;i<text.length;i++){
+      ch = text.charAt(i);
+      if(ch === '(') depth++;
+      else if(ch === ')' && depth > 0) depth--;
+      if(depth === 0 && ch === delimiter){
+        if(String(buf).trim()) out.push(String(buf).trim());
+        buf = '';
+        continue;
+      }
+      buf += ch;
+    }
+    if(String(buf).trim()) out.push(String(buf).trim());
+    return out;
+  }
+
+  function weatherDetailSubitemDelimiters(label){
+    switch(weatherDetailLabelKey(label)){
+      case 'climateanchor':
+        return [','];
+      case 'diurnalcontrol':
+        return [';', ','];
+      case 'driftpersegment':
+      case 'governorcaps':
+      case 'currentsegmentdrift':
+      case 'prevailingwind':
+      case 'windstrengthtable':
+      case 'draftdirectionbias':
+      case 'draftstrengthtable':
+        return [','];
+      case 'waterprofile':
+        return [',', ';'];
+      case 'criticalevent':
+        return ['|'];
+      default:
+        return [];
+    }
+  }
+
+  function splitWeatherDetailSubitems(label, value){
+    var parts = [String(value || '').trim()];
+    var delimiters = weatherDetailSubitemDelimiters(label);
+    var nextParts, i, j, splits, cleaned;
+    for(i=0;i<delimiters.length;i++){
+      nextParts = [];
+      for(j=0;j<parts.length;j++){
+        splits = splitWeatherDetailTopLevel(parts[j], delimiters[i]);
+        if(splits.length > 1) nextParts = nextParts.concat(splits);
+        else nextParts.push(parts[j]);
+      }
+      parts = nextParts;
+    }
+    cleaned = [];
+    for(i=0;i<parts.length;i++){
+      value = String(parts[i] || '').trim().replace(/\.\s*$/,'');
+      if(value) cleaned.push(value);
+    }
+    return cleaned;
+  }
+
+  function renderWeatherDetailItem(item){
+    var text = String(item || '').trim();
+    var pair = splitWeatherDetailLabelValue(text);
+    var subitems;
+    var i;
+    if(!text) return '';
+    if(pair){
+      subitems = splitWeatherDetailSubitems(pair.label, pair.value);
+      if(subitems.length > 1){
+        text = '<li style="margin:0 0 6px 0;line-height:1.35;"><b>' + esc(pair.label) + ':</b>';
+        text += '<ul style="margin:4px 0 0 0;padding-left:16px;list-style-type:circle;">';
+        for(i=0;i<subitems.length;i++){
+          text += '<li style="margin:0 0 3px 0;line-height:1.35;">' + esc(subitems[i]) + '</li>';
+        }
+        text += '</ul></li>';
+        return text;
+      }
+      return '<li style="margin:0 0 4px 0;line-height:1.35;"><b>' + esc(pair.label) + ':</b> ' + esc(pair.value) + '</li>';
+    }
+    return '<li style="margin:0 0 4px 0;line-height:1.35;">' + esc(text) + '</li>';
   }
 
   function renderWeatherDetailSections(details){
@@ -4665,12 +5352,59 @@ var dwt_weather = dwt_weather || (function(){
       var section = sections[i] || {};
       var items = Array.isArray(section.items) ? section.items.filter(function(item){ return !!String(item||'').trim(); }) : [];
       if(!items.length) continue;
-      html += '<div style="margin-top:8px;"><b>' + esc(section.title || 'Details') + '</b><ul style="margin:4px 0 0 18px;padding:0;">';
+      html += '<div style="margin-top:10px;padding-left:8px;">';
+      html += '<div style="font-weight:bold;margin:0 0 4px 0;">&bull; ' + esc(section.title || 'Details') + '</div>';
+      html += '<div style="padding-left:14px;"><ul style="margin:0;padding-left:16px;list-style-type:disc;">';
       for(var j=0;j<items.length;j++){
-        html += '<li>' + esc(items[j]) + '</li>';
+        html += renderWeatherDetailItem(items[j]);
+      }
+      html += '</ul></div></div>';
+    }
+    return html;
+  }
+
+  function renderWeatherSourceGroups(details){
+    details = details || {};
+    var groups = Array.isArray(details.sourceGroups) ? details.sourceGroups : [];
+    var html = '';
+    var i, j, group, items;
+    if(!groups.length) return '';
+    html += '<div style="font-weight:bold;margin:0 0 6px 0;">&bull; Data Sources</div>';
+    for(i=0;i<groups.length;i++){
+      group = groups[i] || {};
+      items = Array.isArray(group.items) ? group.items.filter(function(item){ return !!String(item || '').trim(); }) : [];
+      if(!items.length) continue;
+      html += '<div style="margin-top:' + (i ? '8px' : '0') + ';padding-left:14px;">';
+      html += '<div style="font-weight:bold;margin:0 0 4px 0;">&bull; ' + esc(group.title || 'Sources') + '</div>';
+      html += '<div style="padding-left:14px;"><ul style="margin:0;padding-left:16px;list-style-type:disc;">';
+      for(j=0;j<items.length;j++){
+        html += '<li style="margin:0 0 3px 0;line-height:1.35;">' + esc(items[j]) + '</li>';
+      }
+      html += '</ul></div></div>';
+    }
+    return html;
+  }
+
+  function renderWeatherFooter(details){
+    details = details || {};
+    var anchorItems = buildWeatherAnchorItems(details.profile, details.rl);
+    var sourceHtml = renderWeatherSourceGroups(details);
+    var html = '';
+    var i;
+    if(!anchorItems.length && !sourceHtml) return '';
+    html += '<div style="margin-top:14px;padding-top:8px;border-top:1px solid #666;padding-left:8px;">';
+    if(anchorItems.length){
+      html += '<div style="font-weight:bold;margin:0 0 4px 0;">&bull; Earthen Anchor</div>';
+      html += '<div style="padding-left:14px;"><ul style="margin:0;padding-left:16px;list-style-type:disc;">';
+      for(i=0;i<anchorItems.length;i++){
+        html += '<li style="margin:0 0 3px 0;line-height:1.35;">' + esc(anchorItems[i]) + '</li>';
       }
       html += '</ul></div>';
     }
+    if(sourceHtml){
+      html += '<div style="margin-top:' + (anchorItems.length ? '12px' : '0') + ';">' + sourceHtml + '</div>';
+    }
+    html += '</div>';
     return html;
   }
 
@@ -4678,9 +5412,18 @@ var dwt_weather = dwt_weather || (function(){
     details = details || {};
     var html = '<div><b>' + esc(String((rl && rl.mapname) || 'Weather')) + '</b>';
     if(details.summary){
-      html += '<div style="margin-top:6px;">' + esc(details.summary) + '</div>';
+      html += '<div style="margin-top:10px;padding-left:8px;">';
+      html += '<div style="font-weight:bold;margin:0 0 4px 0;">&bull; Current Conditions</div>';
+      html += '<div style="padding-left:14px;"><ul style="margin:0;padding-left:16px;list-style-type:disc;">';
+      html += '<li style="margin:0;line-height:1.35;">' + esc(details.summary) + '</li>';
+      html += '</ul></div></div>';
     }
     html += renderWeatherDetailSections(details);
+    html += renderWeatherFooter({
+      profile:details.profile || null,
+      rl:rl || null,
+      sourceGroups:details.sourceGroups || []
+    });
     html += '</div>';
     return html;
   }
@@ -4701,13 +5444,11 @@ var dwt_weather = dwt_weather || (function(){
     return buildWeatherLine(render, units, rl||null);
   }
 
-  function buildWeatherQuip(region, locale, cur){
-    var q = String((cur&&cur.quip)||'').trim();
-    if(q) return q;
-    return pickQuip(region, locale, cur) || '';
+  function buildWeatherQuip(region, locale, cur, length){
+    return pickQuip(region, locale, cur, length || 'short') || calendarMonthFallbackQuip();
   }
 
-  function weatherQuipLine(mule, region, locale, cur){
+  function weatherQuipLine(mule, region, locale, cur, length){
     var render = cur;
     if(render && render.activation && mule){
       var profile = loadRegionProfile(mule, region);
@@ -4715,7 +5456,7 @@ var dwt_weather = dwt_weather || (function(){
         render = materializeLiveWeather(render, resolveClimateContext(profile, locale, now()), now());
       }
     }
-    return buildWeatherQuip(region, locale, render);
+    return buildWeatherQuip(region, locale, render, length || 'short');
   }
 
   // ----------------------------
@@ -4929,7 +5670,7 @@ var dwt_weather = dwt_weather || (function(){
   // Command/runtime helpers
   // ----------------------------
   function pageNamingRuleHint(){
-    return 'rename the current page to region.locale.mapname or region.locale_depth.mapname to enable regional and locale-based weather (use bare depth values for feet/meters in the current weather units, append mi/km for large units, and prefix with a "+" for elevation; case and spaces are ignored; canonical names are lower-case with no spaces)';
+    return 'rename the current page to region.locale.mapname or region.locale_depth.mapname to enable regional and locale-based weather (use bare depth values for feet/meters in the current weather units, append mi/km for large-unit input, and prefix with a "+" for elevation; explicit mi/km page tokens are preserved, while the narrative and map metadata display convert depth to the current weather units; case and spaces are ignored; canonical names are lower-case with no spaces)';
   }
 
   function weatherActiveMapError(){
@@ -5181,7 +5922,6 @@ var dwt_weather = dwt_weather || (function(){
     next.origin = origin;
     next.activation = buildActivationForSnapshot(origin, next, ctx, nw, minutesToHHMM(clockMinutesFromNow(nw)), true);
     next = finalizeStoredSnapshot(next, ctx, nw, band.endHHMM);
-    next.quip = pickQuip(rl.region, rl.locale, materializeLiveWeather(next, ctx, nw)) || '';
     next.stamp = stamp(nw);
     next.tick = tick(nw);
     storeCurrentAndHistory(mule, rl.region, rl.locale, next);
@@ -5200,7 +5940,6 @@ var dwt_weather = dwt_weather || (function(){
     next.origin = origin;
     next.activation = buildActivationForSnapshot(origin, next, ctx, nw, minutesToHHMM(clockMinutesFromNow(nw)), true);
     next = finalizeStoredSnapshot(next, ctx, nw, band.endHHMM);
-    next.quip = pickQuip(rl.region, rl.locale, materializeLiveWeather(next, ctx, nw)) || '';
     next.stamp = stamp(nw);
     next.tick = tick(nw);
     storeCurrentAndHistory(mule, rl.region, rl.locale, next);
@@ -5415,13 +6154,12 @@ var dwt_weather = dwt_weather || (function(){
     }
 
     settings.units = units;
-    setJSON(mule, AB_SETTINGS(), settings);
+    setJSON(mule, 'settings', settings);
 
     var rlU = resolveFromPage(pid);
     if(rlU){
       var curU = ensureCurrentWeatherForLocation(mule, rlU);
       if(curU){
-        curU.quip = pickQuip(rlU.region, rlU.locale, curU) || '';
         syncActiveWindsockForPlayer(mule, pid);
         whisperResolvedWeatherLine(pid, settings.units, rlU, curU);
       }
@@ -5444,11 +6182,20 @@ var dwt_weather = dwt_weather || (function(){
     }
 
     if(tokens[0]==='quip'){
-      if(tokens.length !== 1) return { error:'Use !dwt --weather quip with no additional arguments.', changed:false };
+      var quipLength = weatherQuipLengthFromToken(tokens[1] || 'short');
+      if(tokens.length > 2 || !quipLength){
+        return { error:'Use !dwt --weather quip [short|medium|long].', changed:false };
+      }
+      if(!loadedRegions(mule).length){
+        var fallbackQuip = calendarMonthFallbackQuip();
+        if(fallbackQuip) whisper(pid, renderMultilineWhisperHtml(fallbackQuip));
+        else whisper(pid, '<div>No weather quip is configured for this campaign yet.</div>');
+        return { changed:false };
+      }
       var quipWeather = refreshActiveWeather(mule, pid);
       if(quipWeather.error) return { error:quipWeather.error, changed:false };
-      var q = buildWeatherQuip(quipWeather.rl.region, quipWeather.rl.locale, quipWeather.cur);
-      if(q) whisper(pid, '<div>'+esc(q)+'</div>');
+      var q = buildWeatherQuip(quipWeather.rl.region, quipWeather.rl.locale, quipWeather.cur, quipLength);
+      if(q) whisper(pid, renderMultilineWhisperHtml(q));
       else whisper(pid, '<div>No weather quip is configured for this location yet.</div>');
       return { changed:false };
     }
@@ -5465,17 +6212,23 @@ var dwt_weather = dwt_weather || (function(){
     }
 
     if(tokens[0]==='show'){
-      if(tokens.length !== 2 || tokens[1] !== 'chop'){
-        return { error:'Use !dwt --weather show chop.', changed:false };
+      var showKey = weatherShowKeyFromToken(tokens[1] || '');
+      if(tokens.length !== 2 || !showKey){
+        return { error:'Use !dwt --weather show units|temp|rainfall|skies|wind|chop|current.', changed:false };
+      }
+      if(showKey === 'units'){
+        whisper(pid, weatherShowHtml(mule, settings, showKey, null, null));
+        return { changed:false };
       }
       var showWeather = refreshActiveWeather(mule, pid);
       if(showWeather.error) return { error:showWeather.error, changed:false };
-      if(!locationSupportsSurfaceChop(showWeather.rl)){
+      if(showKey === 'chop' && !locationSupportsSurfaceChop(showWeather.rl)){
         return { error:'Chop is only modeled on offshore and coastal surface locales.', changed:false };
       }
-      var showCur = renderWeatherForLocation(showWeather.cur, showWeather.rl);
-      var chopBand = chopBandFromWeather(showCur, showWeather.rl);
-      whisper(pid, '<div>Chop: <b>' + esc(titleCaseWords(chopBand)) + '</b> (derived from the current wind band).</div>');
+      if(showKey === 'current' && !(showWeather.rl && showWeather.rl.localeDef && showWeather.rl.localeDef.useSeasonalCurrent)){
+        return { error:'Current is only modeled on locales that use seasonal currents.', changed:false };
+      }
+      whisper(pid, weatherShowHtml(mule, settings, showKey, showWeather.rl, showWeather.cur));
       return { changed:false };
     }
 
@@ -5837,14 +6590,12 @@ var dwt_weather = dwt_weather || (function(){
         nextS.origin = originS;
         nextS.activation = buildActivationForSnapshot(originS, nextS, ctxS, nw, minutesToHHMM(clockMinutesFromNow(nw)), true);
         nextS = finalizeStoredSnapshot(nextS, ctxS, nw, bandS.endHHMM);
-        nextS.quip = pickQuip(rlS.region, rlS.locale, materializeLiveWeather(nextS, ctxS, nw)) || '';
         nextS.stamp = stamp(nw);
         nextS.tick = tick(nw);
         storeCurrentAndHistory(mule, rlS.region, rlS.locale, nextS);
         curS = materializeLiveWeather(nextS, ctxS, nw);
       }else{
         normalizeCurrentWeather(curS);
-        curS.quip = pickQuip(rlS.region, rlS.locale, curS) || '';
         curS.stamp = stamp(nw);
         curS.tick = tick(nw);
         storeCurrentAndHistory(mule, rlS.region, rlS.locale, curS);
@@ -5878,8 +6629,8 @@ var dwt_weather = dwt_weather || (function(){
       'Commands',
       'Whisper the current weather line for the current map:',
       '!dwt --weather',
-      'Whisper the short weather quip for current map:',
-      '!dwt --weather quip',
+      'Whisper a weather quip for the current map (default short; medium and long are optional):',
+      '!dwt --weather quip [short|medium|long]',
       '',
       'GM-Only Commands',
       'Enable regional and locale-based seasonal weather patterns via dwt_region.regionname modules, with the associated page naming template: region.locale.mapname or region.locale_depth.mapname.',
@@ -5909,8 +6660,8 @@ var dwt_weather = dwt_weather || (function(){
       '!dwt --weather set chop none|light|moderate|heavy|severe',
       'Set current strength and/or direction for the current map at the current timeofday tick when the locale uses seasonal currents:',
       '!dwt --weather set current <pct|dead_calm|crit_light|crit_moderate|crit_heavy|crit_severe> [dir]',
-      'Show the derived chop value for the current map when the locale models surface chop:',
-      '!dwt --weather show chop',
+      'Show the current resolved weather value for the current map:',
+      '!dwt --weather show units|temp|rainfall|skies|wind|chop|current',
       'Page naming rule:',
       'Pages use region.locale.mapname or region.locale_depth.mapname.',
       'Depth token rule:',
@@ -5977,7 +6728,7 @@ var dwt_weather = dwt_weather || (function(){
               }else{
                 html += insert;
               }
-            }catch(e){ /* no-op */ }
+            }catch(e){}
             return html;
           };
           c._dwtWeatherWrapped = true;
@@ -6082,28 +6833,6 @@ try{
 
 on('ready', function(){
   try{ dwt_weather.init(); }catch(e){ log('dwt_weather init error: '+e); }
-});
-
-on('change:campaign:playerpageid', function(obj, prev){
-  try{
-    var mule = (dwt_weather && dwt_weather._weatherVerifySyncActivePage) ? (findObjs({_type:'character', name:'dwt_mule'})[0] || null) : null;
-    if(!mule) return;
-    // Refresh the new ribbon page only; this is a sync/verify, not a weather advance.
-    dwt_weather._weatherVerifySyncActivePage(null, { pageId: String(obj.get('playerpageid')||'') });
-  }catch(e){}
-});
-on('change:campaign:playerspecificpages', function(obj, prev){
-  try{
-    var nowPSP = obj.get('playerspecificpages') || {};
-    var seen = {};
-    for(var pid in nowPSP){
-      if(!nowPSP.hasOwnProperty(pid)) continue;
-      var pageId = String(nowPSP[pid]||'');
-      if(!pageId || seen[pageId]) continue;
-      seen[pageId] = true;
-      dwt_weather._weatherVerifySyncActivePage(pid, { pageId: pageId });
-    }
-  }catch(e){}
 });
 
 

@@ -142,6 +142,48 @@
       "Use NPS cave-climate guidance to keep underdark temperatures near the regional annual mean and airflow near dead calm except at entrances, faults, or critical events.",
       "Use the USGS three-point method for inland and coastal water columns; open ocean defaults use 1, 5, and 10 fathoms."
     ],
+    // Tolkien-inspired quip scaffold:
+    // - short: 2 lines, AA
+    // - medium: 4 lines, ACBC
+    // - long: 8 lines, ABCBDEFE
+    // Keep the voice conversational, lightly rhythmic, and maritime where possible.
+    // Calendar month keys use Harptos month names (hammer..nightal); festival keys use between-month festival keys.
+    "quips": {
+      "calendar": {
+        "months": {
+          "hammer": { "short": [], "medium": [], "long": [] },
+          "alturiak": { "short": [], "medium": [], "long": [] },
+          "ches": { "short": [], "medium": [], "long": [] },
+          "tarsakh": { "short": [], "medium": [], "long": [] },
+          "mirtul": { "short": [], "medium": [], "long": [] },
+          "kythorn": { "short": [], "medium": [], "long": [] },
+          "flamerule": { "short": [], "medium": [], "long": [] },
+          "eleasis": { "short": [], "medium": [], "long": [] },
+          "eleint": { "short": [], "medium": [], "long": [] },
+          "marpenoth": { "short": [], "medium": [], "long": [] },
+          "uktar": { "short": [], "medium": [], "long": [] },
+          "nightal": { "short": [], "medium": [], "long": [] }
+        },
+        "festivals": {
+          "midwinter": { "short": [], "medium": [], "long": [] },
+          "greengrass": { "short": [], "medium": [], "long": [] },
+          "midsummer": { "short": [], "medium": [], "long": [] },
+          "shieldmeet": { "short": [], "medium": [], "long": [] },
+          "highharvestide": { "short": [], "medium": [], "long": [] },
+          "feastofthemoon": { "short": [], "medium": [], "long": [] }
+        }
+      },
+      "weather": {
+        "region": { "short": [], "medium": [], "long": [] },
+        "locales": {
+          "offshore": { "short": [], "medium": [], "long": [] },
+          "coastal": { "short": [], "medium": [], "long": [] },
+          "inland": { "short": [], "medium": [], "long": [] },
+          "underwater": { "short": [], "medium": [], "long": [] },
+          "underdark": { "short": [], "medium": [], "long": [] }
+        }
+      }
+    },
     "localeDefinitions": {
       "offshore": {
         "label": "Offshore",

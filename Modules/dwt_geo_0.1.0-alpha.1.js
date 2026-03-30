@@ -105,13 +105,6 @@ var dwt_geo = dwt_geo || (function () {
     return String(name||'').trim().toLowerCase();
   }
 
-  function normalizeMapKey(name){
-    return String(name||'')
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g,''); // single word, alphanumeric only
-  }
-
-  
   function normalizeGeoKeyComponent(s){
     // Use the same normalizer as other DWT identifiers (calendar, etc.).
     var norm = (RT.dwt && RT.dwt.normalizeName)
@@ -163,6 +156,84 @@ var dwt_geo = dwt_geo || (function () {
 
 /* ========== Mule Helpers ========== */
 
+  function abilityActionLength(ability){
+    try{ return String((ability && ability.get('action')) || '').length; }catch(e){ return 0; }
+  }
+
+  function abilityText(ability){
+    try{ return String((ability && ability.get('action')) || ''); }catch(e){ return ''; }
+  }
+
+  function normalizeAbilityName(name){
+    return String(name || '').toLowerCase().replace(/\s+/g,'');
+  }
+
+  function safeParseJSON(text){
+    try{ return JSON.parse(String(text || '')); }catch(e){ return null; }
+  }
+
+  function regionsRootQuality(text){
+    var parsed = safeParseJSON(text);
+    if(!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return -1;
+    var score = (parsed.schema === 'dwt.regions.root.v1') ? 50 : 0;
+    var regions = parsed.regions;
+    if(!regions || typeof regions !== 'object' || Array.isArray(regions)) return score;
+    var keys = Object.keys(regions);
+    score += keys.length * 5;
+    for(var i=0;i<keys.length;i++){
+      var payload = regions[keys[i]];
+      if(!payload || typeof payload !== 'object' || Array.isArray(payload)) continue;
+      if(payload.schema === 'dwt.region.v4') score += 200;
+      if(payload.weather && typeof payload.weather === 'object' && !Array.isArray(payload.weather)) score += 100;
+      if(payload.region) score += 10;
+      if(payload.locales) score += 10;
+    }
+    return score;
+  }
+
+  function weatherRootQuality(text){
+    var parsed = safeParseJSON(text);
+    if(!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return -1;
+    var score = 0;
+    if(parsed.meta && parsed.meta.rootSchema === 'dwt.weather.root.v2') score += 200;
+    if(parsed.settings && (parsed.settings.units === 'imperial' || parsed.settings.units === 'metric')) score += 25;
+    if(parsed.current && typeof parsed.current === 'object' && !Array.isArray(parsed.current)) score += 25;
+    if(parsed.history && typeof parsed.history === 'object' && !Array.isArray(parsed.history)) score += 25;
+    return score;
+  }
+
+  function abilitySortScore(name, ability){
+    var text = abilityText(ability);
+    var key = normalizeAbilityName(name || (ability && ability.get && ability.get('name')) || '');
+    var base = abilityActionLength(ability);
+    if(key === 'regions') return regionsRootQuality(text) * 1000000 + base;
+    if(key === 'weather') return weatherRootQuality(text) * 1000000 + base;
+    return base;
+  }
+
+  function namedAbilities(character, name){
+    if(!character) return [];
+    var list = findObjs({ _type:'ability', _characterid:character.id, name:name }) || [];
+    list.sort(function(a, b){ return abilitySortScore(name, b) - abilitySortScore(name, a); });
+    return list;
+  }
+
+  function muleScore(character){
+    if(!character) return -1;
+    var abilities = findObjs({_type:'ability', _characterid:character.id}) || [];
+    var score = abilities.length;
+    for(var i=0;i<abilities.length;i++){
+      var ability = abilities[i];
+      var name = '';
+      try{ name = normalizeAbilityName(ability.get('name') || ''); }catch(e){}
+      var weighted = abilitySortScore(name, ability);
+      score += weighted;
+      if(name === 'mapmeta') score += weighted;
+      else if(name === 'version' || name === 'core') score += Math.max(0, weighted);
+    }
+    return score;
+  }
+
   function getOrCreateMule(){
     try{
       if(RT.dwt && typeof RT.dwt.ensureMule === 'function'){
@@ -170,7 +241,16 @@ var dwt_geo = dwt_geo || (function () {
       }
     }catch(e){}
 
-    var mule = findObjs({_type:'character', name:DWT_MULE})[0];
+    var matches = findObjs({_type:'character', name:DWT_MULE}) || [];
+    var mule = null;
+    var bestScore = -1;
+    for(var i=0;i<matches.length;i++){
+      var score = muleScore(matches[i]);
+      if(score > bestScore){
+        bestScore = score;
+        mule = matches[i];
+      }
+    }
     if(!mule){
       mule = createObj('character',{
         name: DWT_MULE,
@@ -184,45 +264,24 @@ var dwt_geo = dwt_geo || (function () {
 
   function upsertAbility(character, name, action){
     if(!character) return;
-    var ability = findObjs({
-      _type:'ability',
-      _characterid:character.id,
-      name:name
-    })[0];
-    if(ability){
-      ability.set({action:action});
+    var abilities = namedAbilities(character, name);
+    if(abilities.length){
+      for(var i=0;i<abilities.length;i++){
+        try{ abilities[i].set({action:String(action || '')}); }catch(e){}
+      }
     }else{
       createObj('ability',{
         characterid: character.id,
         name:name,
-        action:action,
+        action:String(action || ''),
         istokenaction:false
-      });
-    }
-  }
-
-  function upsertAttribute(character, name, value){
-    if(!character) return;
-    var attr = findObjs({
-      _type:'attribute',
-      _characterid:character.id,
-      name:name
-    })[0];
-    if(attr){
-      attr.set({current:String(value||'')});
-    }else{
-      createObj('attribute',{
-        characterid: character.id,
-        name:name,
-        current:String(value||''),
-        max:''
       });
     }
   }
 
   function getAbilityAction(character, name){
     if(!character) return '';
-    var ability = findObjs({ _type:'ability', _characterid:character.id, name:name })[0];
+    var ability = namedAbilities(character, name)[0];
     return ability ? String(ability.get('action')||'') : '';
   }
 
@@ -1506,14 +1565,6 @@ var dwt_geo = dwt_geo || (function () {
     return { changed:false };
   }
 
-  function handleMapRoutePrev(args){
-    return stepRouteForGM(args.pid, args.val, -1);
-  }
-
-  function handleMapRouteNext(args){
-    return stepRouteForGM(args.pid, args.val, +1);
-  }
-
   function handleRenMapPoint(args){
     var pid = args.pid;
     var raw = (args.val===undefined || args.val===null) ? '' : String(args.val).trim();
@@ -2298,9 +2349,6 @@ if(typeof RT.dwt.addHelpSection === 'function'){
 on('ready', function(){
   'use strict';
   try{ dwt_geo.init(); }catch(e){ log('dwt_geo init err: '+e); }
-  on('change:campaign:playerpageid', function(){
-    try{ dwt_geo && dwt_geo.refreshGeoForActivePage && dwt_geo.refreshGeoForActivePage(); }catch(e){}
-  });
 });
 
 

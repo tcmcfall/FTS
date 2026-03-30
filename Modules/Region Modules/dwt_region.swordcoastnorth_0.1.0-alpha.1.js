@@ -18,7 +18,21 @@
 //   - ECMWF ERA5 Reanalysis: https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5
 //   - Copernicus Marine Global Ocean Physics Analysis and Forecast: https://data.marine.copernicus.eu/product/GLOBAL_ANALYSISFORECAST_PHY_001_024/description
 //   - NOAA NCEI OISST: https://www.ncei.noaa.gov/products/optimum-interpolation-sst
+//   - NOAA World Ocean Atlas 2023 Data: https://www.ncei.noaa.gov/access/world-ocean-atlas-2023/
+//   - NOAA Ocean Service light-depth guidance: https://oceanservice.noaa.gov/facts/light_travel.html
+//   - NOAA Ocean Service wave mechanics guidance: https://oceanservice.noaa.gov/education/tutorial_currents/03coastal1.html
+//   - NOAA CoastWatch Kd490 guidance: https://eastcoast.coastwatch.noaa.gov/cw_k490.php
+//   - NOAA NDBC Climatic Summary Plots and Table Descriptions: https://www.ndbc.noaa.gov/climatedesc.shtml
+//   - Copernicus Marine Global Ocean Waves Reanalysis: https://data.marine.copernicus.eu/product/GLOBAL_MULTIYEAR_WAV_001_032/description
+//   - National Weather Service wave glossary: https://www.weather.gov/ggw/GlossaryW
+//   - NPS Great Basin cave climate guidance: https://www.nps.gov/grba/learn/nature/airflow-and-cave-climate.htm
 //   - USGS Streamflow Measurement Guidance: https://www.usgs.gov/water-science-school/science/how-streamflow-measured
+//
+// Page names use:
+//   region.locale.mapname
+//   region.locale_<depth>.mapname
+//
+// Page names are case- and space-insensitive. Canonical generated names should be lower-case with no spaces.
 (function(){
   'use strict';
 
@@ -27,6 +41,13 @@
   var REGION_KEY = 'swordcoastnorth';
   var MODULE_NAME = 'dwt_region.' + REGION_KEY;
   var _startupRegistered = false;
+
+  // Tolkien-inspired quip scaffold:
+  // - short: 2 lines, AA
+  // - medium: 4 lines, ACBC
+  // - long: 8 lines, ABCBDEFE
+  // Keep the voice conversational, lightly rhythmic, and maritime where possible.
+  // Calendar month keys use Harptos month names (hammer..nightal); festival keys use between-month festival keys.
 
   var REGION_ENTRY = {
   "schema": "dwt.region.v4",
@@ -113,6 +134,138 @@
     "Water-column sampling uses surface plus 20/60/80% depths for inland and coastal columns, while offshore defaults use 1, 5, and 10 fathoms.",
     "Exact-clock diurnal controls follow a cool wet west-coast regime, with long winter fronts offshore and restrained summer drift under marine influence."
   ],
+  "quips": {
+    "calendar": {
+      "months": {
+        "hammer": { "short": [], "medium": [], "long": [] },
+        "alturiak": { "short": [], "medium": [], "long": [] },
+        "ches": { "short": [], "medium": [], "long": [] },
+        "tarsakh": { "short": [], "medium": [], "long": [] },
+        "mirtul": { "short": [], "medium": [], "long": [] },
+        "kythorn": { "short": [], "medium": [], "long": [] },
+        "flamerule": { "short": [], "medium": [], "long": [] },
+        "eleasis": { "short": [], "medium": [], "long": [] },
+        "eleint": { "short": [], "medium": [], "long": [] },
+        "marpenoth": { "short": [], "medium": [], "long": [] },
+        "uktar": { "short": [], "medium": [], "long": [] },
+        "nightal": { "short": [], "medium": [], "long": [] }
+      },
+      "festivals": {
+        "midwinter": { "short": [], "medium": [], "long": [] },
+        "greengrass": { "short": [], "medium": [], "long": [] },
+        "midsummer": { "short": [], "medium": [], "long": [] },
+        "shieldmeet": { "short": [], "medium": [], "long": [] },
+        "highharvestide": { "short": [], "medium": [], "long": [] },
+        "feastofthemoon": { "short": [], "medium": [], "long": [] }
+      }
+    },
+    "weather": {
+      "region": {
+        "short": [
+          "Sword Coast North keeps rain and pine in equal share with stone|And every black-rock harbor learns the west wind's weather tone",
+          "There mist can walk from sea to fir before the bells have rung|A northerner calls that common talk and keeps his oilskin hung",
+          "Where surf goes white below dark cliffs and ravens cross the foam|The weather teaches harder folk how small a lamp makes home"
+        ],
+        "medium": [
+          "The northern coast wakes wet and gray|With fir-smoke mixing into brine|A sailor reads the weather there|By how the headland gulls incline",
+          "Rain on pine and rain on quay|Are one long thought in northern lands|The folk of Sword Coast North keep calm|And tie bad weather with good hands",
+          "There sea-fog climbs the harbor stairs|And mountain cloud comes down by night|A drover says the wiser road|Is picked by patience, not by sight"
+        ],
+        "long": [
+          "Sword Coast North keeps black stone piers|And rain along the fir|The surf comes white beneath the cliffs|The sky stays close as fur|A harbor man reads coming squalls|By how the ravens turn|For northern weather there is stern|But not too stern to learn",
+          "Where pine-roads meet the harbor mud|And mountain streams run cold|The weather crosses all of it|In gray and green and gold|A sailor, ranger, smith, and dray|All listen for one sign|The shift in wind, the smell of rain|The dimming of the pine",
+          "The northern coast does not pretend|Its weather will stay still|It wets the quay, it hides the road|It drapes the logging hill|Yet folk there trim the lamps and work|Through fog and steady rain|For northern weather teaches pride|To bend and rise again"
+        ]
+      },
+      "locales": {
+        "offshore": {
+          "short": [
+            "Offshore the northern swells run dark beneath a woolen sky|And every crest seems carved of slate the minute squalls draw nigh",
+            "Beyond those northern headlands mist can swallow mast and bell|A helmsman there trusts sounding more than anything he can tell",
+            "Far offshore Sword Coast North keeps weather cold in breath and bone|And any crew that calls it mild will soon retract the tone"
+          ],
+          "medium": [
+            "Beyond the cliffs the swells breathe deep|And fog can take the coast from view|A captain knows offshore weather|By what the dull bells fail to do",
+            "The outer water north of there|Runs steel and green beneath the gray|A helmsman reefs before he must|And lets the heavy weather say",
+            "Offshore the sea keeps longer thoughts|Than harbor folk may guess ashore|The weather moves in colder lines|And asks a steadier hand at oar"
+          ],
+          "long": [
+            "Offshore beyond the northern piers|The swells come dark and steep|The fog can close around a mast|Before a crew can speak|A lookout strains for bell and bird|Where sight will not be enough|For offshore weather there can turn|From drear to outright rough",
+            "The outer lanes of northern coast|Run cold beneath the rain|The waves roll long, the headlands fade|The compass feels like chain|Yet crews that know those outer waters|Keep canvas humble there|For offshore weather on that coast|Respects the well-prepared",
+            "Far offshore Sword Coast northern weather|Broods in mist and swell|The shore grows small, the light grows thin|The hull begins to tell|A pilot feels the squall arrive|Before the cloud is plain|For offshore water keeps its news|Then hands it back as rain"
+          ]
+        },
+        "coastal": {
+          "short": [
+            "Along the northern harbor walls the rain runs dark as tea|And coastal weather salts the fir before it salts the sea",
+            "Black rock, white surf, and pine-smoke make that coast easy to know|A fishwife there can smell bad weather before the gulls fly low",
+            "On northern piers the fog comes in and makes the bell sound old|Yet every tavern lamp burns warm against the dripping cold"
+          ],
+          "medium": [
+            "The coastal rain on northern stone|Can last from dawn to vesper bell|A harbor wife reads weather there|By how the gulls refuse to yell",
+            "Black cliffs, white foam, and bending fir|Make Sword Coast North a weather chart|The wise tie well, speak less, and wait|Before they trust the sea at heart",
+            "Along the coast the mist climbs up|From tide to stair to chapel flame|A fisher says the weather north|Changes slow, but hard the same"
+          ],
+          "long": [
+            "Along the northern coastal roads|The rain comes in from west|It beads the wool, it wets the pine|It gives no harbor rest|A fisher hauls the last net home|Before the fog grows near|For coastal weather there can turn|From common wet to fear",
+            "The cliffs stand dark above the foam|The coves lie gray below|The mist can fold a harbor in|Before the bells all know|Yet coastal folk keep stew and fire|For any driven home|Because the weather takes enough|Without the adding of their own",
+            "When northern surf climbs hard and white|Against the harbor stair|The ropes grow black, the shutters knock|The cold gets in the air|A widow trims the tavern lamp|A boy runs in the line|For coastal weather there reminds|What must be done in time"
+          ]
+        },
+        "inland": {
+          "short": [
+            "Inland from the northern piers the roads run wet through fir and loam|And weather hangs in cedar smoke wherever folk make home",
+            "The inland wind smells half of pine and half of river rain|A rider there can taste the squall before it shows its stain",
+            "Far inland northern weather moves through ravine, ford, and hill|And wiser folk let storms pass by before they test their will"
+          ],
+          "medium": [
+            "Inland the roads grow dark with rain|Through fir and fern and river clay|A courier learns the weather there|By how the crows postpone the day",
+            "Pine-scent, wet bark, and swollen stream|Tell half the inland weather's mind|The rest is learned by waiting still|To hear what gust comes close behind",
+            "Where logging track and mountain road|Lie far from harbor bell and foam|The inland weather north still carries|Salt enough to smell like home"
+          ],
+          "long": [
+            "Inland from Sword Coast northern quays|The roads go brown and steep|The rain comes slant through cedar boughs|And soaks the ruts full deep|A ranger counts the drier miles|Before he leaves the inn|For inland weather there can wear|The stoutest patience thin",
+            "The firs drip long, the ditches swell|The creeks go loud with rain|Yet inland folk along that coast|Still work through mud and strain|A drover lifts his collar high|A logger slows the team|For inland weather grants its grace|To those who do not dream",
+            "Where rivers cut the logging roads|And mountains gather gray|The weather writes in mud and cloud|What sailors read in spray|A traveler watches cedar tops|To judge the coming gust|For inland weather by that coast|Turns bold resolve to crust"
+          ]
+        },
+        "underwater": {
+          "short": [
+            "Below the northern shoals the kelp bends dark through green and cold|And every current carries news the surface never told",
+            "Under that coast the light comes thin on wreck and barnacled spar|A diver there reads weather best by how the sand-clouds are",
+            "Sword Coast North below the keel is colder than the foam|And underwater weather there can feel less sea than stone"
+          ],
+          "medium": [
+            "Below the northern coast the light|Falls green through kelp and broken mast|A diver feels the colder turns|Before he sees the bright shoals pass",
+            "The underwater roads run cold|Beneath black cliffs and weeping stone|North-coast currents teach the skin|To trust no seeming calm alone",
+            "Below the coves the weed bows slow|And pale fish move like bits of mail|A swimmer reads the underwater weather|By where the quieter pockets fail"
+          ],
+          "long": [
+            "Below the Sword Coast northern cliffs|The daylight filters green|It finds the kelp, it finds old wrecks|It shows what cold can mean|A diver moves with careful hands|And minds the pull below|For underwater weather there|Can change before signs show",
+            "The shoals along that colder coast|Keep current over stone|The water may look clear and kind|Yet never quite seems home|A swimmer reads the colder tongues|By skin before by sight|For underwater weather there|Can bend the course of light",
+            "Where anchors sleep in cedar-dark weed|And crabs patrol the spar|The sea keeps quieter weather there|But not less exacting far|A pearl-hand minds the turning flow|And watches silt-cloud roll|For underwater weather there|Will test a restless soul"
+          ]
+        },
+        "underdark": {
+          "short": [
+            "Below the northern roads the deep keeps rime, old brick, and pine|And every draft through buried halls can feel like weather's sign",
+            "The underdark there smells of damp, of ore, of chimney stone|A traveler reads the deeps by flame more than by map alone",
+            "In northern deep ways stillness holds till one cold breath says go|And wiser folk heed that small draft more than the maps they know"
+          ],
+          "medium": [
+            "Below the inns and logging roads|Old passages of worked stone lie|North-coast underdark weather turns|By breath that never sees the sky",
+            "The deep roads keep a colder damp|And hidden drafts through ore and beam|A lantern tells the wiser truth|Long before cracks show what they mean",
+            "In underways beneath the north|The air can sleep for half a day|Then one small chill along the wall|Will turn the wiser folk away"
+          ],
+          "long": [
+            "Beneath the northern coastal roads|The older passages wind|With root through brick and damp through stone|And weather of their kind|A lantern gutters at one bend|Where hidden currents pass|For underdark weather there can speak|Through mortar, chill, and glass",
+            "The cellars, mines, and buried halls|Lie dark beneath the town|No gull is heard, no rain is seen|Yet cold drafts travel down|A scout lays hand to sweating stone|And watches lamplight thin|For underdark weather near that coast|Can start where none have been",
+            "In passages below the inns|The stillness carries pine|The air stays soft until some vent|Lets through a colder line|A traveler trusts that smaller sign|More than the brightest chart|For underdark weather there can test|The firmest northern heart"
+          ]
+        }
+      }
+    }
+  },
   "localeDefinitions": {
     "offshore": {
       "label": "Offshore",
