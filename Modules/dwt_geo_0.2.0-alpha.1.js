@@ -1,5 +1,5 @@
 // name:        dwt_geo.js
-// version:     0.1.0-alpha.1
+// version:     0.2.0-alpha.1
 // description: Geolocation & Route module (core-aware). Reads mapMeta and token
 //              coordinates, builds per-map named routes and static map points,
 //              and stores data on dwt_mule as mapRoutes.* and mapPoints.*.
@@ -44,7 +44,7 @@ var dwt_geo = dwt_geo || (function () {
          : (typeof global!=='undefined')     ? global
          : this;
 
-  var VERSION    = '0.1.0-alpha.1';
+  var VERSION    = '0.2.0-alpha.1';
   var STATE_ROOT = 'geo';
   var DWT_MULE   = 'dwt_mule';
   var GEO_HANDOUT_NAME = 'Map Locations and Routes';
@@ -2230,9 +2230,10 @@ var dwt_geo = dwt_geo || (function () {
 
     if(h && h.id){
       var url       = 'https://journal.roll20.net/handout/'+h.id;
-      var href      = (v.hrefAttr ? v.hrefAttr(url) : url);
-      var styleAttr = btnStyle ? (' style="'+btnStyle+'"') : '';
-      html += '<a role="button" href="'+href+'"'+styleAttr+' target="_blank">Show Map Locations and Routes</a>';
+      var actionAttrs = (RT.dwt && typeof RT.dwt.actionLinkAttrs === 'function')
+        ? RT.dwt.actionLinkAttrs(url)
+        : ' role="button" href="'+(v.hrefAttr ? v.hrefAttr(url) : url)+'"'+(btnStyle ? (' style="'+btnStyle+'"') : '');
+      html += '<a'+actionAttrs+' target="_blank">Show Map Locations and Routes</a>';
     }
 
     html += '</div>';

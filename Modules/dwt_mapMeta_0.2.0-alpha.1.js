@@ -1,5 +1,5 @@
 // name:        dwt_mapMeta.js
-// version:     0.1.0-alpha.1
+// version:     0.2.0-alpha.1
 // description: Unified map metadata capture for DWT.
 // depends:     dwt_core >= 0.1.0-alpha.1 (optional but recommended), Roll20 Mod API
 // provides:    !dwt --mapMeta | !dwt --mapMeta all | !dwt --mapMeta set depth <value>
@@ -24,7 +24,7 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
          : (typeof global !== 'undefined')     ? global
          : this;
 
-  var VERSION = '0.1.0-alpha.1';
+  var VERSION = '0.2.0-alpha.1';
   var MODULE_KEY = 'mapmeta';
   var MULE_NAME = 'dwt_mule';
   var ROOT_ABILITY = 'regions';
@@ -905,8 +905,6 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
     var gridType = lower(meta.grid_type || '');
     var gridLabel = meta.grid_type || '';
     if (gridType === 'hexr' || gridType === 'hexv' || gridType === 'hex') gridLabel = 'hex';
-    var compactLayoutVisible = !!(meta.showgrid && gridType && gridType !== 'none');
-
     if (meta.name_pattern_ok && meta.region_valid && meta.locale_valid && (meta.locale_name || meta.region_name)) {
       var pieces = [];
       if (meta.locale_name) pieces.push(esc(meta.locale_name));
@@ -926,15 +924,10 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
     var worldHText = isNaN(worldH) ? String(meta.world_height_distance || '') : worldH.toFixed(1);
     var cellDist = isNaN(scaleVal) ? String(meta.scale_number || '') : scaleVal.toFixed(1);
 
-    if (!showAll && compactLayoutVisible) {
-      html += '<div><b>Grid:</b> ' + esc(gridLabel) + ', cell = ' + cellDist + ' ' + esc(scaleUnits) + '</div>';
-    }
-
-    if (showAll || compactLayoutVisible) {
-      html += '<div><b>Map Size:</b> ' + worldWText + ' x ' + worldHText + ' ' + esc(scaleUnits) + '</div>';
-    }
-
+    // Keep footprint/grid diagnostics in the GM-only detail view; the player menu stays location-focused.
     if (showAll) {
+      html += '<div><b>Map Size:</b> ' + worldWText + ' x ' + worldHText + ' ' + esc(scaleUnits) + '</div>';
+
       var gridBits = ['Status=' + (meta.showgrid ? 'enabled' : 'disabled')];
       if (gridType && gridType !== 'none') {
         gridBits.push('Type=' + gridLabel);
@@ -964,9 +957,10 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
     }
 
     if (isGM) {
-      var href = v.hrefAttr ? v.hrefAttr('!dwt --mapMeta all') : '!dwt --mapMeta all';
-      var styleAttr = v.btn ? (' style="' + v.btn + '"') : '';
-      html += '<div style="margin-top:8px;"><a role="button" href="' + href + '"' + styleAttr + '>'
+      var actionAttrs = (RT.dwt && typeof RT.dwt.actionLinkAttrs === 'function')
+        ? RT.dwt.actionLinkAttrs('!dwt --mapMeta all')
+        : ' role="button" href="' + (v.hrefAttr ? v.hrefAttr('!dwt --mapMeta all') : '!dwt --mapMeta all') + '"' + (v.btn ? (' style="' + v.btn + '"') : '');
+      html += '<div style="margin-top:8px;"><a' + actionAttrs + '>'
         + 'Detailed Map Information</a></div>';
     }
 
@@ -1240,7 +1234,7 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
         }
       });
 
-      RT.dwt.addLogCard(20, function (pid) {
+      RT.dwt.addLogCard(1, function (pid) {
         try {
           return renderConfigHTML(pid);
         } catch (e) {

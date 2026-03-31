@@ -1,5 +1,5 @@
 // name:        dwt_calendar.js
-// version:     0.1.0-alpha.1
+// version:     0.2.0-alpha.1
 // description: Campaign Calendar module (unified with Core UI). Ensures/updates 'Campaign Calendar' handout,
 //              mirrors state to dwt_mule, consolidates navigation under --calendar, exposes _ns for Core.
 //
@@ -48,7 +48,7 @@ var dwt_calendar = dwt_calendar || (function () {
          : (typeof global!=='undefined')     ? global
          : this;
 
-  var VERSION='0.1.0-alpha.1', HANDOUT_NAME='Campaign Calendar', DWT_MULE='dwt_mule';
+  var VERSION='0.2.0-alpha.1', HANDOUT_NAME='Campaign Calendar', DWT_MULE='dwt_mule';
   var MIN_Y=1300, MAX_Y=1600;
   var _registered=false;
 
@@ -1729,9 +1729,18 @@ function festivalBgLayout(key){
       line = 'It is currently '+timeofday+' on '+now.day+' '+shortName+', '+now.year+' DR.';
     }
     var btn = (h && h.id)
-      ? '<a role="button" href="'+hrefAttr('https://journal.roll20.net/handout/'+h.id)+'" '+(v.btn?('style="'+v.btn+'"'):'')+' target="_blank"><span style="font-weight:bold;">Show Calendar</span></a>'
+      ? '<a'
+        + ((RT.dwt && typeof RT.dwt.actionLinkAttrs === 'function')
+            ? RT.dwt.actionLinkAttrs('https://journal.roll20.net/handout/'+h.id)
+            : (' role="button" href="'+hrefAttr('https://journal.roll20.net/handout/'+h.id)+'"'
+              + (v.btn?(' style="'+v.btn+'"'):'')))
+        + ' target="_blank"><span style="font-weight:bold;">Show Calendar</span></a>'
       : '';
-    return '<div>'+esc(line)+'</div><div style="margin-top:12px;">'+btn+'</div>';
+    // Weather injects its live narrative into this card, so keep the calendar line and button in the shared shell.
+    return '<div'+(v.card?(' style="'+v.card+'"'):'')+'>'
+      + '<div>'+esc(line)+'</div>'
+      + '<div style="margin-top:12px;">'+btn+'</div>'
+      + '</div>';
   }
 
   /* ========== Router / Integration ========== */

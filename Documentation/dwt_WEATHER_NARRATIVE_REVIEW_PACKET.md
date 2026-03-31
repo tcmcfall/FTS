@@ -4,7 +4,7 @@ This packet turns the live weather-summary grammar into representative sample ou
 
 Source of truth:
 
-- [dwt_weather_0.1.0-alpha.1.js](V:\Programs\Git Repository\DWT\Modules\dwt_weather_0.1.0-alpha.1.js)
+- [dwt_weather_0.2.0-alpha.1.js](V:\Programs\Git Repository\DWT\Modules\dwt_weather_0.2.0-alpha.1.js)
 - [dwt_WEATHER_NARRATIVE_PERMUTATIONS.md](V:\Programs\Git Repository\DWT\Documentation\dwt_WEATHER_NARRATIVE_PERMUTATIONS.md)
 
 Important note:

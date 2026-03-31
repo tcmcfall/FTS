@@ -1,7 +1,7 @@
 // dwt_template_popupDropdown.js
 // Purpose: Template module demonstrating a one-click pop-up (Roll Query) with dropdowns for Year / Month-or-Festival / Day / Time.
 // Relationship: Standalone DWT template. Integrates with dwt_core if present (adds a card & help). Publishes selections to dwt_mule_calendar.
-// Version: 0.1.0-alpha.1
+// Version: 0.2.0-alpha.1
 // Dependencies: Roll20 API sandbox. (Optional) dwt_core (for palette + log/help registry). (Optional) Meta-Toolbox for broader mule usage.
 // Semantic Versioning (SemVer) Policy:
 // - DWT uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
@@ -26,7 +26,7 @@
 
   // === Constants & Version ====================================================
   var SCRIPT = 'dwt_tpl';              // command namespace
-  var VERSION = '0.1.0-alpha.1';
+  var VERSION = '0.2.0-alpha.1';
   var CORE_MULE = 'dwt_mule';
   var CAL_MULE  = 'dwt_mule';
   var TITLE     = 'Set Date';
@@ -81,14 +81,14 @@
   }
   var PALETTES = {
     none: null,
-    dark: { bg:'#222', fg:'#eee', border:'#111', tableBorder:'#555', card:'#2f2f2f', accent:'#3a7' },
+    dark: { bg:'#222', fg:'#eee', border:'#111', tableBorder:'#555', card:'#2f2f2f', accent:'#9b6dff' },
     parchment: { bg:'#f8f1e1', fg:'#3b2f1a', border:'#111', tableBorder:'#b79b74', card:'#efe3c7', accent:'#9a6e37' },
     contrast: { bg:'#000', fg:'#fff', border:'#111', tableBorder:'#888', card:'#111', accent:'#0aa' },
     powder:{ bg:'#eef6ff', fg:'#1f2a44', border:'#7aa7d9', tableBorder:'#9ec3ea', card:'#f2f7ff', accent:'#9ec3ea' }
   };
   function cssVars(){
     var pal = PALETTES[currentPalette()];
-    if(!pal){ return { container:'', title:'', card:'', link:'text-decoration:none; color:#4ea3ff;' }; }
+    if(!pal){ return { container:'', title:'', card:'', link:'text-decoration:none; color:#ba2e68;' }; }
     return {
       container:'display:block;width:80%;margin:0 auto;border:3px solid '+pal.border+';padding:10px 12px;background:'+pal.bg+';color:'+pal.fg+';font:14px/1.32 Georgia,serif;',
       title:'font-weight:bold;font-size:17px;margin-bottom:6px;color:'+pal.fg+';',

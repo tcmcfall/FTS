@@ -28,10 +28,10 @@
     }catch(e1){}
 
 // name:        dwt_core.js
-// version:     0.1.0-alpha.1
+// version:     0.2.0-alpha.1
 // description: unified Date | Weather | Trade shell: registry/router/help & unified Campaign Log, palette owner.
 // depends:     Meta-Toolbox (APILogic + Muler) : https://wiki.roll20.net/Meta-Toolbox
-// provides:    !dwt (unified panel), !dwt --help, dwt.addLogCard(...), dwt.cssVars() for modules
+// provides:    !dwt (unified panel), !dwt --help, !dwt --core set palette <value>, dwt.addLogCard(...), dwt.cssVars() for modules
 // author:      tcm (AI-assisted)
 // Semantic Versioning (SemVer) Policy:
 // - DWT uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
@@ -53,7 +53,7 @@
            : (typeof global!=='undefined')     ? global
            : {};
 
-  var VERSION   = '0.1.0-alpha.1';
+  var VERSION   = '0.2.0-alpha.1';
   var CORE_MULE = 'dwt_mule';
 
   var dwt = { VERSION: VERSION, COMMANDS:{}, HELP_SECTIONS:[], LOG_CARDS:[] };
@@ -398,8 +398,8 @@
     none: null,
     dark: {
       bg:'#222', fg:'#eee', border:'#111', tableBorder:'#555', cell:'#2a2a2a',
-      today:'#4b8', accent:'#3a7', accentText:'#fff', note:'#ffe9a6', subtle:'#ccc', card:'#2f2f2f',
-      btnBg:'transparent', btnText:'#3a7', btnBorder:'#3a7'
+      today:'#4b8', accent:'#9b6dff', accentText:'#fff', note:'#ffe9a6', subtle:'#ccc', card:'#2f2f2f',
+      btnBg:'transparent', btnText:'#9b6dff', btnBorder:'#9b6dff'
     },
     mint: {
       bg:'#f4fff7', fg:'#1f3a28', border:'#9cd1b2', tableBorder:'#b6e2c6', cell:'#ecfbf0',
@@ -410,7 +410,7 @@
     parchment: {
       bg:'#f8f1e1', fg:'#3b2f1a', border:'#5a472d', tableBorder:'#b79b74', cell:'#efe6cf',
       today:'#a36b2a', accent:'#5a3a17', accentText:'#f3e6c9', note:'#7a4a1f', subtle:'#6b5a44', card:'#efe3c7',
-      btnBg:'#5a3a17', btnText:'#f3e6c9', btnBorder:'#4c3113'
+      btnBg:'#6f4215', btnText:'#f3e6c9', btnBorder:'#4c3113'
     },
     powder: {
       bg:'#eef6ff', fg:'#1f2a44', border:'#7aa5ff', tableBorder:'#b6ccff', cell:'#f5f9ff',
@@ -431,7 +431,9 @@
     var pal = PALETTES[currentPalette()];
     if(!pal){
       return {
-        container:'', title:'', card:'', link:'', btn:'',
+        container:'', title:'', card:'',
+        link:'display:inline;background:transparent;border:none;box-shadow:none;border-radius:0;padding:0;margin:0;color:#ba2e68;text-decoration:none;font:inherit;line-height:inherit;',
+        btn:'',
         table:'', th:'', td:function(){ return ''; }, dayLine:'', dot:'',
         helpColsTable:'width:100%;border-collapse:separate;border-spacing:10px 0;',
         helpCol:'width:50%;vertical-align:top;',
@@ -491,7 +493,7 @@
       helpCol: 'width:50%;vertical-align:top;',
       helpSingleCol: 'width:100%;max-width:720px;margin:0 auto;',
       helpSectionCard: 'margin-top:10px;border:1px solid '+pal.tableBorder+';background:'+pal.card+';color:'+pal.fg+';padding:0;overflow:hidden;',
-      helpHeaderBar: 'padding:6px 10px;font-weight:bold;font-size:14px;background:'+pal.accent+';color:'+(pal.btnText || pal.bg)+';',
+      helpHeaderBar: 'padding:6px 10px;font-weight:bold;font-size:14px;background:'+pal.accent+';color:'+(pal.accentText || pal.bg)+';',
       helpBody: 'padding:10px 12px;color:'+pal.fg+';font-size:13px;line-height:1.35;',
       helpRowsTable: 'width:100%;border-collapse:collapse;table-layout:fixed;',
       helpRowSep: 'border-top:1px solid '+pal.tableBorder+';',
@@ -508,6 +510,23 @@
 
   function shell(title){ var v=cssVars(); return '<div style="'+v.container+'"><div style="'+v.title+'">'+esc(title)+'</div>'; }
   function endShell(){ return '</div>'; }
+  // Campaign Menu action controls share one stacked layout so every card aligns its buttons the same way.
+  function actionLinkAttrs(target){
+    var v = cssVars();
+    var href = (v.hrefAttr ? v.hrefAttr(target) : target);
+    var btnStyle = v.btn || '';
+    var linkStyle = v.link || '';
+    var layoutStyle = 'display:block;text-align:center;';
+    var attrs = ' href="'+href+'"';
+    if(btnStyle){
+      attrs += ' role="button" style="'+btnStyle+layoutStyle+'"';
+    }else if(linkStyle){
+      attrs += ' style="'+linkStyle+layoutStyle+'"';
+    }else{
+      attrs += ' style="'+layoutStyle+'"';
+    }
+    return attrs;
+  }
 
   function addLogCard(order, renderFn){
     dwt.LOG_CARDS.push({ order:(order|0), render:renderFn });
@@ -606,7 +625,7 @@
       var raw = dropRedundantTitleLine(sec.title, sec.lines||[]);
 
       var helpCmd = '!dwt --help';
-      var palCmd  = '!dwt --palette none | dark | mint | parchment | powder | rosebud';
+      var palCmd  = '!dwt --core set palette <none|dark|mint|parchment|powder|rosebud>';
 
       // Prefer actual registered commands if present.
       for(var i=0;i<raw.length;i++){
@@ -617,7 +636,7 @@
           line = (ex.cmds && ex.cmds[0]) ? ex.cmds[0] : line;
         }
         if(/^!dwt\s+--help\b/i.test(line)) helpCmd = line.replace(/\s+/g,' ').trim();
-        if(/^!dwt\s+--palette\b/i.test(line)) palCmd = line.replace(/\s+/g,' ').trim();
+        if(/^!dwt\s+--core\s+set\s+palette\b/i.test(line)) palCmd = line.replace(/\s+/g,' ').trim();
       }
 
       var out = '';
@@ -985,9 +1004,6 @@
   function coreConfigCard(pid){
     var v = cssVars();
     var html = '<div style="'+(v.card||'')+'">';
-    var btnStyle = v.btn || '';
-    // Build style attribute only when a palette supplies a button style
-    var styleAttr = btnStyle ? (' style="' + btnStyle + '"' ) : '';
     var isGM = false;
 
     try{
@@ -1011,17 +1027,14 @@
 
     // GM-only Set Palette control (styled like mapMeta config button). Opens a Roll Query dropdown to choose a palette.
     if (isGM){
-      var paletteCmd = '!dwt --palette ?{Palette|none|dark|mint|parchment|powder|rosebud}';
-      var paletteHref = (v.hrefAttr ? v.hrefAttr(paletteCmd) : paletteCmd);
-      html += '<a role="button" href="'+paletteHref+'"'+styleAttr+'">Set Palette</a>';
-      html += '&nbsp;&nbsp;';
+      var paletteCmd = '!dwt --core set palette ?{Palette|none|dark|mint|parchment|powder|rosebud}';
+      html += '<div><a'+actionLinkAttrs(paletteCmd)+'>Set Palette</a></div>';
     }
 
     // Show Help button – opens the help handout window
     if (h && h.id){
       var url = 'https://journal.roll20.net/handout/'+h.id;
-      var href = (v.hrefAttr ? v.hrefAttr(url) : url);
-      html += '<a role="button" href="'+href+'"'+styleAttr+'" target="_blank">Show Help</a>';
+      html += '<div style="'+(isGM ? 'margin-top:8px;' : '')+'"><a'+actionLinkAttrs(url)+' target="_blank">Show Help</a></div>';
     }
 
     html += '</div>';
@@ -1039,12 +1052,32 @@
     return html;
   }
 
+  function applyPaletteChange(value){
+    var S = ensureCoreState();
+    var p = String(value||'').trim().toLowerCase();
+    var legal = {none:1,dark:1,mint:1,parchment:1,powder:1,rosebud:1};
+    if (legal[p]){
+      S.ui.palette = p;
+      mirrorCoreToMule();
+      return {changed:true};
+    }
+    return {error:'Unknown palette: '+p};
+  }
+
   registerCommands({
+    'core': { access:'player', handler:function(a){
+      var expr = String(a.val||'').trim();
+      var m = expr.match(/^set\s+palette(?:\s+(.+))?$/i);
+      if (!m){
+        return {error:'Unknown core command. Use: !dwt --core set palette <none|dark|mint|parchment|powder|rosebud>'};
+      }
+      if (!String(m[1]||'').trim()){
+        return {error:'Missing palette value. Use: !dwt --core set palette <none|dark|mint|parchment|powder|rosebud>'};
+      }
+      return applyPaletteChange(m[1]);
+    }},
     'palette': { access:'player', handler:function(a){
-      var S=ensureCoreState(); var p=String(a.val||'').trim().toLowerCase();
-      var legal = {none:1,dark:1,mint:1,parchment:1,powder:1,rosebud:1};
-      if (legal[p]){ S.ui.palette=p; mirrorCoreToMule(); return {changed:true}; }
-      return {error:'Unknown palette: '+p};
+      return applyPaletteChange(a.val);
     }},
     // Pass-through for --calendar: do NOT echo the unified panel.
     'calendar': { access:'player', handler:function(a){
@@ -1168,6 +1201,7 @@
   dwt.addHelpSection     = addHelpSection;
   dwt.registerCommands   = registerCommands;
   dwt.addLogCard         = addLogCard;
+  dwt.actionLinkAttrs    = actionLinkAttrs;
   dwt.cssVars            = cssVars;
   dwt.ensureCoreState    = ensureCoreState;
   dwt.ensureMule         = ensureMule;
@@ -1222,7 +1256,7 @@
 
   addHelpSection(999, 'Core', function(){ return [
     'Show Help:', '!dwt --help',
-    'Palette switch:', '!dwt --palette none | dark | mint | parchment | powder | rosebud'
+    'Palette switch:', '!dwt --core set palette <none|dark|mint|parchment|powder|rosebud>'
   ]; });
 
   on('chat:message', handleMessage);

@@ -186,7 +186,7 @@ Assessment:
 
 ### D. Calendar and Quips Are Out of Contract
 
-Current issues in `Modules/dwt_calendar_0.1.0-alpha.1.js`:
+Current issues in `Modules/dwt_calendar_0.2.0-alpha.1.js`:
 
 - `FESTIVAL_QUIP` only covers six festivals.
 - Calendar-local fallback pools also include `uktar` and `midwinters_eve`.
@@ -205,7 +205,7 @@ Assessment:
 
 ### E. Weather Flavor Is Too Shallow
 
-Current state in `Modules/dwt_weather_0.1.0-alpha.1.js`:
+Current state in `Modules/dwt_weather_0.2.0-alpha.1.js`:
 
 - `FALLBACK_WEATHER_QUIPS` contains 25 region-locale paths.
 - Each path currently ships with one fallback line.

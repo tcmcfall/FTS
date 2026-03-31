@@ -1,5 +1,5 @@
 // name:        dwt_weather.js
-// version:     0.1.0-alpha.1
+// version:     0.2.0-alpha.1
 // description: Core-aware weather engine for the DWT (Date-Weather-Trade) Roll20 API suite.
 //              - Stores weather settings, metadata, current weather, and history beneath a single
 //                root dwt_mule ability named weather.
@@ -24,7 +24,7 @@ var dwt_weather = dwt_weather || (function(){
   'use strict';
 
   var RT = (typeof globalThis !== 'undefined') ? globalThis : this;
-  var VERSION = '0.1.0-alpha.1';
+  var VERSION = '0.2.0-alpha.1';
   var MODULE_KEY = 'weather';
   var MULE_NAME = 'dwt_mule';
   var REGION_PROFILE_SCHEMA = 'dwt.region.v4';
@@ -5241,6 +5241,24 @@ var dwt_weather = dwt_weather || (function(){
     return items;
   }
 
+  // Weather detail whispers lead with the resolved location context before the deeper climate diagnostics.
+  function buildWeatherTitleEntries(profile, rl){
+    var items = [];
+    var regionLabel = String((profile && profile.displayName) || (rl && rl.region) || '').trim();
+    var localeLabel = String((rl && rl.localeDef && rl.localeDef.label) || (rl && rl.locale) || '').trim();
+    var anchorItems = buildWeatherAnchorItems(profile, rl);
+    if(regionLabel){
+      items.push({ label:'Region', value:titleCaseWords(regionLabel) });
+    }
+    if(localeLabel){
+      items.push({ label:'Locale', value:titleCaseWords(localeLabel) });
+    }
+    if(anchorItems.length){
+      items.push({ label:'Earthen Anchor', value:anchorItems.join(' ') });
+    }
+    return items;
+  }
+
   function weatherDetailLabelKey(label){
     return canonicalKey(String(label || '').replace(/\([^)]*\)/g, ' '));
   }
@@ -5387,30 +5405,26 @@ var dwt_weather = dwt_weather || (function(){
 
   function renderWeatherFooter(details){
     details = details || {};
-    var anchorItems = buildWeatherAnchorItems(details.profile, details.rl);
     var sourceHtml = renderWeatherSourceGroups(details);
-    var html = '';
-    var i;
-    if(!anchorItems.length && !sourceHtml) return '';
-    html += '<div style="margin-top:14px;padding-top:8px;border-top:1px solid #666;padding-left:8px;">';
-    if(anchorItems.length){
-      html += '<div style="font-weight:bold;margin:0 0 4px 0;">&bull; Earthen Anchor</div>';
-      html += '<div style="padding-left:14px;"><ul style="margin:0;padding-left:16px;list-style-type:disc;">';
-      for(i=0;i<anchorItems.length;i++){
-        html += '<li style="margin:0 0 3px 0;line-height:1.35;">' + esc(anchorItems[i]) + '</li>';
-      }
-      html += '</ul></div>';
-    }
-    if(sourceHtml){
-      html += '<div style="margin-top:' + (anchorItems.length ? '12px' : '0') + ';">' + sourceHtml + '</div>';
-    }
-    html += '</div>';
-    return html;
+    if(!sourceHtml) return '';
+    return '<div style="margin-top:14px;padding-top:8px;border-top:1px solid #666;padding-left:8px;">' + sourceHtml + '</div>';
   }
 
   function renderWeatherDetailsHtml(rl, details){
     details = details || {};
+    var titleEntries = buildWeatherTitleEntries(details.profile || null, rl || null);
     var html = '<div><b>' + esc(String((rl && rl.mapname) || 'Weather')) + '</b>';
+    if(titleEntries.length){
+      html += '<div style="margin-top:6px;padding-left:8px;">';
+      for(var i=0;i<titleEntries.length;i++){
+        html += '<div style="margin:0 0 3px 0;line-height:1.35;"><b>'
+          + esc(titleEntries[i].label || 'Detail')
+          + ':</b> '
+          + esc(titleEntries[i].value || '')
+          + '</div>';
+      }
+      html += '</div>';
+    }
     if(details.summary){
       html += '<div style="margin-top:10px;padding-left:8px;">';
       html += '<div style="font-weight:bold;margin:0 0 4px 0;">&bull; Current Conditions</div>';

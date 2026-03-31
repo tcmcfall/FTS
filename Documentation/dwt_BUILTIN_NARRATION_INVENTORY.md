@@ -14,13 +14,13 @@ Historical note: this inventory records the pre-overhaul narration layout and is
 
 | Module | Built-in narration | Notes |
 | --- | --- | --- |
-| `Modules/dwt_calendar_0.1.0-alpha.1.js` | Yes | Festival overlay lines plus calendar-local fallback festival quips. |
-| `Modules/dwt_core_0.1.0-alpha.1.js` | No | Command shell, help, and UI text only; no atmospheric narration pool. |
-| `Modules/dwt_geo_0.1.0-alpha.1.js` | No | Route/location logic only; no built-in narration pool. |
-| `Modules/dwt_mapMeta_0.1.0-alpha.1.js` | No | Map metadata summaries only; no atmospheric narration pool. |
+| `Modules/dwt_calendar_0.2.0-alpha.1.js` | Yes | Festival overlay lines plus calendar-local fallback festival quips. |
+| `Modules/dwt_core_0.2.0-alpha.1.js` | No | Command shell, help, and UI text only; no atmospheric narration pool. |
+| `Modules/dwt_geo_0.2.0-alpha.1.js` | No | Route/location logic only; no built-in narration pool. |
+| `Modules/dwt_mapMeta_0.2.0-alpha.1.js` | No | Map metadata summaries only; no atmospheric narration pool. |
 | `Modules/dwt_quips_0.1.0-alpha.1.js` | Yes | Authoritative quip corpus (festival, season, generic, and region pools). |
 | `Modules/dwt_regionBuilder_0.1.0-alpha.1.js` | No | Generator/preset descriptions only; no runtime narration pool. |
-| `Modules/dwt_weather_0.1.0-alpha.1.js` | Yes | Fallback weather quips, critical-event summaries/effect descriptors, and dynamic narrative templates. |
+| `Modules/dwt_weather_0.2.0-alpha.1.js` | Yes | Fallback weather quips, critical-event summaries/effect descriptors, and dynamic narrative templates. |
 | `Modules/Region Modules/dwt_region.frozenfar_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
 | `Modules/Region Modules/dwt_region.landsofintrigue_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
 | `Modules/Region Modules/dwt_region.moonshaes_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
@@ -29,7 +29,7 @@ Historical note: this inventory records the pre-overhaul narration layout and is
 
 ## Calendar Module
 
-Source: `Modules/dwt_calendar_0.1.0-alpha.1.js`
+Source: `Modules/dwt_calendar_0.2.0-alpha.1.js`
 
 - Festival overlay one-liners: 6
 - Calendar-local festival fallback quips: 32
@@ -15789,7 +15789,7 @@ of the north keeps the old tale bold.
 
 ## Weather Module
 
-Source: `Modules/dwt_weather_0.1.0-alpha.1.js`
+Source: `Modules/dwt_weather_0.2.0-alpha.1.js`
 
 - Fallback weather quip pools: 25
 - Built-in critical events: 19
