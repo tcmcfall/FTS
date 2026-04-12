@@ -1,34 +1,34 @@
-// name:        dwt_calendar.js
+// name:        fts_calendar.js
 // version:     0.2.0-alpha.1
 // description: Campaign Calendar module (unified with Core UI). Ensures/updates 'Campaign Calendar' handout,
-//              mirrors state to dwt_mule, consolidates navigation under --calendar, exposes _ns for Core.
+//              mirrors state to fts_mule, consolidates navigation under --calendar, exposes _ns for Core.
 //
 // NOTE!!!      Regarding the Show Calendar link that is displayed in the unified menu:
 //				Roll20 constrains us here: Handouts can store HTML, but no JS. 
 //              Interactivity is designed to come from clickable links that fire chat messages.
 //              We work around the standard href restrictions with (very sensitive) hrefAttr / Meta-Toolbox plumbing.
-//              The calendar’s nav buttons are basically:
+//              The calendar's nav buttons are basically:
 //
-//              <a href="!dwt --calendar back 1m">back</a>
-//              <a href="!dwt --calendar today"><b>today</b></a>
-//              <a href="!dwt --calendar forward 1m">forward</a>
+//              <a href="!fts --calendar back 1m">back</a>
+//              <a href="!fts --calendar today"><b>today</b></a>
+//              <a href="!fts --calendar forward 1m">forward</a>
 //
-//              Those live inside the handout/config HTML and just fire normal !dwt commands when clicked. The magic is:
-//              The buttons themselves are just <a href="!dwt --calendar back 1m">…</a>.
+//              Those live inside the handout/config HTML and just fire normal !fts commands when clicked. The magic is:
+//              The buttons themselves are just <a href="!fts --calendar back 1m">...</a>.
 //              The calendar module knows how to interpret:
 //
 //              --calendar back 1m
 //              --calendar forward 1m
 //              --calendar today
 //
-//              The Meta-Toolbox plumbing (ZeroFrame + hrefAttr) makes sure those links survive Roll20’s HTML sanitizing
+//              The Meta-Toolbox plumbing (ZeroFrame + hrefAttr) makes sure those links survive Roll20's HTML sanitizing
 //              and actually fire as API commands instead of getting mangled.
 //
 // depends:     Meta-Toolbox (APILogic + Muler)
-// provides:    !dwt --calendar today | --calendar back <#d/m/y> | --calendar forward <#d/m/y> | --calendar set <hour|timeofday|day|month/festival|season|year> <value> | --calendar show <hour|timeofday|day|month/festival|season|year>
+// provides:    !fts --calendar today | --calendar back <#d/m/y> | --calendar forward <#d/m/y> | --calendar set <hour|timeofday|day|month/festival|season|year> <value> | --calendar show <hour|timeofday|day|month/festival|season|year>
 // author:      tcm (AI-assisted)
 // Semantic Versioning (SemVer) Policy:
-// - DWT uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
+// - FTS uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
 // - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
 // - Increment PATCH for backward-compatible bug fixes.
 // - Increment MINOR for new backward-compatible functionality.
@@ -38,7 +38,7 @@
 // - Header comments, internal VERSION constants, filenames, generated module text, and documentation references must stay aligned.
 // - Dependency notes should use SemVer-friendly wording such as ">= 0.1.0-alpha.1" rather than informal forms like "5.1.0+".
 
-var dwt_calendar = dwt_calendar || (function () {
+var fts_calendar = fts_calendar || (function () {
   'use strict';
 
   /* ========== Intro ========== */
@@ -48,7 +48,7 @@ var dwt_calendar = dwt_calendar || (function () {
          : (typeof global!=='undefined')     ? global
          : this;
 
-  var VERSION='0.2.0-alpha.1', HANDOUT_NAME='Campaign Calendar', DWT_MULE='dwt_mule';
+  var VERSION='0.2.0-alpha.1', HANDOUT_NAME='Campaign Calendar', FTS_MULE='fts_mule';
   var MIN_Y=1300, MAX_Y=1600;
   var _registered=false;
 
@@ -63,7 +63,7 @@ var dwt_calendar = dwt_calendar || (function () {
   var BETWEEN=[{key:'midwinter',afterMonth:1,label:'Midwinter (between Hammer & Alturiak)'},
                {key:'greengrass',afterMonth:4,label:'Greengrass (between Tarsakh & Mirtul)'},
                {key:'midsummer',afterMonth:7,label:'Midsummer (between Flamerule & Eleasis)'},
-               {key:'shieldmeet',afterMonth:7,label:'Shieldmeet (day after Midsummer — leap years only)',leap:true},
+               {key:'shieldmeet',afterMonth:7,label:'Shieldmeet (day after Midsummer - leap years only)',leap:true},
                {key:'highharvestide',afterMonth:9,label:'Highharvestide (between Eleint & Marpenoth)'},
                {key:'feastofthemoon',afterMonth:11,label:'Feast of the Moon (between Uktar & Nightal)'}];
 
@@ -78,28 +78,28 @@ var dwt_calendar = dwt_calendar || (function () {
   function clamp(y){ return Math.max(MIN_Y, Math.min(MAX_Y, y)); }
   function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
   function hrefAttr(s){return String(s||'').replace(/"/g,'&quot;');}
-  function cssVars(){ return (RT.dwt && typeof RT.dwt.cssVars==='function') ? RT.dwt.cssVars() : {
+  function cssVars(){ return (RT.fts && typeof RT.fts.cssVars==='function') ? RT.fts.cssVars() : {
     container:'', title:'', card:'', link:'', btn:'', table:'', th:'', td:function(){return ''}, dayLine:'', dot:''
   };}
 
   function ensureCalendarState(){
-    if(!state.dwt) state.dwt={};
+    if(!state.fts) state.fts={};
     // Core owns palette only; units removed from all modules as of 2.7.x.
-    if(!state.dwt.ui) state.dwt.ui={ palette:'parchment' };
-    if(!state.dwt.now){
+    if(!state.fts.ui) state.fts.ui={ palette:'parchment' };
+    if(!state.fts.now){
       // Default campaign date for mule mirrors: 0000 hours, early predawn, 1 Hammer, Winter 1492.
       // Season is derived at mirror time; hour/minute tracked for timeofday display.
-      state.dwt.now={ year:1492, month:1, day:1, hour:0, minute:0, timeofday:'early morning', festival:'' };
+      state.fts.now={ year:1492, month:1, day:1, hour:0, minute:0, timeofday:'early morning', festival:'' };
     }
-    if(!state.dwt.view){
-      var t=todayIndex(); state.dwt.view={ year:t.year, index:t.index };
+    if(!state.fts.view){
+      var t=todayIndex(); state.fts.view={ year:t.year, index:t.index };
     }
   }
 
   /* ============================================================
    * FESTIVAL ART CONFIG  (MAINTAINERS: EDIT HERE)
    * ============================================================
-   * Use HTTPS URLs from your Roll20 Art Library (“Copy Image Address”).
+   * Use HTTPS URLs from your Roll20 Art Library ("Copy Image Address").
    *
    * KEY NORMALIZATION:
    * - We normalize festival keys by lowercasing and removing non-alphanumerics.
@@ -161,8 +161,8 @@ var FESTIVAL_BG_LAYOUT = {
     padBottom: '0px',
     padLeft: '0px',
     minHeightPx: null,
-      heightPx: null
-  },
+    heightPx: null
+  }
 
   // Per-festival overrides (edit as needed)
 //  midwinter:      { size:'cover',  posX:'50%', posY:'50%', repeat:'no-repeat', padTop:'0px', padRight:'0px', padBottom:'0px', padLeft:'0px', minHeightPx:null, heightPx:null },
@@ -281,7 +281,7 @@ function festivalBgLayout(key){
   }
 
   function currentMonthIndexForQuips(now){
-    now = now || ((state.dwt && state.dwt.now) || {});
+    now = now || ((state.fts && state.fts.now) || {});
     var month = parseInt(now.month, 10);
     if(!isNaN(month) && month >= 1 && month <= 12) return month;
     if(now.festival) return festivalMonthFallback(now.festival);
@@ -594,7 +594,7 @@ function festivalBgLayout(key){
   }
 
   // >>> SET FESTIVAL MINIMUM CELL HEIGHT HERE <<<
-  // This preserves stable handout sizing when switching Month ↔ Festival views.
+  // This preserves stable handout sizing when switching Month <-> Festival views.
   // Value is pixels.
   var FESTIVAL_MIN_CELL_HEIGHT_PX = 100;  // <-- ADJUST MIN HEIGHT HERE
 
@@ -612,7 +612,7 @@ function festivalBgLayout(key){
 
   function whisperToPlayer(pid, line){
     var target = String(playerDisplayName(pid) || 'GM').replace(/"/g, '\\"');
-    sendChat('DWT', '/w "' + target + '" ' + line);
+    sendChat('FTS', '/w "' + target + '" ' + line);
   }
 
   function buildSeq(y){
@@ -660,9 +660,9 @@ function festivalBgLayout(key){
   function navBar(){
     var v = cssVars(), pad='margin:0 12px 8px 0;';
     return '<div style="margin-top:10px;text-align:center;">'
-         + '<a href="'+esc('!dwt --calendar back 1m')+'" '+(v.btn?('style="'+v.btn+pad+'"'):'style="'+pad+'"')+'>&#9664; back</a>'
-         + '<a href="'+esc('!dwt --calendar today')+'" '+(v.btn?('style="'+v.btn+pad+'"'):'style="'+pad+'"')+'><b>today</b></a>'
-         + '<a href="'+esc('!dwt --calendar forward 1m')+'" '+(v.btn?('style="'+v.btn+pad+'"'):'style="'+pad+'"')+'>forward &#9654;</a>'
+         + '<a href="'+esc('!fts --calendar back 1m')+'" '+(v.btn?('style="'+v.btn+pad+'"'):'style="'+pad+'"')+'>&#9664; back</a>'
+         + '<a href="'+esc('!fts --calendar today')+'" '+(v.btn?('style="'+v.btn+pad+'"'):'style="'+pad+'"')+'><b>today</b></a>'
+         + '<a href="'+esc('!fts --calendar forward 1m')+'" '+(v.btn?('style="'+v.btn+pad+'"'):'style="'+pad+'"')+'>forward &#9654;</a>'
          + '</div>';
   }
 
@@ -679,7 +679,7 @@ function festivalBgLayout(key){
       built+='<div style="margin:8px 0;"><span style="font-style:italic;">'+esc(monthQuip)+'</span></div>';
     }
 
-    // SECOND LINE: show season + year, e.g. "Spring 1492 DR" instead of "Mirtul — 1492 DR"
+    // SECOND LINE: show season + year, e.g. "Spring 1492 DR" instead of "Mirtul - 1492 DR"
     var seasonKey = seasonKeyFromMonth(month);
     var seasonLabel = seasonKey ? (seasonKey.charAt(0).toUpperCase()+seasonKey.slice(1)) : '';
     var headerLine = seasonLabel ? (seasonLabel+' '+year+' DR') : ((MONTHS[month-1].short)+' '+year+' DR');
@@ -698,10 +698,10 @@ function festivalBgLayout(key){
       built+='<tr>';
       for(var c2=0;c2<10;c2++){
         var meta=withinInfo(month,d); // solstice/equinox day?
-        var isToday=(state.dwt && state.dwt.now && year===state.dwt.now.year && month===state.dwt.now.month && d===state.dwt.now.day);
+        var isToday=(state.fts && state.fts.now && year===state.fts.now.year && month===state.fts.now.month && d===state.fts.now.day);
         var tdStyle = (typeof v.td==='function') ? v.td(isToday) : 'border:1px solid #555;text-align:center;padding:12px 16px;vertical-align:top;';
         if(meta){
-          var pal=((state.dwt.ui||{}).palette)||'parchment';
+          var pal=((state.fts.ui||{}).palette)||'parchment';
           var tint=seasonTintFor(pal, meta.season||'');
           if(tint){ tdStyle += 'background:'+tint+';'; }
         }
@@ -815,7 +815,7 @@ function festivalBgLayout(key){
       return renderQuipBlocks(q, 'display:block;margin:0;padding:0;line-height:1.50;');
     }
 
-    // Minimum height keeps the pop-up stable across month ↔ festival.
+    // Minimum height keeps the pop-up stable across month <-> festival.
     built += '<div style="'
           + 'display:flex;flex-direction:column;align-items:center;justify-content:center;'
           + 'width:100%;height:100%;'
@@ -830,7 +830,7 @@ function festivalBgLayout(key){
 
     built += '</td></tr>';
 
-    // Keep the remaining rows to match the month table’s 3-row body.
+    // Keep the remaining rows to match the month table's 3-row body.
     built += '<tr></tr><tr></tr>';
 
     built += '</tbody></table>';
@@ -841,7 +841,7 @@ function festivalBgLayout(key){
     return built;
 
   }catch(e){
-    // Never allow festival rendering failure to “fall through” navigation.
+    // Never allow festival rendering failure to "fall through" navigation.
     try{
       var built2 = headerCal(label || key || 'Festival');
 	        built2 += '<div><span style="font-weight:bold;">'+String(year)+' DR</span></div>';
@@ -861,11 +861,11 @@ function festivalBgLayout(key){
 
   function getOrCreateMule(){
     try{
-      if(RT.dwt && typeof RT.dwt.ensureMule === 'function'){
-        return RT.dwt.ensureMule();
+      if(RT.fts && typeof RT.fts.ensureMule === 'function'){
+        return RT.fts.ensureMule();
       }
     }catch(e){}
-    var matches = findObjs({_type:'character', name:DWT_MULE}) || [];
+    var matches = findObjs({_type:'character', name:FTS_MULE}) || [];
     var mule = null;
     var bestScore = -1;
     for(var i=0;i<matches.length;i++){
@@ -876,7 +876,7 @@ function festivalBgLayout(key){
       }
     }
     if(!mule){
-      mule = createObj('character', { name:DWT_MULE, archived:false, inplayerjournals:'', controlledby:'' });
+      mule = createObj('character', { name:FTS_MULE, archived:false, inplayerjournals:'', controlledby:'' });
     }
     return mule;
   }
@@ -895,7 +895,7 @@ function festivalBgLayout(key){
   function regionsRootQuality(text){
     var parsed = safeParseJSON(text);
     if(!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return -1;
-    var score = (parsed.schema === 'dwt.regions.root.v1') ? 50 : 0;
+    var score = (parsed.schema === 'fts.regions.root.v1') ? 50 : 0;
     var regions = parsed.regions;
     if(!regions || typeof regions !== 'object' || Array.isArray(regions)) return score;
     var keys = Object.keys(regions);
@@ -903,7 +903,7 @@ function festivalBgLayout(key){
     for(var i=0;i<keys.length;i++){
       var payload = regions[keys[i]];
       if(!payload || typeof payload !== 'object' || Array.isArray(payload)) continue;
-      if(payload.schema === 'dwt.region.v4') score += 200;
+      if(payload.schema === 'fts.region.v4') score += 200;
       if(payload.weather && typeof payload.weather === 'object' && !Array.isArray(payload.weather)) score += 100;
       if(payload.region) score += 10;
       if(payload.locales) score += 10;
@@ -1015,7 +1015,7 @@ function festivalBgLayout(key){
   }
 
   function todayIndex(){
-    var now=state.dwt.now, y=now.year, seq=buildSeq(y);
+    var now=state.fts.now, y=now.year, seq=buildSeq(y);
     if(now.festival){
       var i=idxForFest(seq, now.festival); if(i>=0) return {year:y,index:i};
       return {year:y,index:idxForMonth(seq, currentMonthIndexForQuips(now))};
@@ -1024,7 +1024,7 @@ function festivalBgLayout(key){
   }
 
   function updateHandout(forceToday){
-    var v=state.dwt.view, now=state.dwt.now;
+    var v=state.fts.view, now=state.fts.now;
     if(forceToday){
       var T=todayIndex(); v.year=T.year; v.index=T.index;
     }
@@ -1037,15 +1037,15 @@ function festivalBgLayout(key){
       built = renderFestival(v.year, tok.key, tok.label);
     }
     var h = upsertHandout(built);
-    state.dwt.view.index = i;
+    state.fts.view.index = i;
     return h;
 }
 
   function commitCalendarState(forceToday){
     if(forceToday !== false){
       var T = todayIndex();
-      state.dwt.view.year = T.year;
-      state.dwt.view.index = T.index;
+      state.fts.view.year = T.year;
+      state.fts.view.index = T.index;
     }
     updateHandout(forceToday !== false);
     mirrorToMule();
@@ -1054,7 +1054,7 @@ function festivalBgLayout(key){
   /* ========== Mule sync ========== */
   function mirrorToMule(){
     try{
-      var now = state.dwt.now || { year:1492, month:1, day:1, timeofday:'early morning', festival:'' };
+      var now = state.fts.now || { year:1492, month:1, day:1, timeofday:'early morning', festival:'' };
 
       var year = now.year || 1492;
       var month = now.month || 1;
@@ -1155,7 +1155,7 @@ function festivalBgLayout(key){
     return out;
   }
 
-  function dwt_parseStep(val){
+  function fts_parseStep(val){
     var m = String(val||'').match(/^(\d+)\s*([dmy])$/i);
     if(!m) return null;
     var n = parseInt(m[1],10);
@@ -1168,9 +1168,9 @@ function festivalBgLayout(key){
   }
 
   function handleBack(val){
-    var st = dwt_parseStep(val||'1m'); if(!st) return;
+    var st = fts_parseStep(val||'1m'); if(!st) return;
     if (st.days){
-      var now = state.dwt.now;
+      var now = state.fts.now;
       var ord = nowToOrd(now) - Math.abs(st.days);
       var y = now.year;
       while(ord<=0){
@@ -1186,26 +1186,26 @@ function festivalBgLayout(key){
       nextNow.hour = (typeof now.hour === 'number') ? now.hour : 0;
       nextNow.minute = (typeof now.minute === 'number') ? now.minute : 0;
       nextNow.timeofday = now.timeofday || timeofdayFromHM(nextNow.hour, nextNow.minute);
-      state.dwt.now = nextNow;
+      state.fts.now = nextNow;
       commitCalendarState(true);
       return;
     }
     if (st.months){
-      var v=state.dwt.view, seq=buildSeq(v.year), n=Math.abs(st.months);
+      var v=state.fts.view, seq=buildSeq(v.year), n=Math.abs(st.months);
       while(n--){
         if(v.index>0){ v.index--; } else if(v.year>MIN_Y){ v.year--; v.index=buildSeq(v.year).length-1; }
       }
       updateHandout(); mirrorToMule(); return;
     }
     if (st.years){
-      var v2=state.dwt.view; v2.year=clamp(v2.year-Math.abs(st.years));
+      var v2=state.fts.view; v2.year=clamp(v2.year-Math.abs(st.years));
       v2.index=0; updateHandout(); mirrorToMule(); return;
     }
   }
   function handleForward(val){
-    var st = dwt_parseStep(val||'1m'); if(!st) return;
+    var st = fts_parseStep(val||'1m'); if(!st) return;
     if (st.days){
-      var now = state.dwt.now;
+      var now = state.fts.now;
       var ord = nowToOrd(now) + Math.abs(st.days);
       var y = now.year;
       while(ord>yearLen(y)){
@@ -1221,19 +1221,19 @@ function festivalBgLayout(key){
       nextNow.hour = (typeof now.hour === 'number') ? now.hour : 0;
       nextNow.minute = (typeof now.minute === 'number') ? now.minute : 0;
       nextNow.timeofday = now.timeofday || timeofdayFromHM(nextNow.hour, nextNow.minute);
-      state.dwt.now = nextNow;
+      state.fts.now = nextNow;
       commitCalendarState(true);
       return;
     }
     if (st.months){
-      var v=state.dwt.view, seq=buildSeq(v.year), n=Math.abs(st.months);
+      var v=state.fts.view, seq=buildSeq(v.year), n=Math.abs(st.months);
       while(n--){
         if(v.index<seq.length-1){ v.index++; } else if(v.year<MAX_Y){ v.year++; v.index=0; seq=buildSeq(v.year); }
       }
       updateHandout(); mirrorToMule(); return;
     }
     if (st.years){
-      var v2=state.dwt.view; v2.year=clamp(v2.year+Math.abs(st.years));
+      var v2=state.fts.view; v2.year=clamp(v2.year+Math.abs(st.years));
       v2.index=0; updateHandout(); mirrorToMule(); return;
     }
   }
@@ -1269,7 +1269,7 @@ function festivalBgLayout(key){
       var showFields = parseCalendarFieldList(restShow);
       if(!showFields.length){
         if(restShow){
-          whisperToPlayer(pid, '<b>Calendar</b><br>' + esc('Use !dwt --calendar show hour | timeofday | day | month/festival | season | year.'));
+          whisperToPlayer(pid, '<b>Calendar</b><br>' + esc('Use !fts --calendar show hour | timeofday | day | month/festival | season | year.'));
         }else{
           whisperToPlayer(pid, '<b>Calendar</b><br>' + esc(currentDateLine()));
         }
@@ -1313,13 +1313,13 @@ function festivalBgLayout(key){
 
       if(typeof sendChat === 'function'){
         if(errs.length){
-          sendChat('DWT','/w gm <b>Calendar:</b> set failed — ' + errs.join(' | '));
+          sendChat('FTS','/w gm <b>Calendar:</b> set failed - ' + errs.join(' | '));
         }else{
           try{
             var line = currentDateLine();
-            sendChat('DWT','/w gm '+line);
+            sendChat('FTS','/w gm '+line);
             }catch(e){
-            sendChat('DWT','/w gm <b>Calendar:</b> updated.');
+            sendChat('FTS','/w gm <b>Calendar:</b> updated.');
           }
         }
       }
@@ -1337,14 +1337,14 @@ function festivalBgLayout(key){
   }
 
   // Timeofday helpers for early/late predawn, morning, afternoon, and evening.
-  // early predawn   : 0000–0259
-  // late predawn    : 0300–0559
-  // early morning   : 0600–0859
-  // late morning    : 0900–1159
-  // early afternoon : 1200–1459
-  // late afternoon  : 1500–1759
-  // early evening   : 1800–2059
-  // late evening    : 2100–2359
+  // early predawn   : 0000-0259
+  // late predawn    : 0300-0559
+  // early morning   : 0600-0859
+  // late morning    : 0900-1159
+  // early afternoon : 1200-1459
+  // late afternoon  : 1500-1759
+  // early evening   : 1800-2059
+  // late evening    : 2100-2359
   function timeofdayFromHM(hh, mm){
     hh = (typeof hh==='number' && hh>=0 && hh<24) ? hh : 0;
     mm = (typeof mm==='number' && mm>=0 && mm<60) ? mm : 0;
@@ -1539,7 +1539,7 @@ function festivalBgLayout(key){
 
   function currentDateLine(){
     ensureCalendarState();
-    var now = state.dwt.now || { year:1492, month:1, day:1, hour:0, minute:0, timeofday:'early morning', festival:'' };
+    var now = state.fts.now || { year:1492, month:1, day:1, hour:0, minute:0, timeofday:'early morning', festival:'' };
     var timeofday = timeofdayFromHM(now.hour||0, now.minute||0);
     var line;
     if(now.festival){
@@ -1554,7 +1554,7 @@ function festivalBgLayout(key){
 
   function formatCalendarFieldLine(kind){
     ensureCalendarState();
-    var now = state.dwt.now || { year:1492, month:1, day:1, hour:0, minute:0, timeofday:'early morning', festival:'' };
+    var now = state.fts.now || { year:1492, month:1, day:1, hour:0, minute:0, timeofday:'early morning', festival:'' };
     var hh = (typeof now.hour==='number' && now.hour>=0 && now.hour<24) ? now.hour : 0;
     var mm = (typeof now.minute==='number' && now.minute>=0 && now.minute<60) ? now.minute : 0;
     var hhmm = (hh<10?'0':'')+hh+''+(mm<10?'0':'')+mm;
@@ -1584,7 +1584,7 @@ function festivalBgLayout(key){
   function setCalendarField(kind, raw, opts){
     ensureCalendarState();
     opts = opts || {};
-    var now = state.dwt.now || { year:1492, month:1, day:1, hour:0, minute:0, timeofday:'early morning', festival:'' };
+    var now = state.fts.now || { year:1492, month:1, day:1, hour:0, minute:0, timeofday:'early morning', festival:'' };
     var newNow = {
       year: now.year,
       month: now.month,
@@ -1615,7 +1615,7 @@ function festivalBgLayout(key){
       newNow.festival = '';
       // If current day is invalid (for example, 0 when coming from a festival),
       // normalize it to 1 so that stacked commands like --setMonth X --setDay Y
-      // can be applied in a single !dwt invocation.
+      // can be applied in a single !fts invocation.
       if(newNow.day<1 || newNow.day>30){
         newNow.day = 1;
       }
@@ -1707,18 +1707,18 @@ function festivalBgLayout(key){
       return { error:'Unknown calendar field: '+kind };
     }
 
-    state.dwt.now = newNow;
+    state.fts.now = newNow;
     if(!opts.deferCommit){
       commitCalendarState(true);
     }
 
-    return { ok:true, text: formatTimestampLine(state.dwt.now) };
+    return { ok:true, text: formatTimestampLine(state.fts.now) };
   }
 
   /* ========== Help block into unified panel ========== */
 
   function renderConfigHTML(){
-    var v=cssVars(), now=state.dwt.now, h=handout();
+    var v=cssVars(), now=state.fts.now, h=handout();
     var timeofday = timeofdayFromHM(now.hour||0, now.minute||0);
     var line;
     if(now.festival){
@@ -1730,8 +1730,8 @@ function festivalBgLayout(key){
     }
     var btn = (h && h.id)
       ? '<a'
-        + ((RT.dwt && typeof RT.dwt.actionLinkAttrs === 'function')
-            ? RT.dwt.actionLinkAttrs('https://journal.roll20.net/handout/'+h.id)
+        + ((RT.fts && typeof RT.fts.actionLinkAttrs === 'function')
+            ? RT.fts.actionLinkAttrs('https://journal.roll20.net/handout/'+h.id)
             : (' role="button" href="'+hrefAttr('https://journal.roll20.net/handout/'+h.id)+'"'
               + (v.btn?(' style="'+v.btn+'"'):'')))
         + ' target="_blank"><span style="font-weight:bold;">Show Calendar</span></a>'
@@ -1747,21 +1747,21 @@ function festivalBgLayout(key){
   function registerWithCore(){
     if(_registered) return;
     try{
-      if(RT.dwt && typeof RT.dwt.addLogCard==='function' && typeof RT.dwt.addHelpSection==='function'){
-        RT.dwt.addLogCard(5, function(pid){
+      if(RT.fts && typeof RT.fts.addLogCard==='function' && typeof RT.fts.addHelpSection==='function'){
+        RT.fts.addLogCard(5, function(pid){
           try{ updateHandout(true); }catch(e){}
           return renderConfigHTML();
         });
-        RT.dwt.addHelpSection(10,'Calendar',function(){ return [
+        RT.fts.addHelpSection(10,'Calendar',function(){ return [
            'Calendar',
-           'Calendar navigation: !dwt --calendar today | back | forward <value as #d/m/y>',
-           '(day/month/year : !dwt --calendar back 4m would move calendar view back 4 months)',
+           'Calendar navigation: !fts --calendar today | back | forward <value as #d/m/y>',
+           '(day/month/year : !fts --calendar back 4m would move calendar view back 4 months)',
            '',
-           'Set current date/timeofday (GM only): !dwt --calendar set hour | timeofday | day | month/festival | season | year <value>',
-           'Show current date/timeofday fields: !dwt --calendar show hour | timeofday | day | month/festival | season | year',
+           'Set current date/timeofday (GM only): !fts --calendar set hour | timeofday | day | month/festival | season | year <value>',
+           'Show current date/timeofday fields: !fts --calendar show hour | timeofday | day | month/festival | season | year',
            '',
            'Inputs are normalized to lower-case, no spaces (e.g. "Feast of the Moon" -> feastofthemoon).',
-           'Months can be specified either by name or number. (!dwt --calendar set month 1 | hammer | Deep WinTER would all be acceptable).',
+           'Months can be specified either by name or number. (!fts --calendar set month 1 | hammer | Deep WinTER would all be acceptable).',
            ''
          ];});
         _registered=true;
@@ -1777,22 +1777,22 @@ function festivalBgLayout(key){
 
   function init(){
     calendarStartup();
-    // NOTE: calendar no longer binds its own !dwt listener; Core routes --calendar here.
+    // NOTE: calendar no longer binds its own !fts listener; Core routes --calendar here.
     registerWithCore();
     try{
-      RT.dwtQ = RT.dwtQ || [];
-      RT.dwtQ.push(function(dwt){
+      RT.ftsQ = RT.ftsQ || [];
+      RT.ftsQ.push(function(fts){
         try{
-          if(dwt && typeof dwt.registerStartup === 'function'){
-            dwt.registerStartup('calendar', function(mule, reason){
+          if(fts && typeof fts.registerStartup === 'function'){
+            fts.registerStartup('calendar', function(mule, reason){
               try{ calendarStartup(); }catch(e){}
             });
           }
           registerWithCore();
         }catch(e){}
       });
-      if (RT.dwt && typeof RT.dwt.registerStartup === 'function'){
-        RT.dwt.registerStartup('calendar', function(mule, reason){
+      if (RT.fts && typeof RT.fts.registerStartup === 'function'){
+        RT.fts.registerStartup('calendar', function(mule, reason){
           try{ calendarStartup(); }catch(e){}
         });
       }
@@ -1813,9 +1813,9 @@ function festivalBgLayout(key){
   };
 }());
 
-on('ready', function(){ dwt_calendar.init(); });
+on('ready', function(){ fts_calendar.init(); });
 
 on('change:player:_online', function(p){
-  try{ if(p && p.id){ dwt_calendar._refreshView(); } }catch(e){ log('calendar login refresh err: '+e); }
+  try{ if(p && p.id){ fts_calendar._refreshView(); } }catch(e){ log('calendar login refresh err: '+e); }
 });
 

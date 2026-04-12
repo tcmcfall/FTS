@@ -1,14 +1,14 @@
-# DWT Region Module Guide
+# FTS Region Module Guide
 
-This guide covers the `dwt.region.v4` format used by `dwt_weather`, `dwt_mapMeta`, and the shipped regional modules.
+This guide covers the `fts.region.v4` format used by `fts_weather`, `fts_mapMeta`, and the shipped regional modules.
 
 ## Overview
 
-Each region module now writes one authoritative entry into the `dwt_mule` character ability named `regions`.
+Each region module now writes one authoritative entry into the `fts_mule` character ability named `regions`.
 
-- Module key: `dwt_region.<regionKey>`
+- Module key: `fts_region.<regionKey>`
 - Storage path: `root.regions[<regionKey>]`
-- Schema: `dwt.region.v4`
+- Schema: `fts.region.v4`
 
 The region entry drives:
 
@@ -40,7 +40,7 @@ The shipped modules do not rely on a single global dataset, because no one offic
 
 ## Installation
 
-Load the shipped regional modules you want to use from `Modules/Region Modules/dwt_region.<regionKey>_0.1.0-alpha.1.js`, restart the Roll20 API sandbox, and run `!dwt --weather verify`.
+Load the shipped regional modules you want to use from `Modules/Region Modules/fts_region.<regionKey>_0.1.0-alpha.1.js`, restart the Roll20 API sandbox, and run `!fts --weather verify`.
 
 ## Page Naming
 
@@ -48,6 +48,8 @@ Pages now follow this pattern:
 
 - `region.locale.mapname`
 - `region.locale_<depth>.mapname`
+- `region.region`
+- `mapname.global`
 
 Examples:
 
@@ -55,15 +57,19 @@ Examples:
 - `moonshaes.underwater_90.sunkenhall`
 - `swordcoast.underdark_2mi.deeproad`
 - `swordcoast.coastal_+100.cliffwatch`
+- `landsofintrigue.region`
+- `faerun.global`
 
 Notes:
 
 - page names are case- and space-insensitive, and canonical output is lower-case with no spaces
 - the locale segment is the locale key
+- `region.region` designates a whole-region overview map that may contain many locales, routes, and points
+- `mapname.global` designates a multi-region overview map keyed by its first segment
 - bare depth values use the current weather units
 - append `mi` or `km` to force large units
 - prefix `+` for elevation
-- `underwater` pages drive the `dwt_windsock` token with the underwater layer family, and `underdark` pages use the underdark layer family
+- `underwater` pages drive the `fts_windsock` token with the underwater layer family, and `underdark` pages use the underdark layer family
 - underwater depth tags also drive page-specific current sampling, temperature shift, and visibility falloff
 - underdark depth tags keep the locale in cave-air mode; visibility stays dark by default and airflow remains mostly still unless a draft or critical event is introduced
 
@@ -137,7 +143,7 @@ Each period must define:
 - `drift.directionChangePct`
 - `drift.timeofdaySegments`
 
-`drift.timeofdaySegments` is keyed by the eight DWT time-of-day segments:
+`drift.timeofdaySegments` is keyed by the eight FTS time-of-day segments:
 
 - `earlypredawn`
 - `latepredawn`
@@ -162,7 +168,7 @@ These period values are the regional baseline. Locale definitions can drift from
 
 ## Climate Control
 
-`weather.climateControl` is required in `dwt.region.v4`.
+`weather.climateControl` is required in `fts.region.v4`.
 
 It defines:
 
@@ -236,10 +242,10 @@ Subsurface locales are intentionally not copies of the surface weather loop.
 
 Surface chop is intentionally narrower than a full sea-state or swell model.
 
-- DWT currently models `chop` only on offshore and coastal surface locales.
+- FTS currently models `chop` only on offshore and coastal surface locales.
 - Chop is treated as local short-period wind-wave roughness, not as total seas or distant swell.
 - The runtime derives chop directly from the live wind band, so dead calm always yields `none`.
-- `!dwt --weather set chop none|light|moderate|heavy|severe` is a convenience command that raises or lowers wind to the nearest compliant marine band.
+- `!fts --weather set chop none|light|moderate|heavy|severe` is a convenience command that raises or lowers wind to the nearest compliant marine band.
 - Depth-tagged surface pages do not model chop, because those pages are already treated as subsurface views rather than exposed surface-water maps.
 
 ## Locale Definitions
@@ -287,7 +293,7 @@ Critical events use four severity levels:
 - `heavy`
 - `severe`
 
-The active-page `dwt_windsock` token must contain 30 sides in this exact order:
+The active-page `fts_windsock` token must contain 30 sides in this exact order:
 
 `dead_calm`, `20%`, `40%`, `60%`, `80%`, `100%`, `crit_light`, `crit_moderate`, `crit_heavy`, `crit_severe`, `uw_dead_calm`, `uw_20%`, `uw_40%`, `uw_60%`, `uw_80%`, `uw_100%`, `uw_crit_light`, `uw_crit_moderate`, `uw_crit_heavy`, `uw_crit_severe`, `ud_dead_calm`, `ud_20%`, `ud_40%`, `ud_60%`, `ud_80%`, `ud_100%`, `ud_crit_light`, `ud_crit_moderate`, `ud_crit_heavy`, `ud_crit_severe`
 
@@ -323,9 +329,9 @@ You can also add `weather.customCriticalEvents` for region-specific hazards.
 
 The GM can roll weather manually with:
 
-- `!dwt --weather roll`
-- `!dwt --weather roll event`
-- `!dwt --weather roll event <eventKey> <severity>`
+- `!fts --weather roll`
+- `!fts --weather roll event`
+- `!fts --weather roll event <eventKey> <severity>`
 
 Manual rolls now apply one immediate governed step at the current band. They obey the same caps as automatic drift instead of bypassing the governor.
 
@@ -349,7 +355,7 @@ Useful manual-table fields:
 
 ## Authoring Workflow
 
-1. Start from [dwt_TEMPLATE_region.js](/V:/Programs/dwt/git/Documentation/dwt_TEMPLATE_region.js) or `!dwt --regionbuilder template`.
+1. Start from [fts_TEMPLATE_region.js](/V:/Programs/Git Repository/FTS/Documentation/fts_TEMPLATE_region.js) or `!fts --mapRegionWizard template`.
 2. Set `referenceSources` and `sourceNotes` first so the analogue, climatology source, water-current source, underwater visibility source, and cave-climate source are explicit.
 3. Set `weather.climateControl` so low/high times, governor caps, and activation windows are explicit before you tune the monthly data.
 4. Choose the regional default locale first and fill `weather.periods` around that climate.
@@ -358,9 +364,9 @@ Useful manual-table fields:
 7. Add optional locale `climateControl` overrides only where the locale truly behaves differently from the region.
 8. Add any custom locales and pick biome presets for them.
 9. Tune critical-event weights and manual tables.
-10. Upload the script and run `!dwt --weather verify`.
-11. Confirm a page name like `region.locale.mapname` resolves in both weather and map metadata.
-12. Run `python Tools/verify_region_modules.py` in the repo to verify every shipped region module against the live weather-module period set and required `dwt.region.v4` structure.
+10. Upload the script and run `!fts --weather verify`.
+11. Confirm that locale pages like `region.locale.mapname`, region overview pages like `region.region`, and global overview pages like `mapname.global` resolve appropriately in map metadata and weather.
+12. Run `python Tools/verify_region_modules.py` in the repo to verify every shipped region module against the live weather-module period set and required `fts.region.v4` structure.
 
 ## Validation Checklist
 
@@ -377,15 +383,15 @@ Useful manual-table fields:
 - every current-driven locale defines `waterProfile`
 - every seasonal current defines `surface`, `shallow`, `mid`, and `deep` readings
 - every critical event key is either built-in or defined in `customCriticalEvents`
-- page names use `region.locale.mapname` or `region.locale_<depth>.mapname`
+- page names use `region.locale.mapname`, `region.locale_<depth>.mapname`, `region.region`, or `mapname.global`
 
 ## Test Flow
 
-1. Load `dwt_core`, `dwt_weather`, `dwt_mapMeta`, and the region module.
+1. Load `fts_core`, `fts_weather`, `fts_mapMeta`, and the region module.
 2. Name a page with a valid region and locale.
-3. Run `!dwt --weather verify`.
-4. Run `!dwt --weather detail`.
-5. Run `!dwt --weather roll`.
-6. Run `!dwt --mapMeta`.
+3. Run `!fts --weather verify`.
+4. Run `!fts --weather detail`.
+5. Run `!fts --weather roll`.
+6. Run `!fts --mapMeta`.
 7. Run `python Tools/verify_region_modules.py`.
 8. Advance time and confirm the active band reuses its stored snapshot while live temperature still moves with the exact clock.

@@ -1,11 +1,11 @@
-// name:        dwt_regionBuilder_0.1.0-alpha.1.js
-// version:     0.1.0-alpha.1
-// description: GM-only generator for dwt.region.v4 modules and locale snippets.
-// depends:     dwt_core >= 0.1.0-alpha.1 (optional but recommended), Roll20 Mod API
-// provides:    !dwt --regionbuilder
+// name:        fts_mapRegionWizard_0.2.0-alpha.1.js
+// version:     0.2.0-alpha.1
+// description: GM-only generator for fts.region.v4 modules and locale snippets.
+// depends:     fts_core >= 0.1.0-alpha.1 (optional but recommended), Roll20 Mod API
+// provides:    !fts --mapRegionWizard
 // author:      tcm (AI-assisted)
 // Semantic Versioning (SemVer) Policy:
-// - DWT uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
+// - FTS uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
 // - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
 // - Increment PATCH for backward-compatible bug fixes.
 // - Increment MINOR for new backward-compatible functionality.
@@ -15,7 +15,7 @@
 // - Header comments, internal VERSION constants, filenames, generated module text, and documentation references must stay aligned.
 // - Dependency notes should use SemVer-friendly wording such as ">= 0.1.0-alpha.1" rather than informal forms like "5.1.0+".
 
-var dwt_regionBuilder = dwt_regionBuilder || (function(){
+var fts_mapRegionWizard = fts_mapRegionWizard || (function(){
   'use strict';
 
   var RT = (typeof globalThis !== 'undefined') ? globalThis
@@ -24,11 +24,11 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
          : (typeof global !== 'undefined') ? global
          : this;
 
-  var VERSION = '0.1.0-alpha.1';
-  var MODULE_KEY = 'regionbuilder';
-  var MODULE_NAME = 'dwt_regionBuilder';
-  var DWT_MULE = 'dwt_mule';
-  var OUTPUT_HANDOUT_NAME = 'Region Builder Output';
+  var VERSION = '0.2.0-alpha.1';
+  var MODULE_KEY = 'mapregionwizard';
+  var MODULE_NAME = 'fts_mapRegionWizard';
+  var FTS_MULE = 'fts_mule';
+  var OUTPUT_HANDOUT_NAME = 'Map Region Wizard Output';
   var _registered = false;
 
   var CANONICAL_LOCALES = ['offshore','coastal','inland','underwater','underdark'];
@@ -549,7 +549,7 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
 
   function whisper(pid, html){
     try{
-      sendChat('dwt', '/w "' + playerName(pid) + '" ' + html);
+      sendChat('fts', '/w "' + playerName(pid) + '" ' + html);
     }catch(e){}
   }
 
@@ -584,7 +584,7 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
   function regionsRootQuality(text){
     var parsed = safeParseJSON(text);
     if(!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return -1;
-    var score = (parsed.schema === 'dwt.regions.root.v1') ? 50 : 0;
+    var score = (parsed.schema === 'fts.regions.root.v1') ? 50 : 0;
     var regions = parsed.regions;
     if(!regions || typeof regions !== 'object' || Array.isArray(regions)) return score;
     var keys = Object.keys(regions);
@@ -592,7 +592,7 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
     for(var i=0;i<keys.length;i++){
       var payload = regions[keys[i]];
       if(!payload || typeof payload !== 'object' || Array.isArray(payload)) continue;
-      if(payload.schema === 'dwt.region.v4') score += 200;
+      if(payload.schema === 'fts.region.v4') score += 200;
       if(payload.weather && typeof payload.weather === 'object' && !Array.isArray(payload.weather)) score += 100;
       if(payload.region) score += 10;
       if(payload.locales) score += 10;
@@ -604,7 +604,7 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
     var parsed = safeParseJSON(text);
     if(!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return -1;
     var score = 0;
-    if(parsed.meta && parsed.meta.rootSchema === 'dwt.weather.root.v2') score += 200;
+    if(parsed.meta && parsed.meta.rootSchema === 'fts.weather.root.v2') score += 200;
     if(parsed.settings && (parsed.settings.units === 'imperial' || parsed.settings.units === 'metric')) score += 25;
     if(parsed.current && typeof parsed.current === 'object' && !Array.isArray(parsed.current)) score += 25;
     if(parsed.history && typeof parsed.history === 'object' && !Array.isArray(parsed.history)) score += 25;
@@ -645,9 +645,9 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
 
   function getOrCreateMule(){
     try{
-      if(RT.dwt && typeof RT.dwt.ensureMule === 'function') return RT.dwt.ensureMule();
+      if(RT.fts && typeof RT.fts.ensureMule === 'function') return RT.fts.ensureMule();
     }catch(e){}
-    var matches = findObjs({ _type:'character', name:DWT_MULE }) || [];
+    var matches = findObjs({ _type:'character', name:FTS_MULE }) || [];
     var mule = null;
     var bestScore = -1;
     for(var i=0;i<matches.length;i++){
@@ -659,7 +659,7 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
     }
     if(!mule){
       mule = createObj('character', {
-        name: DWT_MULE,
+        name: FTS_MULE,
         archived: false,
         inplayerjournals: '',
         controlledby: ''
@@ -734,7 +734,7 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
         controlledby: ''
       });
     }
-    var html = '<div><b>' + esc(title) + '</b></div><div style="margin-top:6px;">Generated by dwt_regionBuilder.</div><pre>'
+    var html = '<div><b>' + esc(title) + '</b></div><div style="margin-top:6px;">Generated by fts_mapRegionWizard.</div><pre>'
       + esc(code)
       + '</pre>';
     try{ handout.set({ notes:html, gmnotes:code, inplayerjournals:'', controlledby:'' }); }catch(e){}
@@ -759,7 +759,7 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
 
   function buildManualTableTemplate(){
     return {
-      default:{
+      'default':{
         temperatureSteps: defaultStepWeights(1),
         precipitationSteps: defaultStepWeights(1),
         skySteps: defaultStepWeights(1),
@@ -817,6 +817,134 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
     return def;
   }
 
+  function buildDefaultTradePointBlock(){
+    return {
+      notes:[
+        'Map Point Wizard reads the templates array below.',
+        'Keep these templates simple: a key, a short label, a short summary, and defaults that stay easy to edit.',
+        'Defaults may omit any field the GM should always choose manually.'
+      ],
+      templates:[
+        {
+          key:'fishing_village',
+          label:'Fishing Village',
+          summary:'Small coastal trade node with dependable catch, modest wealth, and simple defenses.',
+          defaults:{
+            locale:'coastal',
+            population:'350',
+            development:'2',
+            wealth:'2',
+            faiths:['chauntea', 'umberlee'],
+            factions:['fishers_guild', 'town_council'],
+            offense_level:'1',
+            offense_types:['militia', 'scouts'],
+            defense_level:'2',
+            defense_types:['harbor_patrols', 'natural_barriers'],
+            tradeGoods:[
+              { stance:'has', goodKey:'fish_fresh', windows:[{ key:'spring', cu:'6' }, { key:'summer', cu:'10' }, { key:'autumn', cu:'8' }] },
+              { stance:'has', goodKey:'fish_salted', windows:[{ key:'annual', cu:'4' }] },
+              { stance:'wants', goodKey:'grain', windows:[{ key:'annual', cu:'5' }] },
+              { stance:'needs', goodKey:'lamp_oil', windows:[{ key:'annual', cu:'2' }] }
+            ]
+          }
+        },
+        {
+          key:'pirate_smuggler_cove',
+          label:'Pirate / Smuggler Cove',
+          summary:'Hidden maritime exchange point with illicit traffic, sharper offense, and fragile legitimacy.',
+          defaults:{
+            locale:'coastal',
+            population:'220',
+            development:'2',
+            wealth:'3',
+            faiths:['mask', 'umberlee'],
+            factions:['smugglers_ring', 'pirate_captains'],
+            offense_level:'3',
+            offense_types:['raiders', 'armed_ships', 'saboteurs'],
+            defense_level:'2',
+            defense_types:['hidden_channels', 'safehouses', 'natural_barriers'],
+            tradeGoods:[
+              { stance:'has', goodKey:'stolen_goods', windows:[{ key:'annual', cu:'3' }] },
+              { stance:'has', goodKey:'smuggled_luxuries', windows:[{ key:'summer', cu:'4' }, { key:'autumn', cu:'5' }] },
+              { stance:'wants', goodKey:'ship_repair_supplies', windows:[{ key:'annual', cu:'4' }] },
+              { stance:'needs', goodKey:'medicinal_herbs', windows:[{ key:'annual', cu:'1' }] }
+            ]
+          }
+        },
+        {
+          key:'minor_trade_hub',
+          label:'Minor Trade Hub',
+          summary:'Modest inland market center with steady caravan traffic and practical civic infrastructure.',
+          defaults:{
+            locale:'inland',
+            population:'1200',
+            development:'3',
+            wealth:'3',
+            faiths:['waukeen'],
+            factions:['merchants_guild', 'town_council'],
+            offense_level:'2',
+            offense_types:['militia', 'trained_guard'],
+            defense_level:'2',
+            defense_types:['walls', 'patrols'],
+            tradeGoods:[
+              { stance:'has', goodKey:'warehousing', windows:[{ key:'annual', cu:'6' }] },
+              { stance:'has', goodKey:'iron_tools', windows:[{ key:'annual', cu:'4' }] },
+              { stance:'wants', goodKey:'grain', windows:[{ key:'annual', cu:'6' }] },
+              { stance:'needs', goodKey:'rope', windows:[{ key:'annual', cu:'2' }] }
+            ]
+          }
+        },
+        {
+          key:'moderate_trade_hub',
+          label:'Moderate Trade Hub',
+          summary:'Established trade city with deeper reserves, stronger customs presence, and broader seasonal throughput.',
+          defaults:{
+            locale:'coastal',
+            population:'4200',
+            development:'4',
+            wealth:'4',
+            faiths:['waukeen', 'tyr'],
+            factions:['merchants_guild', 'customs_office', 'harbormaster_office'],
+            offense_level:'3',
+            offense_types:['trained_guard', 'marines'],
+            defense_level:'3',
+            defense_types:['fortified_docks', 'walls', 'harbor_patrols'],
+            tradeGoods:[
+              { stance:'has', goodKey:'warehousing', windows:[{ key:'annual', cu:'10' }] },
+              { stance:'has', goodKey:'passage_transport', windows:[{ key:'spring', cu:'5' }, { key:'summer', cu:'8' }, { key:'autumn', cu:'6' }] },
+              { stance:'wants', goodKey:'metal_ingots', windows:[{ key:'annual', cu:'6' }] },
+              { stance:'needs', goodKey:'ship_repair_supplies', windows:[{ key:'annual', cu:'4' }] }
+            ]
+          }
+        },
+        {
+          key:'major_trade_hub',
+          label:'Major Trade Hub',
+          summary:'Major regional trade city with exceptional throughput, powerful institutions, and year-round cargo demand.',
+          defaults:{
+            locale:'coastal',
+            population:'12000',
+            development:'5',
+            wealth:'5',
+            faiths:['waukeen', 'gond', 'tyr'],
+            factions:['merchants_guild', 'customs_office', 'harbormaster_office', 'town_guard'],
+            offense_level:'4',
+            offense_types:['trained_guard', 'marines', 'armed_ships'],
+            defense_level:'4',
+            defense_types:['fortified_docks', 'walls', 'gatehouses', 'harbor_chain'],
+            tradeGoods:[
+              { stance:'has', goodKey:'warehousing', windows:[{ key:'annual', cu:'18' }] },
+              { stance:'has', goodKey:'shipwright_services', windows:[{ key:'annual', cu:'10' }] },
+              { stance:'has', goodKey:'spices', windows:[{ key:'spring', cu:'4' }, { key:'summer', cu:'7' }, { key:'autumn', cu:'6' }] },
+              { stance:'wants', goodKey:'grain', windows:[{ key:'annual', cu:'14' }] },
+              { stance:'needs', goodKey:'lumber', windows:[{ key:'annual', cu:'8' }] }
+            ]
+          }
+        }
+      ]
+    };
+  }
+
   function buildDefaultRegionEntry(regionKey, displayName, defaultLocale){
     var localeDefinitions = {};
     for(var i=0;i<CANONICAL_LOCALES.length;i++){
@@ -839,7 +967,7 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
     var localeQuips = buildWeatherLocaleQuipScaffold();
 
     return {
-      schema:'dwt.region.v4',
+      schema:'fts.region.v4',
       region:regionKey,
       displayName:displayName,
       defaultLocale:defaultLocale,
@@ -857,6 +985,7 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
         'Use NPS cave-climate guidance to keep underdark temperatures near the regional annual mean and airflow near dead calm except at entrances, faults, or critical events.',
         'Use the USGS three-point method for inland and coastal water columns; open ocean defaults use 1, 5, and 10 fathoms.'
       ],
+      tradePoints:buildDefaultTradePointBlock(),
       quips:{
         calendar:buildCalendarQuipScaffold(),
         weather:{
@@ -906,14 +1035,14 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
     var entry = buildDefaultRegionEntry(regionKey, displayName, defaultLocale);
     var json = JSON.stringify(entry, null, 2);
     return (
-      "// name:        dwt_region." + regionKey + ".js\n" +
+      "// name:        fts_region." + regionKey + ".js\n" +
       "// version:     0.1.0-alpha.1\n" +
-      "// description: Unified " + displayName + " region module for dwt_weather and dwt_mapMeta.\n" +
-      "// provides:    dwt_mule ability: regions (root JSON; regions." + regionKey + "), version entry dwt_region." + regionKey + "_0.1.0-alpha.1\n" +
-      "// depends:     dwt_weather >= 0.1.0-alpha.1 (recommended), dwt_core >= 0.1.0-alpha.1 (optional startup registration), Roll20 API.\n" +
+      "// description: Unified " + displayName + " region module for fts_weather and fts_mapMeta.\n" +
+      "// provides:    fts_mule ability: regions (root JSON; regions." + regionKey + "), version entry fts_region." + regionKey + "_0.1.0-alpha.1\n" +
+      "// depends:     fts_weather >= 0.1.0-alpha.1 (recommended), fts_core >= 0.1.0-alpha.1 (optional startup registration), Roll20 API.\n" +
       "// author:      tcm (AI-assisted)\n" +
       "// Semantic Versioning (SemVer) Policy:\n" +
-      "// - DWT uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].\n" +
+      "// - FTS uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].\n" +
       "// - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.\n" +
       "// - Increment PATCH for backward-compatible bug fixes.\n" +
       "// - Increment MINOR for new backward-compatible functionality.\n" +
@@ -939,6 +1068,8 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
       "// Page names use:\n" +
       "//   region.locale.mapname\n" +
       "//   region.locale_<depth>.mapname\n" +
+      "//   region.region\n" +
+      "//   mapname.global\n" +
       "//\n" +
       "// Page names are case- and space-insensitive. Canonical generated names should be lower-case with no spaces.\n\n" +
       "(function(){\n" +
@@ -946,7 +1077,7 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
       "  var RT = (typeof globalThis !== 'undefined') ? globalThis : this;\n" +
       "  var VERSION = '0.1.0-alpha.1';\n" +
       "  var REGION_KEY = '" + regionKey + "';\n" +
-      "  var MODULE_NAME = 'dwt_region.' + REGION_KEY;\n" +
+      "  var MODULE_NAME = 'fts_region.' + REGION_KEY;\n" +
       "  var _startupRegistered = false;\n\n" +
       "  // Tolkien-inspired quip scaffold:\n" +
       "  // - short: 2 lines, AA\n" +
@@ -956,19 +1087,19 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
       "  // Calendar month keys use Harptos month names (hammer..nightal); festival keys use between-month festival keys.\n\n" +
       "  var REGION_ENTRY = " + json + ";\n\n" +
       "  function queueRegion(){\n" +
-      "    RT.dwtRegionQ = RT.dwtRegionQ || [];\n" +
+      "    RT.ftsRegionQ = RT.ftsRegionQ || [];\n" +
       "    var next = [];\n" +
-      "    for(var i=0;i<RT.dwtRegionQ.length;i++){\n" +
-      "      var item = RT.dwtRegionQ[i];\n" +
+      "    for(var i=0;i<RT.ftsRegionQ.length;i++){\n" +
+      "      var item = RT.ftsRegionQ[i];\n" +
       "      if(item && item.moduleName !== MODULE_NAME) next.push(item);\n" +
       "    }\n" +
       "    next.push({ entry: REGION_ENTRY, moduleName: MODULE_NAME, version: VERSION });\n" +
-      "    RT.dwtRegionQ = next;\n" +
+      "    RT.ftsRegionQ = next;\n" +
       "  }\n\n" +
       "  function registerRegion(){\n" +
       "    try{\n" +
-      "      if(RT.dwt_weather && typeof RT.dwt_weather.registerRegionEntry === 'function'){\n" +
-      "        RT.dwt_weather.registerRegionEntry(REGION_ENTRY, MODULE_NAME, VERSION);\n" +
+      "      if(RT.fts_weather && typeof RT.fts_weather.registerRegionEntry === 'function'){\n" +
+      "        RT.fts_weather.registerRegionEntry(REGION_ENTRY, MODULE_NAME, VERSION);\n" +
       "      }else{\n" +
       "        queueRegion();\n" +
       "      }\n" +
@@ -979,14 +1110,14 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
       "  function registerStartupHooks(){\n" +
       "    if(_startupRegistered) return;\n" +
       "    _startupRegistered = true;\n\n" +
-      "    RT.dwtQ = RT.dwtQ || [];\n" +
-      "    RT.dwtQ.push(function(dwt){\n" +
-      "      if(dwt && typeof dwt.registerStartup === 'function'){\n" +
-      "        dwt.registerStartup(MODULE_NAME, function(){ registerRegion(); });\n" +
+      "    RT.ftsQ = RT.ftsQ || [];\n" +
+      "    RT.ftsQ.push(function(fts){\n" +
+      "      if(fts && typeof fts.registerStartup === 'function'){\n" +
+      "        fts.registerStartup(MODULE_NAME, function(){ registerRegion(); });\n" +
       "      }\n" +
       "    });\n\n" +
-      "    if(RT.dwt && typeof RT.dwt.registerStartup === 'function'){\n" +
-      "      RT.dwt.registerStartup(MODULE_NAME, function(){ registerRegion(); });\n" +
+      "    if(RT.fts && typeof RT.fts.registerStartup === 'function'){\n" +
+      "      RT.fts.registerStartup(MODULE_NAME, function(){ registerRegion(); });\n" +
       "    }\n" +
       "  }\n\n" +
       "  function init(){\n" +
@@ -1008,13 +1139,13 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
 
   function renderHelpHTML(){
     return [
-      '<div><b>Region Builder</b></div>',
-      '<div style="margin-top:6px;">Generate a starter <code>dwt.region.v4</code> module or a custom locale snippet.</div>',
+      '<div><b>Map Region Wizard</b></div>',
+      '<div style="margin-top:6px;">Generate a starter <code>fts.region.v4</code> module or a custom locale snippet.</div>',
       '<div style="margin-top:6px;"><b>Commands</b></div>',
-      '<div><code>!dwt --regionbuilder</code></div>',
-      '<div><code>!dwt --regionbuilder presets</code></div>',
-      '<div><code>!dwt --regionbuilder template regionkey | Display Name | coastal</code></div>',
-      '<div><code>!dwt --regionbuilder locale moonwell | Moonwell | forest | Moonwell</code></div>',
+      '<div><code>!fts --mapRegionWizard</code></div>',
+      '<div><code>!fts --mapRegionWizard presets</code></div>',
+      '<div><code>!fts --mapRegionWizard template regionkey | Display Name | coastal</code></div>',
+      '<div><code>!fts --mapRegionWizard locale moonwell | Moonwell | forest | Moonwell</code></div>',
       '<div style="margin-top:6px;">Template output goes to the GM-only handout <b>' + esc(OUTPUT_HANDOUT_NAME) + '</b>.</div>'
     ].join('');
   }
@@ -1022,7 +1153,7 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
   function handleTemplateCommand(pid, raw){
     var parts = splitPipeArgs(raw);
     if(parts.length < 2){
-      return { error:'Use !dwt --regionbuilder template regionkey | Display Name | [defaultLocale].' };
+      return { error:'Use !fts --mapRegionWizard template regionkey | Display Name | [defaultLocale].' };
     }
     var regionKey = canonicalRegionKey(parts[0]);
     var displayName = titleCaseWords(parts[1]);
@@ -1045,7 +1176,7 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
   function handleLocaleCommand(pid, raw){
     var parts = splitPipeArgs(raw);
     if(parts.length < 3){
-      return { error:'Use !dwt --regionbuilder locale localeKey | Label | biomePreset | [token].' };
+      return { error:'Use !fts --mapRegionWizard locale localeKey | Label | biomePreset | [token].' };
     }
     var localeKey = canonicalKey(parts[0]);
     var label = titleCaseWords(parts[1]);
@@ -1055,7 +1186,7 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
       return { error:'Locale key is required.' };
     }
     if(!BIOME_PRESETS[presetKey]){
-      return { error:'Unknown biome preset "' + parts[2] + '". Use !dwt --regionbuilder presets.' };
+      return { error:'Unknown biome preset "' + parts[2] + '". Use !fts --mapRegionWizard presets.' };
     }
     var snippet = JSON.stringify(buildBiomeLocaleDefinition(localeKey, label, presetKey, token, false), null, 2);
     upsertGmHandout(OUTPUT_HANDOUT_NAME, 'Locale Definition Snippet', snippet);
@@ -1067,7 +1198,7 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
     var pid = args.pid;
     var raw = String(args.val || '').trim();
     if(!isGM(pid)){
-      return { error:'Only the GM may use regionbuilder.' };
+      return { error:'Only the GM may use the Map Region Wizard.' };
     }
     if(!raw){
       whisper(pid, renderHelpHTML());
@@ -1089,38 +1220,38 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
       return handleLocaleCommand(pid, rest);
     }
 
-    return { error:'Unknown regionbuilder command. Use !dwt --regionbuilder, !dwt --regionbuilder presets, !dwt --regionbuilder template ..., or !dwt --regionbuilder locale ...' };
+    return { error:'Unknown Map Region Wizard command. Use !fts --mapRegionWizard, !fts --mapRegionWizard presets, !fts --mapRegionWizard template ..., or !fts --mapRegionWizard locale ...' };
   }
 
   function helpLines(){
     return [
-      'Show Region Builder help:',
-      '!dwt --regionbuilder',
+      'Show Map Region Wizard help:',
+      '!fts --mapRegionWizard',
       'List the built-in biome presets:',
-      '!dwt --regionbuilder presets',
-      'Generate a starter dwt.region.v4 module into the GM handout:',
-      '!dwt --regionbuilder template regionkey | Display Name | coastal',
+      '!fts --mapRegionWizard presets',
+      'Generate a starter fts.region.v4 module into the GM handout:',
+      '!fts --mapRegionWizard template regionkey | Display Name | coastal',
       'Generate a custom localeDefinition snippet from a biome preset:',
-      '!dwt --regionbuilder locale localeKey | Label | biomePreset | Token'
+      '!fts --mapRegionWizard locale localeKey | Label | biomePreset | Token'
     ];
   }
 
   function registerWithCore(){
     try{
-      if(!(RT.dwt && !_registered && typeof RT.dwt.registerCommands === 'function')) return;
+      if(!(RT.fts && !_registered && typeof RT.fts.registerCommands === 'function')) return;
       _registered = true;
 
-      RT.dwt.registerCommands({
-        regionbuilder:{
+      RT.fts.registerCommands({
+        mapregionwizard:{
           access:'player',
           handler:handleCommand
         }
       });
 
-      if(typeof RT.dwt.addHelpSection === 'function'){
-        RT.dwt.addHelpSection(340, 'Region Builder', function(){ return helpLines(); });
-        if(typeof RT.dwt.refreshHelpHandout === 'function'){
-          RT.dwt.refreshHelpHandout(null);
+      if(typeof RT.fts.addHelpSection === 'function'){
+        RT.fts.addHelpSection(340, 'Map Region Wizard', function(){ return helpLines(); });
+        if(typeof RT.fts.refreshHelpHandout === 'function'){
+          RT.fts.refreshHelpHandout(null);
         }
       }
     }catch(e){}
@@ -1129,9 +1260,9 @@ var dwt_regionBuilder = dwt_regionBuilder || (function(){
   function init(){
     mergeVersionEntry(getOrCreateMule(), MODULE_KEY, VERSION);
     try{
-      RT.dwtQ = RT.dwtQ || [];
-      RT.dwtQ.push(function(){ registerWithCore(); });
-      if(RT.dwt) registerWithCore();
+      RT.ftsQ = RT.ftsQ || [];
+      RT.ftsQ.push(function(){ registerWithCore(); });
+      if(RT.fts) registerWithCore();
     }catch(e){}
   }
 

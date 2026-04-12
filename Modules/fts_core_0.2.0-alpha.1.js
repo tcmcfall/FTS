@@ -1,4 +1,4 @@
-    var _dwtCoreSyncRoot = (typeof globalThis!=='undefined') ? globalThis
+    var _ftsCoreSyncRoot = (typeof globalThis!=='undefined') ? globalThis
                          : (typeof window!=='undefined')     ? window
                          : (typeof self!=='undefined')       ? self
                          : (typeof global!=='undefined')     ? global
@@ -8,33 +8,33 @@
     try{
       on('change:campaign:playerpageid', function(obj, prev){
         try{
-          if(_dwtCoreSyncRoot.RT && _dwtCoreSyncRoot.RT.dwt && typeof _dwtCoreSyncRoot.RT.dwt.autoOpenCampaignMenuForPageChange==='function'){
-            _dwtCoreSyncRoot.RT.dwt.autoOpenCampaignMenuForPageChange('ribbon', {
+          if(_ftsCoreSyncRoot.RT && _ftsCoreSyncRoot.RT.fts && typeof _ftsCoreSyncRoot.RT.fts.autoOpenCampaignMenuForPageChange==='function'){
+            _ftsCoreSyncRoot.RT.fts.autoOpenCampaignMenuForPageChange('ribbon', {
               campaign: (typeof Campaign === 'function') ? Campaign() : null
             });
           }
-        }catch(e2){ log('dwt core autosync playerpageid err: '+e2); }
+        }catch(e2){ log('fts core autosync playerpageid err: '+e2); }
       });
       on('change:campaign:playerspecificpages', function(obj, prev){
         try{
-          if(_dwtCoreSyncRoot.RT && _dwtCoreSyncRoot.RT.dwt && typeof _dwtCoreSyncRoot.RT.dwt.autoOpenCampaignMenuForPageChange==='function'){
-            _dwtCoreSyncRoot.RT.dwt.autoOpenCampaignMenuForPageChange('split', {
+          if(_ftsCoreSyncRoot.RT && _ftsCoreSyncRoot.RT.fts && typeof _ftsCoreSyncRoot.RT.fts.autoOpenCampaignMenuForPageChange==='function'){
+            _ftsCoreSyncRoot.RT.fts.autoOpenCampaignMenuForPageChange('split', {
               campaign: (typeof Campaign === 'function') ? Campaign() : null,
               prev: prev || {}
             });
           }
-        }catch(e3){ log('dwt core autosync playerspecificpages err: '+e3); }
+        }catch(e3){ log('fts core autosync playerspecificpages err: '+e3); }
       });
     }catch(e1){}
 
-// name:        dwt_core.js
+// name:        fts_core.js
 // version:     0.2.0-alpha.1
-// description: unified Date | Weather | Trade shell: registry/router/help & unified Campaign Log, palette owner.
+// description: unified Fantasy Trade Simulator shell: registry/router/help & unified Campaign Log, palette owner.
 // depends:     Meta-Toolbox (APILogic + Muler) : https://wiki.roll20.net/Meta-Toolbox
-// provides:    !dwt (unified panel), !dwt --help, !dwt --core set palette <value>, dwt.addLogCard(...), dwt.cssVars() for modules
+// provides:    !fts (unified panel), !fts --help, !fts --core set palette <value>, fts.addLogCard(...), fts.cssVars() for modules
 // author:      tcm (AI-assisted)
 // Semantic Versioning (SemVer) Policy:
-// - DWT uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
+// - FTS uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
 // - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
 // - Increment PATCH for backward-compatible bug fixes.
 // - Increment MINOR for new backward-compatible functionality.
@@ -54,15 +54,15 @@
            : {};
 
   var VERSION   = '0.2.0-alpha.1';
-  var CORE_MULE = 'dwt_mule';
+  var CORE_MULE = 'fts_mule';
 
-  var dwt = { VERSION: VERSION, COMMANDS:{}, HELP_SECTIONS:[], LOG_CARDS:[] };
+  var fts = { VERSION: VERSION, COMMANDS:{}, HELP_SECTIONS:[], LOG_CARDS:[] };
 
   function ensureCoreState(){
     if (!root.state) root.state = {};
-    if (!root.state.dwt) root.state.dwt = {};
-    if (!root.state.dwt.ui) root.state.dwt.ui = { palette: 'parchment' };
-    return root.state.dwt;
+    if (!root.state.fts) root.state.fts = {};
+    if (!root.state.fts.ui) root.state.fts.ui = { palette: 'parchment' };
+    return root.state.fts;
   }
   var STARTUP_HOOKS = [];
 
@@ -81,11 +81,11 @@
         try{
           hooks[i].fn(mule, (reason || ''));
         }catch(e){
-          log('dwt startup ['+hooks[i].name+'] err: '+e);
+          log('fts startup ['+hooks[i].name+'] err: '+e);
         }
       }
     }catch(e){
-      log('dwt runStartupHooks err: '+e);
+      log('fts runStartupHooks err: '+e);
     }
   }
 
@@ -109,7 +109,7 @@
   function regionsRootQuality(text){
     var parsed = safeParseJSON(text);
     if(!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return -1;
-    var score = (parsed.schema === 'dwt.regions.root.v1') ? 50 : 0;
+    var score = (parsed.schema === 'fts.regions.root.v1') ? 50 : 0;
     var regions = parsed.regions;
     if(!regions || typeof regions !== 'object' || Array.isArray(regions)) return score;
     var keys = Object.keys(regions);
@@ -117,7 +117,7 @@
     for(var i=0;i<keys.length;i++){
       var payload = regions[keys[i]];
       if(!payload || typeof payload !== 'object' || Array.isArray(payload)) continue;
-      if(payload.schema === 'dwt.region.v4') score += 200;
+      if(payload.schema === 'fts.region.v4') score += 200;
       if(payload.weather && typeof payload.weather === 'object' && !Array.isArray(payload.weather)) score += 100;
       if(payload.region) score += 10;
       if(payload.locales) score += 10;
@@ -129,7 +129,7 @@
     var parsed = safeParseJSON(text);
     if(!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return -1;
     var score = 0;
-    if(parsed.meta && parsed.meta.rootSchema === 'dwt.weather.root.v2') score += 200;
+    if(parsed.meta && parsed.meta.rootSchema === 'fts.weather.root.v2') score += 200;
     if(parsed.settings && (parsed.settings.units === 'imperial' || parsed.settings.units === 'metric')) score += 25;
     if(parsed.current && typeof parsed.current === 'object' && !Array.isArray(parsed.current)) score += 25;
     if(parsed.history && typeof parsed.history === 'object' && !Array.isArray(parsed.history)) score += 25;
@@ -216,7 +216,7 @@
   function playerName(pid){
     try{ var p=getObj('player',pid); return p ? (p.get('displayname')||'GM') : 'GM'; }catch(e){ return 'GM'; }
   }
-  function whisper(pid, html){ try{ sendChat('dwt','/w "'+playerName(pid)+'" '+html); }catch(e){} }
+  function whisper(pid, html){ try{ sendChat('fts','/w "'+playerName(pid)+'" '+html); }catch(e){} }
   function esc(s){ return String(s||'').replace(/[<>&"']/g,function(c){return c=='<'?'&lt;':c=='>'?'&gt;':c=='&'?'&amp;':c=='"'?'&quot;':'&#39;';}); }
   function hrefAttr(s){ return String(s||'').replace(/"/g,'&quot;'); }
   function literal(s){ return '<code>'+esc(s)+'</code>'; }
@@ -302,13 +302,13 @@
 
   function syncMapMetaForPlayer(pid, pageId){
     try{
-      if(root.RT && root.RT.dwt && typeof root.RT.dwt.mapMetaSyncActivePage === 'function'){
-        return root.RT.dwt.mapMetaSyncActivePage(pid, { pageId: pageId });
+      if(root.RT && root.RT.fts && typeof root.RT.fts.mapMetaSyncActivePage === 'function'){
+        return root.RT.fts.mapMetaSyncActivePage(pid, { pageId: pageId });
       }
     }catch(e){}
     try{
-      if(root.dwt_mapMeta && typeof root.dwt_mapMeta.syncPageMeta === 'function'){
-        return root.dwt_mapMeta.syncPageMeta(pid, { pageId: pageId });
+      if(root.fts_mapMeta && typeof root.fts_mapMeta.syncPageMeta === 'function'){
+        return root.fts_mapMeta.syncPageMeta(pid, { pageId: pageId });
       }
     }catch(e2){}
     return null;
@@ -316,14 +316,14 @@
 
   function syncCampaignContextForPlayer(pid, opts){
     opts = opts || {};
-    var pageId = String(opts.pageId || dwt.getEffectivePageId(pid) || '');
+    var pageId = String(opts.pageId || fts.getEffectivePageId(pid) || '');
     if(!pageId) return { ok:false, error:'No page resolved for sync.' };
     try{ syncMapMetaForPlayer(pid, pageId); }catch(e){}
     try{
-      if(root.RT && root.RT.dwt && typeof root.RT.dwt.weatherSyncActivePage === 'function'){
-        root.RT.dwt.weatherSyncActivePage(pid || 'API', { silent:true, pageId: pageId });
-      }else if(root.RT && root.RT.dwt && typeof root.RT.dwt.weatherVerifySyncActivePage === 'function'){
-        root.RT.dwt.weatherVerifySyncActivePage(pid || 'API', { silent:true, pageId: pageId });
+      if(root.RT && root.RT.fts && typeof root.RT.fts.weatherSyncActivePage === 'function'){
+        root.RT.fts.weatherSyncActivePage(pid || 'API', { silent:true, pageId: pageId });
+      }else if(root.RT && root.RT.fts && typeof root.RT.fts.weatherVerifySyncActivePage === 'function'){
+        root.RT.fts.weatherVerifySyncActivePage(pid || 'API', { silent:true, pageId: pageId });
       }
     }catch(e2){}
     return { ok:true, pageId:pageId };
@@ -338,18 +338,18 @@
       try{ ensureCampaignLogMacroForPlayer(pids[i]); }catch(e2){}
     }
     if(opts.runStartup){
-      try{ runStartupHooks(opts.reason || 'command'); }catch(e3){ log('dwt core runStartupHooks ['+(opts.reason||'menu')+'] err: '+e3); }
+      try{ runStartupHooks(opts.reason || 'command'); }catch(e3){ log('fts core runStartupHooks ['+(opts.reason||'menu')+'] err: '+e3); }
     }
-    try{ syncCampaignContextForPlayer(pids[0], { pageId: opts.pageId }); }catch(e4){ log('dwt core context sync err: '+e4); }
+    try{ syncCampaignContextForPlayer(pids[0], { pageId: opts.pageId }); }catch(e4){ log('fts core context sync err: '+e4); }
     if(opts.refreshGeo){
       try{
-        if(root.dwt_geo && typeof root.dwt_geo.refreshGeoForActivePage === 'function'){
-          root.dwt_geo.refreshGeoForActivePage();
+        if(root.fts_geo && typeof root.fts_geo.refreshGeoForActivePage === 'function'){
+          root.fts_geo.refreshGeoForActivePage();
         }
-      }catch(e5){ log('dwt core geo page refresh err: '+e5); }
+      }catch(e5){ log('fts core geo page refresh err: '+e5); }
     }
     for(var j=0;j<pids.length;j++){
-      whisper(pids[j], campaignLogPanel(pids[j]));
+      whisper(pids[j], campaignLogPanel(pids[j], opts));
     }
   }
 
@@ -388,11 +388,11 @@
   }
 
   function addHelpSection(order, title, linesFn){
-    dwt.HELP_SECTIONS.push({ order:(order|0), title:String(title||'Help'), lines:linesFn });
-    dwt.HELP_SECTIONS.sort(function(a,b){ return a.order - b.order; });
+    fts.HELP_SECTIONS.push({ order:(order|0), title:String(title||'Help'), lines:linesFn });
+    fts.HELP_SECTIONS.sort(function(a,b){ return a.order - b.order; });
   }
   function registerCommands(map){
-    map=map||{}; for (var k in map){ if(map.hasOwnProperty(k)){ dwt.COMMANDS[String(k||'').toLowerCase()] = map[k]; } }
+    map=map||{}; for (var k in map){ if(map.hasOwnProperty(k)){ fts.COMMANDS[String(k||'').toLowerCase()] = map[k]; } }
   }
   var PALETTES = {
     none: null,
@@ -488,7 +488,7 @@
       dayLine: dayLine,
       dot: dot,
 
-      // Help/Handout styles (palette-aware, used by the Date | Weather | Trade Help handout)
+      // Help/Handout styles (palette-aware, used by the Fantasy Trade Simulator Help handout)
       helpColsTable: 'width:100%;border-collapse:separate;border-spacing:10px 0;',
       helpCol: 'width:50%;vertical-align:top;',
       helpSingleCol: 'width:100%;max-width:720px;margin:0 auto;',
@@ -529,13 +529,13 @@
   }
 
   function addLogCard(order, renderFn){
-    dwt.LOG_CARDS.push({ order:(order|0), render:renderFn });
-    dwt.LOG_CARDS.sort(function(a,b){ return a.order - b.order; });
+    fts.LOG_CARDS.push({ order:(order|0), render:renderFn });
+    fts.LOG_CARDS.sort(function(a,b){ return a.order - b.order; });
   }
 
   function helpPanel(pid){
     var v = cssVars();
-    var html = shell('Date | Weather | Trade Help');
+    var html = shell('Fantasy Trade Simulator Help');
 
     // Global note (ubiquitous by design; do not repeat inside each module section).
     html += '<div style="margin:6px 0 10px 0;'+(currentPalette()==='dark' ? 'opacity:0.92;' : 'opacity:0.95;')+'font-size:12.5px;">'
@@ -548,13 +548,13 @@
 
     // Auto-generate from registered help sections.
     var sections = [];
-    for (var i=0;i<dwt.HELP_SECTIONS.length;i++){
-      var h = dwt.HELP_SECTIONS[i];
+    for (var i=0;i<fts.HELP_SECTIONS.length;i++){
+      var h = fts.HELP_SECTIONS[i];
       try{
         var lines = (typeof h.lines==='function') ? h.lines(pid) : (h.lines||[]);
         sections.push({ title:String(h.title||''), lines:(lines||[]) });
       }catch(e){
-        log('dwt help err: '+e);
+        log('fts help err: '+e);
       }
     }
 
@@ -581,9 +581,9 @@
 
     function extractCommandsFromLine(line){
       var s = String(line||'');
-      var m = s.match(/!dwt\b[^\n]*/i);
+      var m = s.match(/!fts\b[^\n]*/i);
       if(!m) return null;
-      var idx = s.toLowerCase().indexOf('!dwt');
+      var idx = s.toLowerCase().indexOf('!fts');
       var before = s.slice(0, idx).trim();
       var cmdPart = s.slice(idx).trim();
       return { before: before, cmds: [cmdPart], after: '' };
@@ -591,7 +591,7 @@
 
     function looksLikeCmd(line){
       var s = String(line||'').trim();
-      return /^!dwt\b/i.test(s);
+      return /^!fts\b/i.test(s);
     }
 
     function renderTextBlock(txt){
@@ -624,8 +624,8 @@
     function coreFormatter(sec){
       var raw = dropRedundantTitleLine(sec.title, sec.lines||[]);
 
-      var helpCmd = '!dwt --help';
-      var palCmd  = '!dwt --core set palette <none|dark|mint|parchment|powder|rosebud>';
+      var helpCmd = '!fts --help';
+      var palCmd  = '!fts --core set palette <none|dark|mint|parchment|powder|rosebud>';
 
       // Prefer actual registered commands if present.
       for(var i=0;i<raw.length;i++){
@@ -635,8 +635,8 @@
         if(ex){
           line = (ex.cmds && ex.cmds[0]) ? ex.cmds[0] : line;
         }
-        if(/^!dwt\s+--help\b/i.test(line)) helpCmd = line.replace(/\s+/g,' ').trim();
-        if(/^!dwt\s+--core\s+set\s+palette\b/i.test(line)) palCmd = line.replace(/\s+/g,' ').trim();
+        if(/^!fts\s+--help\b/i.test(line)) helpCmd = line.replace(/\s+/g,' ').trim();
+        if(/^!fts\s+--core\s+set\s+palette\b/i.test(line)) palCmd = line.replace(/\s+/g,' ').trim();
       }
 
       var out = '';
@@ -676,20 +676,20 @@
           continue;
         }
 
-        if(/^!dwt\s+--calendar\s+back\s+\d+\s*m\b/i.test(line) && !backExample){
+        if(/^!fts\s+--calendar\s+back\s+\d+\s*m\b/i.test(line) && !backExample){
           backExample = line.replace(/\s+/g,' ').trim();
           continue;
         }
 
-        if(/^!dwt\s+--calendar\s+set\b/i.test(line) && !setCmd){
+        if(/^!fts\s+--calendar\s+set\b/i.test(line) && !setCmd){
           setCmd = line.replace(/\s+/g,' ').trim();
           continue;
         }
       }
 
-      if(!navCmd) navCmd = '!dwt --calendar today | back | forward <value>';
-      if(!backExample) backExample = '!dwt --calendar back 4m';
-      if(!setCmd) setCmd = '!dwt --calendar set hour|timeofday|day|month/festival|season|year <value>';
+      if(!navCmd) navCmd = '!fts --calendar today | back | forward <value>';
+      if(!backExample) backExample = '!fts --calendar back 4m';
+      if(!setCmd) setCmd = '!fts --calendar set hour|timeofday|day|month/festival|season|year <value>';
 
       var out = '';
       out += '<div style="'+v.helpSectionCard+'">';
@@ -704,7 +704,7 @@
       out += renderHeading('GM-Only Commands');
       out += renderCodeBlock(setCmd);
       out += renderTextBlock('Months can be specified either by name (short or long) or number:');
-      out += renderCodeBlock('!dwt --calendar set month 1 | hammer | Deep Winter');
+      out += renderCodeBlock('!fts --calendar set month 1 | hammer | Deep Winter');
 
       out +=   '</div>';
       out += '</div>';
@@ -900,7 +900,7 @@
 
 
   function helpHandout(){
-    return findObjs({_type:'handout', name:'Date | Weather | Trade Help'})[0] || null;
+    return findObjs({_type:'handout', name:'Fantasy Trade Simulator Help'})[0] || null;
   }
 
   function upsertHelpHandout(html){
@@ -908,7 +908,7 @@
 
     if(!h){
       h = createObj('handout', {
-        name: 'Date | Weather | Trade Help',
+        name: 'Fantasy Trade Simulator Help',
         inplayerjournals: 'all',
         controlledby: ''
       });
@@ -1027,11 +1027,11 @@
 
     // GM-only Set Palette control (styled like mapMeta config button). Opens a Roll Query dropdown to choose a palette.
     if (isGM){
-      var paletteCmd = '!dwt --core set palette ?{Palette|none|dark|mint|parchment|powder|rosebud}';
+      var paletteCmd = '!fts --core set palette ?{Palette|none|dark|mint|parchment|powder|rosebud}';
       html += '<div><a'+actionLinkAttrs(paletteCmd)+'>Set Palette</a></div>';
     }
 
-    // Show Help button – opens the help handout window
+    // Show Help button - opens the help handout window
     if (h && h.id){
       var url = 'https://journal.roll20.net/handout/'+h.id;
       html += '<div style="'+(isGM ? 'margin-top:8px;' : '')+'"><a'+actionLinkAttrs(url)+' target="_blank">Show Help</a></div>';
@@ -1042,10 +1042,10 @@
     return html;
   }
 
-  function campaignLogPanel(pid){
+  function campaignLogPanel(pid, opts){
     var v = cssVars(), html = shell('Campaign Menu');
-    for (var i=0;i<dwt.LOG_CARDS.length;i++){
-      try{ html += (dwt.LOG_CARDS[i].render(pid)||''); }catch(e){ log('dwt card err: '+e); }
+    for (var i=0;i<fts.LOG_CARDS.length;i++){
+      try{ html += (fts.LOG_CARDS[i].render(pid, opts)||''); }catch(e){ log('fts card err: '+e); }
     }
     html += coreConfigCard(pid);
     html += endShell();
@@ -1069,10 +1069,10 @@
       var expr = String(a.val||'').trim();
       var m = expr.match(/^set\s+palette(?:\s+(.+))?$/i);
       if (!m){
-        return {error:'Unknown core command. Use: !dwt --core set palette <none|dark|mint|parchment|powder|rosebud>'};
+        return {error:'Unknown core command. Use: !fts --core set palette <none|dark|mint|parchment|powder|rosebud>'};
       }
       if (!String(m[1]||'').trim()){
-        return {error:'Missing palette value. Use: !dwt --core set palette <none|dark|mint|parchment|powder|rosebud>'};
+        return {error:'Missing palette value. Use: !fts --core set palette <none|dark|mint|parchment|powder|rosebud>'};
       }
       return applyPaletteChange(m[1]);
     }},
@@ -1090,10 +1090,10 @@
         // Interactivity is designed to come from clickable links that fire chat messages.
         // We work around standard href restrictions with (very sensitive) hrefAttr / Meta-Toolbox plumbing.
         //
-        // The calendar’s nav buttons are basically:
-        //   <a href="!dwt --calendar back 1m">back</a>
-        //   <a href="!dwt --calendar today"><b>today</b></a>
-        //   <a href="!dwt --calendar forward 1m">forward</a>
+        // The calendar's nav buttons are basically:
+        //   <a href="!fts --calendar back 1m">back</a>
+        //   <a href="!fts --calendar today"><b>today</b></a>
+        //   <a href="!fts --calendar forward 1m">forward</a>
         //
         // Supported surface:
         //   today | back <#d/m/y> | forward <#d/m/y>
@@ -1101,13 +1101,13 @@
         //
         // The calendar module enforces GM-only restrictions for set operations.
 
-        if (root.dwt_calendar && typeof root.dwt_calendar._ns === 'function'){
-          root.dwt_calendar._ns(expr, a.pid);
+        if (root.fts_calendar && typeof root.fts_calendar._ns === 'function'){
+          root.fts_calendar._ns(expr, a.pid);
           return { changed:false };
         }
         return { error:'Calendar module missing.', changed:false };
       }catch(e){
-        log('dwt core calendar handler err: '+e);
+        log('fts core calendar handler err: '+e);
         return { error:'Calendar error.', changed:false };
       }
     }}
@@ -1116,7 +1116,7 @@
   function handleMessage(msg){
     if (msg.type!=='api') return;
     var content = (msg.content||'').trim();
-    if (!/^!dwt(\b|$)/i.test(content)) return;
+    if (!/^!fts(\b|$)/i.test(content)) return;
 
     var pid = msg.playerid;
 
@@ -1134,7 +1134,7 @@
     for (var k in flags){
       if (!flags.hasOwnProperty(k)) continue;
       if (k==='help') continue;
-      if (dwt.COMMANDS.hasOwnProperty(k)){ filtered[k]=flags[k]; keys.push(k); }
+      if (fts.COMMANDS.hasOwnProperty(k)){ filtered[k]=flags[k]; keys.push(k); }
     }
 
     if (anyFlags && keys.length===0){
@@ -1143,15 +1143,16 @@
 
     if (!anyFlags){
       whisperCampaignMenuBatch([pid], {
-        pageId: dwt.getEffectivePageId(pid) || (function(){ try{ return String(Campaign().get('playerpageid') || ''); }catch(e){ return ''; } })(),
+        pageId: fts.getEffectivePageId(pid) || (function(){ try{ return String(Campaign().get('playerpageid') || ''); }catch(e){ return ''; } })(),
         runStartup: true,
-        reason: 'command'
+        reason: 'command',
+        msg: msg
       });
       return;
     }
 
     for (var i2=0;i2<keys.length;i2++){
-      var cmd = dwt.COMMANDS[keys[i2]];
+      var cmd = fts.COMMANDS[keys[i2]];
       try{
         var res = cmd.handler({ pid:pid, key:keys[i2], val:filtered[keys[i2]] });
         if (res && res.error){ whisper(pid, '<div>'+esc(res.error)+'</div>'); }
@@ -1164,9 +1165,9 @@
     try{
       var m=(findObjs({_type:'macro',name:'Campaign.Log',playerid:pid})||[])[0]||null;
       if(!m){
-        createObj('macro',{name:'Campaign.Log',action:'!dwt',playerid:pid,inbar:true,istokenaction:false});
+        createObj('macro',{name:'Campaign.Log',action:'!fts',playerid:pid,inbar:true,istokenaction:false});
       }else{
-        m.set('action','!dwt');m.set('inbar',true);m.set('istokenaction',false);
+        m.set('action','!fts');m.set('inbar',true);m.set('istokenaction',false);
       }
     }catch(e){log('ensureCampaignLogMacroForPlayer err: '+e);}
   }
@@ -1184,9 +1185,9 @@
 
       var m=(findObjs({_type:'macro',name:'Campaign.Log',playerid:gmId})||[])[0]||null;
       if(!m){
-        createObj('macro',{name:'Campaign.Log',action:'!dwt',playerid:gmId,visibleto:'all',inbar:true,istokenaction:false});
+        createObj('macro',{name:'Campaign.Log',action:'!fts',playerid:gmId,visibleto:'all',inbar:true,istokenaction:false});
       }else{
-        m.set('action','!dwt');m.set('visibleto','all');m.set('inbar',true);m.set('istokenaction',false);
+        m.set('action','!fts');m.set('visibleto','all');m.set('inbar',true);m.set('istokenaction',false);
       }
     }catch(e){log('ensureGlobalCampaignLogMacro err: '+e);}
   }
@@ -1198,15 +1199,15 @@
     }catch(e){ log('provisionBarMacros err: '+e); }
   }
 
-  dwt.addHelpSection     = addHelpSection;
-  dwt.registerCommands   = registerCommands;
-  dwt.addLogCard         = addLogCard;
-  dwt.actionLinkAttrs    = actionLinkAttrs;
-  dwt.cssVars            = cssVars;
-  dwt.ensureCoreState    = ensureCoreState;
-  dwt.ensureMule         = ensureMule;
+  fts.addHelpSection     = addHelpSection;
+  fts.registerCommands   = registerCommands;
+  fts.addLogCard         = addLogCard;
+  fts.actionLinkAttrs    = actionLinkAttrs;
+  fts.cssVars            = cssVars;
+  fts.ensureCoreState    = ensureCoreState;
+  fts.ensureMule         = ensureMule;
   // Effective page resolution (supports split-party pages).
-  dwt.getEffectivePageId = function(pid){
+  fts.getEffectivePageId = function(pid){
     try{
       var c = Campaign();
       var psp = c.get('playerspecificpages') || {};
@@ -1217,7 +1218,7 @@
   };
 
   // Pages that currently have players (unique pageId list).
-  dwt.getActivePlayerPageIds = function(){
+  fts.getActivePlayerPageIds = function(){
     var out = {};
     try{
       var c = Campaign();
@@ -1233,37 +1234,37 @@
   };
 
 
-  dwt.registerStartup    = registerStartup;
-  dwt.refreshHelpHandout = refreshHelpHandout;
-  dwt.runStartupHooks    = runStartupHooks;
-  dwt.autoOpenCampaignMenuForPageChange = autoOpenCampaignMenuForPageChange;
-  dwt.esc                = esc;
-  dwt.hrefAttr           = hrefAttr;
-  dwt.literal            = literal;
+  fts.registerStartup    = registerStartup;
+  fts.refreshHelpHandout = refreshHelpHandout;
+  fts.runStartupHooks    = runStartupHooks;
+  fts.autoOpenCampaignMenuForPageChange = autoOpenCampaignMenuForPageChange;
+  fts.esc                = esc;
+  fts.hrefAttr           = hrefAttr;
+  fts.literal            = literal;
 
 
-  // Publish to both root.dwt and Meta-Toolbox RT.dwt for consistent module registration.
-  // (Some modules register through RT.dwt; core also exposes root.dwt for convenience.)
+  // Publish to both root.fts and Meta-Toolbox RT.fts for consistent module registration.
+  // (Some modules register through RT.fts; core also exposes root.fts for convenience.)
   try{
     root.RT = root.RT || {};
-    root.RT.dwt = dwt;
+    root.RT.fts = fts;
   }catch(e){}
 
-  root.dwt = dwt;
-  if (root.dwtQ && root.dwtQ.length){
-    try{ for (var qi=0; qi<root.dwtQ.length; qi++){ try{ root.dwtQ[qi](dwt); }catch(e){ log('dwtQ fn err: '+e);} } root.dwtQ=[]; }catch(e){ log('dwtQ fatal: '+e); }
+  root.fts = fts;
+  if (root.ftsQ && root.ftsQ.length){
+    try{ for (var qi=0; qi<root.ftsQ.length; qi++){ try{ root.ftsQ[qi](fts); }catch(e){ log('ftsQ fn err: '+e);} } root.ftsQ=[]; }catch(e){ log('ftsQ fatal: '+e); }
   }
 
   addHelpSection(999, 'Core', function(){ return [
-    'Show Help:', '!dwt --help',
-    'Palette switch:', '!dwt --core set palette <none|dark|mint|parchment|powder|rosebud>'
+    'Show Help:', '!fts --help',
+    'Palette switch:', '!fts --core set palette <none|dark|mint|parchment|powder|rosebud>'
   ]; });
 
   on('chat:message', handleMessage);
   on('ready', function(){
     ensureCoreState();
     mirrorCoreToMule();
-    try{ runStartupHooks('ready'); }catch(e){ log('dwt core startup err: '+e); }
+    try{ runStartupHooks('ready'); }catch(e){ log('fts core startup err: '+e); }
     try{
       upsertHelpHandout(helpPanel(null));
     }catch(e){}

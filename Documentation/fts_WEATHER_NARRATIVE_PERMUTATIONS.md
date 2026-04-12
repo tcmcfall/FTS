@@ -1,6 +1,6 @@
-# DWT Weather Narrative Permutations
+# FTS Weather Narrative Permutations
 
-Source of truth: [Modules/dwt_weather_0.2.0-alpha.1.js](V:\Programs\Git Repository\DWT\Modules\dwt_weather_0.2.0-alpha.1.js), especially `buildNarrative()` at lines `4824-4877` and its helper functions.
+Source of truth: [Modules/fts_weather_0.2.0-alpha.1.js](V:\Programs\Git Repository\FTS\Modules\fts_weather_0.2.0-alpha.1.js), especially `buildNarrative()` at lines `4824-4877` and its helper functions.
 
 ## Scope
 

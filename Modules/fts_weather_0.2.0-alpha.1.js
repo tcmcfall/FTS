@@ -1,16 +1,16 @@
-// name:        dwt_weather.js
+// name:        fts_weather.js
 // version:     0.2.0-alpha.1
-// description: Core-aware weather engine for the DWT (Date-Weather-Trade) Roll20 API suite.
+// description: Core-aware weather engine for the FTS (Fantasy Trade Simulator) Roll20 API suite.
 //              - Stores weather settings, metadata, current weather, and history beneath a single
-//                root dwt_mule ability named weather.
-//              - Writes the module version to the root dwt_mule ability named version.
+//                root fts_mule ability named weather.
+//              - Writes the module version to the root fts_mule ability named version.
 //              - Updates weather in Harptos timeofday segments (early/late predawn, morning, afternoon, evening).
-//              - Loads regional profiles from the shared dwt_mule ability named regions.
-//              - Provides !dwt --weather controls plus Tolkien-inspired weather quips for direct whisper use.
-// depends:     dwt_core >= 0.1.0-alpha.1, dwt_calendar >= 0.1.0-alpha.1 (state.dwt.now), Roll20 API.
+//              - Loads regional profiles from the shared fts_mule ability named regions.
+//              - Provides !fts --weather controls plus Tolkien-inspired weather quips for direct whisper use.
+// depends:     fts_core >= 0.1.0-alpha.1, fts_calendar >= 0.1.0-alpha.1 (state.fts.now), Roll20 API.
 // author:      TC McFall (AI-assisted)
 // Semantic Versioning (SemVer) Policy:
-// - DWT uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
+// - FTS uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
 // - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
 // - Increment PATCH for backward-compatible bug fixes.
 // - Increment MINOR for new backward-compatible functionality.
@@ -20,23 +20,23 @@
 // - Header comments, internal VERSION constants, filenames, generated module text, and documentation references must stay aligned.
 // - Dependency notes should use SemVer-friendly wording such as ">= 0.1.0-alpha.1" rather than informal forms like "5.1.0+".
 
-var dwt_weather = dwt_weather || (function(){
+var fts_weather = fts_weather || (function(){
   'use strict';
 
   var RT = (typeof globalThis !== 'undefined') ? globalThis : this;
   var VERSION = '0.2.0-alpha.1';
   var MODULE_KEY = 'weather';
-  var MULE_NAME = 'dwt_mule';
-  var REGION_PROFILE_SCHEMA = 'dwt.region.v4';
-  var WEATHER_ROOT_SCHEMA = 'dwt.weather.root.v2';
-  var WEATHER_CURRENT_SCHEMA = 'dwt.weather.current.v3';
-  var WEATHER_TICK_SCHEMA = 'dwt.harptos.tick.v2';
+  var MULE_NAME = 'fts_mule';
+  var REGION_PROFILE_SCHEMA = 'fts.region.v4';
+  var WEATHER_ROOT_SCHEMA = 'fts.weather.root.v2';
+  var WEATHER_CURRENT_SCHEMA = 'fts.weather.current.v3';
+  var WEATHER_TICK_SCHEMA = 'fts.harptos.tick.v2';
   var HARPTOS_BASE_YEAR = 1300;
 
   // ---------------------------------------------------------------------------
   // Active-page windsock token (multi-sided + rotation)
   // ---------------------------------------------------------------------------
-  // Token name: dwt_windsock
+  // Token name: fts_windsock
   // Side order (by index) MUST be:
   //   0: dead_calm
   //   1: 20%
@@ -71,7 +71,7 @@ var dwt_weather = dwt_weather || (function(){
   //
   // Animation cadence: milliseconds per step for BOTH rotation and side changes.
   // Requested default: 0.05 seconds per step.
-  var WINDSOCK_NAME = 'dwt_windsock';
+  var WINDSOCK_NAME = 'fts_windsock';
   var WINDSOCK_STEP_MS = 50; // Milliseconds between rotation/side animation steps.
   var WINDSOCK_SIDE_MAX = 29;
   var WINDSOCK_SIDES = {
@@ -824,16 +824,16 @@ var dwt_weather = dwt_weather || (function(){
 
   function whisper(pid, html){
     try{
-      if(RT.dwt && typeof RT.dwt.whisper==='function'){
-        RT.dwt.whisper(pid, html);
+      if(RT.fts && typeof RT.fts.whisper==='function'){
+        RT.fts.whisper(pid, html);
         return;
       }
     }catch(e){}
-    try{ sendChat('dwt_weather','/w "'+playerName(pid)+'" '+html); }catch(e2){}
+    try{ sendChat('fts_weather','/w "'+playerName(pid)+'" '+html); }catch(e2){}
   }
 
   function whisperGM(html){
-    try{ sendChat('dwt_weather','/w gm '+html); }catch(e){}
+    try{ sendChat('fts_weather','/w gm '+html); }catch(e){}
   }
 
   function whisperGMOnce(key, html){
@@ -845,7 +845,7 @@ var dwt_weather = dwt_weather || (function(){
   }
 
   function ensureMule(){
-    try{ if(RT.dwt && typeof RT.dwt.ensureMule==='function'){ return RT.dwt.ensureMule(); } }catch(e){}
+    try{ if(RT.fts && typeof RT.fts.ensureMule==='function'){ return RT.fts.ensureMule(); } }catch(e){}
     var matches = findObjs({_type:'character', name:MULE_NAME}) || [];
     var ch = null;
     var bestScore = -1;
@@ -891,7 +891,7 @@ var dwt_weather = dwt_weather || (function(){
   function regionsRootQuality(text){
     var parsed = safeParseJSON(text);
     if(!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return -1;
-    var score = (parsed.schema === 'dwt.regions.root.v1') ? 50 : 0;
+    var score = (parsed.schema === 'fts.regions.root.v1') ? 50 : 0;
     var regions = parsed.regions;
     if(!regions || typeof regions !== 'object' || Array.isArray(regions)) return score;
     var keys = Object.keys(regions);
@@ -961,9 +961,9 @@ var dwt_weather = dwt_weather || (function(){
   }
 
   function ensureStateRoot(){
-    if(!state.dwt) state.dwt = {};
-    if(!state.dwt.weather) state.dwt.weather = {};
-    return state.dwt.weather;
+    if(!state.fts) state.fts = {};
+    if(!state.fts.weather) state.fts.weather = {};
+    return state.fts.weather;
   }
 
   function parseVersionRoot(raw){
@@ -1001,11 +1001,11 @@ var dwt_weather = dwt_weather || (function(){
   }
 
   function defaultWeatherMeta(){
-    return { schema:'dwt.weather.meta.v1', lastTick:null, lastStamp:'', tickSchema:WEATHER_TICK_SCHEMA };
+    return { schema:'fts.weather.meta.v1', lastTick:null, lastStamp:'', tickSchema:WEATHER_TICK_SCHEMA };
   }
 
   function defaultWeatherSettings(){
-    return { schema:'dwt.weather.settings.v1', units:'imperial' };
+    return { schema:'fts.weather.settings.v1', units:'imperial' };
   }
 
   function normalizeWeatherRoot(root){
@@ -1016,7 +1016,7 @@ var dwt_weather = dwt_weather || (function(){
       changed = true;
     }
 
-    if(!root.meta || root.meta.schema !== 'dwt.weather.meta.v1'){
+    if(!root.meta || root.meta.schema !== 'fts.weather.meta.v1'){
       root.meta = defaultWeatherMeta();
       changed = true;
     }else{
@@ -1034,7 +1034,7 @@ var dwt_weather = dwt_weather || (function(){
       }
     }
 
-    if(!root.settings || root.settings.schema !== 'dwt.weather.settings.v1'){
+    if(!root.settings || root.settings.schema !== 'fts.weather.settings.v1'){
       root.settings = defaultWeatherSettings();
       changed = true;
     }
@@ -1182,7 +1182,7 @@ var dwt_weather = dwt_weather || (function(){
   }
 
   function now(){
-    try{ if(state && state.dwt && state.dwt.now){ return state.dwt.now; } }catch(e){}
+    try{ if(state && state.fts && state.fts.now){ return state.fts.now; } }catch(e){}
     return { year:1492, month:1, day:1, hour:6, minute:0, timeofday:'early morning', festival:'' };
   }
 
@@ -1591,7 +1591,7 @@ var dwt_weather = dwt_weather || (function(){
   function ensureSettings(mule){
     var s = getJSON(mule, 'settings');
     var changed = false;
-    if(!s || s.schema!=='dwt.weather.settings.v1'){
+    if(!s || s.schema!=='fts.weather.settings.v1'){
       s = defaultWeatherSettings();
       changed = true;
     }
@@ -1611,12 +1611,12 @@ var dwt_weather = dwt_weather || (function(){
   // Region catalog loading
   // ----------------------------
   function defaultRegionsRoot(){
-    return { schema:'dwt.regions.root.v1', regions:{} };
+    return { schema:'fts.regions.root.v1', regions:{} };
   }
 
   function normalizeRegionsRoot(root){
     if(!root || typeof root !== 'object' || Array.isArray(root)) root = {};
-    if(root.schema !== 'dwt.regions.root.v1') root.schema = 'dwt.regions.root.v1';
+    if(root.schema !== 'fts.regions.root.v1') root.schema = 'fts.regions.root.v1';
     if(!root.regions || typeof root.regions !== 'object' || Array.isArray(root.regions)) root.regions = {};
     return root;
   }
@@ -2248,7 +2248,7 @@ var dwt_weather = dwt_weather || (function(){
     if(!catalog.issues.length) return catalog;
     whisperGMOnce(
       'regioncatalog.'+catalog.issues.join('|'),
-      '<div style="border:1px solid #666;padding:8px;"><b>dwt_weather</b>: Region data mismatch detected.<br>'
+      '<div style="border:1px solid #666;padding:8px;"><b>fts_weather</b>: Region data mismatch detected.<br>'
         + catalog.issues.map(function(msg){ return esc(msg); }).join('<br>')
         + '</div>'
     );
@@ -2281,17 +2281,17 @@ var dwt_weather = dwt_weather || (function(){
   }
 
   function drainRegionQueue(){
-    var queue = RT.dwtRegionQ || [];
+    var queue = RT.ftsRegionQ || [];
     if(!Array.isArray(queue) || !queue.length) return;
     for(var i=0;i<queue.length;i++){
       var item = queue[i] || {};
       try{
         if(item && item.entry) registerRegionEntry(item.entry, item.moduleName, item.version);
       }catch(e){
-        log('dwt_weather region registration err: '+e);
+        log('fts_weather region registration err: '+e);
       }
     }
-    RT.dwtRegionQ = [];
+    RT.ftsRegionQ = [];
   }
 
   // ----------------------------
@@ -2459,8 +2459,30 @@ var dwt_weather = dwt_weather || (function(){
   }
 
   function parsePageNameTriple(name, mule){
-    // region.locale.mapname or region.locale_<depth>.mapname
+    // region.locale.mapname, region.locale_<depth>.mapname, or region.region
     var raw = String(name||'').trim();
+    var overview = raw.match(/^([^.]+)\.region$/i);
+    if(overview){
+      var overviewRegion = canonicalKey(overview[1]);
+      var overviewPayload = loadRegionProfile(mule, overviewRegion);
+      if(!overviewPayload) return null;
+      var defaultLocaleKey = canonicalKey(overviewPayload.defaultLocale || '');
+      var defaultLocaleDef = findLocaleDefinition(overviewPayload, defaultLocaleKey);
+      if(!defaultLocaleKey || !defaultLocaleDef) return null;
+      return {
+        scope:'region',
+        region:overviewRegion,
+        locale:defaultLocaleKey,
+        localeDef:defaultLocaleDef,
+        mapname:String(overview[1]||'').trim(),
+        depthMeters:0,
+        depthToken:'',
+        depthMetric:'',
+        depthImperial:'',
+        depthFathoms:'',
+        depthIsElevation:false
+      };
+    }
     var m = raw.match(/^([^.]+)\.([^.]+)\.(.+)$/);
     if(!m) return null;
     var r = canonicalKey(m[1]);
@@ -2471,6 +2493,7 @@ var dwt_weather = dwt_weather || (function(){
     var localeMeta = parseLocaleSpec(m[2], mule, payload);
     if(!localeMeta.ok) return null;
     return {
+      scope:'locale',
       region:r,
       locale:localeMeta.locale,
       localeDef:localeMeta.localeDef || findLocaleDefinition(payload, localeMeta.locale),
@@ -2950,7 +2973,7 @@ var dwt_weather = dwt_weather || (function(){
   function scopedManualTable(raw, periodKey){
     raw = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {};
     if(raw[periodKey] && typeof raw[periodKey] === 'object' && !Array.isArray(raw[periodKey])) return raw[periodKey];
-    if(raw.default && typeof raw.default === 'object' && !Array.isArray(raw.default)) return raw.default;
+    if(raw['default'] && typeof raw['default'] === 'object' && !Array.isArray(raw['default'])) return raw['default'];
     return raw;
   }
 
@@ -3520,8 +3543,8 @@ var dwt_weather = dwt_weather || (function(){
 
   function calendarMonthFallbackQuip(){
     try{
-      if(RT.dwt_calendar && typeof RT.dwt_calendar._pickCurrentMonthQuip === 'function'){
-        return String(RT.dwt_calendar._pickCurrentMonthQuip('short') || '').split('|').join('\n').trim();
+      if(RT.fts_calendar && typeof RT.fts_calendar._pickCurrentMonthQuip === 'function'){
+        return String(RT.fts_calendar._pickCurrentMonthQuip('short') || '').split('|').join('\n').trim();
       }
     }catch(e){}
     return '';
@@ -3839,8 +3862,8 @@ var dwt_weather = dwt_weather || (function(){
 
   function ensureHistory(mule, region, locale){
     var h = getJSON(mule, rootHistPath(region, locale));
-    if(!h || h.schema!=='dwt.weather.history.v1'){
-      h = { schema:'dwt.weather.history.v1', entries:[] };
+    if(!h || h.schema!=='fts.weather.history.v1'){
+      h = { schema:'fts.weather.history.v1', entries:[] };
       setJSON(mule, rootHistPath(region, locale), h);
     }
     if(!Array.isArray(h.entries)) h.entries = [];
@@ -3877,8 +3900,8 @@ var dwt_weather = dwt_weather || (function(){
 
   function ensureRootHistory(root, region, locale){
     var hist = weatherPathGet(root, rootHistPath(region, locale));
-    if(!hist || hist.schema!=='dwt.weather.history.v1'){
-      hist = { schema:'dwt.weather.history.v1', entries:[] };
+    if(!hist || hist.schema!=='fts.weather.history.v1'){
+      hist = { schema:'fts.weather.history.v1', entries:[] };
       weatherPathSet(root, rootHistPath(region, locale), hist);
     }
     if(!Array.isArray(hist.entries)) hist.entries = [];
@@ -5507,7 +5530,7 @@ var dwt_weather = dwt_weather || (function(){
     if(!tok) return false;
 
     var rl = resolveFromPageId(pageId);
-    if(!rl) return false;
+    if(!rl || !rl.region || !rl.locale) return false;
 
     var settings = ensureSettings(mule);
     var cur = ensureCurrentWeatherForLocation(mule, rl);
@@ -5545,7 +5568,7 @@ var dwt_weather = dwt_weather || (function(){
     opts = opts || {};
     var catalog = ensureRegionCatalogHealth(mule);
     if(!catalog.regions.length){
-      whisper(pid,'<div style="border:1px solid #666;padding:8px;"><b>dwt_weather</b>: No unified region weather profiles were detected in the regions root.</div>');
+      whisper(pid,'<div style="border:1px solid #666;padding:8px;"><b>fts_weather</b>: No unified region weather profiles were detected in the regions root.</div>');
       return { ok:false, error:'No unified region weather profiles were loaded from the regions root.' };
     }
 
@@ -5582,7 +5605,7 @@ var dwt_weather = dwt_weather || (function(){
     var settings = ensureSettings(mule);
     var rl = resolveFromPage(pid);
 
-    if(!rl){
+    if(!rl || !rl.region || !rl.locale){
       // silent for players; GM gets prompt hint.
       if(isGM(pid)){
         return '<div style="margin-top:8px;"><i>Weather not set: ' + esc(pageNamingRuleHint()) + '.</i></div>';
@@ -5620,7 +5643,7 @@ var dwt_weather = dwt_weather || (function(){
     }catch(e0){ rl = null; }
 
     if(!rl || !rl.region || !rl.locale){
-      return { ok:false, error:'Unable to resolve region/locale for this page.' };
+      return { ok:false, error:'Unable to resolve a single page-wide weather location. ' + pageNamingRuleHint() + '.' };
     }
 
     // Ensure a current record exists (generate once if missing).
@@ -5645,7 +5668,7 @@ var dwt_weather = dwt_weather || (function(){
     opts = opts||{};
     var mule = ensureMule();
 
-    // If a pageId override is provided, sync to that page (useful for bare !dwt and page-ribbon changes).
+    // If a pageId override is provided, sync to that page (useful for bare !fts and page-ribbon changes).
     var rlOverride = null;
     if(opts.pageId){
       rlOverride = resolveFromPageId(opts.pageId);
@@ -5684,7 +5707,7 @@ var dwt_weather = dwt_weather || (function(){
   // Command/runtime helpers
   // ----------------------------
   function pageNamingRuleHint(){
-    return 'rename the current page to region.locale.mapname or region.locale_depth.mapname to enable regional and locale-based weather (use bare depth values for feet/meters in the current weather units, append mi/km for large-unit input, and prefix with a "+" for elevation; explicit mi/km page tokens are preserved, while the narrative and map metadata display convert depth to the current weather units; case and spaces are ignored; canonical names are lower-case with no spaces)';
+    return 'use a unified page name: region.locale.mapname, region.locale_depth.mapname, region.region, or mapname.global (use bare depth values for feet/meters in the current weather units, append mi/km for large-unit input, and prefix with a "+" for elevation; explicit mi/km page tokens are preserved, while the narrative and map metadata display convert depth to the current weather units; case and spaces are ignored; canonical names are lower-case with no spaces; region overview pages fall back to the region default locale for page-wide weather, while global overview pages do not resolve a single page-wide weather location)';
   }
 
   function weatherActiveMapError(){
@@ -5821,7 +5844,7 @@ var dwt_weather = dwt_weather || (function(){
 
   function refreshActiveWeather(mule, pid){
     var rl = resolveFromPage(pid);
-    if(!rl) return { error:weatherActiveMapError().error };
+    if(!rl || !rl.region || !rl.locale) return { error:weatherActiveMapError().error };
 
     var up = updateAllCalendarAware(mule, pid, { pageId:_activePageId(pid) });
     if(!up || up.ok===false){
@@ -5837,8 +5860,8 @@ var dwt_weather = dwt_weather || (function(){
   function getActivePlayerPageIds(){
     var out = [];
     try{
-      if(RT.dwt && typeof RT.dwt.getActivePlayerPageIds==='function'){
-        out = RT.dwt.getActivePlayerPageIds() || [];
+      if(RT.fts && typeof RT.fts.getActivePlayerPageIds==='function'){
+        out = RT.fts.getActivePlayerPageIds() || [];
       }else{
         var c = Campaign();
         var psp = c.get('playerspecificpages') || {};
@@ -5855,7 +5878,7 @@ var dwt_weather = dwt_weather || (function(){
 
   function syncPageWeatherAndEcho(mule, pid, units, pageId){
     var rl = resolveFromPageId(pageId);
-    if(!rl) return false;
+    if(!rl || !rl.region || !rl.locale) return false;
     var cur = ensureCurrentWeatherForLocation(mule, rl);
     if(!cur) return false;
     try{ updateWindsockAndTooltipForPageId(mule, pageId); }catch(e){}
@@ -6083,7 +6106,7 @@ var dwt_weather = dwt_weather || (function(){
     var info = [];
 
     if(!mule){
-      issues.push('dwt_mule is not available.');
+      issues.push('fts_mule is not available.');
       return { ok:false, issues:issues, warnings:warnings, info:info };
     }
 
@@ -6103,20 +6126,20 @@ var dwt_weather = dwt_weather || (function(){
 
     var unsupportedWeatherAbilities = findUnsupportedWeatherAbilityNames(mule);
     if(unsupportedWeatherAbilities.length){
-      warnings.push('Unsupported weather ability fragments remain on dwt_mule: ' + summarizeList(unsupportedWeatherAbilities, 8) + '.');
+      warnings.push('Unsupported weather ability fragments remain on fts_mule: ' + summarizeList(unsupportedWeatherAbilities, 8) + '.');
     }
 
     appendUnknownWeatherBranchWarnings(root.current, 'weather.current', catalog, warnings);
     appendUnknownWeatherBranchWarnings(root.history, 'weather.history', catalog, warnings);
 
     var diag = regionsAbilityDiagnostics(mule);
-    info.push('Selected dwt_mule id: ' + (objectId(mule) || '(unknown)') + '.');
+    info.push('Selected fts_mule id: ' + (objectId(mule) || '(unknown)') + '.');
     info.push('Selected regions ability score: ' + String(diag.selectedRegionAbilityScore === null ? 'n/a' : diag.selectedRegionAbilityScore) + '.');
     if(diag.muleCount > 1){
-      warnings.push('Multiple dwt_mule characters were found: ' + summarizeList(diag.muleIds, 10) + '.');
+      warnings.push('Multiple fts_mule characters were found: ' + summarizeList(diag.muleIds, 10) + '.');
     }
     if(diag.regionAbilityCount > 1){
-      warnings.push('Multiple regions abilities were found on the selected dwt_mule. Scores: ' + summarizeList(diag.regionAbilityScores.map(function(v){ return String(v); }), 10) + '.');
+      warnings.push('Multiple regions abilities were found on the selected fts_mule. Scores: ' + summarizeList(diag.regionAbilityScores.map(function(v){ return String(v); }), 10) + '.');
     }
 
     info.push('Module version: ' + VERSION + '.');
@@ -6146,7 +6169,7 @@ var dwt_weather = dwt_weather || (function(){
   }
 
   function renderWeatherVerifyReport(report){
-    var parts = ['<div style="border:1px solid #666;padding:8px;"><b>dwt_weather verify</b><br>'];
+    var parts = ['<div style="border:1px solid #666;padding:8px;"><b>fts_weather verify</b><br>'];
     parts.push('Status: <b>' + (report.ok ? 'OK' : 'Issues detected') + '</b>');
     if(report.info && report.info.length){
       parts.push('<br><br><b>Details</b><br>' + report.info.map(function(msg){ return esc(msg); }).join('<br>'));
@@ -6164,14 +6187,14 @@ var dwt_weather = dwt_weather || (function(){
   function setWeatherUnitsForPlayer(mule, pid, settings, units){
     if(!isGM(pid)) return { error:'Only the GM may change weather units.', changed:false };
     if(units !== 'metric' && units !== 'imperial'){
-      return { error:'Use !dwt --weather set units metric|imperial.', changed:false };
+      return { error:'Use !fts --weather set units metric|imperial.', changed:false };
     }
 
     settings.units = units;
     setJSON(mule, 'settings', settings);
 
     var rlU = resolveFromPage(pid);
-    if(rlU){
+    if(rlU && rlU.region && rlU.locale){
       var curU = ensureCurrentWeatherForLocation(mule, rlU);
       if(curU){
         syncActiveWindsockForPlayer(mule, pid);
@@ -6198,7 +6221,7 @@ var dwt_weather = dwt_weather || (function(){
     if(tokens[0]==='quip'){
       var quipLength = weatherQuipLengthFromToken(tokens[1] || 'short');
       if(tokens.length > 2 || !quipLength){
-        return { error:'Use !dwt --weather quip [short|medium|long].', changed:false };
+        return { error:'Use !fts --weather quip [short|medium|long].', changed:false };
       }
       if(!loadedRegions(mule).length){
         var fallbackQuip = calendarMonthFallbackQuip();
@@ -6215,7 +6238,7 @@ var dwt_weather = dwt_weather || (function(){
     }
 
     if(tokens[0]==='detail'){
-      if(tokens.length !== 1) return { error:'Use !dwt --weather detail with no additional arguments.', changed:false };
+      if(tokens.length !== 1) return { error:'Use !fts --weather detail with no additional arguments.', changed:false };
       if(!isGM(pid)) return { error:'Only the GM may view detailed weather state.', changed:false };
       var detailWeather = refreshActiveWeather(mule, pid);
       if(detailWeather.error) return { error:detailWeather.error, changed:false };
@@ -6228,7 +6251,7 @@ var dwt_weather = dwt_weather || (function(){
     if(tokens[0]==='show'){
       var showKey = weatherShowKeyFromToken(tokens[1] || '');
       if(tokens.length !== 2 || !showKey){
-        return { error:'Use !dwt --weather show units|temp|rainfall|skies|wind|chop|current.', changed:false };
+        return { error:'Use !fts --weather show units|temp|rainfall|skies|wind|chop|current.', changed:false };
       }
       if(showKey === 'units'){
         whisper(pid, weatherShowHtml(mule, settings, showKey, null, null));
@@ -6247,7 +6270,7 @@ var dwt_weather = dwt_weather || (function(){
     }
 
     if(tokens[0]==='update'){
-      if(tokens.length !== 1) return { error:'Use !dwt --weather update with no additional arguments.', changed:false };
+      if(tokens.length !== 1) return { error:'Use !fts --weather update with no additional arguments.', changed:false };
       if(!isGM(pid)) return { error:'Only the GM may update weather.', changed:false };
 
       var up = updateAllCalendarAware(mule, pid, { pageId:_activePageId(pid) });
@@ -6272,16 +6295,16 @@ var dwt_weather = dwt_weather || (function(){
       }
 
       if(skipped.length){
-        whisper(pid, '<div style="border:1px solid #666;padding:6px;">Skipped weather sync for pages that do not follow the unified page-naming rule (<b>region.locale.mapname</b> or <b>region.locale_depth.mapname</b>; use bare depth values for feet/meters in the current weather units, append <b>mi</b>/<b>km</b> for large units, and prefix with a <b>+</b> for elevation; case and spaces are ignored; canonical names are lower-case with no spaces): '+esc(skipped.join(', '))+'.</div>');
+        whisper(pid, '<div style="border:1px solid #666;padding:6px;">Skipped weather sync for pages that do not resolve a single page-wide weather location. Supported page names are <b>region.locale.mapname</b>, <b>region.locale_depth.mapname</b>, <b>region.region</b>, and <b>mapname.global</b>. Region overview pages fall back to their default locale for page-wide weather; global overview pages remain valid map shells but require localized region/locale context. Bare depth values use the current weather units, append <b>mi</b>/<b>km</b> for large-unit input, and prefix with a <b>+</b> for elevation; case and spaces are ignored; canonical names are lower-case with no spaces: '+esc(skipped.join(', '))+'.</div>');
       }
       if(!refreshed){
-        return { error:'No active player pages could be resolved with the unified region/locale page-naming rule.', changed:false };
+        return { error:'No active player pages could be resolved to a single page-wide weather location.', changed:false };
       }
       return { changed:false };
     }
 
     if(tokens[0]==='verify'){
-      if(tokens.length !== 1) return { error:'Use !dwt --weather verify with no additional arguments.', changed:false };
+      if(tokens.length !== 1) return { error:'Use !fts --weather verify with no additional arguments.', changed:false };
       if(!isGM(pid)) return { error:'Only the GM may verify weather state.', changed:false };
       whisper(pid, renderWeatherVerifyReport(verifyWeatherModuleState(mule)));
       return { changed:false };
@@ -6291,7 +6314,7 @@ var dwt_weather = dwt_weather || (function(){
       if(!isGM(pid)) return { error:'Only the GM may roll weather tables.', changed:false };
 
       var rlR = resolveFromPage(pid);
-      if(!rlR) return weatherActiveMapError();
+      if(!rlR || !rlR.region || !rlR.locale) return weatherActiveMapError();
       var profileR = loadRegionProfile(mule, rlR.region);
       if(!profileR) return { error:'Weather could not be resolved for the current map.', changed:false };
       var curR = ensureCurrentWeatherForLocation(mule, rlR);
@@ -6305,11 +6328,11 @@ var dwt_weather = dwt_weather || (function(){
       }
 
       if(tokens[1] !== 'event'){
-        return { error:'Use !dwt --weather roll or !dwt --weather roll event [event_key] [light|moderate|heavy|severe].', changed:false };
+        return { error:'Use !fts --weather roll or !fts --weather roll event [event_key] [light|moderate|heavy|severe].', changed:false };
       }
 
       if(tokens.length > 4){
-        return { error:'Use !dwt --weather roll event [event_key] [light|moderate|heavy|severe].', changed:false };
+        return { error:'Use !fts --weather roll event [event_key] [light|moderate|heavy|severe].', changed:false };
       }
 
       var eventKey = '';
@@ -6336,20 +6359,20 @@ var dwt_weather = dwt_weather || (function(){
     }
 
     if(tokens[0]==='units'){
-      if(tokens.length !== 2) return { error:'Use !dwt --weather set units metric|imperial.', changed:false };
+      if(tokens.length !== 2) return { error:'Use !fts --weather set units metric|imperial.', changed:false };
       return setWeatherUnitsForPlayer(mule, pid, settings, lower(tokens[1]||'').trim());
     }
 
     if(tokens[0]==='set'){
       if(tokens.length===1) return { error:'No weather set values provided.', changed:false };
       if(canonicalKey(tokens[1]||'') === 'units'){
-        if(tokens.length !== 3) return { error:'Use !dwt --weather set units metric|imperial.', changed:false };
+        if(tokens.length !== 3) return { error:'Use !fts --weather set units metric|imperial.', changed:false };
         return setWeatherUnitsForPlayer(mule, pid, settings, lower(tokens[2]||'').trim());
       }
       if(!isGM(pid)) return { error:'Only the GM may set weather conditions.', changed:false };
 
       var rlS = resolveFromPage(pid);
-      if(!rlS) return weatherActiveMapError();
+      if(!rlS || !rlS.region || !rlS.locale) return weatherActiveMapError();
       var curS = ensureCurrentWeatherForLocation(mule, rlS);
       if(!curS) return weatherActiveMapError();
 
@@ -6462,7 +6485,7 @@ var dwt_weather = dwt_weather || (function(){
             return { error:'Invalid wind value.', changed:false };
           }
           if(next && !isWeatherSetKey(next)){
-            return { error:'Use !dwt --weather set wind <speed> [dir] or !dwt --weather set wind <dir>.', changed:false };
+            return { error:'Use !fts --weather set wind <speed> [dir] or !fts --weather set wind <dir>.', changed:false };
           }
           pending.windDir = windDir;
           pending.windCritical = '';
@@ -6525,7 +6548,7 @@ var dwt_weather = dwt_weather || (function(){
             return { error:'Invalid current value.', changed:false };
           }
           if(nextCurrent && !isWeatherSetKey(nextCurrent)){
-            return { error:'Use !dwt --weather set current <speed> [dir] or !dwt --weather set current <dir>.', changed:false };
+            return { error:'Use !fts --weather set current <speed> [dir] or !fts --weather set current <dir>.', changed:false };
           }
           pending.currentDir = currentDir;
           j++;
@@ -6642,52 +6665,52 @@ var dwt_weather = dwt_weather || (function(){
     return [
       'Commands',
       'Whisper the current weather line for the current map:',
-      '!dwt --weather',
+      '!fts --weather',
       'Whisper a weather quip for the current map (default short; medium and long are optional):',
-      '!dwt --weather quip [short|medium|long]',
+      '!fts --weather quip [short|medium|long]',
       '',
       'GM-Only Commands',
-      'Enable regional and locale-based seasonal weather patterns via dwt_region.regionname modules, with the associated page naming template: region.locale.mapname or region.locale_depth.mapname.',
+      'Enable regional and locale-based seasonal weather patterns via fts_region.regionname modules. Pages may use region.locale.mapname, region.locale_depth.mapname, region.region, or mapname.global.',
       'Use bare depth values for feet/meters in the current weather units, append mi/km for large units, and prefix with a "+" for elevation. Case and spaces are ignored; canonical names are lower-case with no spaces.',
       '',
       'Whisper detailed climate control, governor, activation-window, current pattern, and active event information for the current map:',
-      '!dwt --weather detail',
+      '!fts --weather detail',
       'Sync only the exact current timeofday tick for the active page and any page that currently has players on it. Live temperature, wind, and current rendering still follow the exact clock inside the current band:',
-      '!dwt --weather update',
+      '!fts --weather update',
       'Verify the unified weather root and region catalog:',
-      '!dwt --weather verify',
+      '!fts --weather verify',
       'Roll one immediate governed weather step for the current map at the current timeofday tick:',
-      '!dwt --weather roll',
+      '!fts --weather roll',
       'Roll or force an immediate critical event for the current map at the current timeofday tick:',
-      '!dwt --weather roll event [event_key] [light|moderate|heavy|severe]',
+      '!fts --weather roll event [event_key] [light|moderate|heavy|severe]',
       'Set display units for weather output:',
-      '!dwt --weather set units metric|imperial',
+      '!fts --weather set units metric|imperial',
       'Set temperature band or exact temperature for the current map at the current timeofday tick. Exact clock time still drives the live diurnal reading:',
-      '!dwt --weather set temp <number|frigid|cold|mild|warm|hot>',
+      '!fts --weather set temp <number|frigid|cold|mild|warm|hot>',
       'Set rainfall band for the current map at the current timeofday tick:',
-      '!dwt --weather set rainfall none|light|moderate|heavy',
+      '!fts --weather set rainfall none|light|moderate|heavy',
       'Set sky cover for the current map at the current timeofday tick:',
-      '!dwt --weather set skies clear|partly_cloudy|cloudy|overcast|stormy',
+      '!fts --weather set skies clear|partly_cloudy|cloudy|overcast|stormy',
       'Set wind strength and/or direction for the current map at the current timeofday tick:',
-      '!dwt --weather set wind <pct|dead_calm|crit_light|crit_moderate|crit_heavy|crit_severe> [dir]',
+      '!fts --weather set wind <pct|dead_calm|crit_light|crit_moderate|crit_heavy|crit_severe> [dir]',
       'Set marine surface chop for the current map by dragging wind to the nearest compliant band:',
-      '!dwt --weather set chop none|light|moderate|heavy|severe',
+      '!fts --weather set chop none|light|moderate|heavy|severe',
       'Set current strength and/or direction for the current map at the current timeofday tick when the locale uses seasonal currents:',
-      '!dwt --weather set current <pct|dead_calm|crit_light|crit_moderate|crit_heavy|crit_severe> [dir]',
+      '!fts --weather set current <pct|dead_calm|crit_light|crit_moderate|crit_heavy|crit_severe> [dir]',
       'Show the current resolved weather value for the current map:',
-      '!dwt --weather show units|temp|rainfall|skies|wind|chop|current',
+      '!fts --weather show units|temp|rainfall|skies|wind|chop|current',
       'Page naming rule:',
-      'Pages use region.locale.mapname or region.locale_depth.mapname.',
+      'Pages use region.locale.mapname, region.locale_depth.mapname, region.region, or mapname.global.',
       'Depth token rule:',
       'Bare depth values use the current weather units (feet for imperial, meters for metric). Append mi or km to force large units, and prefix with a "+" for elevation. Case and spaces are ignored; canonical names are lower-case with no spaces.',
       'Windsock rule:',
-      'The active-page dwt_windsock token uses the surface layer family for surface locales, the uw_* layer family for underwater locales, and the ud_* layer family for underdark locales. The token must include the documented 30-side order.',
+      'The active-page fts_windsock token uses the surface layer family for surface locales, the uw_* layer family for underwater locales, and the ud_* layer family for underdark locales. The token must include the documented 30-side order.',
       'Chop rule:',
       'Chop is modeled only on offshore and coastal surface locales. It represents local short-period wind waves, so dead calm always yields chop none, and setting chop raises or lowers wind to the nearest compliant wind band.',
       'Subsurface rule:',
       'Underwater pages sample current strength, direction, temperature shift, and visibility from the locale waterProfile and the active page depth. Underdark pages treat airflow as mostly dead-calm cave ventilation, with only brief drafts or critical events pushing the ud_* tiers.',
       'Set keys may be stacked in a single command. The command writes the current map weather for the current timeofday tick and clears any active critical event on that map. Example:',
-      '!dwt --weather set temp cold rainfall light',
+      '!fts --weather set temp cold rainfall light',
       'Manual weather rolls and automatic drift both obey the same governor caps. Temperature anomalies are capped in absolute degrees per segment, rain/skies/wind move one step per segment unless a critical event overrides them, and current direction/strength/temperature ease toward their targets.',
       'Light rainfall requires partly_cloudy skies or better, and moderate and heavy rainfall require cloudy skies or better. If a rainfall command omits skies, the module raises skies to the minimum compatible state.',
       '',
@@ -6709,12 +6732,12 @@ var dwt_weather = dwt_weather || (function(){
 
   function tryWrapCalendarCard(){
     try{
-      if(!(RT.dwt && RT.dwt.LOG_CARDS && Array.isArray(RT.dwt.LOG_CARDS))) return false;
+      if(!(RT.fts && RT.fts.LOG_CARDS && Array.isArray(RT.fts.LOG_CARDS))) return false;
 
-      for(var i=0;i<RT.dwt.LOG_CARDS.length;i++){
-        var card = RT.dwt.LOG_CARDS[i];
+      for(var i=0;i<RT.fts.LOG_CARDS.length;i++){
+        var card = RT.fts.LOG_CARDS[i];
         if(!card || card.order !== 5 || typeof card.render !== 'function') continue;
-        if(card._dwtWeatherWrapped) return true;
+        if(card._ftsWeatherWrapped) return true;
 
         (function(c){
           var orig = c.render;
@@ -6745,7 +6768,7 @@ var dwt_weather = dwt_weather || (function(){
             }catch(e){}
             return html;
           };
-          c._dwtWeatherWrapped = true;
+          c._ftsWeatherWrapped = true;
         })(card);
 
         return true;
@@ -6754,25 +6777,25 @@ var dwt_weather = dwt_weather || (function(){
     return false;
   }
 
-  function registerWithCore(dwt){
+  function registerWithCore(fts){
     try{
-      dwt = dwt || (RT && RT.dwt) || null;
-      if(!dwt) return;
+      fts = fts || (RT && RT.fts) || null;
+      if(!fts) return;
 
-      if(typeof dwt.addHelpSection==='function'){
-        dwt.addHelpSection(300, 'Weather', function(){ return helpLines(); });
-        if(typeof dwt.refreshHelpHandout==='function'){
-          dwt.refreshHelpHandout(null);
+      if(typeof fts.addHelpSection==='function'){
+        fts.addHelpSection(300, 'Weather', function(){ return helpLines(); });
+        if(typeof fts.refreshHelpHandout==='function'){
+          fts.refreshHelpHandout(null);
         }
       }
 
       // Publish weather helpers to core for unified-menu sync behavior.
-      dwt.weatherSyncActivePage = weatherSyncActivePage;
-      dwt.weatherVerifySyncActivePage = weatherVerifySyncActivePage;
+      fts.weatherSyncActivePage = weatherSyncActivePage;
+      fts.weatherVerifySyncActivePage = weatherVerifySyncActivePage;
 
       // Ensure our weather line is injected into the calendar log card regardless of script load order.
-      if(typeof dwt.registerStartup==='function'){
-        dwt.registerStartup(MODULE_KEY, function(mule){
+      if(typeof fts.registerStartup==='function'){
+        fts.registerStartup(MODULE_KEY, function(mule){
           moduleStartup(mule);
           tryWrapCalendarCard();
         });
@@ -6781,9 +6804,9 @@ var dwt_weather = dwt_weather || (function(){
       // Best-effort immediate wrap (covers cases where calendar already registered).
       tryWrapCalendarCard();
 
-      if(typeof dwt.registerCommands==='function'){
+      if(typeof fts.registerCommands==='function'){
         // IMPORTANT: core calls cmd.handler({pid,key,val}); we must provide a function.
-        dwt.registerCommands({
+        fts.registerCommands({
           weather: { access:'player', handler:function(ctx){
             try{ return handleWeatherExpr(ctx.pid, String(ctx.val||'')); }
             catch(e){ return { error:String(e), changed:false }; }
@@ -6809,11 +6832,11 @@ var dwt_weather = dwt_weather || (function(){
     moduleStartup(mule);
 
     try{
-      RT.dwtQ = RT.dwtQ || [];
-      RT.dwtQ.push(function(dwt){
-        registerWithCore(dwt);
+      RT.ftsQ = RT.ftsQ || [];
+      RT.ftsQ.push(function(fts){
+        registerWithCore(fts);
       });
-      if(RT.dwt) registerWithCore(RT.dwt);
+      if(RT.fts) registerWithCore(RT.fts);
     }catch(e){}
   }
 
@@ -6835,18 +6858,18 @@ var dwt_weather = dwt_weather || (function(){
 }());
 
 try{
-  var _dwtWeatherRoot = (typeof globalThis !== 'undefined') ? globalThis
+  var _ftsWeatherRoot = (typeof globalThis !== 'undefined') ? globalThis
                       : (typeof window !== 'undefined')     ? window
                       : (typeof self !== 'undefined')       ? self
                       : (typeof global !== 'undefined')     ? global
                       : this;
-  _dwtWeatherRoot.dwt_weather = dwt_weather;
-  _dwtWeatherRoot.RT = _dwtWeatherRoot.RT || {};
-  _dwtWeatherRoot.RT.dwt_weather = dwt_weather;
+  _ftsWeatherRoot.fts_weather = fts_weather;
+  _ftsWeatherRoot.RT = _ftsWeatherRoot.RT || {};
+  _ftsWeatherRoot.RT.fts_weather = fts_weather;
 }catch(e){}
 
 on('ready', function(){
-  try{ dwt_weather.init(); }catch(e){ log('dwt_weather init error: '+e); }
+  try{ fts_weather.init(); }catch(e){ log('fts_weather init error: '+e); }
 });
 
 

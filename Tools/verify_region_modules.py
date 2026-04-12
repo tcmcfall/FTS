@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate shipped DWT region modules against the live weather schema."""
+"""Validate shipped FTS region modules against the live weather schema."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-WEATHER_MODULE = ROOT / "Modules" / "dwt_weather_0.2.0-alpha.1.js"
+WEATHER_MODULE = ROOT / "Modules" / "fts_weather_0.2.0-alpha.1.js"
 REGION_DIR = ROOT / "Modules" / "Region Modules"
 CANONICAL_LOCALES = ["offshore", "coastal", "inland", "underwater", "underdark"]
 SEASONS = ["winter", "spring", "summer", "autumn"]
@@ -38,7 +38,7 @@ REQUIRED_LOCALE_KEYS = [
     "biome",
     "climateMode",
 ]
-REGION_FILE_PATTERN = "dwt_region.*_*.js"
+REGION_FILE_PATTERN = "fts_region.*_*.js"
 
 
 def load_period_order(weather_path: Path) -> list[str]:
@@ -201,14 +201,14 @@ def validate_locale_definition(label: str, locale_def: dict, period_order: list[
 def validate_region_entry(path: Path, entry: dict, period_order: list[str]) -> list[str]:
     issues: list[str] = []
     region_name = entry.get("region")
-    if entry.get("schema") != "dwt.region.v4":
-        issues.append(f"schema is {entry.get('schema')!r}, expected 'dwt.region.v4'")
+    if entry.get("schema") != "fts.region.v4":
+        issues.append(f"schema is {entry.get('schema')!r}, expected 'fts.region.v4'")
     if not isinstance(region_name, str) or not region_name.strip():
         issues.append("region is missing")
-    match = re.match(r"^dwt_region\.(?P<region>.+?)_\d", path.name)
+    match = re.match(r"^fts_region\.(?P<region>.+?)_\d", path.name)
     stem_region = match.group("region") if match else ""
     if not stem_region:
-        issues.append("filename does not match expected dwt_region.<region>_<version>.js pattern")
+        issues.append("filename does not match expected fts_region.<region>_<version>.js pattern")
     elif isinstance(region_name, str) and region_name != stem_region:
         issues.append(f"region {region_name!r} does not match filename key {stem_region!r}")
     locales = entry.get("locales")

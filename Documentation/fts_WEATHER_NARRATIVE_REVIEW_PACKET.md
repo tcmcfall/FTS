@@ -1,11 +1,11 @@
-# DWT Weather Narrative Review Packet
+# FTS Weather Narrative Review Packet
 
 This packet turns the live weather-summary grammar into representative sample outputs for prose review.
 
 Source of truth:
 
-- [dwt_weather_0.2.0-alpha.1.js](V:\Programs\Git Repository\DWT\Modules\dwt_weather_0.2.0-alpha.1.js)
-- [dwt_WEATHER_NARRATIVE_PERMUTATIONS.md](V:\Programs\Git Repository\DWT\Documentation\dwt_WEATHER_NARRATIVE_PERMUTATIONS.md)
+- [fts_weather_0.2.0-alpha.1.js](V:\Programs\Git Repository\FTS\Modules\fts_weather_0.2.0-alpha.1.js)
+- [fts_WEATHER_NARRATIVE_PERMUTATIONS.md](V:\Programs\Git Repository\FTS\Documentation\fts_WEATHER_NARRATIVE_PERMUTATIONS.md)
 
 Important note:
 

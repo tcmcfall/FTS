@@ -1,8 +1,8 @@
-// name:        dwt_region.TEMPLATE.js
+// name:        fts_region.TEMPLATE.js
 // version:     0.1.0-alpha.1
-// description: Authoritative template for a DWT dwt.region.v4 module.
+// description: Authoritative template for a FTS fts.region.v4 module.
 // Semantic Versioning (SemVer) Policy:
-// - DWT uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
+// - FTS uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
 // - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
 // - Increment PATCH for backward-compatible bug fixes.
 // - Increment MINOR for new backward-compatible functionality.
@@ -13,7 +13,7 @@
 // - Dependency notes should use SemVer-friendly wording such as ">= 0.1.0-alpha.1" rather than informal forms like "5.1.0+".
 //
 // Copy this file to:
-//   Modules/Region Modules/dwt_region.<regionKey>_0.1.0-alpha.1.js
+//   Modules/Region Modules/fts_region.<regionKey>_0.1.0-alpha.1.js
 //
 // Then replace REGION_KEY, MODULE_NAME, and REGION_ENTRY.
 //
@@ -34,6 +34,8 @@
 // Page names use:
 //   region.locale.mapname
 //   region.locale_<depth>.mapname
+//   region.region
+//   mapname.global
 //
 // Page names are case- and space-insensitive. Canonical generated names should be lower-case with no spaces.
 
@@ -43,13 +45,13 @@
   var RT = (typeof globalThis !== 'undefined') ? globalThis : this;
   var VERSION = '0.1.0-alpha.1';
   var REGION_KEY = 'replacewithregionkey';
-  var MODULE_NAME = 'dwt_region.' + REGION_KEY;
+  var MODULE_NAME = 'fts_region.' + REGION_KEY;
   var _startupRegistered = false;
 
   // Replace the object below with real data.
   // The template is intentionally explicit so every editable area is visible.
   var REGION_ENTRY = {
-    "schema": "dwt.region.v4",
+    "schema": "fts.region.v4",
     "region": "replacewithregionkey",
     "displayName": "Replace With Region Name",
     "defaultLocale": "coastal",
@@ -142,6 +144,135 @@
       "Use NPS cave-climate guidance to keep underdark temperatures near the regional annual mean and airflow near dead calm except at entrances, faults, or critical events.",
       "Use the USGS three-point method for inland and coastal water columns; open ocean defaults use 1, 5, and 10 fathoms."
     ],
+
+    // Trade-point templates are read by fts_mapPointWizard.
+    // Keep this block simple so the GM can edit or duplicate templates quickly.
+    "tradePoints": {
+      "notes": [
+        "Map Point Wizard ships with built-in trade-point templates already.",
+        "The templates array below adds or overrides options when this region is selected.",
+        "Keep these templates simple: a key, a short label, a short summary, and defaults that stay easy to edit.",
+        "Defaults may omit any field the GM should always choose manually."
+      ],
+      "templates": [
+        {
+          "key": "fishing_village",
+          "label": "Fishing Village",
+          "summary": "Small coastal trade node with dependable catch, modest wealth, and simple defenses.",
+          "defaults": {
+            "locale": "coastal",
+            "population": "350",
+            "development": "2",
+            "wealth": "2",
+            "faiths": ["chauntea", "umberlee"],
+            "factions": ["fishers_guild", "town_council"],
+            "offense_level": "1",
+            "offense_types": ["militia", "scouts"],
+            "defense_level": "2",
+            "defense_types": ["harbor_patrols", "natural_barriers"],
+            "tradeGoods": [
+              { "stance": "has", "goodKey": "fish_fresh", "windows": [{ "key": "spring", "cu": "6" }, { "key": "summer", "cu": "10" }, { "key": "autumn", "cu": "8" }] },
+              { "stance": "has", "goodKey": "fish_salted", "windows": [{ "key": "annual", "cu": "4" }] },
+              { "stance": "wants", "goodKey": "grain", "windows": [{ "key": "annual", "cu": "5" }] },
+              { "stance": "needs", "goodKey": "lamp_oil", "windows": [{ "key": "annual", "cu": "2" }] }
+            ]
+          }
+        },
+        {
+          "key": "pirate_smuggler_cove",
+          "label": "Pirate / Smuggler Cove",
+          "summary": "Hidden maritime exchange point with illicit traffic, sharper offense, and fragile legitimacy.",
+          "defaults": {
+            "locale": "coastal",
+            "population": "220",
+            "development": "2",
+            "wealth": "3",
+            "faiths": ["mask", "umberlee"],
+            "factions": ["smugglers_ring", "pirate_captains"],
+            "offense_level": "3",
+            "offense_types": ["raiders", "armed_ships", "saboteurs"],
+            "defense_level": "2",
+            "defense_types": ["hidden_channels", "safehouses", "natural_barriers"],
+            "tradeGoods": [
+              { "stance": "has", "goodKey": "stolen_goods", "windows": [{ "key": "annual", "cu": "3" }] },
+              { "stance": "has", "goodKey": "smuggled_luxuries", "windows": [{ "key": "summer", "cu": "4" }, { "key": "autumn", "cu": "5" }] },
+              { "stance": "wants", "goodKey": "ship_repair_supplies", "windows": [{ "key": "annual", "cu": "4" }] },
+              { "stance": "needs", "goodKey": "medicinal_herbs", "windows": [{ "key": "annual", "cu": "1" }] }
+            ]
+          }
+        },
+        {
+          "key": "minor_trade_hub",
+          "label": "Minor Trade Hub",
+          "summary": "Modest inland market center with steady caravan traffic and practical civic infrastructure.",
+          "defaults": {
+            "locale": "inland",
+            "population": "1200",
+            "development": "3",
+            "wealth": "3",
+            "faiths": ["waukeen"],
+            "factions": ["merchants_guild", "town_council"],
+            "offense_level": "2",
+            "offense_types": ["militia", "trained_guard"],
+            "defense_level": "2",
+            "defense_types": ["walls", "patrols"],
+            "tradeGoods": [
+              { "stance": "has", "goodKey": "warehousing", "windows": [{ "key": "annual", "cu": "6" }] },
+              { "stance": "has", "goodKey": "iron_tools", "windows": [{ "key": "annual", "cu": "4" }] },
+              { "stance": "wants", "goodKey": "grain", "windows": [{ "key": "annual", "cu": "6" }] },
+              { "stance": "needs", "goodKey": "rope", "windows": [{ "key": "annual", "cu": "2" }] }
+            ]
+          }
+        },
+        {
+          "key": "moderate_trade_hub",
+          "label": "Moderate Trade Hub",
+          "summary": "Established trade city with deeper reserves, stronger customs presence, and broader seasonal throughput.",
+          "defaults": {
+            "locale": "coastal",
+            "population": "4200",
+            "development": "4",
+            "wealth": "4",
+            "faiths": ["waukeen", "tyr"],
+            "factions": ["merchants_guild", "customs_office", "harbormaster_office"],
+            "offense_level": "3",
+            "offense_types": ["trained_guard", "marines"],
+            "defense_level": "3",
+            "defense_types": ["fortified_docks", "walls", "harbor_patrols"],
+            "tradeGoods": [
+              { "stance": "has", "goodKey": "warehousing", "windows": [{ "key": "annual", "cu": "10" }] },
+              { "stance": "has", "goodKey": "passage_transport", "windows": [{ "key": "spring", "cu": "5" }, { "key": "summer", "cu": "8" }, { "key": "autumn", "cu": "6" }] },
+              { "stance": "wants", "goodKey": "metal_ingots", "windows": [{ "key": "annual", "cu": "6" }] },
+              { "stance": "needs", "goodKey": "ship_repair_supplies", "windows": [{ "key": "annual", "cu": "4" }] }
+            ]
+          }
+        },
+        {
+          "key": "major_trade_hub",
+          "label": "Major Trade Hub",
+          "summary": "Major regional trade city with exceptional throughput, powerful institutions, and year-round cargo demand.",
+          "defaults": {
+            "locale": "coastal",
+            "population": "12000",
+            "development": "5",
+            "wealth": "5",
+            "faiths": ["waukeen", "gond", "tyr"],
+            "factions": ["merchants_guild", "customs_office", "harbormaster_office", "town_guard"],
+            "offense_level": "4",
+            "offense_types": ["trained_guard", "marines", "armed_ships"],
+            "defense_level": "4",
+            "defense_types": ["fortified_docks", "walls", "gatehouses", "harbor_chain"],
+            "tradeGoods": [
+              { "stance": "has", "goodKey": "warehousing", "windows": [{ "key": "annual", "cu": "18" }] },
+              { "stance": "has", "goodKey": "shipwright_services", "windows": [{ "key": "annual", "cu": "10" }] },
+              { "stance": "has", "goodKey": "spices", "windows": [{ "key": "spring", "cu": "4" }, { "key": "summer", "cu": "7" }, { "key": "autumn", "cu": "6" }] },
+              { "stance": "wants", "goodKey": "grain", "windows": [{ "key": "annual", "cu": "14" }] },
+              { "stance": "needs", "goodKey": "lumber", "windows": [{ "key": "annual", "cu": "8" }] }
+            ]
+          }
+        }
+      ]
+    },
     // Tolkien-inspired quip scaffold:
     // - short: 2 lines, AA
     // - medium: 4 lines, ACBC
@@ -471,7 +602,7 @@
   // earlypredawn, latepredawn, earlymorning, latemorning,
   // earlyafternoon, lateafternoon, earlyevening, lateevening.
   //
-  // weather.climateControl is required in dwt.region.v4.
+  // weather.climateControl is required in fts.region.v4.
   // localeDefinitions.<locale>.climateControl and localeDefinitions.<locale>.periods.<period>.climateControl
   // are optional overrides when a locale needs different diurnal timings, governor caps, or activation windows.
   //
@@ -504,13 +635,13 @@
   // }
 
   function queueRegion(){
-    RT.dwtRegionQ = RT.dwtRegionQ || [];
-    RT.dwtRegionQ.push({ entry: REGION_ENTRY, moduleName: MODULE_NAME, version: VERSION });
+    RT.ftsRegionQ = RT.ftsRegionQ || [];
+    RT.ftsRegionQ.push({ entry: REGION_ENTRY, moduleName: MODULE_NAME, version: VERSION });
   }
 
   function registerRegion(){
-    if(RT.dwt_weather && typeof RT.dwt_weather.registerRegionEntry === 'function'){
-      RT.dwt_weather.registerRegionEntry(REGION_ENTRY, MODULE_NAME, VERSION);
+    if(RT.fts_weather && typeof RT.fts_weather.registerRegionEntry === 'function'){
+      RT.fts_weather.registerRegionEntry(REGION_ENTRY, MODULE_NAME, VERSION);
       return;
     }
     queueRegion();
@@ -520,17 +651,17 @@
     if(_startupRegistered) return;
     _startupRegistered = true;
 
-    RT.dwtQ = RT.dwtQ || [];
-    RT.dwtQ.push(function(dwt){
-      if(dwt && typeof dwt.registerStartup === 'function'){
-        dwt.registerStartup(MODULE_NAME, function(){
+    RT.ftsQ = RT.ftsQ || [];
+    RT.ftsQ.push(function(fts){
+      if(fts && typeof fts.registerStartup === 'function'){
+        fts.registerStartup(MODULE_NAME, function(){
           registerRegion();
         });
       }
     });
 
-    if(RT.dwt && typeof RT.dwt.registerStartup === 'function'){
-      RT.dwt.registerStartup(MODULE_NAME, function(){
+    if(RT.fts && typeof RT.fts.registerStartup === 'function'){
+      RT.fts.registerStartup(MODULE_NAME, function(){
         registerRegion();
       });
     }

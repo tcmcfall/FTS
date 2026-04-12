@@ -1,4 +1,4 @@
-# DWT Built-in Narration Inventory
+# FTS Built-in Narration Inventory
 
 Generated on 2026-03-28 from the runtime modules in this workspace.
 
@@ -14,22 +14,22 @@ Historical note: this inventory records the pre-overhaul narration layout and is
 
 | Module | Built-in narration | Notes |
 | --- | --- | --- |
-| `Modules/dwt_calendar_0.2.0-alpha.1.js` | Yes | Festival overlay lines plus calendar-local fallback festival quips. |
-| `Modules/dwt_core_0.2.0-alpha.1.js` | No | Command shell, help, and UI text only; no atmospheric narration pool. |
-| `Modules/dwt_geo_0.2.0-alpha.1.js` | No | Route/location logic only; no built-in narration pool. |
-| `Modules/dwt_mapMeta_0.2.0-alpha.1.js` | No | Map metadata summaries only; no atmospheric narration pool. |
-| `Modules/dwt_quips_0.1.0-alpha.1.js` | Yes | Authoritative quip corpus (festival, season, generic, and region pools). |
-| `Modules/dwt_regionBuilder_0.1.0-alpha.1.js` | No | Generator/preset descriptions only; no runtime narration pool. |
-| `Modules/dwt_weather_0.2.0-alpha.1.js` | Yes | Fallback weather quips, critical-event summaries/effect descriptors, and dynamic narrative templates. |
-| `Modules/Region Modules/dwt_region.frozenfar_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
-| `Modules/Region Modules/dwt_region.landsofintrigue_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
-| `Modules/Region Modules/dwt_region.moonshaes_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
-| `Modules/Region Modules/dwt_region.swordcoastnorth_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
-| `Modules/Region Modules/dwt_region.swordcoast_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
+| `Modules/fts_calendar_0.2.0-alpha.1.js` | Yes | Festival overlay lines plus calendar-local fallback festival quips. |
+| `Modules/fts_core_0.2.0-alpha.1.js` | No | Command shell, help, and UI text only; no atmospheric narration pool. |
+| `Modules/fts_geo_0.2.0-alpha.1.js` | No | Route/location logic only; no built-in narration pool. |
+| `Modules/fts_mapMeta_0.2.0-alpha.1.js` | No | Map metadata summaries only; no atmospheric narration pool. |
+| `Modules/fts_quips_0.1.0-alpha.1.js` | Yes | Authoritative quip corpus (festival, season, generic, and region pools). |
+| `Modules/fts_mapRegionWizard_0.2.0-alpha.1.js` | No | Generator/preset descriptions only; no runtime narration pool. |
+| `Modules/fts_weather_0.2.0-alpha.1.js` | Yes | Fallback weather quips, critical-event summaries/effect descriptors, and dynamic narrative templates. |
+| `Modules/Region Modules/fts_region.frozenfar_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
+| `Modules/Region Modules/fts_region.landsofintrigue_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
+| `Modules/Region Modules/fts_region.moonshaes_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
+| `Modules/Region Modules/fts_region.swordcoastnorth_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
+| `Modules/Region Modules/fts_region.swordcoast_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
 
 ## Calendar Module
 
-Source: `Modules/dwt_calendar_0.2.0-alpha.1.js`
+Source: `Modules/fts_calendar_0.2.0-alpha.1.js`
 
 - Festival overlay one-liners: 6
 - Calendar-local festival fallback quips: 32
@@ -53,7 +53,7 @@ Old oaths awaken in new leaves.
 #### `midsummer`
 
 ```text
-Sun at its crown—nothing stays hidden.
+Sun at its crown-nothing stays hidden.
 ```
 
 #### `shieldmeet`
@@ -106,7 +106,7 @@ Midwinter teaches patience to all who listen.
 ```text
 When the wind howls, the city leans inward.
 A table becomes a fortress, laughter its guard.
-Let the cold take what it can—never your kindness.
+Let the cold take what it can-never your kindness.
 Midwinter passes; what you keep remains.
 ```
 
@@ -130,7 +130,7 @@ Greengrass is permission to try again.
 
 3.
 ```text
-Rains rinse the soot from winter’s edges.
+Rains rinse the soot from winter's edges.
 Promises sprout where doubt once sat.
 Share seed, share story, share time.
 Greengrass makes room for mercy.
@@ -148,7 +148,7 @@ Greengrass will do the rest.
 
 1.
 ```text
-Sun at its crown—nothing stays hidden.
+Sun at its crown-nothing stays hidden.
 Lanterns and laughter crowd out careful silence.
 Spend your joy while the night is long.
 Midsummer remembers those who dared to dance.
@@ -185,7 +185,7 @@ Midsummer proves it.
 Once in four years, the world holds its breath.
 Charters are read where all may hear.
 A promise spoken plainly is a shield.
-Shieldmeet weighs the city’s soul.
+Shieldmeet weighs the city's soul.
 ```
 
 2.
@@ -198,7 +198,7 @@ Shieldmeet remembers who stood accountable.
 
 3.
 ```text
-The bells ring, and the crowd answers—steady, not loud.
+The bells ring, and the crowd answers-steady, not loud.
 Justice prefers clear words over sharp steel.
 Choose carefully; the year will quote you.
 Shieldmeet binds what you decide.
@@ -224,7 +224,7 @@ Highharvestide honors honest accounting.
 
 2.
 ```text
-Full barns, full hearts—if you keep them that way.
+Full barns, full hearts-if you keep them that way.
 Gratitude is measured in portions given away.
 Close the ledgers with clean hands.
 Highharvestide rewards restraint.
@@ -275,7 +275,7 @@ The Feast of the Moon asks nothing more.
 4.
 ```text
 Moonlight on the floor, warm hands in the dark.
-No bargains tonight—only belonging.
+No bargains tonight-only belonging.
 The year slows long enough to listen.
 The Feast of the Moon is that pause.
 ```
@@ -311,7 +311,7 @@ Uktar is truth in brown and gray.
 Nothing stays sweet forever.
 The wise learn when to seal the jar and bank the fire.
 Decay is a messenger, not a verdict.
-Uktar’s lesson is readiness.
+Uktar's lesson is readiness.
 ```
 
 #### `midwinters_eve` (4 entries)
@@ -321,7 +321,7 @@ Uktar’s lesson is readiness.
 A breath between what was and will.
 No oaths demanded, no banners raised.
 Release the old year gently and keep only what matters.
-Midwinter’s Eve lets the turning happen.
+Midwinter's Eve lets the turning happen.
 ```
 
 2.
@@ -329,7 +329,7 @@ Midwinter’s Eve lets the turning happen.
 The lamps burn low and the city listens.
 Forgive what you can; remember what you must.
 Tomorrow arrives whether invited or not.
-Year’s Turning is humility made visible.
+Year's Turning is humility made visible.
 ```
 
 3.
@@ -337,7 +337,7 @@ Year’s Turning is humility made visible.
 Time pauses long enough to be felt.
 Set down the weight you carried and pick up something kinder.
 The circle closes, then begins.
-Midwinter’s Eve is the hinge.
+Midwinter's Eve is the hinge.
 ```
 
 4.
@@ -345,7 +345,7 @@ Midwinter’s Eve is the hinge.
 The old year steps back without ceremony.
 The new year waits without a name.
 Between them lies one quiet night to breathe.
-Year’s Turning belongs to everyone.
+Year's Turning belongs to everyone.
 ```
 
 ### Generic Festival Fallback Quips
@@ -384,7 +384,7 @@ Carry that forward.
 
 ## Quips Corpus Module
 
-Source: `Modules/dwt_quips_0.1.0-alpha.1.js`
+Source: `Modules/fts_quips_0.1.0-alpha.1.js`
 
 - Lookup paths: 51
 - Total authored quip entries: 1900
@@ -401,7 +401,7 @@ Source: `Modules/dwt_quips_0.1.0-alpha.1.js`
 
 1.
 ```text
-On Waterdeep’s long candlelit table,
+On Waterdeep's long candlelit table,
 The bread is shared, the wine passed slow,
 Feast of the Moon makes kinship able,
 And lets remembered faces glow,
@@ -428,7 +428,7 @@ And learn how memory understands.
 In Calimshan the incense curls,
 And elders speak the names once known,
 Feast of the Moon gathers boys and girls,
-To learn the past they’ve never grown,
+To learn the past they've never grown,
 The stories wind like patient thread,
 Through heat and hardship, loss and care,
 The living walk where others tread,
@@ -449,7 +449,7 @@ And guards the fragile young and old.
 
 5.
 ```text
-At Baldur’s Gate the harbor sighs,
+At Baldur's Gate the harbor sighs,
 As lamps burn low along the quay,
 Feast of the Moon lifts weary eyes,
 And lets the present simply be,
@@ -466,7 +466,7 @@ As tables fill with fish and bread,
 Feast of the Moon brings sailors home,
 To names remembered, not the dead,
 A bowl is set beside the fire,
-For those who won’t return again,
+For those who won't return again,
 The meal grows warm with shared desire,
 To hold the past without the pain.
 ```
@@ -521,12 +521,12 @@ And feeds the living with the dead.
 
 11.
 ```text
-At Baldur’s Gate the bells don’t ring,
+At Baldur's Gate the bells don't ring,
 The night prefers a gentler sound,
 Feast of the Moon needs quieter things,
 To keep the living safely bound,
 The harbor lights reflect like stars,
-Upon the water’s steady skin,
+Upon the water's steady skin,
 The city loosens all its scars,
 And lets remembrance settle in.
 ```
@@ -536,11 +536,11 @@ And lets remembrance settle in.
 In Saltmarsh children hear old tales,
 Of storms survived and loves once true,
 Feast of the Moon sets gentler sails,
-For hearts that don’t yet know what’s due,
+For hearts that don't yet know what's due,
 The elders speak of loss and gain,
 With equal weight and steady tone,
 The past is not a chain of pain,
-But roots from which the present’s grown.
+But roots from which the present's grown.
 ```
 
 13.
@@ -586,7 +586,7 @@ And what they taught with patient care,
 Feast of the Moon hears every sigh,
 And keeps the wisdom there to share,
 The children trace the moons in chalk,
-Along the courtyard’s cooling stone,
+Along the courtyard's cooling stone,
 The past and present gently walk,
 And neither one must stand alone.
 ```
@@ -605,7 +605,7 @@ To honor love above its might.
 
 18.
 ```text
-At Baldur’s Gate the tide runs slow,
+At Baldur's Gate the tide runs slow,
 As if the sea itself would wait,
 Feast of the Moon lets feelings flow,
 Without the push of time or fate,
@@ -643,7 +643,7 @@ And leaves us held by what we mean.
 
 1.
 ```text
-On Waterdeep’s long candlelit table,
+On Waterdeep's long candlelit table,
 The bread is shared, the wine passed slow,
 Feast of the Moon makes kinship able,
 And lets remembered faces glow.
@@ -662,7 +662,7 @@ And feeds the heart that bore it all.
 In Calimshan the incense curls,
 And elders speak the names once known,
 Feast of the Moon gathers boys and girls,
-To learn the past they’ve never grown.
+To learn the past they've never grown.
 ```
 
 4.
@@ -675,7 +675,7 @@ Where gratitude is spoken loud.
 
 5.
 ```text
-At Baldur’s Gate the harbor sighs,
+At Baldur's Gate the harbor sighs,
 As lamps burn low along the quay,
 Feast of the Moon lifts weary eyes,
 And lets the present simply be.
@@ -731,7 +731,7 @@ And honors want as well as need.
 
 12.
 ```text
-At Baldur’s Gate the bells don’t ring,
+At Baldur's Gate the bells don't ring,
 The night prefers a gentler sound,
 Feast of the Moon needs quieter things,
 To keep the living safely bound.
@@ -742,7 +742,7 @@ To keep the living safely bound.
 In Saltmarsh children hear old tales,
 Of storms survived and loves once true,
 Feast of the Moon sets gentler sails,
-For hearts that don’t yet know what’s due.
+For hearts that don't yet know what's due.
 ```
 
 14.
@@ -787,7 +787,7 @@ Enough to feel the human flame.
 
 19.
 ```text
-At Baldur’s Gate the tide runs slow,
+At Baldur's Gate the tide runs slow,
 As if the sea itself would wait,
 Feast of the Moon lets feelings flow,
 Without the push of time or fate.
@@ -811,7 +811,7 @@ Between what was and what must be.
 
 22.
 ```text
-On Waterdeep’s broad family row,
+On Waterdeep's broad family row,
 The night runs long, the voices soft,
 Feast of the Moon lets patience grow,
 And lifts the past where it was lost.
@@ -843,7 +843,7 @@ By keeping memory well-fed.
 
 26.
 ```text
-At Baldur’s Gate the lamps burn low,
+At Baldur's Gate the lamps burn low,
 And doors stay open late and kind,
 Feast of the Moon lets the past show,
 Without demanding we rewind.
@@ -854,7 +854,7 @@ Without demanding we rewind.
 In Saltmarsh the sea is thanked aloud,
 For those returned and those not so,
 Feast of the Moon makes peace allowed,
-With tides we’ll never fully know.
+With tides we'll never fully know.
 ```
 
 28.
@@ -899,7 +899,7 @@ Where family holds the truest right.
 
 33.
 ```text
-At Baldur’s Gate the harbor rests,
+At Baldur's Gate the harbor rests,
 The ships like shadows tied to shore,
 Feast of the Moon counts quiet guests,
 Who need no tally anymore.
@@ -918,7 +918,7 @@ What must be done and what can stay.
 A final candle guttering low,
 The table cleared but hearts still full,
 Feast of the Moon lets go,
-And leaves behind what’s beautiful.
+And leaves behind what's beautiful.
 ```
 
 36.
@@ -951,13 +951,13 @@ Feast of the Moon lets memories glow.
 
 4.
 ```text
-Tethyr’s halls hold quieter cheer,
+Tethyr's halls hold quieter cheer,
 Feast of the Moon draws loved ones near.
 ```
 
 5.
 ```text
-At Baldur’s Gate the streets go calm,
+At Baldur's Gate the streets go calm,
 Feast of the Moon is gentle balm.
 ```
 
@@ -993,7 +993,7 @@ Feast of the Moon counts quiet luck.
 
 11.
 ```text
-Amn forgives the year’s sharp turn,
+Amn forgives the year's sharp turn,
 Feast of the Moon lets old wounds burn.
 ```
 
@@ -1005,13 +1005,13 @@ Feast of the Moon lets children know.
 
 13.
 ```text
-Tethyr’s banners hang at rest,
+Tethyr's banners hang at rest,
 Feast of the Moon prefers the chest.
 ```
 
 14.
 ```text
-At Baldur’s Gate the harbor sighs,
+At Baldur's Gate the harbor sighs,
 Feast of the Moon lifts weary eyes.
 ```
 
@@ -1053,13 +1053,13 @@ Feast of the Moon names all the dead.
 
 21.
 ```text
-Tethyr’s fire burns low and clear,
+Tethyr's fire burns low and clear,
 Feast of the Moon keeps memory near.
 ```
 
 22.
 ```text
-At Baldur’s Gate the bells don’t ring,
+At Baldur's Gate the bells don't ring,
 Feast of the Moon needs quieter things.
 ```
 
@@ -1095,13 +1095,13 @@ Feast of the Moon lets secrets sleep.
 
 28.
 ```text
-Tethyr’s roads lie calm and bare,
+Tethyr's roads lie calm and bare,
 Feast of the Moon draws circles there.
 ```
 
 29.
 ```text
-At Baldur’s Gate the tide runs slow,
+At Baldur's Gate the tide runs slow,
 Feast of the Moon lets feelings flow.
 ```
 
@@ -1137,13 +1137,13 @@ Feast of the Moon clears the mind.
 
 35.
 ```text
-Tethyr’s watch walks softer still,
+Tethyr's watch walks softer still,
 Feast of the Moon bends iron will.
 ```
 
 36.
 ```text
-At Baldur’s Gate the lamps burn low,
+At Baldur's Gate the lamps burn low,
 Feast of the Moon lets the past show.
 ```
 
@@ -1179,13 +1179,13 @@ Feast of the Moon hears every sigh.
 
 42.
 ```text
-Tethyr’s hearthstones glow like gold,
+Tethyr's hearthstones glow like gold,
 Feast of the Moon guards old and old.
 ```
 
 43.
 ```text
-At Baldur’s Gate the crowd stays near,
+At Baldur's Gate the crowd stays near,
 Feast of the Moon holds those dear.
 ```
 
@@ -1219,7 +1219,7 @@ Feast of the Moon runs deep.
 
 1.
 ```text
-On Waterdeep’s streets the gutters run,
+On Waterdeep's streets the gutters run,
 With rain that smells of open ground,
 Greengrass begins the work begun,
 And lifts the year with gentler sound,
@@ -1267,7 +1267,7 @@ Is paid back slow in sun and rain.
 
 5.
 ```text
-At Baldur’s Gate the docks smell rain,
+At Baldur's Gate the docks smell rain,
 The river swells with brighter sheen,
 Greengrass rinses loss and gain,
 And paints the hulls in hopeful green,
@@ -1327,7 +1327,7 @@ And sings it slow, but sings to stay.
 
 10.
 ```text
-Tethyr’s creeks run fast and clean,
+Tethyr's creeks run fast and clean,
 They cut the fields with silver line,
 Greengrass keeps the promise green,
 By letting water choose its sign,
@@ -1339,7 +1339,7 @@ By letting risk and joy both meet.
 
 11.
 ```text
-At Baldur’s Gate the fog lifts slow,
+At Baldur's Gate the fog lifts slow,
 Revealing masts like waiting spears,
 Greengrass lets the harbor show,
 What winter hid with colder fears,
@@ -1363,7 +1363,7 @@ From hands that plant the promise now.
 
 13.
 ```text
-On Waterdeep’s damp cobbled lane,
+On Waterdeep's damp cobbled lane,
 A child draws suns in dripping chalk,
 Greengrass turns the rain to gain,
 And teaches joy to learn to walk,
@@ -1399,19 +1399,19 @@ And listens when the future sings.
 
 16.
 ```text
-Tethyr’s banners lift and stir,
+Tethyr's banners lift and stir,
 As wind smells fresh of open ground,
 Greengrass makes the future sure,
 By giving hope a working sound,
 No blade is drawn, no oath is sworn,
 But soil is turned and fences set,
 The year is claimed by what is born,
-Not by the debts we won’t forget.
+Not by the debts we won't forget.
 ```
 
 17.
 ```text
-At Baldur’s Gate the river laughs,
+At Baldur's Gate the river laughs,
 And slaps the stone with rising cheer,
 Greengrass counts the hopeful crafts,
 That build the coming trading year,
@@ -1425,7 +1425,7 @@ Where shared reward is what is found.
 ```text
 Saltmarsh marsh turns gold and green,
 As reeds forget the frost they knew,
-Greengrass blesses what’s between,
+Greengrass blesses what's between,
 The land, the sea, and those who do,
 A fisher sets a bowl aside,
 For tides that gave and took before,
@@ -1449,7 +1449,7 @@ And time agrees to take its time.
 
 1.
 ```text
-On Waterdeep’s streets the gutters run,
+On Waterdeep's streets the gutters run,
 With rain that smells of open ground,
 Greengrass begins the work begun,
 And lifts the year with gentler sound.
@@ -1481,7 +1481,7 @@ Then spends it all on growing time.
 
 5.
 ```text
-At Baldur’s Gate the docks smell rain,
+At Baldur's Gate the docks smell rain,
 The river swells with brighter sheen,
 Greengrass rinses loss and gain,
 And paints the hulls in hopeful green.
@@ -1529,7 +1529,7 @@ And trades the weeks for miles of smiles.
 
 11.
 ```text
-Tethyr’s roads grow loud with carts,
+Tethyr's roads grow loud with carts,
 That carry grain and eager hands,
 Greengrass mends the broken parts,
 Between the towns and scattered lands.
@@ -1537,7 +1537,7 @@ Between the towns and scattered lands.
 
 12.
 ```text
-At Baldur’s Gate a captain swears,
+At Baldur's Gate a captain swears,
 To fairer weights and honest tolls,
 Greengrass likes the vow that dares,
 To plant its trust in working souls.
@@ -1561,7 +1561,7 @@ By letting work and faith be one.
 
 15.
 ```text
-On Waterdeep’s wall fresh paint dries,
+On Waterdeep's wall fresh paint dries,
 A sigil bright against the gray,
 Greengrass lets the city try,
 A newer face without delay.
@@ -1577,7 +1577,7 @@ Is fixing now before you dare.
 
 17.
 ```text
-Calimshan’s markets bloom with sound,
+Calimshan's markets bloom with sound,
 Of spice and cloth and honest cheer,
 Greengrass turns the wheel around,
 And makes the coming season clear.
@@ -1593,7 +1593,7 @@ By letting water choose its sign.
 
 19.
 ```text
-At Baldur’s Gate the fog lifts slow,
+At Baldur's Gate the fog lifts slow,
 Revealing masts like waiting spears,
 Greengrass lets the harbor show,
 What winter hid with colder fears.
@@ -1617,7 +1617,7 @@ To teach the hands to hold it still.
 
 22.
 ```text
-Waterdeep’s bells ring clear and bright,
+Waterdeep's bells ring clear and bright,
 But stop before the echo fades,
 Greengrass keeps the tone just right,
 Between the noise and quiet trades.
@@ -1641,17 +1641,17 @@ And leaves it there to promise more.
 
 25.
 ```text
-Tethyr’s farms ring iron-true,
+Tethyr's farms ring iron-true,
 As fences mended face the sun,
 Greengrass shows the work to do,
-Is never ended—just begun.
+Is never ended-just begun.
 ```
 
 26.
 ```text
-At Baldur’s Gate a toast is poured,
+At Baldur's Gate a toast is poured,
 To ships that soon will ride the swell,
-Greengrass favors what’s restored,
+Greengrass favors what's restored,
 And trusts the tides that know us well.
 ```
 
@@ -1673,7 +1673,7 @@ Between the hope and reckless dream.
 
 29.
 ```text
-On Waterdeep’s damp cobbled lane,
+On Waterdeep's damp cobbled lane,
 A child draws suns in dripping chalk,
 Greengrass turns the rain to gain,
 And teaches joy to learn to walk.
@@ -1697,7 +1697,7 @@ And writes new ones in what is seen.
 
 32.
 ```text
-Tethyr’s banners lift and stir,
+Tethyr's banners lift and stir,
 As wind smells fresh of open ground,
 Greengrass makes the future sure,
 By giving hope a working sound.
@@ -1705,7 +1705,7 @@ By giving hope a working sound.
 
 33.
 ```text
-At Baldur’s Gate the river laughs,
+At Baldur's Gate the river laughs,
 And slaps the stone with rising cheer,
 Greengrass counts the hopeful crafts,
 That build the coming trading year.
@@ -1715,7 +1715,7 @@ That build the coming trading year.
 ```text
 Saltmarsh marsh turns gold and green,
 As reeds forget the frost they knew,
-Greengrass blesses what’s between,
+Greengrass blesses what's between,
 The land, the sea, and those who do.
 ```
 
@@ -1729,7 +1729,7 @@ And hands the year to warmer feet.
 
 36.
 ```text
-On Waterdeep’s long market row,
+On Waterdeep's long market row,
 New stalls appear like sprouting leaves,
 Greengrass proves the old is slow,
 To leave when hope still half-believes.
@@ -1745,15 +1745,15 @@ Of risks the patient heart must yield.
 
 38.
 ```text
-Calimshan’s gates stand open wide,
+Calimshan's gates stand open wide,
 No shade pulled tight against the sun,
 Greengrass sets the heat aside,
-And says the gentler work’s begun.
+And says the gentler work's begun.
 ```
 
 39.
 ```text
-Tethyr’s children race the plow,
+Tethyr's children race the plow,
 Leaving footprints in the loam,
 Greengrass does not ask them how,
 It lets the future call that home.
@@ -1761,7 +1761,7 @@ It lets the future call that home.
 
 40.
 ```text
-At Baldur’s Gate the bells ring once,
+At Baldur's Gate the bells ring once,
 For seed and sail and honest toil,
 Greengrass spends its small advance,
 On hands that trust the waiting soil.
@@ -1811,7 +1811,7 @@ Greengrass turns the soil to home.
 
 5.
 ```text
-At Baldur’s Gate the docks smell rain,
+At Baldur's Gate the docks smell rain,
 Greengrass rinses loss and gain.
 ```
 
@@ -1859,13 +1859,13 @@ Greengrass finds the stones still sweet.
 
 13.
 ```text
-Tethyr’s banners lift and stir,
-Greengrass makes them whisper, “Start.”
+Tethyr's banners lift and stir,
+Greengrass makes them whisper, "Start."
 ```
 
 14.
 ```text
-At Baldur’s Gate the nets go free,
+At Baldur's Gate the nets go free,
 Greengrass trusts the open sea.
 ```
 
@@ -1919,14 +1919,14 @@ Greengrass sets the shade aside.
 
 23.
 ```text
-Tethyr’s roads grow busy feet,
+Tethyr's roads grow busy feet,
 Greengrass makes the journey meet.
 ```
 
 24.
 ```text
-At Baldur’s Gate a toast is poured,
-Greengrass favors what’s restored.
+At Baldur's Gate a toast is poured,
+Greengrass favors what's restored.
 ```
 
 25.
@@ -1967,19 +1967,19 @@ Greengrass breaks the winter hold.
 
 31.
 ```text
-Calim’s nights grow warm and sweet,
+Calim's nights grow warm and sweet,
 Greengrass pulls the stars down street.
 ```
 
 32.
 ```text
-Tethyr’s farms ring iron true,
+Tethyr's farms ring iron true,
 Greengrass keeps the promise new.
 ```
 
 33.
 ```text
-At Baldur’s Gate the river swells,
+At Baldur's Gate the river swells,
 Greengrass listens when it tells.
 ```
 
@@ -2004,7 +2004,7 @@ Greengrass knows what winter slept.
 37.
 ```text
 A bellrope smells of rain and hemp,
-Greengrass pays the season’s rent.
+Greengrass pays the season's rent.
 ```
 
 38.
@@ -2027,20 +2027,20 @@ Greengrass spins the wheel around.
 
 41.
 ```text
-Tethyr’s creeks run fast and clear,
-Greengrass whispers, “Plant it here.”
+Tethyr's creeks run fast and clear,
+Greengrass whispers, "Plant it here."
 ```
 
 42.
 ```text
-At Baldur’s Gate the fog lifts slow,
+At Baldur's Gate the fog lifts slow,
 Greengrass lets the harbor show.
 ```
 
 43.
 ```text
 Saltmarsh marsh turns gold and green,
-Greengrass blesses what’s between.
+Greengrass blesses what's between.
 ```
 
 44.
@@ -2064,7 +2064,7 @@ Greengrass asks the earth the rest.
 47.
 ```text
 Rain stops just as bells begin,
-Greengrass says, “Now enter in.”
+Greengrass says, "Now enter in."
 ```
 
 #### `highharvestide`
@@ -2073,13 +2073,13 @@ Greengrass says, “Now enter in.”
 
 1.
 ```text
-On Waterdeep’s square the grain stands tall,
+On Waterdeep's square the grain stands tall,
 Measured twice, then shared with care,
 Highharvestide answers the call,
 To count the yield and make it fair,
 The scales are wiped, the ledgers read,
 In open air beneath the sun,
-The city learns it’s safely fed,
+The city learns it's safely fed,
 By many hands that worked as one.
 ```
 
@@ -2089,9 +2089,9 @@ In Amn the ledgers close at dusk,
 The ink dries dark, the margins clean,
 Highharvestide lifts the husk,
 From numbers earned and numbers seen,
-A portion’s set for winter lean,
+A portion's set for winter lean,
 Another freed for those in need,
-The balance holds because it’s keen,
+The balance holds because it's keen,
 To count the heart as well as deed.
 ```
 
@@ -2121,13 +2121,13 @@ And held secure in wooden bands.
 
 5.
 ```text
-At Baldur’s Gate the docks smell bread,
+At Baldur's Gate the docks smell bread,
 And wine is poured in steady flow,
 Highharvestide feeds the fed,
-And counts the ships that didn’t go,
+And counts the ships that didn't go,
 A toast is raised to work well done,
 Not risk, nor chance, nor daring play,
-The harbor sleeps because it’s won,
+The harbor sleeps because it's won,
 Enough to face the colder day.
 ```
 
@@ -2140,7 +2140,7 @@ To save for need, not spend for more,
 A share is set for storms to come,
 Another sold to settle debt,
 The sea is thanked for what was won,
-And for what patience hasn’t met.
+And for what patience hasn't met.
 ```
 
 7.
@@ -2151,13 +2151,13 @@ Highharvestide keeps the meaning bound,
 To honest work across the years,
 No seal is pressed behind a door,
 No clause is left to hidden ink,
-The numbers stand because they’re sure,
+The numbers stand because they're sure,
 And all can see, and all can think.
 ```
 
 8.
 ```text
-On Waterdeep’s long market row,
+On Waterdeep's long market row,
 The stalls stand quiet after noon,
 Highharvestide lets the balance show,
 Before the winter comes too soon,
@@ -2205,7 +2205,7 @@ And hope is stored, not scattered round.
 
 12.
 ```text
-At Baldur’s Gate the bells ring low,
+At Baldur's Gate the bells ring low,
 As trade winds turn toward colder seas,
 Highharvestide lets us know,
 What must be saved and what to please,
@@ -2255,7 +2255,7 @@ With food enough and lighter heart.
 
 1.
 ```text
-On Waterdeep’s square the grain stands tall,
+On Waterdeep's square the grain stands tall,
 Measured twice, then shared with care,
 Highharvestide answers the call,
 To count the yield and make it fair.
@@ -2287,10 +2287,10 @@ And names the gain beside the cost.
 
 5.
 ```text
-At Baldur’s Gate the docks smell bread,
+At Baldur's Gate the docks smell bread,
 And wine is poured in steady flow,
 Highharvestide feeds the fed,
-And counts the ships that didn’t go.
+And counts the ships that didn't go.
 ```
 
 6.
@@ -2311,7 +2311,7 @@ To honest work across the years.
 
 8.
 ```text
-On Waterdeep’s long market row,
+On Waterdeep's long market row,
 The stalls stand quiet after noon,
 Highharvestide lets the balance show,
 Before the winter comes too soon.
@@ -2319,7 +2319,7 @@ Before the winter comes too soon.
 
 9.
 ```text
-In Amn a portion’s set aside,
+In Amn a portion's set aside,
 For leaner months and poorer hands,
 Highharvestide judges pride,
 By how well mercy understands.
@@ -2327,7 +2327,7 @@ By how well mercy understands.
 
 10.
 ```text
-Calimshan’s lamps glow amber-bright,
+Calimshan's lamps glow amber-bright,
 As merchants share a final count,
 Highharvestide weighs day and night,
 And names the sum that should amount.
@@ -2343,7 +2343,7 @@ And trusts the seed will come again.
 
 12.
 ```text
-At Baldur’s Gate a toast is raised,
+At Baldur's Gate a toast is raised,
 Not to risk, but work well done,
 Highharvestide quietly praised,
 The many hands that fed the one.
@@ -2367,8 +2367,8 @@ And lightens each shared load.
 
 15.
 ```text
-On Waterdeep’s stone counting floor,
-The final tally’s read aloud,
+On Waterdeep's stone counting floor,
+The final tally's read aloud,
 Highharvestide proves the law is more,
 Than hoarded wealth or voices loud.
 ```
@@ -2399,7 +2399,7 @@ And names what risk the land can endure.
 
 19.
 ```text
-At Baldur’s Gate the bells ring low,
+At Baldur's Gate the bells ring low,
 As trade winds turn toward colder seas,
 Highharvestide lets us know,
 What must be saved and what to please.
@@ -2423,8 +2423,8 @@ By keeping hunger far at bay.
 
 22.
 ```text
-On Waterdeep’s docks at fading light,
-The last crate’s marked and set aside,
+On Waterdeep's docks at fading light,
+The last crate's marked and set aside,
 Highharvestide gets the numbers right,
 Before the tides and tempests hide.
 ```
@@ -2450,12 +2450,12 @@ Where profit meets the human heart.
 In Tethyr barns the lamps burn low,
 As seals are pressed and doors are barred,
 Highharvestide lets the farmers know,
-Their labor stands as winter’s guard.
+Their labor stands as winter's guard.
 ```
 
 26.
 ```text
-At Baldur’s Gate the crowd eats well,
+At Baldur's Gate the crowd eats well,
 From tables set with honest share,
 Highharvestide has much to tell,
 About the virtue of repair.
@@ -2479,7 +2479,7 @@ And answers not with excess, but one.
 
 29.
 ```text
-On Waterdeep’s broad counting steps,
+On Waterdeep's broad counting steps,
 The crowd disperses, fed and calm,
 Highharvestide quietly keeps,
 Its blessing like a closing psalm.
@@ -2488,7 +2488,7 @@ Its blessing like a closing psalm.
 30.
 ```text
 In Amn the scales are wiped and true,
-No trick allowed at season’s end,
+No trick allowed at season's end,
 Highharvestide begins anew,
 Where fairness is the coin we spend.
 ```
@@ -2511,7 +2511,7 @@ As part of how the fields still stand.
 
 33.
 ```text
-At Baldur’s Gate the river flows,
+At Baldur's Gate the river flows,
 Unmoved by sums or settled books,
 Highharvestide leaves us those,
 Who learn from water more than looks.
@@ -2535,7 +2535,7 @@ Against the needs of community.
 
 36.
 ```text
-The harvest’s counted, debts are clear,
+The harvest's counted, debts are clear,
 The tables set, the barns secured,
 Highharvestide ends the year,
 With thanks that keep the future sure.
@@ -2563,20 +2563,20 @@ Highharvestide shows wealth with care.
 
 4.
 ```text
-Tethyr’s barns stand full and bright,
+Tethyr's barns stand full and bright,
 Highharvestide weighs the yield right.
 ```
 
 5.
 ```text
-At Baldur’s Gate the casks run deep,
+At Baldur's Gate the casks run deep,
 Highharvestide keeps what we reap.
 ```
 
 6.
 ```text
 Saltmarsh nets come heavy in,
-Highharvestide pays the sea’s long sin.
+Highharvestide pays the sea's long sin.
 ```
 
 7.
@@ -2617,13 +2617,13 @@ Highharvestide hums a measured song.
 
 13.
 ```text
-Tethyr’s fields lie cut and bare,
+Tethyr's fields lie cut and bare,
 Highharvestide knows what was there.
 ```
 
 14.
 ```text
-At Baldur’s Gate the wine is poured,
+At Baldur's Gate the wine is poured,
 Highharvestide honors stored.
 ```
 
@@ -2671,13 +2671,13 @@ Highharvestide ends the night.
 
 22.
 ```text
-Tethyr’s banners dip in thanks,
+Tethyr's banners dip in thanks,
 Highharvestide closes ranks.
 ```
 
 23.
 ```text
-At Baldur’s Gate the docks smell bread,
+At Baldur's Gate the docks smell bread,
 Highharvestide feeds the fed.
 ```
 
@@ -2719,20 +2719,20 @@ Highharvestide favors told.
 
 30.
 ```text
-Tethyr’s farmers rest at last,
+Tethyr's farmers rest at last,
 Highharvestide weighs future past.
 ```
 
 31.
 ```text
-At Baldur’s Gate the crowd eats well,
+At Baldur's Gate the crowd eats well,
 Highharvestide has much to tell.
 ```
 
 32.
 ```text
 Saltmarsh elders nod and smile,
-Highharvestide’s worth the while.
+Highharvestide's worth the while.
 ```
 
 33.
@@ -2755,19 +2755,19 @@ Highharvestide plans for more.
 
 36.
 ```text
-Calimshan’s markets slow their pace,
+Calimshan's markets slow their pace,
 Highharvestide keeps the place.
 ```
 
 37.
 ```text
-Tethyr’s barns are sealed and blessed,
+Tethyr's barns are sealed and blessed,
 Highharvestide grants the rest.
 ```
 
 38.
 ```text
-At Baldur’s Gate the bells ring low,
+At Baldur's Gate the bells ring low,
 Highharvestide lets us know.
 ```
 
@@ -2809,7 +2809,7 @@ Highharvestide honors pain.
 
 45.
 ```text
-At Baldur’s Gate the tables groan,
+At Baldur's Gate the tables groan,
 Highharvestide feeds unknown.
 ```
 
@@ -2837,7 +2837,7 @@ Highharvestide keeps what we hold.
 
 1.
 ```text
-On Waterdeep’s streets the torches burn,
+On Waterdeep's streets the torches burn,
 And shadows leap from stone to stone,
 Midsummer makes the city turn,
 And claim the night as fully grown,
@@ -2885,7 +2885,7 @@ About the cost of calling home.
 
 5.
 ```text
-At Baldur’s Gate the river shines,
+At Baldur's Gate the river shines,
 With lanterns drifting, slow and bright,
 Midsummer blurs the careful lines,
 Between the day and deeper night,
@@ -2921,7 +2921,7 @@ And trusts the joy it cannot mend.
 
 8.
 ```text
-On Waterdeep’s wall the watch looks down,
+On Waterdeep's wall the watch looks down,
 Yet joins the song they swore to keep,
 Midsummer pulls the city crown,
 And lets it laugh instead of sleep,
@@ -2957,7 +2957,7 @@ And leaves delight upon each face.
 
 11.
 ```text
-Tethyr’s banners glow like flame,
+Tethyr's banners glow like flame,
 As wind snaps cloth against the sky,
 Midsummer burns away the same,
 Old oaths that feared to ask us why,
@@ -2969,7 +2969,7 @@ In how to spend, not hoard, the day.
 
 12.
 ```text
-At Baldur’s Gate the bells go mad,
+At Baldur's Gate the bells go mad,
 Then lose the count of why they rang,
 Midsummer keeps the joy we had,
 Long after careful rules have sang,
@@ -3005,8 +3005,8 @@ And asks us nothing more than play.
 
 15.
 ```text
-On Waterdeep’s broad avenue,
-The music drowns the city’s cares,
+On Waterdeep's broad avenue,
+The music drowns the city's cares,
 Midsummer teaches what to do,
 When joy outweighs the need for prayers,
 The dawn waits just beyond the sound,
@@ -3034,7 +3034,7 @@ No shade is drawn against the heat,
 Midsummer sets restraint aside,
 And lets the city find its beat,
 The stars grow pale as dawn draws near,
-But no one mourns the night’s retreat,
+But no one mourns the night's retreat,
 The joy is stored like summer cheer,
 To warm the colder days we meet.
 ```
@@ -3053,7 +3053,7 @@ What one bright night was meant to make.
 
 19.
 ```text
-At Baldur’s Gate the dawn comes late,
+At Baldur's Gate the dawn comes late,
 As if the sun itself delayed,
 Midsummer bargains hard with fate,
 And wins the time it has not paid,
@@ -3079,7 +3079,7 @@ Then leaves us changed for joy we take.
 
 1.
 ```text
-On Waterdeep’s streets the torches burn,
+On Waterdeep's streets the torches burn,
 And shadows leap from stone to stone,
 Midsummer makes the city turn,
 And claim the night as fully grown.
@@ -3111,7 +3111,7 @@ A promise fierce and hard to mark.
 
 5.
 ```text
-At Baldur’s Gate the river shines,
+At Baldur's Gate the river shines,
 With lanterns drifting, slow and bright,
 Midsummer blurs the careful lines,
 Between the day and deeper night.
@@ -3135,7 +3135,7 @@ And makes excess a rightful goal.
 
 8.
 ```text
-On Waterdeep’s wall the watch looks down,
+On Waterdeep's wall the watch looks down,
 Yet joins the song they swore to keep,
 Midsummer pulls the city crown,
 And lets it laugh instead of sleep.
@@ -3159,7 +3159,7 @@ By stretching joy mile after mile.
 
 11.
 ```text
-Tethyr’s knights lay helms aside,
+Tethyr's knights lay helms aside,
 And share a cup with farm and field,
 Midsummer flattens rank and pride,
 And shows what dropping guard can yield.
@@ -3167,7 +3167,7 @@ And shows what dropping guard can yield.
 
 12.
 ```text
-At Baldur’s Gate the bells ring wild,
+At Baldur's Gate the bells ring wild,
 Then lose the count of why they rang,
 Midsummer keeps the heart a child,
 Long after careful rules have sang.
@@ -3191,7 +3191,7 @@ And crowns excess the only rule.
 
 15.
 ```text
-On Waterdeep’s long market row,
+On Waterdeep's long market row,
 The stalls stay lit till morning gray,
 Midsummer lets the future know,
 That some debts fade by break of day.
@@ -3207,7 +3207,7 @@ To lose control and not be lone.
 
 17.
 ```text
-Calimshan’s incense clouds the street,
+Calimshan's incense clouds the street,
 As drums and flutes refuse to cease,
 Midsummer makes the city meet,
 In sweat and sound and reckless peace.
@@ -3223,7 +3223,7 @@ Not titles earned or banners bowed.
 
 19.
 ```text
-At Baldur’s Gate the river laughs,
+At Baldur's Gate the river laughs,
 And slaps the quay in time with song,
 Midsummer counts the foolish crafts,
 That teach the brave where they belong.
@@ -3247,7 +3247,7 @@ Can bend without a guiding hand.
 
 22.
 ```text
-On Waterdeep’s high towers bright,
+On Waterdeep's high towers bright,
 The watch forgets the hour late,
 Midsummer bargains with the night,
 And keeps the dawn at city gate.
@@ -3279,7 +3279,7 @@ To worlds they had not seen before.
 
 26.
 ```text
-At Baldur’s Gate the fires roar,
+At Baldur's Gate the fires roar,
 And shadows dance like living things,
 Midsummer asks the heart for more,
 Than careful thought or measured springs.
@@ -3303,8 +3303,8 @@ Into the streets and common lands.
 
 29.
 ```text
-On Waterdeep’s broad avenue,
-The music drowns the city’s cares,
+On Waterdeep's broad avenue,
+The music drowns the city's cares,
 Midsummer teaches what to do,
 When joy outweighs the need for prayers.
 ```
@@ -3335,7 +3335,7 @@ And calls it human, not a slight.
 
 33.
 ```text
-At Baldur’s Gate the dawn comes late,
+At Baldur's Gate the dawn comes late,
 As if the sun itself delayed,
 Midsummer presses hard on fate,
 And wins the time it has not paid.
@@ -3387,13 +3387,13 @@ Midsummer laughs the night is gone.
 
 4.
 ```text
-Tethyr’s fires leap high and free,
+Tethyr's fires leap high and free,
 Midsummer claims both land and sea.
 ```
 
 5.
 ```text
-At Baldur’s Gate the wine runs fast,
+At Baldur's Gate the wine runs fast,
 Midsummer asks the night to last.
 ```
 
@@ -3441,20 +3441,20 @@ Midsummer keeps the heart a child.
 
 13.
 ```text
-Tethyr’s knights lay helms aside,
+Tethyr's knights lay helms aside,
 Midsummer walks with equal stride.
 ```
 
 14.
 ```text
-At Baldur’s Gate the river gleams,
+At Baldur's Gate the river gleams,
 Midsummer loosens sober dreams.
 ```
 
 15.
 ```text
 Saltmarsh nets lie cast and still,
-Midsummer bends the fisher’s will.
+Midsummer bends the fisher's will.
 ```
 
 16.
@@ -3489,19 +3489,19 @@ Midsummer likes the roll of dice.
 
 21.
 ```text
-Calimshan’s courts throw wide their doors,
+Calimshan's courts throw wide their doors,
 Midsummer asks for nothing more.
 ```
 
 22.
 ```text
-Tethyr’s banners glow like flame,
+Tethyr's banners glow like flame,
 Midsummer burns away the same.
 ```
 
 23.
 ```text
-At Baldur’s Gate the night stands still,
+At Baldur's Gate the night stands still,
 Midsummer tests the mortal will.
 ```
 
@@ -3532,18 +3532,18 @@ Midsummer turns the wise to led.
 28.
 ```text
 Calishite drums outpace the sun,
-Midsummer says the night’s begun.
+Midsummer says the night's begun.
 ```
 
 29.
 ```text
-Tethyr’s roads forget their dust,
-Midsummer spends the year’s deep trust.
+Tethyr's roads forget their dust,
+Midsummer spends the year's deep trust.
 ```
 
 30.
 ```text
-At Baldur’s Gate the fires roar,
+At Baldur's Gate the fires roar,
 Midsummer asks the heart for more.
 ```
 
@@ -3579,20 +3579,20 @@ Midsummer makes the night feel sweet.
 
 36.
 ```text
-Tethyr’s lords and laborers dance,
+Tethyr's lords and laborers dance,
 Midsummer breaks the guarded stance.
 ```
 
 37.
 ```text
-At Baldur’s Gate the bells go mad,
+At Baldur's Gate the bells go mad,
 Midsummer claims the joy we had.
 ```
 
 38.
 ```text
 Saltmarsh sings till throats go raw,
-Midsummer bends the sailor’s law.
+Midsummer bends the sailor's law.
 ```
 
 39.
@@ -3609,7 +3609,7 @@ Midsummer lets the wishes in.
 
 41.
 ```text
-Amn’s hot stones still hum with sound,
+Amn's hot stones still hum with sound,
 Midsummer spins the world around.
 ```
 
@@ -3621,13 +3621,13 @@ Midsummer frees the hidden prayer.
 
 43.
 ```text
-Tethyr’s fire rings circle wide,
+Tethyr's fire rings circle wide,
 Midsummer keeps no rank or side.
 ```
 
 44.
 ```text
-At Baldur’s Gate the dawn comes late,
+At Baldur's Gate the dawn comes late,
 Midsummer bargains hard with fate.
 ```
 
@@ -3655,7 +3655,7 @@ Midsummer lets the joy rush in.
 
 1.
 ```text
-On Waterdeep’s high winter wall,
+On Waterdeep's high winter wall,
 The watch bell rings, then fades from sight,
 Midwinter makes the proud feel small,
 As snow turns stone to silent white,
@@ -3693,7 +3693,7 @@ And candles buy a little time.
 ```text
 In Tethyr halls the banners rest,
 The hearth is judge, the stew is king,
-Midwinter tests the soldier’s chest,
+Midwinter tests the soldier's chest,
 And turns the iron into sing,
 A captain shares his cloak in wool,
 With lads who guard the gate at night,
@@ -3703,7 +3703,7 @@ But comrades keep the lantern bright.
 
 5.
 ```text
-At Baldur’s Gate the docks go still,
+At Baldur's Gate the docks go still,
 The tide pulls dark beneath the pier,
 Midwinter calls a softer will,
 Where soup is shared and fear grows clear,
@@ -3733,7 +3733,7 @@ Midwinter blesses bread and gain,
 And asks the hands to give, not hoard,
 The bell rings once, then holds its breath,
 As if the night were listening near,
-The lesson isn’t fear of death,
+The lesson isn't fear of death,
 But how to keep the living dear.
 ```
 
@@ -3799,7 +3799,7 @@ But home is built of shared-alone.
 
 13.
 ```text
-In Calim’s shadow, lanterns glow,
+In Calim's shadow, lanterns glow,
 Like small suns trapped in painted tin,
 Midwinter makes the alleys slow,
 And lets the quiet settle in,
@@ -3811,20 +3811,20 @@ And mercy keeps the balance here.
 
 14.
 ```text
-On Waterdeep’s stone steps at dusk,
+On Waterdeep's stone steps at dusk,
 A street-song rises, thin and bright,
 Midwinter sheds the loud and brusque,
 And teaches voices how to light,
 The guild bells sleep behind their doors,
 Yet children chalk a star in snow,
-The cold may guard the city’s floors,
+The cold may guard the city's floors,
 But hope still learns to walk and go.
 ```
 
 15.
 ```text
 In Amn the coin-lords bow their heads,
-For one night’s truce with hunger’s claim,
+For one night's truce with hunger's claim,
 Midwinter counts the loaves instead,
 And calls that mercy by its name,
 A soup pot steams in market square,
@@ -3841,13 +3841,13 @@ Midwinter lowers old desire,
 And makes the promise bittersweet,
 The banner hangs in quiet rest,
 While watchmen trade a weary grin,
-The cold may test the soldier’s chest,
+The cold may test the soldier's chest,
 But duty keeps the warmth within.
 ```
 
 17.
 ```text
-At Baldur’s Gate a captain sighs,
+At Baldur's Gate a captain sighs,
 And shares his cloak with dockside kin,
 Midwinter sees through hardened eyes,
 And finds the human tucked within,
@@ -3871,7 +3871,7 @@ But fellowship stays much the same.
 
 19.
 ```text
-On Waterdeep’s broad winter street,
+On Waterdeep's broad winter street,
 A single laugh runs clear and far,
 Midwinter makes the moment sweet,
 And hangs it like a lucky star,
@@ -3884,7 +3884,7 @@ But song can still outlast the night.
 20.
 ```text
 In Amn the caravaners rest,
-And mend the straps by candle’s glow,
+And mend the straps by candle's glow,
 Midwinter teaches what is best,
 Is fixing now before you go,
 A mule-bell taps a quieter beat,
@@ -3907,12 +3907,12 @@ Yet hearts still pay a kinder price.
 
 22.
 ```text
-In Tethyr’s courts the tongues grow spare,
+In Tethyr's courts the tongues grow spare,
 They hear the hearth more than the throne,
 Midwinter strips the lies between,
 And leaves the simple truth alone,
 A judge sets aside one sharp decree,
-To spare a widow’s winter bread,
+To spare a widow's winter bread,
 The cold may ask what law should be,
 But mercy walks where pride has fled.
 ```
@@ -3924,7 +3924,7 @@ And tell one tale, then tell no more,
 Midwinter shortens rowdy days,
 And keeps the peace behind the door,
 A fiddler strings a quieter tune,
-To match the sea’s restrained reply,
+To match the sea's restrained reply,
 The night is deep beneath the moon,
 Yet warm hands will not let it die.
 ```
@@ -3933,9 +3933,9 @@ Yet warm hands will not let it die.
 ```text
 A bellrope burns the naked palm,
 Yet still the toll is duly made,
-Midwinter’s lesson isn’t calm,
+Midwinter's lesson isn't calm,
 But doing good though sorely paid,
-The watchman’s breath turns white and thin,
+The watchman's breath turns white and thin,
 He stamps his feet and checks the gate,
 The cold may creep beneath the skin,
 But duty will not come too late.
@@ -3955,8 +3955,8 @@ But kindness still is what saves us.
 
 26.
 ```text
-At Baldur’s Gate the lanterns sway,
-Above the quay’s black, frozen shine,
+At Baldur's Gate the lanterns sway,
+Above the quay's black, frozen shine,
 Midwinter calls the night to stay,
 But lets the hearth declare its line,
 A fisher brings a bowl of stew,
@@ -3967,13 +3967,13 @@ But sharing dulls the sharpest knife.
 
 27.
 ```text
-On Waterdeep’s long icy lane,
+On Waterdeep's long icy lane,
 A carol climbs, then turns to hush,
 Midwinter does not waste the strain,
 It makes the last note clean, not brusque,
 A child drops coins in temple box,
 And smiles as if it were a game,
-The cold may lock the city’s locks,
+The cold may lock the city's locks,
 But giving keeps the heart the same.
 ```
 
@@ -3992,10 +3992,10 @@ But mercy settles honest debt.
 29.
 ```text
 In Tethyr guards share bread and salt,
-At the old gate’s frozen seam,
+At the old gate's frozen seam,
 Midwinter turns the smallest halt,
 To fellowship that warms a dream,
-A lantern’s glass is cracked and thin,
+A lantern's glass is cracked and thin,
 Yet still it holds its steady fire,
 The cold may press its knuckles in,
 But friends refuse to call it dire.
@@ -4003,7 +4003,7 @@ But friends refuse to call it dire.
 
 30.
 ```text
-At Baldur’s Gate the casks are low,
+At Baldur's Gate the casks are low,
 But laughter finds a way to stay,
 Midwinter lets the lanterns glow,
 And keeps the wolves of want at bay,
@@ -4039,7 +4039,7 @@ But not the echo of our laughter.
 
 33.
 ```text
-On Waterdeep’s Dock Ward cobbles slick,
+On Waterdeep's Dock Ward cobbles slick,
 A lantern swings in salted gust,
 Midwinter makes the footsteps quick,
 Yet asks the heart to choose its trust,
@@ -4063,7 +4063,7 @@ But tales can keep the brave sincere.
 
 35.
 ```text
-In Tethyr’s outer farms at dusk,
+In Tethyr's outer farms at dusk,
 A bonfire burns with steady flame,
 Midwinter sheds the bright and brusque,
 And teaches hands to do the same,
@@ -4075,11 +4075,11 @@ But work and bread can set it right.
 
 36.
 ```text
-At Baldur’s Gate the tide runs black,
+At Baldur's Gate the tide runs black,
 And drags the night along the pier,
 Midwinter keeps the lanterns back,
 Yet makes the quiet strangely clear,
-A dockhand hums a sailor’s tune,
+A dockhand hums a sailor's tune,
 And passes it to those who wait,
 The cold may claim the coming moon,
 But song still finds the open gate.
@@ -4101,7 +4101,7 @@ But kindness keeps the hearthfire still.
 ```text
 In Amn the counting-houses close,
 Their shutters tight against the night,
-Midwinter cools the merchant’s pose,
+Midwinter cools the merchant's pose,
 And weighs the purse against the right,
 A clerk sets down his careful pen,
 To serve hot broth to those outside,
@@ -4111,7 +4111,7 @@ But giving keeps the soul supplied.
 
 39.
 ```text
-On Waterdeep’s gatehouse steps at noon,
+On Waterdeep's gatehouse steps at noon,
 A sermon ends with simple bread,
 Midwinter favors plainer tune,
 Than gilded words that turn the head,
@@ -4123,7 +4123,7 @@ But kindness makes the city live.
 
 40.
 ```text
-In Tethyr’s chapel, candles burn,
+In Tethyr's chapel, candles burn,
 In rows like guards against the night,
 Midwinter asks the heart to learn,
 To hold its vows in steady light,
@@ -4135,7 +4135,7 @@ But memory keeps the warmth the same.
 
 41.
 ```text
-In Calimshan the fountain’s sleep,
+In Calimshan the fountain's sleep,
 Is broken by a copper coin,
 Midwinter keeps its silence deep,
 But lets a wish and water join,
@@ -4147,7 +4147,7 @@ Yet hope can keep its footing right.
 
 42.
 ```text
-At Baldur’s Gate the harbor guard,
+At Baldur's Gate the harbor guard,
 Marks footprints where the snow is thin,
 Midwinter keeps the streets too hard,
 For easy lies to wander in,
@@ -4161,7 +4161,7 @@ But mercy can reforge a name.
 ```text
 In Saltmarsh, fishers mend their lines,
 With faces red and fingers numb,
-Midwinter reads the sea’s designs,
+Midwinter reads the sea's designs,
 And asks what storms will surely come,
 A bowl is poured for those offshore,
 A toast is raised, then voices cease,
@@ -4171,7 +4171,7 @@ But fellowship still bargains peace.
 
 44.
 ```text
-On Waterdeep’s high towers, bright,
+On Waterdeep's high towers, bright,
 The frost makes windows thin as glass,
 Midwinter holds the city tight,
 And lets the loudest boasting pass,
@@ -4188,9 +4188,9 @@ And salt is scattered by the door,
 Midwinter keeps the promise kept,
 That none should freeze on Amnish floor,
 A priestess blesses bread and oil,
-Then turns to warm a traveler’s hands,
+Then turns to warm a traveler's hands,
 The cold may ask for harder toil,
-But care still loosens winter’s bands.
+But care still loosens winter's bands.
 ```
 
 46.
@@ -4201,13 +4201,13 @@ Midwinter cools the loudest jar,
 And makes the softer voices show,
 A dancer wraps in wool and laughs,
 At jests that rhyme the cold away,
-The wind may scrape the courtyard’s path,
+The wind may scrape the courtyard's path,
 But mirth can keep the dark at bay.
 ```
 
 47.
 ```text
-In Tethyr’s gate the sentries stand,
+In Tethyr's gate the sentries stand,
 Their breath like smoke, their hands like stone,
 Midwinter asks for more than command,
 It asks the heart to not be lone,
@@ -4219,7 +4219,7 @@ But comrades share the warming wreath.
 
 48.
 ```text
-At Baldur’s Gate the river’s mouth,
+At Baldur's Gate the river's mouth,
 Turns black beneath a moonless sky,
 Midwinter walks the quay from south,
 And makes the bravest questions why,
@@ -4243,11 +4243,11 @@ But hearthfire holds the warmer dream.
 
 50.
 ```text
-In Amn by Athkatla’s colder ledger,
+In Amn by Athkatla's colder ledger,
 The bells keep time when streets turn still,
 Midwinter asks the proud grow sober ledger,
 And teaches busy hands to still,
-A candle’s glow is set, quiet and spare,
+A candle's glow is set, quiet and spare,
 It travels warm from shore to shore,
 The cold may sharpen every stare,
 But kindness holds the shore to shore.
@@ -4257,7 +4257,7 @@ But kindness holds the shore to shore.
 
 1.
 ```text
-On Waterdeep’s high winter wall,
+On Waterdeep's high winter wall,
 The watch bell rings, then waits for more,
 Midwinter makes the proud feel small,
 And teaches warmth what gates are for.
@@ -4267,7 +4267,7 @@ And teaches warmth what gates are for.
 ```text
 In Amn the guilds close early down,
 Yet leave one lantern in the lane,
-Midwinter keeps the market’s crown,
+Midwinter keeps the market's crown,
 By turning profit into grain.
 ```
 
@@ -4283,13 +4283,13 @@ And keeps the whispered vows we keep.
 ```text
 In Tethyr halls the banners rest,
 The hearth is judge, the stew is king,
-Midwinter tests the soldier’s chest,
+Midwinter tests the soldier's chest,
 And softens iron into sing.
 ```
 
 5.
 ```text
-At Baldur’s Gate the docks stand still,
+At Baldur's Gate the docks stand still,
 The tide pulls dark beneath the pier,
 Midwinter calls a softer will,
 Where soup is shared and fear grows clear.
@@ -4361,7 +4361,7 @@ That turns the cold into a class.
 
 14.
 ```text
-In Calim’s shadow, lanterns glow,
+In Calim's shadow, lanterns glow,
 Like small suns trapped in painted tin,
 Midwinter makes the alleys slow,
 And lets the quiet settle in.
@@ -4369,7 +4369,7 @@ And lets the quiet settle in.
 
 15.
 ```text
-On Waterdeep’s stone steps at dusk,
+On Waterdeep's stone steps at dusk,
 A street-song rises, thin and bright,
 Midwinter sheds the loud and brusque,
 And teaches voices how to light.
@@ -4378,7 +4378,7 @@ And teaches voices how to light.
 16.
 ```text
 In Amn the coin-lords bow their heads,
-For one night’s truce with hunger’s claim,
+For one night's truce with hunger's claim,
 Midwinter counts the loaves instead,
 And calls that mercy by its name.
 ```
@@ -4393,7 +4393,7 @@ And makes the promise bittersweet.
 
 18.
 ```text
-At Baldur’s Gate a captain sighs,
+At Baldur's Gate a captain sighs,
 And shares his cloak with dockside kin,
 Midwinter sees through hardened eyes,
 And finds the human tucked within.
@@ -4410,8 +4410,8 @@ That warmth is made, not planned.
 20.
 ```text
 A shrine gets swept, a candle set,
-In Calimshan’s perfumed night,
-Midwinter won’t forget the debt,
+In Calimshan's perfumed night,
+Midwinter won't forget the debt,
 Of giving dark a little light.
 ```
 
@@ -4428,12 +4428,12 @@ Yet lets the young teach hope to walk.
 An Amnian baker leaves a loaf,
 Where poorest steps will surely find,
 Midwinter turns that simple oath,
-To bread that feeds the town’s own kind.
+To bread that feeds the town's own kind.
 ```
 
 23.
 ```text
-Tethyr’s knights stand watch in white,
+Tethyr's knights stand watch in white,
 Their breath like smoke, their hands like stone,
 Midwinter asks for more than fight,
 It asks the heart to not be lone.
@@ -4451,7 +4451,7 @@ And keeps the peace behind the door.
 ```text
 A bellrope burns the naked palm,
 Yet still the toll is duly made,
-Midwinter’s lesson isn’t calm,
+Midwinter's lesson isn't calm,
 But doing good though sorely paid.
 ```
 
@@ -4465,15 +4465,15 @@ By letting neighbors stay and sleep.
 
 27.
 ```text
-At Baldur’s Gate the lanterns sway,
-Above the quay’s black, frozen shine,
+At Baldur's Gate the lanterns sway,
+Above the quay's black, frozen shine,
 Midwinter calls the night to stay,
 But lets the hearth declare its line.
 ```
 
 28.
 ```text
-On Waterdeep’s broad winter street,
+On Waterdeep's broad winter street,
 A single laugh runs clear and far,
 Midwinter makes the moment sweet,
 And hangs it like a lucky star.
@@ -4482,14 +4482,14 @@ And hangs it like a lucky star.
 29.
 ```text
 In Amn the caravaners rest,
-And mend the straps by candle’s glow,
+And mend the straps by candle's glow,
 Midwinter teaches what is best,
 Is fixing now before you go.
 ```
 
 30.
 ```text
-Tethyr’s courts grow quiet-keen,
+Tethyr's courts grow quiet-keen,
 They hear the hearth more than the throne,
 Midwinter strips the lies between,
 And leaves the simple truth alone.
@@ -4499,13 +4499,13 @@ And leaves the simple truth alone.
 ```text
 Saltmarsh fishers share their rum,
 And set a bowl for those at sea,
-Midwinter says, “Let kindness come,”
+Midwinter says, "Let kindness come,"
 And counts that gift as piety.
 ```
 
 32.
 ```text
-In Calim’s lanes the music thins,
+In Calim's lanes the music thins,
 To finger-drums and soft refrain,
 Midwinter loosens hardened grins,
 And turns the cold to gentle rain.
@@ -4513,7 +4513,7 @@ And turns the cold to gentle rain.
 
 33.
 ```text
-A watchman’s lantern guards the gate,
+A watchman's lantern guards the gate,
 A small sun in the frozen air,
 Midwinter teaches how to wait,
 By standing firm and staying fair.
@@ -4523,8 +4523,8 @@ By standing firm and staying fair.
 ```text
 In Waterdeep the snow turns gray,
 But candles keep their golden right,
-Midwinter doesn’t chase away,
-The dark—just teaches it to bite.
+Midwinter doesn't chase away,
+The dark-just teaches it to bite.
 ```
 
 35.
@@ -4537,7 +4537,7 @@ And finds the need that lies ahead.
 
 36.
 ```text
-Tethyr’s hearthstones glow like gold,
+Tethyr's hearthstones glow like gold,
 While shutters shake beneath the gust,
 Midwinter favors steady hold,
 And crowns the quiet kind of trust.
@@ -4545,10 +4545,10 @@ And crowns the quiet kind of trust.
 
 37.
 ```text
-At Baldur’s Gate the tide comes slow,
+At Baldur's Gate the tide comes slow,
 It drags the night along the pier,
 Midwinter bids the lanterns glow,
-And tells the living, “Stay you near.”
+And tells the living, "Stay you near."
 ```
 
 38.
@@ -4569,10 +4569,10 @@ Then teaches hands to finish still.
 
 40.
 ```text
-On Waterdeep’s tavern bench,
+On Waterdeep's tavern bench,
 A stranger shares a warming cup,
 Midwinter does not mind the stench,
-Of streets—so long as hearts hold up.
+Of streets-so long as hearts hold up.
 ```
 
 41.
@@ -4593,7 +4593,7 @@ Without surrendering to freeze.
 
 43.
 ```text
-At Baldur’s Gate a prayer is said,
+At Baldur's Gate a prayer is said,
 For ships that never found the shore,
 Midwinter keeps the names not dead,
 And lets the living love them more.
@@ -4601,7 +4601,7 @@ And lets the living love them more.
 
 44.
 ```text
-In Calim’s night the lamps are bright,
+In Calim's night the lamps are bright,
 Yet voices drop to softer speech,
 Midwinter makes the world less tight,
 By giving hush the right to teach.
@@ -4617,7 +4617,7 @@ The ones that keep the darkness still.
 
 46.
 ```text
-On Waterdeep’s long icy lane,
+On Waterdeep's long icy lane,
 A carol climbs, then turns to hush,
 Midwinter does not waste the strain,
 It makes the last note clean, not brusque.
@@ -4633,15 +4633,15 @@ A simpler kind of measured right.
 
 48.
 ```text
-Tethyr’s guards share bread and salt,
-At the old gate’s frozen seam,
+Tethyr's guards share bread and salt,
+At the old gate's frozen seam,
 Midwinter turns the smallest halt,
 To fellowship that warms a dream.
 ```
 
 49.
 ```text
-At Baldur’s Gate the casks are low,
+At Baldur's Gate the casks are low,
 But laughter finds a way to stay,
 Midwinter lets the lanterns glow,
 And keeps the wolves of want at bay.
@@ -4659,14 +4659,14 @@ Then tucks it safely in the chest.
 
 1.
 ```text
-Midwinter hush on Waterdeep’s stone,
+Midwinter hush on Waterdeep's stone,
 The bells ring clear, then leave you alone.
 ```
 
 2.
 ```text
 Amnian coins are counted slow,
-When Midwinter’s quiet starts to show.
+When Midwinter's quiet starts to show.
 ```
 
 3.
@@ -4683,7 +4683,7 @@ To keep the cold from winning the night.
 
 5.
 ```text
-On Baldur’s Gate the docks stand still,
+On Baldur's Gate the docks stand still,
 While soup and song replace the chill.
 ```
 
@@ -4725,8 +4725,8 @@ Midwinter turns the air to care.
 
 12.
 ```text
-A sailor’s oath, a quiet nod,
-Midwinter counts what’s owed to God.
+A sailor's oath, a quiet nod,
+Midwinter counts what's owed to God.
 ```
 
 13.
@@ -4767,7 +4767,7 @@ Midwinter slows the clock of time.
 
 19.
 ```text
-Tethyr’s banners hang at rest,
+Tethyr's banners hang at rest,
 Midwinter puts pride to the test.
 ```
 
@@ -4803,7 +4803,7 @@ Midwinter keeps the edges clean.
 
 25.
 ```text
-A ship’s bell taps a gentler beat,
+A ship's bell taps a gentler beat,
 Midwinter brings the crew to meet.
 ```
 
@@ -4863,7 +4863,7 @@ Midwinter meets the market fair.
 
 35.
 ```text
-Tethyr’s knights stand watch in white,
+Tethyr's knights stand watch in white,
 Midwinter steels the heart for fight.
 ```
 
@@ -4882,19 +4882,19 @@ Midwinter lets her have her say.
 38.
 ```text
 The quay grows still, the stars look close,
-Midwinter keeps the sea’s mouth closed.
+Midwinter keeps the sea's mouth closed.
 ```
 
 39.
 ```text
 A bellrope frays where hands are numb,
-Midwinter says, “Hold fast—then come.”
+Midwinter says, "Hold fast-then come."
 ```
 
 40.
 ```text
 Hot tea steams in gloved-up hands,
-Midwinter loosens winter’s bands.
+Midwinter loosens winter's bands.
 ```
 
 41.
@@ -4917,13 +4917,13 @@ Midwinter pays them back in grain.
 
 44.
 ```text
-A baker’s pledge, a loaf set free,
+A baker's pledge, a loaf set free,
 Midwinter makes a family.
 ```
 
 45.
 ```text
-A shrine in Calim’s shadowed lane,
+A shrine in Calim's shadowed lane,
 Midwinter lifts the quiet pain.
 ```
 
@@ -4941,13 +4941,13 @@ Midwinter keeps the brave from cold.
 
 48.
 ```text
-Waterdeep’s yawning gates are shut,
+Waterdeep's yawning gates are shut,
 Midwinter keeps the night from glut.
 ```
 
 49.
 ```text
-A sailor’s charm on braided twine,
+A sailor's charm on braided twine,
 Midwinter turns it into sign.
 ```
 
@@ -4963,13 +4963,13 @@ Midwinter bargains hard for peace.
 
 1.
 ```text
-On Waterdeep’s streets the lamps burn low,
+On Waterdeep's streets the lamps burn low,
 As one year loosens careful hold,
-Midwinter’s Eve asks us to slow,
+Midwinter's Eve asks us to slow,
 And count what warmed us from the cold,
 No banner waves, no bell is rung,
 The city breathes without decree,
-The year is closed by what we’ve done,
+The year is closed by what we've done,
 Not by what we claim to be.
 ```
 
@@ -4977,19 +4977,19 @@ Not by what we claim to be.
 ```text
 In Amn the ledgers close at last,
 No sum is chased beyond the night,
-Year’s Turning weighs the future past,
+Year's Turning weighs the future past,
 And sets the balance by candlelight,
 A coin is set aside in care,
 For needs that names have yet to wear,
 The year is judged not just by gain,
-But mercy’s quiet, patient reign.
+But mercy's quiet, patient reign.
 ```
 
 3.
 ```text
 In Calimshan the courtyards hush,
 The drums laid down, the incense thin,
-Midwinter’s Eve waits in the hush,
+Midwinter's Eve waits in the hush,
 Where endings fold to start again,
 The year is named by loss and grace,
 By what was held and what let go,
@@ -5001,7 +5001,7 @@ Where time agrees to move more slow.
 ```text
 In Tethyr halls the hearth burns small,
 No banner waved, no oath renewed,
-Year’s Turning hears the quiet call,
+Year's Turning hears the quiet call,
 Of gratitude for what endured,
 The fire remembers hands long gone,
 That built the walls and kept them sound,
@@ -5011,10 +5011,10 @@ But by the trust still underground.
 
 5.
 ```text
-At Baldur’s Gate the harbor rests,
+At Baldur's Gate the harbor rests,
 The bells unswung, the tide run slow,
-Midwinter’s Eve counts silent guests,
-Who shaped the year we’ve come to know,
+Midwinter's Eve counts silent guests,
+Who shaped the year we've come to know,
 The river mirrors fading stars,
 And carries secrets out to sea,
 The city learns its hidden scars,
@@ -5025,7 +5025,7 @@ Are part of what it means to be.
 ```text
 In Saltmarsh stars reflect the sea,
 As nets and fears are set aside,
-Year’s Turning lets the people be,
+Year's Turning lets the people be,
 Between the ebb and coming tide,
 The longest night is met, not fought,
 The dark is held without alarm,
@@ -5037,8 +5037,8 @@ And opened by what kept us warm.
 ```text
 A candle lit for what was lost,
 Another for what yet may be,
-Midwinter’s Eve accepts the cost,
-Of loving time’s fragility,
+Midwinter's Eve accepts the cost,
+Of loving time's fragility,
 The flames burn down without a sound,
 Yet leave the room more fully known,
 The year is gone, but we are found,
@@ -5047,9 +5047,9 @@ Still standing, still not overthrown.
 
 8.
 ```text
-On Waterdeep’s walls the watch stands still,
+On Waterdeep's walls the watch stands still,
 The city breathes without command,
-Year’s Turning bends the iron will,
+Year's Turning bends the iron will,
 And leaves the moment unplanned,
 The rules that shaped the passing days,
 Are set aside without dispute,
@@ -5061,7 +5061,7 @@ Where strength is shown by resolute.
 ```text
 In Amn a cup is raised, not high,
 But held and warmed by steady hands,
-Midwinter’s Eve lets old debts lie,
+Midwinter's Eve lets old debts lie,
 And trusts what patience understands,
 The year was hard, the year was kind,
 The balance rests in human care,
@@ -5073,7 +5073,7 @@ But who was still beside us there.
 ```text
 Calimshan names the year by pain,
 And also by what helped it stand,
-Year’s Turning keeps the loss and gain,
+Year's Turning keeps the loss and gain,
 In equal, open, waiting hand,
 No verdict falls, no judgment made,
 The night accepts without demand,
@@ -5085,8 +5085,8 @@ But set to rest as it was planned.
 ```text
 In Tethyr watchmen walk more slow,
 And nod to faces long since known,
-Midwinter’s Eve lets duty go,
-Enough to feel they’re not alone,
+Midwinter's Eve lets duty go,
+Enough to feel they're not alone,
 The roads lie bare, the fields at peace,
 The frost takes hold of furrowed land,
 The year concludes with a release,
@@ -5095,9 +5095,9 @@ No order forced, no crown command.
 
 12.
 ```text
-At Baldur’s Gate the river sighs,
+At Baldur's Gate the river sighs,
 And mirrors lamps like fading stars,
-Year’s Turning hears what never cries,
+Year's Turning hears what never cries,
 But shaped us quietly with scars,
 The city waits without demand,
 For dawn to name the coming year,
@@ -5109,7 +5109,7 @@ And says that holding still is dear.
 ```text
 In Saltmarsh fires are banked to coals,
 The longest night is met, not feared,
-Midwinter’s Eve steadies souls,
+Midwinter's Eve steadies souls,
 With truths we carried all the year,
 The sea pulls slow, the stars hold fast,
 The boats remain, the work can wait,
@@ -5121,7 +5121,7 @@ And peace arrives unchallenged, late.
 ```text
 A breath between the old and new,
 Where nothing must be said or sworn,
-Year’s Turning lets the silence do,
+Year's Turning lets the silence do,
 What words cannot before the morn,
 The past steps back, the future waits,
 No one commands the shift to start,
@@ -5133,7 +5133,7 @@ But by the calm within the heart.
 ```text
 The night grows calm, the year steps down,
 No bell is rung, no crown is worn,
-Midwinter’s Eve unthreads the crown,
+Midwinter's Eve unthreads the crown,
 That time itself had tightly sworn,
 The past releases, not erased,
 The future waits without a name,
@@ -5145,9 +5145,9 @@ And leaves us changed, but much the same.
 
 1.
 ```text
-On Waterdeep’s streets the lamps burn low,
+On Waterdeep's streets the lamps burn low,
 As one year loosens careful hold,
-Midwinter’s Eve asks us to slow,
+Midwinter's Eve asks us to slow,
 And count what warmed us from the cold.
 ```
 
@@ -5155,7 +5155,7 @@ And count what warmed us from the cold.
 ```text
 In Amn the ledgers close at last,
 No sum is chased beyond the night,
-Year’s Turning weighs the future past,
+Year's Turning weighs the future past,
 And sets the balance by candlelight.
 ```
 
@@ -5163,7 +5163,7 @@ And sets the balance by candlelight.
 ```text
 In Calimshan the courtyards hush,
 The drums laid down, the incense thin,
-Midwinter’s Eve waits in the hush,
+Midwinter's Eve waits in the hush,
 Where endings fold to start again.
 ```
 
@@ -5171,23 +5171,23 @@ Where endings fold to start again.
 ```text
 In Tethyr halls the hearth burns small,
 No banner waved, no oath renewed,
-Year’s Turning hears the quiet call,
+Year's Turning hears the quiet call,
 Of gratitude for what endured.
 ```
 
 5.
 ```text
-At Baldur’s Gate the harbor rests,
+At Baldur's Gate the harbor rests,
 The bells unswung, the tide run slow,
-Midwinter’s Eve counts silent guests,
-Who shaped the year we’ve come to know.
+Midwinter's Eve counts silent guests,
+Who shaped the year we've come to know.
 ```
 
 6.
 ```text
 In Saltmarsh stars reflect the sea,
 As nets and fears are set aside,
-Year’s Turning lets the people be,
+Year's Turning lets the people be,
 Between the ebb and coming tide.
 ```
 
@@ -5195,15 +5195,15 @@ Between the ebb and coming tide.
 ```text
 A candle lit for what was lost,
 Another for what yet may be,
-Midwinter’s Eve accepts the cost,
-Of loving time’s fragility.
+Midwinter's Eve accepts the cost,
+Of loving time's fragility.
 ```
 
 8.
 ```text
-On Waterdeep’s walls the watch stands still,
+On Waterdeep's walls the watch stands still,
 The city breathes without command,
-Year’s Turning bends the iron will,
+Year's Turning bends the iron will,
 And leaves the moment unplanned.
 ```
 
@@ -5211,7 +5211,7 @@ And leaves the moment unplanned.
 ```text
 In Amn a cup is raised, not high,
 But held and warmed by steady hands,
-Midwinter’s Eve lets old debts lie,
+Midwinter's Eve lets old debts lie,
 And trusts what patience understands.
 ```
 
@@ -5219,7 +5219,7 @@ And trusts what patience understands.
 ```text
 Calimshan names the year by pain,
 And also by what helped it stand,
-Year’s Turning keeps the loss and gain,
+Year's Turning keeps the loss and gain,
 In equal, open, waiting hand.
 ```
 
@@ -5227,15 +5227,15 @@ In equal, open, waiting hand.
 ```text
 In Tethyr watchmen walk more slow,
 And nod to faces long since known,
-Midwinter’s Eve lets duty go,
-Enough to feel they’re not alone.
+Midwinter's Eve lets duty go,
+Enough to feel they're not alone.
 ```
 
 12.
 ```text
-At Baldur’s Gate the river sighs,
+At Baldur's Gate the river sighs,
 And mirrors lamps like fading stars,
-Year’s Turning hears what never cries,
+Year's Turning hears what never cries,
 But shaped us quietly with scars.
 ```
 
@@ -5243,7 +5243,7 @@ But shaped us quietly with scars.
 ```text
 In Saltmarsh fires are banked to coals,
 The longest night is met, not feared,
-Midwinter’s Eve steadies souls,
+Midwinter's Eve steadies souls,
 With truths we carried all the year.
 ```
 
@@ -5251,15 +5251,15 @@ With truths we carried all the year.
 ```text
 A breath between the old and new,
 Where nothing must be said or sworn,
-Year’s Turning lets the silence do,
+Year's Turning lets the silence do,
 What words cannot before the morn.
 ```
 
 15.
 ```text
-On Waterdeep’s counting stones laid bare,
+On Waterdeep's counting stones laid bare,
 No numbers written, none erased,
-Midwinter’s Eve leaves empty air,
+Midwinter's Eve leaves empty air,
 Where future sums may yet be placed.
 ```
 
@@ -5267,15 +5267,15 @@ Where future sums may yet be placed.
 ```text
 In Amn the poor are named aloud,
 Not as a debt, but as a care,
-Year’s Turning humbles wealth and crowd,
+Year's Turning humbles wealth and crowd,
 By counting mercy as its share.
 ```
 
 17.
 ```text
-Calimshan’s lamps grow fewer still,
+Calimshan's lamps grow fewer still,
 The night prefers a gentler flame,
-Midwinter’s Eve bends time and will,
+Midwinter's Eve bends time and will,
 And loosens guilt as well as blame.
 ```
 
@@ -5283,15 +5283,15 @@ And loosens guilt as well as blame.
 ```text
 In Tethyr roads lie quiet, bare,
 No caravan disturbs the frost,
-Year’s Turning waits in open air,
+Year's Turning waits in open air,
 And honors all the year has cost.
 ```
 
 19.
 ```text
-At Baldur’s Gate the bells stay mute,
+At Baldur's Gate the bells stay mute,
 The silence chosen, not imposed,
-Midwinter’s Eve is resolute,
+Midwinter's Eve is resolute,
 That some things end because they closed.
 ```
 
@@ -5299,7 +5299,7 @@ That some things end because they closed.
 ```text
 In Saltmarsh the tide pulls breath by breath,
 As if the sea itself reflects,
-Year’s Turning weighs both life and death,
+Year's Turning weighs both life and death,
 And what each passing year collects.
 ```
 
@@ -5307,23 +5307,23 @@ And what each passing year collects.
 ```text
 A promise set without a vow,
 A hope not spoken, but still known,
-Midwinter’s Eve asks only now,
+Midwinter's Eve asks only now,
 That hearts be held, not overthrown.
 ```
 
 22.
 ```text
-On Waterdeep’s long avenue,
+On Waterdeep's long avenue,
 The lamps go dark one by one,
-Year’s Turning leaves the city new,
-Before the next year’s work’s begun.
+Year's Turning leaves the city new,
+Before the next year's work's begun.
 ```
 
 23.
 ```text
 In Amn the doors are shut by choice,
 No trade outpaces human need,
-Midwinter’s Eve lifts the voice,
+Midwinter's Eve lifts the voice,
 Of care beyond the weight of greed.
 ```
 
@@ -5331,7 +5331,7 @@ Of care beyond the weight of greed.
 ```text
 Calimshan listens to the dark,
 And finds it fuller than the day,
-Year’s Turning leaves its quiet mark,
+Year's Turning leaves its quiet mark,
 That light must also learn to stay.
 ```
 
@@ -5339,15 +5339,15 @@ That light must also learn to stay.
 ```text
 In Tethyr hearthstones glow with rest,
 The fire fed just enough to last,
-Midwinter’s Eve counts what was best,
+Midwinter's Eve counts what was best,
 Not what could never hold the past.
 ```
 
 26.
 ```text
-At Baldur’s Gate the night feels wide,
+At Baldur's Gate the night feels wide,
 Unmeasured, free of toll or fee,
-Year’s Turning lets the city hide,
+Year's Turning lets the city hide,
 Within a shared humility.
 ```
 
@@ -5355,7 +5355,7 @@ Within a shared humility.
 ```text
 In Saltmarsh elders mark the hour,
 By stars, not bells, not spoken sign,
-Midwinter’s Eve gives fragile power,
+Midwinter's Eve gives fragile power,
 To moments never kept in line.
 ```
 
@@ -5363,7 +5363,7 @@ To moments never kept in line.
 ```text
 The year steps down without demand,
 The next steps up without a name,
-Year’s Turning leaves us where we stand,
+Year's Turning leaves us where we stand,
 Between the dark and coming flame.
 ```
 
@@ -5371,7 +5371,7 @@ Between the dark and coming flame.
 ```text
 The year pauses, neither new nor old,
 As lamps burn low and voices cease,
-Midwinter’s Eve lets time be told,
+Midwinter's Eve lets time be told,
 By silence settling into peace.
 ```
 
@@ -5380,277 +5380,277 @@ By silence settling into peace.
 1.
 ```text
 Year turns slow in Waterdeep stone,
-Midwinter’s Eve leaves none alone.
+Midwinter's Eve leaves none alone.
 ```
 
 2.
 ```text
 Amn closes books, then lights one flame,
-Year’s Turning stays the same.
+Year's Turning stays the same.
 ```
 
 3.
 ```text
 Calimshan hushes drum and song,
-Midwinter’s Eve waits long.
+Midwinter's Eve waits long.
 ```
 
 4.
 ```text
 Tethyr binds the old year tight,
-Year’s Turning guards the night.
+Year's Turning guards the night.
 ```
 
 5.
 ```text
-At Baldur’s Gate the bells fall still,
-Midwinter’s Eve bends will.
+At Baldur's Gate the bells fall still,
+Midwinter's Eve bends will.
 ```
 
 6.
 ```text
 Saltmarsh watches stars and tide,
-Year’s Turning draws inside.
+Year's Turning draws inside.
 ```
 
 7.
 ```text
-A candle marks what’s passed and gone,
-Midwinter’s Eve holds on.
+A candle marks what's passed and gone,
+Midwinter's Eve holds on.
 ```
 
 8.
 ```text
 Old vows sleep, new vows breathe,
-Year’s Turning weaves.
+Year's Turning weaves.
 ```
 
 9.
 ```text
 Snow or rain or salted air,
-Midwinter’s Eve is prayer.
+Midwinter's Eve is prayer.
 ```
 
 10.
 ```text
 Time itself seems asked to pause,
-Year’s Turning draws a cause.
+Year's Turning draws a cause.
 ```
 
 11.
 ```text
-Amn forgives the ledger’s weight,
-Midwinter’s Eve waits.
+Amn forgives the ledger's weight,
+Midwinter's Eve waits.
 ```
 
 12.
 ```text
 Calimshan names the year by loss,
-Year’s Turning counts the cost.
+Year's Turning counts the cost.
 ```
 
 13.
 ```text
-Tethyr’s hearth burns low but true,
-Midwinter’s Eve renews.
+Tethyr's hearth burns low but true,
+Midwinter's Eve renews.
 ```
 
 14.
 ```text
-At Baldur’s Gate the harbor rests,
-Year’s Turning tests.
+At Baldur's Gate the harbor rests,
+Year's Turning tests.
 ```
 
 15.
 ```text
 Saltmarsh listens to the dark,
-Midwinter’s Eve marks.
+Midwinter's Eve marks.
 ```
 
 16.
 ```text
 A breath between what was and will,
-Year’s Turning still.
+Year's Turning still.
 ```
 
 17.
 ```text
 Promises set gently down,
-Midwinter’s Eve un-crowns.
+Midwinter's Eve un-crowns.
 ```
 
 18.
 ```text
 The past exhales, the future waits,
-Year’s Turning states.
+Year's Turning states.
 ```
 
 19.
 ```text
 Amn seals hope against the cold,
-Midwinter’s Eve holds.
+Midwinter's Eve holds.
 ```
 
 20.
 ```text
 Calimshan counts the years in flame,
-Year’s Turning names.
+Year's Turning names.
 ```
 
 21.
 ```text
 Tethyr thanks the land and dead,
-Midwinter’s Eve is said.
+Midwinter's Eve is said.
 ```
 
 22.
 ```text
-At Baldur’s Gate the lamps burn few,
-Year’s Turning true.
+At Baldur's Gate the lamps burn few,
+Year's Turning true.
 ```
 
 23.
 ```text
 Saltmarsh tides pull breath by breath,
-Midwinter’s Eve and death.
+Midwinter's Eve and death.
 ```
 
 24.
 ```text
 A door is closed, another waits,
-Year’s Turning gates.
+Year's Turning gates.
 ```
 
 25.
 ```text
 Memory and promise meet,
-Midwinter’s Eve complete.
+Midwinter's Eve complete.
 ```
 
 26.
 ```text
 Amn sets one coin aside,
-Year’s Turning abides.
+Year's Turning abides.
 ```
 
 27.
 ```text
 Calimshan prays without a sound,
-Midwinter’s Eve is bound.
+Midwinter's Eve is bound.
 ```
 
 28.
 ```text
-Tethyr’s watch walks slow and kind,
-Year’s Turning mind.
+Tethyr's watch walks slow and kind,
+Year's Turning mind.
 ```
 
 29.
 ```text
-At Baldur’s Gate the river sighs,
-Midwinter’s Eve replies.
+At Baldur's Gate the river sighs,
+Midwinter's Eve replies.
 ```
 
 30.
 ```text
 Saltmarsh marks the longest night,
-Year’s Turning light.
+Year's Turning light.
 ```
 
 31.
 ```text
 The year lets go without a fight,
-Midwinter’s Eve night.
+Midwinter's Eve night.
 ```
 
 32.
 ```text
 What was carried now released,
-Year’s Turning peace.
+Year's Turning peace.
 ```
 
 33.
 ```text
 Amn rests its careful hand,
-Midwinter’s Eve understands.
+Midwinter's Eve understands.
 ```
 
 34.
 ```text
 Calimshan lets the old year sleep,
-Year’s Turning deep.
+Year's Turning deep.
 ```
 
 35.
 ```text
-Tethyr’s fire burns memory,
-Midwinter’s Eve keeps.
+Tethyr's fire burns memory,
+Midwinter's Eve keeps.
 ```
 
 36.
 ```text
-At Baldur’s Gate no bell is rung,
-Year’s Turning sung.
+At Baldur's Gate no bell is rung,
+Year's Turning sung.
 ```
 
 37.
 ```text
 Saltmarsh hears the water pray,
-Midwinter’s Eve stay.
+Midwinter's Eve stay.
 ```
 
 38.
 ```text
 A pause where nothing must be done,
-Year’s Turning begun.
+Year's Turning begun.
 ```
 
 39.
 ```text
 The circle closes, then begins,
-Midwinter’s Eve wins.
+Midwinter's Eve wins.
 ```
 
 40.
 ```text
 Amn looks forward without haste,
-Year’s Turning placed.
+Year's Turning placed.
 ```
 
 41.
 ```text
 Calimshan seals the year with breath,
-Midwinter’s Eve and death.
+Midwinter's Eve and death.
 ```
 
 42.
 ```text
 Tethyr thanks the turning wheel,
-Year’s Turning real.
+Year's Turning real.
 ```
 
 43.
 ```text
-At Baldur’s Gate the night holds fast,
-Midwinter’s Eve past.
+At Baldur's Gate the night holds fast,
+Midwinter's Eve past.
 ```
 
 44.
 ```text
 Saltmarsh sets its fears aside,
-Year’s Turning tide.
+Year's Turning tide.
 ```
 
 45.
 ```text
 The old year fades, the new draws near,
-Midwinter’s Eve here.
+Midwinter's Eve here.
 ```
 
 46.
 ```text
 The year exhales, the night stands still,
-Midwinter’s Eve bends human will.
+Midwinter's Eve bends human will.
 ```
 
 #### `shieldmeet`
@@ -5659,7 +5659,7 @@ Midwinter’s Eve bends human will.
 
 1.
 ```text
-On Waterdeep’s high open square,
+On Waterdeep's high open square,
 The bells ring once, then hold their breath,
 Shieldmeet asks the city where,
 It stands on justice, law, and faith,
@@ -5678,18 +5678,18 @@ Beyond the profit of their youth,
 A debt is named, then lessened fair,
 Before the watching public eye,
 The scales are set in honest air,
-And mercy’s weight is justified.
+And mercy's weight is justified.
 ```
 
 3.
 ```text
 In Calimshan the courts stand bare,
-No music masks the elder’s tone,
+No music masks the elder's tone,
 Shieldmeet strips the layered air,
 Till only judgment stands alone,
 The verdict falls without a cheer,
 But holds the city firm and fast,
-The law is felt because it’s clear,
+The law is felt because it's clear,
 And binds the future to the past.
 ```
 
@@ -5702,12 +5702,12 @@ That keeps the law from being torn,
 The crown steps back, the charter stays,
 The road and field are bound as one,
 The year is set by measured ways,
-And duty says the work’s begun.
+And duty says the work's begun.
 ```
 
 5.
 ```text
-At Baldur’s Gate the crowd stands tight,
+At Baldur's Gate the crowd stands tight,
 As captains speak of duty owed,
 Shieldmeet measures wrong and right,
 And names the path the city showed,
@@ -5737,18 +5737,18 @@ Shieldmeet keeps the meaning bound,
 To shared and spoken clarity,
 No seal is pressed behind a door,
 No clause is left to whispered doubt,
-The law becomes the commons’ core,
+The law becomes the commons' core,
 Because the light was not shut out.
 ```
 
 8.
 ```text
-On Waterdeep’s stone steps at noon,
+On Waterdeep's stone steps at noon,
 A judge speaks plain, without a guard,
 Shieldmeet trades the sword for rune,
 And asks the law to work its hard,
 The sentence lands without delay,
-Yet leaves a space for mercy’s breath,
+Yet leaves a space for mercy's breath,
 The city learns a harder way,
 To balance justice, life, and death.
 ```
@@ -5772,7 +5772,7 @@ And name the line that now must stand,
 Shieldmeet sets the coming days,
 By choosing trust instead of sand,
 No song intrudes, no spice is burned,
-Until the verdict’s shape is clear,
+Until the verdict's shape is clear,
 The city holds what it has learned,
 And lets the rest dissolve in fear.
 ```
@@ -5791,7 +5791,7 @@ And guarded by the shared-up right.
 
 12.
 ```text
-At Baldur’s Gate the bells ring low,
+At Baldur's Gate the bells ring low,
 As rival voices take their turn,
 Shieldmeet lets the people know,
 What must be faced, not simply burned,
@@ -5804,7 +5804,7 @@ And bears the weight of what it read.
 13.
 ```text
 In Saltmarsh elders mark the day,
-With chalk upon the hall’s old beam,
+With chalk upon the hall's old beam,
 Shieldmeet asks the town to say,
 What future fits the shared-up dream,
 The mark will fade with coming rain,
@@ -5815,8 +5815,8 @@ But by the choice we made it here.
 
 14.
 ```text
-On Waterdeep’s long marble floor,
-The city’s code is read aloud,
+On Waterdeep's long marble floor,
+The city's code is read aloud,
 Shieldmeet proves the law is more,
 Than symbols worn or titles bowed,
 Each clause is weighed, each phrase made plain,
@@ -5833,14 +5833,14 @@ Shieldmeet counts the fair and just,
 And lets the hidden margins die,
 The numbers settle, clean and spare,
 No flourish left to mask the truth,
-The law endures because it’s fair,
+The law endures because it's fair,
 And speaks to age as well as youth.
 ```
 
 16.
 ```text
 Calimshan pauses song and spice,
-To hear the verdict’s final shape,
+To hear the verdict's final shape,
 Shieldmeet makes the careful choice,
 That cuts a clean and lasting drape,
 The city breathes, then moves ahead,
@@ -5863,7 +5863,7 @@ And faced by honest, shared-up sight.
 
 18.
 ```text
-At Baldur’s Gate the river waits,
+At Baldur's Gate the river waits,
 As judgments fall like measured stone,
 Shieldmeet opens heavier gates,
 By making every reason known,
@@ -5889,7 +5889,7 @@ And vows sworn here are sworn in deep.
 
 1.
 ```text
-On Waterdeep’s high open square,
+On Waterdeep's high open square,
 The bells ring once, then hold their breath,
 Shieldmeet asks the city where,
 It stands on justice, law, and faith.
@@ -5906,7 +5906,7 @@ Beyond the profit of their youth.
 3.
 ```text
 In Calimshan the courts stand bare,
-No music masks the elder’s tone,
+No music masks the elder's tone,
 Shieldmeet strips the layered air,
 Till only judgment stands alone.
 ```
@@ -5921,7 +5921,7 @@ That keeps the law from being torn.
 
 5.
 ```text
-At Baldur’s Gate the crowd stands tight,
+At Baldur's Gate the crowd stands tight,
 As captains speak of duty owed,
 Shieldmeet measures wrong and right,
 And names the path the city showed.
@@ -5945,7 +5945,7 @@ To shared and spoken clarity.
 
 8.
 ```text
-On Waterdeep’s stone steps at noon,
+On Waterdeep's stone steps at noon,
 A judge speaks plain, without a guard,
 Shieldmeet trades the sword for rune,
 And asks the law to work its hard.
@@ -5977,7 +5977,7 @@ Of land that feeds and laws that load.
 
 12.
 ```text
-At Baldur’s Gate the bells ring low,
+At Baldur's Gate the bells ring low,
 As rival voices take their turn,
 Shieldmeet lets the people know,
 What must be faced, not simply burned.
@@ -5986,7 +5986,7 @@ What must be faced, not simply burned.
 13.
 ```text
 In Saltmarsh elders mark the day,
-With chalk upon the hall’s old beam,
+With chalk upon the hall's old beam,
 Shieldmeet asks the town to say,
 What future fits the shared-up dream.
 ```
@@ -6001,8 +6001,8 @@ To half-spoke vows and voices loud.
 
 15.
 ```text
-On Waterdeep’s long marble floor,
-The city’s code is read aloud,
+On Waterdeep's long marble floor,
+The city's code is read aloud,
 Shieldmeet proves the law is more,
 Than symbols worn or titles bowed.
 ```
@@ -6018,7 +6018,7 @@ And lets the hidden margins die.
 17.
 ```text
 Calimshan pauses song and spice,
-To hear the verdict’s final shape,
+To hear the verdict's final shape,
 Shieldmeet makes the careful choice,
 That cuts a clean and lasting drape.
 ```
@@ -6033,7 +6033,7 @@ When nothing can be set aside.
 
 19.
 ```text
-At Baldur’s Gate the river waits,
+At Baldur's Gate the river waits,
 As judgments fall like measured stone,
 Shieldmeet opens heavier gates,
 By making every reason known.
@@ -6057,7 +6057,7 @@ And keeps the city tightly bound.
 
 22.
 ```text
-On Waterdeep’s high tower stair,
+On Waterdeep's high tower stair,
 The watch resets its oath and seal,
 Shieldmeet makes the promise fair,
 By making all the burden real.
@@ -6073,8 +6073,8 @@ When mercy learned to spell its name.
 
 24.
 ```text
-Calimshan weighs the elder’s word,
-Against the market’s restless need,
+Calimshan weighs the elder's word,
+Against the market's restless need,
 Shieldmeet listens, undeterred,
 And plants the future like a seed.
 ```
@@ -6089,7 +6089,7 @@ And marks the year the law was born.
 
 26.
 ```text
-At Baldur’s Gate the bells fall mute,
+At Baldur's Gate the bells fall mute,
 As silence seals the chosen path,
 Shieldmeet calls for firm resolve,
 Not easy peace or hurried wrath.
@@ -6100,7 +6100,7 @@ Not easy peace or hurried wrath.
 In Saltmarsh votes are counted slow,
 By lifted hand and careful eye,
 Shieldmeet trusts the gathered know,
-What future asks and won’t deny.
+What future asks and won't deny.
 ```
 
 28.
@@ -6113,9 +6113,9 @@ And makes the spoken promise loud.
 
 29.
 ```text
-On Waterdeep’s broad civic stone,
+On Waterdeep's broad civic stone,
 The crowd disperses, changed but whole,
-Shieldmeet weighs the city’s tone,
+Shieldmeet weighs the city's tone,
 And writes it in the public soul.
 ```
 
@@ -6124,7 +6124,7 @@ And writes it in the public soul.
 In Amn the ink is dried and kept,
 No flourish hides the final line,
 Shieldmeet guards the promise swept,
-From greed’s more tempting, crooked sign.
+From greed's more tempting, crooked sign.
 ```
 
 31.
@@ -6139,13 +6139,13 @@ That all the people come to know.
 ```text
 In Tethyr oaths are sworn at dawn,
 Not to a king, but law itself,
-Shieldmeet says the work’s begun,
+Shieldmeet says the work's begun,
 When duty outlives crown and self.
 ```
 
 33.
 ```text
-At Baldur’s Gate the river flows,
+At Baldur's Gate the river flows,
 Unmoved by word or chosen claim,
 Shieldmeet leaves the choice exposed,
 And asks the city earn its name.
@@ -6203,7 +6203,7 @@ Shieldmeet binds the law to right.
 
 5.
 ```text
-At Baldur’s Gate the bells ring true,
+At Baldur's Gate the bells ring true,
 Shieldmeet asks what we will do.
 ```
 
@@ -6216,7 +6216,7 @@ Shieldmeet crowns the common choice.
 7.
 ```text
 Oaths are spoken, hands are shown,
-Shieldmeet claims what’s clearly known.
+Shieldmeet claims what's clearly known.
 ```
 
 8.
@@ -6228,7 +6228,7 @@ Shieldmeet counts the living dead.
 9.
 ```text
 A charter signed, a seal impressed,
-Shieldmeet tests the town’s good faith.
+Shieldmeet tests the town's good faith.
 ```
 
 10.
@@ -6246,18 +6246,18 @@ Shieldmeet draws the border fine.
 12.
 ```text
 Calimshan pauses song and drum,
-Shieldmeet asks what we’ve become.
+Shieldmeet asks what we've become.
 ```
 
 13.
 ```text
-Tethyr’s lords and farmers meet,
+Tethyr's lords and farmers meet,
 Shieldmeet keeps the ground beneath.
 ```
 
 14.
 ```text
-At Baldur’s Gate the crowd stands still,
+At Baldur's Gate the crowd stands still,
 Shieldmeet weighs the public will.
 ```
 
@@ -6305,13 +6305,13 @@ Shieldmeet names the chosen stand.
 
 22.
 ```text
-Tethyr’s banners do not wave,
+Tethyr's banners do not wave,
 Shieldmeet keeps the oaths we gave.
 ```
 
 23.
 ```text
-At Baldur’s Gate the river waits,
+At Baldur's Gate the river waits,
 Shieldmeet opens heavier gates.
 ```
 
@@ -6341,7 +6341,7 @@ Shieldmeet guards the fragile crown.
 
 28.
 ```text
-Calimshan weighs the elder’s word,
+Calimshan weighs the elder's word,
 Shieldmeet listens, undeterred.
 ```
 
@@ -6353,7 +6353,7 @@ Shieldmeet shows what vows can yield.
 
 30.
 ```text
-At Baldur’s Gate the crowd divides,
+At Baldur's Gate the crowd divides,
 Shieldmeet hears both stubborn sides.
 ```
 
@@ -6389,13 +6389,13 @@ Shieldmeet asks what comes of act.
 
 36.
 ```text
-Tethyr’s courts sit open-wide,
+Tethyr's courts sit open-wide,
 Shieldmeet leaves no place to hide.
 ```
 
 37.
 ```text
-At Baldur’s Gate the bells fall mute,
+At Baldur's Gate the bells fall mute,
 Shieldmeet calls for firm resolve.
 ```
 
@@ -6432,12 +6432,12 @@ Shieldmeet draws the final sign.
 43.
 ```text
 Tethyr swears before the sun,
-Shieldmeet says the work’s begun.
+Shieldmeet says the work's begun.
 ```
 
 44.
 ```text
-At Baldur’s Gate the river flows,
+At Baldur's Gate the river flows,
 Shieldmeet leaves the choice exposed.
 ```
 
@@ -6459,7 +6459,7 @@ Shieldmeet binds the common will.
 
 1.
 ```text
-On Waterdeep’s streets the leaves decay,
+On Waterdeep's streets the leaves decay,
 And cling like paste to stone and boot,
 Uktar reminds us day by day,
 That endings feed the waiting root,
@@ -6473,7 +6473,7 @@ And practice being swallowed night.
 
 1.
 ```text
-On Waterdeep’s streets the leaves decay,
+On Waterdeep's streets the leaves decay,
 And cling like paste to stone and boot,
 Uktar reminds us day by day,
 That endings feed the waiting root.
@@ -6505,10 +6505,10 @@ And makes the wounded earth endure.
 
 5.
 ```text
-At Baldur’s Gate the fog runs thick,
+At Baldur's Gate the fog runs thick,
 And swallows bell and harbor cry,
 Uktar makes the daylight sick,
-And drags the year’s last warmth to die.
+And drags the year's last warmth to die.
 ```
 
 ##### `quips.festival.uktar.short` (47 entries)
@@ -6533,13 +6533,13 @@ Uktar counts what time forgot.
 
 4.
 ```text
-Tethyr’s woods go soft and brown,
+Tethyr's woods go soft and brown,
 Uktar pulls the green world down.
 ```
 
 5.
 ```text
-At Baldur’s Gate the fog stays low,
+At Baldur's Gate the fog stays low,
 Uktar slows the outward flow.
 ```
 
@@ -6551,14 +6551,14 @@ Uktar closes one more door.
 
 7.
 ```text
-Fruit falls black before it’s sweet,
+Fruit falls black before it's sweet,
 Uktar keeps no harvest neat.
 ```
 
 8.
 ```text
 Cold creeps in through rotting grain,
-Uktar weighs the year’s last pain.
+Uktar weighs the year's last pain.
 ```
 
 9.
@@ -6581,19 +6581,19 @@ Uktar tests the strong and old.
 
 12.
 ```text
-Calimshan buries summer’s boast,
+Calimshan buries summer's boast,
 Uktar favors ghost and ghost.
 ```
 
 13.
 ```text
-Tethyr’s roads turn slick and slow,
+Tethyr's roads turn slick and slow,
 Uktar makes the cart wheels groan.
 ```
 
 14.
 ```text
-At Baldur’s Gate the river dulls,
+At Baldur's Gate the river dulls,
 Uktar thickens trade and skulls.
 ```
 
@@ -6611,14 +6611,14 @@ Uktar crowns the unseen king.
 
 17.
 ```text
-Leaves stick fast to traveler’s feet,
+Leaves stick fast to traveler's feet,
 Uktar breaks the walking beat.
 ```
 
 18.
 ```text
 Cellars smell of dampened hope,
-Uktar tightens winter’s rope.
+Uktar tightens winter's rope.
 ```
 
 19.
@@ -6635,13 +6635,13 @@ Uktar lets the cold creep in.
 
 21.
 ```text
-Tethyr’s cattle breathe out steam,
+Tethyr's cattle breathe out steam,
 Uktar chills the pastoral dream.
 ```
 
 22.
 ```text
-At Baldur’s Gate the bells ring rare,
+At Baldur's Gate the bells ring rare,
 Uktar thickens city air.
 ```
 
@@ -6677,13 +6677,13 @@ Uktar teaches less to show.
 
 28.
 ```text
-Tethyr’s leaves collapse to paste,
+Tethyr's leaves collapse to paste,
 Uktar hates no honest waste.
 ```
 
 29.
 ```text
-At Baldur’s Gate the docks run slick,
+At Baldur's Gate the docks run slick,
 Uktar makes the footing thick.
 ```
 
@@ -6702,7 +6702,7 @@ Uktar works without a rhyme.
 32.
 ```text
 Mold writes maps on cellar wall,
-Uktar waits for winter’s call.
+Uktar waits for winter's call.
 ```
 
 33.
@@ -6719,20 +6719,20 @@ Uktar bends the southern line.
 
 35.
 ```text
-Tethyr’s hunters walk more slow,
+Tethyr's hunters walk more slow,
 Uktar tracks the wounded doe.
 ```
 
 36.
 ```text
-At Baldur’s Gate the nights feel long,
+At Baldur's Gate the nights feel long,
 Uktar hums a dying song.
 ```
 
 37.
 ```text
 Saltmarsh boats sit black and still,
-Uktar drains the sailor’s will.
+Uktar drains the sailor's will.
 ```
 
 38.
@@ -6761,13 +6761,13 @@ Uktar asks for something more.
 
 42.
 ```text
-Tethyr’s soil turns dark as ink,
+Tethyr's soil turns dark as ink,
 Uktar makes the future sink.
 ```
 
 43.
 ```text
-At Baldur’s Gate the fog won’t break,
+At Baldur's Gate the fog won't break,
 Uktar keeps us half-awake.
 ```
 
@@ -6816,10 +6816,10 @@ And keeps what time would not retain.
 2.
 ```text
 A cooler breeze walks down the quay,
-It tests the lantern’s steadier flame,
+It tests the lantern's steadier flame,
 Autumn asks the sea to be,
 Less bright, but truer all the same,
-The sun steps back from summer’s boast,
+The sun steps back from summer's boast,
 It leaves the sky in tempered glow,
 Autumn knows what matters most,
 By letting lighter moments go.
@@ -6851,7 +6851,7 @@ By sharing heat the way we should.
 
 5.
 ```text
-A crow repeats the day’s last news,
+A crow repeats the day's last news,
 It speaks of fields and fallen plans,
 Autumn listens, then reviews,
 What must be held in careful hands,
@@ -6972,7 +6972,7 @@ By showing what the hands can do.
 15.
 ```text
 The dock boards creak with older tales,
-They’ve learned the weight of slower gales,
+They've learned the weight of slower gales,
 Autumn listens where it fails,
 And reads the truth in softer scales,
 Wood remembers boots and rain,
@@ -7077,7 +7077,7 @@ And learns the worth of every shade.
 
 5.
 ```text
-A crow repeats the day’s last news,
+A crow repeats the day's last news,
 It speaks of fields and fallen plans,
 Autumn listens, then reviews,
 What must be kept in careful hands.
@@ -7085,7 +7085,7 @@ What must be kept in careful hands.
 
 6.
 ```text
-The sun steps back from summer’s boast,
+The sun steps back from summer's boast,
 It leaves the sky in tempered flame,
 Autumn teaches what we lost,
 And lets the cooling teach the same.
@@ -7150,7 +7150,7 @@ May walk where brighter days have fled.
 14.
 ```text
 The bell rings once, then holds its breath,
-As if to mark the year’s slow turn,
+As if to mark the year's slow turn,
 Autumn names the shape of death,
 By showing how the fires burn.
 ```
@@ -7184,7 +7184,7 @@ For notes that say where things belong.
 A kettle waits with patient heat,
 It knows the night will ask for more,
 Autumn teaches hands to meet,
-Around the hearth they’ve known before.
+Around the hearth they've known before.
 ```
 
 19.
@@ -7206,7 +7206,7 @@ The strength it took the year to seed.
 21.
 ```text
 The dock boards creak with older tales,
-They’ve learned the weight of slower gales,
+They've learned the weight of slower gales,
 Autumn listens where it fails,
 And writes the truth in softer scales.
 ```
@@ -7256,7 +7256,7 @@ For heat that knows the coming gloom.
 The harbor sleeps with tighter seams,
 It dreams of ice and heavier dreams,
 Autumn pulls the quiet beams,
-That brace the dark at midnight’s schemes.
+That brace the dark at midnight's schemes.
 ```
 
 28.
@@ -7269,7 +7269,7 @@ Until the need is sharp and clear.
 
 29.
 ```text
-The sun burns red at day’s last glance,
+The sun burns red at day's last glance,
 It bows before the lengthened night,
 Autumn learns the patient dance,
 Of fading slow instead of slight.
@@ -7389,7 +7389,7 @@ Without pretending fear is right.
 
 44.
 ```text
-A lantern’s glow turns inward now,
+A lantern's glow turns inward now,
 It warms the near, ignores the far,
 Autumn shows us how and how,
 To guard the small things that we are.
@@ -7435,7 +7435,7 @@ And asks the fields to pay in rain.
 
 3.
 ```text
-The sun steps back from summer’s boast,
+The sun steps back from summer's boast,
 It leaves the day a thinner toast.
 ```
 
@@ -7490,7 +7490,7 @@ It counts the warmth the summer lost.
 12.
 ```text
 A rope grows rough beneath the hand,
-It’s learned the truth of autumn’s sand.
+It's learned the truth of autumn's sand.
 ```
 
 13.
@@ -7502,7 +7502,7 @@ As if the night were listening too.
 14.
 ```text
 A shutter learns to close in time,
-It’s done with light that stays past prime.
+It's done with light that stays past prime.
 ```
 
 15.
@@ -7538,7 +7538,7 @@ It hums a low, unhurried strain.
 20.
 ```text
 A gull grows fat on slower seas,
-It’s learned the art of waiting fees.
+It's learned the art of waiting fees.
 ```
 
 21.
@@ -7580,7 +7580,7 @@ It knows what every season leaves.
 27.
 ```text
 The trees stand thin against the sky,
-They’ve learned the grace of letting by.
+They've learned the grace of letting by.
 ```
 
 28.
@@ -7598,7 +7598,7 @@ As warmth prepares to walk away.
 30.
 ```text
 The dock boards creak with older tales,
-They’ve learned the weight of slower gales.
+They've learned the weight of slower gales.
 ```
 
 31.
@@ -7616,7 +7616,7 @@ It hands the sky to colder sun.
 33.
 ```text
 A rope coils neat without a word,
-It’s ready now for what it heard.
+It's ready now for what it heard.
 ```
 
 34.
@@ -7633,7 +7633,7 @@ It proves that iron has its will.
 
 36.
 ```text
-A fire remembers summer’s face,
+A fire remembers summer's face,
 It keeps it close but not in place.
 ```
 
@@ -7694,7 +7694,7 @@ It knows what longer nights are for.
 46.
 ```text
 The air smells peat and distant rain,
-It hints at frost but won’t complain.
+It hints at frost but won't complain.
 ```
 
 47.
@@ -7715,12 +7715,12 @@ It dreams of ice and heavier dreams.
 
 1.
 ```text
-The thaw unlocks the harbor’s breath,
+The thaw unlocks the harbor's breath,
 As ice releases timbered strain,
 Spring argues gently against death,
 And teaches loss how to remain,
 Rain taps the dock with patient cheer,
-It knocks like news that won’t stay still,
+It knocks like news that won't stay still,
 Spring makes each whispered promise clear,
 Then dares the heart to test its will.
 ```
@@ -7730,7 +7730,7 @@ Then dares the heart to test its will.
 The bell rings bright with lifted tone,
 As if the cold has stepped aside,
 Spring warms the sound to make it known,
-That winter’s grip has lost its pride,
+That winter's grip has lost its pride,
 New echoes travel farther now,
 They trust the air to carry far,
 Spring shows the how and teaches how,
@@ -7911,7 +7911,7 @@ A rope dries fast in warming sun,
 It smells of hemp and second tries,
 Spring knows the work is never done,
 But lets the effort feel like prize,
-The hands remember winter’s ache,
+The hands remember winter's ache,
 Yet move with lighter practiced ease,
 Spring teaches strength is not to break,
 But bend and still accomplish these.
@@ -7946,7 +7946,7 @@ For what will come and pass on through.
 The harbor wakes with quieter pride,
 It hums instead of shouting loud,
 Spring shifts the weight the tides provide,
-And wears the calm it’s newly allowed,
+And wears the calm it's newly allowed,
 Work resumes with tempered might,
 No longer rushed by fear or frost,
 Spring balances the dark and light,
@@ -7957,7 +7957,7 @@ And counts the gain without the cost.
 
 1.
 ```text
-The thaw unlocks the harbor’s breath,
+The thaw unlocks the harbor's breath,
 As ropes remember how to bend,
 Spring argues softly against death,
 And teaches ice how things can end.
@@ -7966,7 +7966,7 @@ And teaches ice how things can end.
 2.
 ```text
 Rain taps the dock with careful cheer,
-It knocks like news that won’t stay still,
+It knocks like news that won't stay still,
 Spring makes each whispered promise clear,
 Then dares the heart to trust its will.
 ```
@@ -7976,7 +7976,7 @@ Then dares the heart to trust its will.
 The bell rings bright with lifted tone,
 As if the cold has stepped aside,
 Spring warms the sound to make it known,
-That winter’s grip has slipped its pride.
+That winter's grip has slipped its pride.
 ```
 
 4.
@@ -8120,7 +8120,7 @@ And spilling truth at gentle speed.
 The harbor wakes with quieter pride,
 It hums instead of shouting loud,
 Spring shifts the weight the tides provide,
-And wears the calm it’s newly allowed.
+And wears the calm it's newly allowed.
 ```
 
 22.
@@ -8183,7 +8183,7 @@ As something earned by staying place.
 ```text
 The rain forgives the dusty road,
 It smooths the cracks the frost had made,
-Spring lifts the world from winter’s load,
+Spring lifts the world from winter's load,
 And pays the debt that cold delayed.
 ```
 
@@ -8224,7 +8224,7 @@ And trusts the gift it dares to give.
 A rope lies loose beside the rail,
 It rests before the work begins,
 Spring teaches pause can still prevail,
-Before the season’s labor wins.
+Before the season's labor wins.
 ```
 
 35.
@@ -8254,7 +8254,7 @@ And grows through small uncertainties.
 38.
 ```text
 The harbor breathes in deeper time,
-It stretches free of winter’s seam,
+It stretches free of winter's seam,
 Spring writes the world a newer rhyme,
 And lets the waking feel like dream.
 ```
@@ -8311,7 +8311,7 @@ But choosing to remain unbroken.
 ```text
 The harbor smiles in shifting light,
 It learns to trust the changing tide,
-Spring trades the cold’s unyielding night,
+Spring trades the cold's unyielding night,
 For days that open wide and wide.
 ```
 
@@ -8340,25 +8340,25 @@ It starts in whispers, then says so.
 3.
 ```text
 The rain arrives without a grudge,
-It cleans the street of winter’s sludge.
+It cleans the street of winter's sludge.
 ```
 
 4.
 ```text
-A bud believes the sun’s a friend,
+A bud believes the sun's a friend,
 It trusts the warmth will not pretend.
 ```
 
 5.
 ```text
 The river laughs at broken ice,
-It’s learned that change can still be nice.
+It's learned that change can still be nice.
 ```
 
 6.
 ```text
 Old paths wake up with muddy feet,
-They stretch and yawn at springtime’s beat.
+They stretch and yawn at springtime's beat.
 ```
 
 7.
@@ -8406,7 +8406,7 @@ And finds the courage to amuse.
 14.
 ```text
 New ropes feel strange in warming hands,
-They’ve yet to learn the sea’s demands.
+They've yet to learn the sea's demands.
 ```
 
 15.
@@ -8442,7 +8442,7 @@ Coins change their minds by afternoon.
 20.
 ```text
 A thawed-out knot comes loose with grace,
-It leaves no mark of winter’s face.
+It leaves no mark of winter's face.
 ```
 
 21.
@@ -8460,7 +8460,7 @@ It dares the eye to linger near.
 23.
 ```text
 The bell rings twice for something new,
-The third ring’s left for what comes through.
+The third ring's left for what comes through.
 ```
 
 24.
@@ -8484,7 +8484,7 @@ It knows its reign was not for all.
 27.
 ```text
 The sun counts hours more at play,
-It’s less inclined to rush away.
+It's less inclined to rush away.
 ```
 
 28.
@@ -8495,8 +8495,8 @@ It tastes the dock, then freshened air.
 
 29.
 ```text
-The ground forgives the winter’s weight,
-It rises slow, but won’t be late.
+The ground forgives the winter's weight,
+It rises slow, but won't be late.
 ```
 
 30.
@@ -8514,7 +8514,7 @@ It lets the boots complain of rain.
 32.
 ```text
 The river bends with softened will,
-It’s learned that ice can’t argue still.
+It's learned that ice can't argue still.
 ```
 
 33.
@@ -8556,7 +8556,7 @@ It hums along on loosened strings.
 39.
 ```text
 A rope dries fast in lengthened light,
-It’s learned to trust the day, not night.
+It's learned to trust the day, not night.
 ```
 
 40.
@@ -8568,7 +8568,7 @@ To let a small green truth come through.
 41.
 ```text
 The harbor wakes with quieter pride,
-It’s done pretending it won’t tide.
+It's done pretending it won't tide.
 ```
 
 42.
@@ -8579,7 +8579,7 @@ As if its worth has learned to fold.
 
 43.
 ```text
-The sun steps back from winter’s claim,
+The sun steps back from winter's claim,
 And leaves the door ajar to flame.
 ```
 
@@ -8598,13 +8598,13 @@ It learns to laugh at clearer skies.
 46.
 ```text
 The rain stops short, as if to say,
-You’ll walk alone the rest of the way.
+You'll walk alone the rest of the way.
 ```
 
 47.
 ```text
 The bells ring on with lifted sound,
-They like the air that’s gone unbound.
+They like the air that's gone unbound.
 ```
 
 48.
@@ -8629,7 +8629,7 @@ The sun stays late above the quay,
 It listens close to water talk,
 Summer lets the daylight wander free,
 And slows the pace of every walk,
-Warm boards remember bare feet’s trace,
+Warm boards remember bare feet's trace,
 They hold the heat the hours gave,
 Summer teaches time its place,
 By letting moments misbehave.
@@ -8689,7 +8689,7 @@ A sail snaps white against the blue,
 It argues gently with the breeze,
 Summer trusts the wind to see it through,
 And lets the effort move with ease,
-The canvas learns the sky’s reply,
+The canvas learns the sky's reply,
 It bends but does not lose its aim,
 Summer shows the reason why,
 To yield is not to quit the game.
@@ -8723,7 +8723,7 @@ By letting thirst and kindness burn.
 ```text
 The sun writes long across the stone,
 It spells the hours without shame,
-Summer knows it’s not alone,
+Summer knows it's not alone,
 In stretching time to fit its flame,
 Shadows shrink but do not hide,
 They linger where the light is fair,
@@ -8738,7 +8738,7 @@ It trusts the heat to guard its rest,
 Summer teaches day and night,
 Can share the same unbroken chest,
 Dreams stretch long beneath the sun,
-They wander free of winter’s seam,
+They wander free of winter's seam,
 Summer proves the work is done,
 When resting feels like earned routine.
 ```
@@ -8794,7 +8794,7 @@ The pause that lets the muscles breathe.
 15.
 ```text
 The street grows quiet in the glare,
-It waits for evening’s softer claim,
+It waits for evening's softer claim,
 Summer knows when not to dare,
 And lets the hush speak just the same,
 Stillness settles without fear,
@@ -8834,7 +8834,7 @@ It rocks with tides that do not rush,
 Summer trusts the smallest breeze,
 To say what silence cannot hush,
 Motion comes without demand,
-It follows water’s gentler way,
+It follows water's gentler way,
 Summer puts the helm in hand,
 And lets the current have its say.
 ```
@@ -8933,7 +8933,7 @@ Than memory will ever last.
 ```text
 The sun writes long across the stone,
 It spells the hours without shame,
-Summer knows it’s not alone,
+Summer knows it's not alone,
 In stretching time to fit its flame.
 ```
 
@@ -8980,7 +8980,7 @@ And makes the hardest effort lurk.
 15.
 ```text
 The street grows quiet in the glare,
-It waits for evening’s softer claim,
+It waits for evening's softer claim,
 Summer knows when not to dare,
 And lets the hush speak just the same.
 ```
@@ -9044,7 +9044,7 @@ That winter never dared to name.
 23.
 ```text
 The heat forgives the smallest sin,
-If laughter’s quick to usher in,
+If laughter's quick to usher in,
 Summer lets the light begin,
 Where stricter seasons would rescind.
 ```
@@ -9061,7 +9061,7 @@ Before the labor reconsumes.
 ```text
 The sun reads time in lengthened grain,
 Not hours lost, but warmth to gain,
-Summer trades the clock’s refrain,
+Summer trades the clock's refrain,
 For moments that refuse to wane.
 ```
 
@@ -9110,7 +9110,7 @@ That stood too hard in days of yore.
 The dock boards warm beneath the feet,
 They hold the sun without complaint,
 Summer teaches heat to meet,
-The body’s trust and not its faint.
+The body's trust and not its faint.
 ```
 
 32.
@@ -9157,7 +9157,7 @@ And calls the gentler burn the same.
 ```text
 A rope sighs soft when knots are right,
 It rests at last through honest night,
-Summer proves the day’s long light,
+Summer proves the day's long light,
 Can make the ending feel polite.
 ```
 
@@ -9189,7 +9189,7 @@ And leaves the rest for stars to find.
 ```text
 The tide leaves cool along the shore,
 It whispers thanks, then asks no more,
-Summer shows what leaving’s for,
+Summer shows what leaving's for,
 When staying warmed the hours before.
 ```
 
@@ -9382,7 +9382,7 @@ It saves the eyes the sun would raid.
 25.
 ```text
 The docks ring warm with careless sound,
-Of boots that don’t yet seek the ground.
+Of boots that don't yet seek the ground.
 ```
 
 26.
@@ -9418,13 +9418,13 @@ Than any careful promise how.
 31.
 ```text
 The street grows quiet in the glare,
-It waits for evening’s gentler air.
+It waits for evening's gentler air.
 ```
 
 32.
 ```text
 The bell rings thin in sunstruck stone,
-It knows it’s not alone, alone.
+It knows it's not alone, alone.
 ```
 
 33.
@@ -9436,13 +9436,13 @@ It steals with less remorse than praise.
 34.
 ```text
 The heat forgives the smallest sin,
-If laughter’s quick to usher in.
+If laughter's quick to usher in.
 ```
 
 35.
 ```text
 A rope lies loose, its work complete,
-It naps beneath the sailor’s feet.
+It naps beneath the sailor's feet.
 ```
 
 36.
@@ -9460,7 +9460,7 @@ It trusts the calm but knows surprise.
 38.
 ```text
 The shade feels earned beneath the wall,
-A gift that answers summer’s call.
+A gift that answers summer's call.
 ```
 
 39.
@@ -9478,7 +9478,7 @@ It trips on nothing, free of care.
 41.
 ```text
 The dockcat stretches long and slow,
-It knows the sun won’t let it go.
+It knows the sun won't let it go.
 ```
 
 42.
@@ -9495,7 +9495,7 @@ It argues gently with the breeze.
 
 44.
 ```text
-The sun slips west but won’t admit,
+The sun slips west but won't admit,
 That night is waiting close to it.
 ```
 
@@ -9508,7 +9508,7 @@ It bends the day around your feet.
 46.
 ```text
 The tide returns with quieter grace,
-It leaves cool prints in summer’s face.
+It leaves cool prints in summer's face.
 ```
 
 47.
@@ -9572,7 +9572,7 @@ When gentler seasons slip away.
 4.
 ```text
 The moon hangs close on winter nights,
-As if it slipped the sky’s tight seam,
+As if it slipped the sky's tight seam,
 Its silver presses docks and sights,
 And turns the sea to solid gleam,
 The dark grows thick with waiting time,
@@ -9671,7 +9671,7 @@ A crow cries out against the white,
 Its voice a nail in silent wood,
 Cold sharpens black against the light,
 And dares us call the contrast good,
-No color hides in winter’s glare,
+No color hides in winter's glare,
 Each shade stands clear and undefended,
 Winter teaches how to stare,
 At truths we wish were more blended.
@@ -9682,7 +9682,7 @@ At truths we wish were more blended.
 The wind learns every crack and seam,
 It pries at doors with patient might,
 Cold tests the strength of every beam,
-That swore it’d stand through endless night,
+That swore it'd stand through endless night,
 A wall is judged by smallest gap,
 A promise by the least kept word,
 Winter redraws the careful map,
@@ -9802,7 +9802,7 @@ Of holding fast when cold commands.
 4.
 ```text
 The moon looks close on winter nights,
-As if it slipped the sky’s great seam,
+As if it slipped the sky's great seam,
 Its silver weighs on docks and sights,
 And turns the sea to rigid gleam.
 ```
@@ -9820,14 +9820,14 @@ What warmth once said with less and more.
 A kettle sings with honest steam,
 It knows the worth of patient heat,
 Winter refines the smallest dream,
-Until it’s strong enough to meet.
+Until it's strong enough to meet.
 ```
 
 7.
 ```text
 The dock boards crack beneath the frost,
 They speak in pops of older strain,
-Cold counts the warmth that’s been lost,
+Cold counts the warmth that's been lost,
 And asks the bones to pay in pain.
 ```
 
@@ -9867,8 +9867,8 @@ When comfort learns to look like gray.
 ```text
 A bell rope burns the naked palm,
 It leaves a mark that will not fade,
-Cold proves endurance isn’t calm,
-But staying when you’re sorely made.
+Cold proves endurance isn't calm,
+But staying when you're sorely made.
 ```
 
 13.
@@ -9916,7 +9916,7 @@ Until they argue what is good.
 The wind learns every crack and seam,
 It pries at doors with patient might,
 Cold tests the strength of every beam,
-That swore it’d stand through endless night.
+That swore it'd stand through endless night.
 ```
 
 19.
@@ -9978,7 +9978,7 @@ By teaching how the warm still strives.
 26.
 ```text
 The docks grow quiet without shame,
-They’ve learned the weight of shorter days,
+They've learned the weight of shorter days,
 Cold strips the world of borrowed flame,
 And leaves the core in honest ways.
 ```
@@ -10011,7 +10011,7 @@ And finds the brave in quiet cheer.
 ```text
 The harbor lamp burns hard and small,
 It wastes no glow on distant seas,
-Winter demands we choose what’s all,
+Winter demands we choose what's all,
 And guard it well through freezing pleas.
 ```
 
@@ -10035,7 +10035,7 @@ In heat, in hope, in near and death.
 ```text
 A frost-lined rail cuts through the palm,
 It leaves the truth in aching skin,
-Cold proves endurance isn’t calm,
+Cold proves endurance isn't calm,
 But choosing still to enter in.
 ```
 
@@ -10076,7 +10076,7 @@ Is not the boast but staying same.
 The dockcat curls against the stone,
 It steals the heat the world forgot,
 Winter explains the art of home,
-As sharing what you’ve barely got.
+As sharing what you've barely got.
 ```
 
 39.
@@ -10116,7 +10116,7 @@ Until it bears the load it caught.
 The harbor waits in frozen calm,
 It keeps its faith beneath the ice,
 Cold strips the world of borrowed balm,
-And leaves what’s real at any price.
+And leaves what's real at any price.
 ```
 
 44.
@@ -10186,7 +10186,7 @@ Like old regrets too stiff to warn.
 6.
 ```text
 The tide moves slow in iron skin,
-Still counting debts it’s taken in.
+Still counting debts it's taken in.
 ```
 
 7.
@@ -10204,19 +10204,19 @@ A smug, gray knot of borrowed gold.
 9.
 ```text
 Ice keeps secrets worse than stone,
-It shows you only what it’s shown.
+It shows you only what it's shown.
 ```
 
 10.
 ```text
-The wind cuts deals it can’t recall,
+The wind cuts deals it can't recall,
 It takes no blame when sailors fall.
 ```
 
 11.
 ```text
 A winter star looks sharp and near,
-As if it slipped the sky’s veneer.
+As if it slipped the sky's veneer.
 ```
 
 12.
@@ -10228,7 +10228,7 @@ A coin flipped once to choose the night.
 13.
 ```text
 Old nets grow stiff with salted years,
-They creak like men who’ve swallowed fears.
+They creak like men who've swallowed fears.
 ```
 
 14.
@@ -10258,7 +10258,7 @@ It trusts the ground but tests the sky.
 18.
 ```text
 The mast complains of aching grain,
-It’s tired of bearing winter’s chain.
+It's tired of bearing winter's chain.
 ```
 
 19.
@@ -10276,7 +10276,7 @@ As if to ask the cost of ice.
 21.
 ```text
 The cold makes liars speak too fast,
-Each breath a truth that won’t hold past.
+Each breath a truth that won't hold past.
 ```
 
 22.
@@ -10306,7 +10306,7 @@ Dragging the dark back to the street.
 26.
 ```text
 A spark survives the cruelest wind,
-If fed by hands that won’t rescind.
+If fed by hands that won't rescind.
 ```
 
 27.
@@ -10336,7 +10336,7 @@ They groan beneath remembered dreams.
 31.
 ```text
 A winter oath weighs twice as much,
-It’s hard to keep what frost can touch.
+It's hard to keep what frost can touch.
 ```
 
 32.
@@ -10347,19 +10347,19 @@ It cuts the hours as they pass.
 
 33.
 ```text
-A sailor’s laugh comes late and dry,
+A sailor's laugh comes late and dry,
 It learned to live before goodbye.
 ```
 
 34.
 ```text
-The wind keeps lists it won’t explain,
+The wind keeps lists it won't explain,
 Of every loss and little gain.
 ```
 
 35.
 ```text
-A lantern’s glow grows tight and mean,
+A lantern's glow grows tight and mean,
 It guards its heat like jealous kin.
 ```
 
@@ -10402,7 +10402,7 @@ It moves by rules beyond our sight.
 42.
 ```text
 A rope grows stiff but does not fail,
-It trusts the knot, not fortune’s tale.
+It trusts the knot, not fortune's tale.
 ```
 
 43.
@@ -10455,7 +10455,7 @@ It leaves a thinner dawn to find.
 
 1.
 ```text
-Beneath the aurora’s watchful sweep,
+Beneath the aurora's watchful sweep,
 The tundra keeps its ancient law,
 What you swear the ice will keep,
 And break you if you stand in awe,
@@ -10472,19 +10472,19 @@ While travelers learn to measure go,
 The frostwind can make the kindest rime,
 And turn a proud resolve to time,
 Auril keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
 
 3.
 ```text
-In Kelvin’s Cairn the long night lingers into road,
+In Kelvin's Cairn the long night lingers into road,
 While travelers learn to measure load,
 The cairn can make the kindest coin,
 And turn a proud resolve to sign,,
 frost giants keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -10496,7 +10496,7 @@ While travelers learn to measure go,
 The ice-lake can make the kindest rime,
 And turn a proud resolve to time,
 Auril keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -10508,7 +10508,7 @@ While travelers learn to measure go,
 The ice-lake can make the kindest rime,
 And turn a proud resolve to time,,
 the Reghed keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -10520,7 +10520,7 @@ While travelers learn to measure hand,
 The tundra can make the kindest spice,
 And turn a proud resolve to price,,
 the Reghed keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -10532,19 +10532,19 @@ While travelers learn to measure light,
 The sled can make the kindest cold,
 And turn a proud resolve to bold,
 Auril keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
 
 8.
 ```text
-In Kelvin’s Cairn the ice-lake lingers into sand,
+In Kelvin's Cairn the ice-lake lingers into sand,
 While travelers learn to measure hand,
 The tundra can make the kindest spice,
 And turn a proud resolve to price,,
 the Reghed keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -10556,7 +10556,7 @@ While travelers learn to measure go,
 The cairn can make the kindest rime,
 And turn a proud resolve to time,,
 cold spirits keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -10568,7 +10568,7 @@ While travelers learn to measure light,
 The tundra can make the kindest cold,
 And turn a proud resolve to bold,,
 the Reghed keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -10580,7 +10580,7 @@ While travelers learn to measure hand,
 The long night can make the kindest spice,
 And turn a proud resolve to price,,
 winter wolves keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -10592,7 +10592,7 @@ While travelers learn to measure light,
 The cairn can make the kindest cold,
 And turn a proud resolve to bold,,
 cold spirits keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -10604,19 +10604,19 @@ While travelers learn to measure go,
 The long night can make the kindest rime,
 And turn a proud resolve to time,,
 winter wolves keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
 
 14.
 ```text
-In Kelvin’s Cairn the midwinter lingers into road,
+In Kelvin's Cairn the midwinter lingers into road,
 While travelers learn to measure load,
 The ice-lake can make the kindest coin,
 And turn a proud resolve to sign,,
 cold spirits keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -10628,7 +10628,7 @@ While travelers learn to measure go,
 The sled can make the kindest rime,
 And turn a proud resolve to time,,
 cold spirits keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -10640,7 +10640,7 @@ While travelers learn to measure hand,
 The aurora can make the kindest spice,
 And turn a proud resolve to price,,
 cold spirits keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -10652,7 +10652,7 @@ While travelers learn to measure hand,
 The cairn can make the kindest spice,
 And turn a proud resolve to price,,
 frost giants keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -10664,7 +10664,7 @@ While travelers learn to measure light,
 The cairn can make the kindest cold,
 And turn a proud resolve to bold,,
 the Reghed keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -10676,7 +10676,7 @@ While travelers learn to measure hand,
 The cairn can make the kindest spice,
 And turn a proud resolve to price,,
 the Reghed keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -10688,7 +10688,7 @@ While travelers learn to measure go,
 The rime can make the kindest rime,
 And turn a proud resolve to time,,
 cold spirits keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -10700,7 +10700,7 @@ While travelers learn to measure hand,
 The long night can make the kindest spice,
 And turn a proud resolve to price,,
 winter wolves keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -10712,7 +10712,7 @@ While travelers learn to measure load,
 The cairn can make the kindest coin,
 And turn a proud resolve to sign,,
 the Reghed keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -10724,7 +10724,7 @@ While travelers learn to measure go,
 The sled can make the kindest rime,
 And turn a proud resolve to time,,
 the Reghed keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -10736,7 +10736,7 @@ While travelers learn to measure load,
 The midwinter can make the kindest coin,
 And turn a proud resolve to sign,,
 winter wolves keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -10748,7 +10748,7 @@ While travelers learn to measure load,
 The midwinter can make the kindest coin,
 And turn a proud resolve to sign,
 Auril keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -10760,7 +10760,7 @@ While travelers learn to measure load,
 The whiteout can make the kindest coin,
 And turn a proud resolve to sign,,
 frost giants keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -10772,7 +10772,7 @@ While travelers learn to measure hand,
 The rime can make the kindest spice,
 And turn a proud resolve to price,,
 the Reghed keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -10784,7 +10784,7 @@ While travelers learn to measure go,
 The cairn can make the kindest rime,
 And turn a proud resolve to time,,
 winter wolves keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -10796,7 +10796,7 @@ While travelers learn to measure light,
 The rime can make the kindest cold,
 And turn a proud resolve to bold,,
 the Reghed keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -10808,7 +10808,7 @@ While travelers learn to measure load,
 The frostwind can make the kindest coin,
 And turn a proud resolve to sign,,
 winter wolves keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -10820,7 +10820,7 @@ While travelers learn to measure light,
 The ice-lake can make the kindest cold,
 And turn a proud resolve to bold,,
 winter wolves keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -10832,7 +10832,7 @@ While travelers learn to measure light,
 The rime can make the kindest cold,
 And turn a proud resolve to bold,,
 the Reghed keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -10844,7 +10844,7 @@ While travelers learn to measure load,
 The aurora can make the kindest coin,
 And turn a proud resolve to sign,,
 frost giants keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -10856,7 +10856,7 @@ While travelers learn to measure go,
 The cairn can make the kindest rime,
 And turn a proud resolve to time,,
 cold spirits keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -10868,19 +10868,19 @@ While travelers learn to measure load,
 The long night can make the kindest coin,
 And turn a proud resolve to sign,,
 cold spirits keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
 
 36.
 ```text
-In Kelvin’s Cairn the midwinter lingers into snow,
+In Kelvin's Cairn the midwinter lingers into snow,
 While travelers learn to measure go,
 The cairn can make the kindest rime,
 And turn a proud resolve to time,,
 frost giants keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -10897,7 +10897,7 @@ And spares the bold who learn to care.
 
 2.
 ```text
-Auril’s breath still haunts the night,
+Auril's breath still haunts the night,
 Old cairns hum beneath the snow,
 Frozenfar measures wrong and right,
 By how you stand when storms say no.
@@ -11001,7 +11001,7 @@ And pays the patient heart with flame.
 
 15.
 ```text
-In Kelvin’s Cairn the whiteout draws close like gold,
+In Kelvin's Cairn the whiteout draws close like gold,
 And every promise bends with told,,
 frost giants watches bargains held with name,
 And pays the patient heart with flame.
@@ -11129,7 +11129,7 @@ And pays the patient heart with year.
 
 31.
 ```text
-In Kelvin’s Cairn the frostwind draws close like coin,
+In Kelvin's Cairn the frostwind draws close like coin,
 And every promise bends with sign,,
 frost giants watches bargains held with day,
 And pays the patient heart with stay.
@@ -11153,7 +11153,7 @@ And pays the patient heart with land.
 
 34.
 ```text
-In Kelvin’s Cairn the aurora draws close like tide,
+In Kelvin's Cairn the aurora draws close like tide,
 And every promise bends with wide,,
 frost giants watches bargains held with near,
 And pays the patient heart with year.
@@ -11177,7 +11177,7 @@ And pays the patient heart with land.
 
 37.
 ```text
-In Kelvin’s Cairn the whiteout draws close like fire,
+In Kelvin's Cairn the whiteout draws close like fire,
 And every promise bends with desire,,
 cold spirits watches bargains held with care,
 And pays the patient heart with air.
@@ -11271,7 +11271,7 @@ frost giants keeps the old tale free.
 
 11.
 ```text
-Kelvin’s Cairn listens under sled and spice,
+Kelvin's Cairn listens under sled and spice,
 cold spirits keeps the old tale price.
 ```
 
@@ -11331,7 +11331,7 @@ cold spirits keeps the old tale alone.
 
 21.
 ```text
-Kelvin’s Cairn listens under frostwind and sea,
+Kelvin's Cairn listens under frostwind and sea,
 frost giants keeps the old tale free.
 ```
 
@@ -11355,7 +11355,7 @@ frost giants keeps the old tale alone.
 
 25.
 ```text
-Kelvin’s Cairn listens under long night and
+Kelvin's Cairn listens under long night and
 gold, frost giants keeps the old tale told.
 ```
 
@@ -11391,13 +11391,13 @@ cold spirits keeps the old tale load.
 
 31.
 ```text
-Kelvin’s Cairn listens under tundra and law,
+Kelvin's Cairn listens under tundra and law,
 cold spirits keeps the old tale saw.
 ```
 
 32.
 ```text
-Kelvin’s Cairn listens under tundra and road,
+Kelvin's Cairn listens under tundra and road,
 the Reghed keeps the old tale load.
 ```
 
@@ -11457,7 +11457,7 @@ the Reghed keeps the old tale hand.
 
 42.
 ```text
-Kelvin’s Cairn listens under sled and stone,
+Kelvin's Cairn listens under sled and stone,
 Auril keeps the old tale alone.
 ```
 
@@ -11499,7 +11499,7 @@ the Reghed keeps the old tale bold.
 
 49.
 ```text
-Kelvin’s Cairn listens under aurora and road,
+Kelvin's Cairn listens under aurora and road,
 cold spirits keeps the old tale load.
 ```
 
@@ -11514,7 +11514,7 @@ It listens hard for what comes back,
 Some sounds are shaped by where and when,
 And others fade along their track,
 A pause can weigh more than a shout,
-When meaning needs a moment’s space,
+When meaning needs a moment's space,
 The town will answer, in or out,
 At its own careful, chosen pace.
 ```
@@ -11547,11 +11547,11 @@ And quiet fire outlives the cries.
 ```text
 A rumor walks on borrowed feet,
 It stumbles where the truth stands still,
-Yet finds the doors it’s meant to meet,
+Yet finds the doors it's meant to meet,
 And tests the locks with careful will,
 Some words are swift but seldom stay,
 Some linger long when softly said,
-The tongue may race the mind’s delay,
+The tongue may race the mind's delay,
 But silence weighs what speech has sped.
 ```
 
@@ -11571,7 +11571,7 @@ And by the things it takes with care.
 ```text
 A clock insists it rules the room,
 By cutting moments sharp and neat,
-Yet hearts decide the hour’s bloom,
+Yet hearts decide the hour's bloom,
 And choose which seconds truly meet,
 Time bends around what matters most,
 It stretches thin or gathers tight,
@@ -11693,7 +11693,7 @@ The wind repeats what walls forget,
 It carries words we thought were gone,
 Some debts the air will not offset,
 They circle back by break of dawn,
-What’s spoken never truly ends,
+What's spoken never truly ends,
 It drifts and finds another ear,
 The breeze remembers, twists, and bends,
 What we believed had disappeared.
@@ -11753,7 +11753,7 @@ It fades, then leaves us on our own.
 ```text
 The bell rings out, then thinks it through,
 It waits to hear the town reply,
-For sound means little if it’s new,
+For sound means little if it's new,
 And much if silence answers why.
 ```
 
@@ -11793,7 +11793,7 @@ For dawn to read and not agree.
 ```text
 A clock pretends it rules the room,
 By carving seconds out of air,
-Yet hearts decide the hour’s bloom,
+Yet hearts decide the hour's bloom,
 And spend their time with careless care.
 ```
 
@@ -11825,13 +11825,13 @@ Will leave the careful cold inside.
 ```text
 The harbor hums a lower tone,
 When daylight thins and work is through,
-It keeps the sounds that aren’t its own,
-And lends them back to evening’s blue.
+It keeps the sounds that aren't its own,
+And lends them back to evening's blue.
 ```
 
 11.
 ```text
-A promise weighs more once it’s said,
+A promise weighs more once it's said,
 It pulls against the tongue like stone,
 Words dream of flight inside the head,
 But fall like coins when fully thrown.
@@ -12023,7 +12023,7 @@ They age us gently into depth.
 
 35.
 ```text
-A window waits for evening’s cool,
+A window waits for evening's cool,
 It knows the day must end sometime,
 Patience is not the lack of rule,
 But choosing rest instead of climb.
@@ -12058,14 +12058,14 @@ Like distant surf or passing trains.
 A shadow slips beyond the wall,
 It does not ask to be believed,
 Truth sometimes leaves without a call,
-And proves itself by what’s retrieved.
+And proves itself by what's retrieved.
 ```
 
 40.
 ```text
 The bell rings out to empty air,
 Yet still completes its ancient task,
-Meaning is not the crowd’s affair,
+Meaning is not the crowd's affair,
 It answers those who dare to ask.
 ```
 
@@ -12119,7 +12119,7 @@ He naps until the truth is gone.
 
 2.
 ```text
-A bell rings twice before it’s heard,
+A bell rings twice before it's heard,
 The silence keeps the sharper word.
 ```
 
@@ -12156,7 +12156,7 @@ It knows the hour will ripen soon.
 8.
 ```text
 A sailor smiles and checks the rope,
-Because he’s learned the shape of hope.
+Because he's learned the shape of hope.
 ```
 
 9.
@@ -12180,7 +12180,7 @@ The purse insists it had one more.
 12.
 ```text
 The harbor lamp burns calm and slow,
-It’s seen enough to let things go.
+It's seen enough to let things go.
 ```
 
 13.
@@ -12192,13 +12192,13 @@ It waits in corners, thin and fair.
 14.
 ```text
 The clock ticks loud to seem severe,
-It’s only nervous time is here.
+It's only nervous time is here.
 ```
 
 15.
 ```text
 A whispered plan walks faster
-far Than any shouted standard-bearer’s war.
+far Than any shouted standard-bearer's war.
 ```
 
 16.
@@ -12209,7 +12209,7 @@ That roads are honest, if uncouth.
 
 17.
 ```text
-A gull cries out as if it’s wise,
+A gull cries out as if it's wise,
 Then drops its lunch from too much pride.
 ```
 
@@ -12234,7 +12234,7 @@ It warms the hands and burns the prose.
 21.
 ```text
 A shadow stretches, thin and sly,
-To touch a truth that won’t walk by.
+To touch a truth that won't walk by.
 ```
 
 22.
@@ -12336,7 +12336,7 @@ For one more pause, one lesser need.
 38.
 ```text
 A shadow naps beside the door,
-It’s tired of guessing who’s before.
+It's tired of guessing who's before.
 ```
 
 39.
@@ -12389,7 +12389,7 @@ That wax remembers how to burn.
 
 47.
 ```text
-The wind repeats the sailor’s lie,
+The wind repeats the sailor's lie,
 And dares him once more to deny.
 ```
 
@@ -12411,14 +12411,14 @@ It measures breaths instead of days.
 
 1.
 ```text
-In the Lands of Intrigue’s glare,
+In the Lands of Intrigue's glare,
 Where Calimshan perfumes deceit,
 Power smiles with patient care,
 And waits for rivals to repeat,
 Amn tallies cost and quiet gain,
 Tethyr pays in oath and war,
 The south teaches, again and again,
-That secrets rule what steel can’t force.
+That secrets rule what steel can't force.
 ```
 
 2.
@@ -12428,7 +12428,7 @@ While travelers learn to measure hand,
 The sand can make the kindest spice,
 And turn a proud resolve to,
 price, pashas keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -12440,7 +12440,7 @@ While travelers learn to measure load,
 The spice can make the kindest coin,
 And turn a proud resolve to sign,,
 old pacts keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -12452,7 +12452,7 @@ While travelers learn to measure go,
 The spice can make the kindest rime,
 And turn a proud resolve to time,,
 courtly spies keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -12464,7 +12464,7 @@ While travelers learn to measure load,
 The oath can make the kindest coin,
 And turn a proud resolve to sign,,
 old pacts keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -12476,7 +12476,7 @@ While travelers learn to measure hand,
 The heat haze can make the kindest spice,
 And turn a proud resolve to,
 price, pashas keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -12488,7 +12488,7 @@ While travelers learn to measure load,
 The court can make the kindest coin,
 And turn a proud resolve to sign,,
 old pacts keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -12500,7 +12500,7 @@ While travelers learn to measure light,
 The ledger can make the kindest cold,
 And turn a proud resolve to bold,,
 merchant princes keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -12512,7 +12512,7 @@ While travelers learn to measure light,
 The ledger can make the kindest cold,
 And turn a proud resolve to bold,,
 courtly spies keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -12524,7 +12524,7 @@ While travelers learn to measure hand,
 The spice can make the kindest spice,
 And turn a proud resolve to,
 price, pashas keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -12536,7 +12536,7 @@ While travelers learn to measure load,
 The oath can make the kindest coin,
 And turn a proud resolve to sign,,
 old pacts keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -12548,7 +12548,7 @@ While travelers learn to measure hand,
 The ledger can make the kindest spice,
 And turn a proud resolve to,
 price, pashas keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -12560,7 +12560,7 @@ While travelers learn to measure go,
 The silk can make the kindest rime,
 And turn a proud resolve to time,,
 old pacts keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -12572,7 +12572,7 @@ While travelers learn to measure hand,
 The oath can make the kindest spice,
 And turn a proud resolve to price,,
 merchant princes keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -12584,7 +12584,7 @@ While travelers learn to measure hand,
 The whisper can make the kindest spice,
 And turn a proud resolve to price,,
 courtly spies keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -12596,7 +12596,7 @@ While travelers learn to measure light,
 The heat haze can make the kindest cold,
 And turn a proud resolve to bold,,
 courtly spies keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -12608,7 +12608,7 @@ While travelers learn to measure light,
 The silk can make the kindest cold,
 And turn a proud resolve to bold,,
 djinn-blooded tales keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -12620,7 +12620,7 @@ While travelers learn to measure go,
 The harbor smoke can make the kindest rime,
 And turn a proud resolve to,
 time, pashas keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -12632,7 +12632,7 @@ While travelers learn to measure light,
 The ledger can make the kindest cold,
 And turn a proud resolve to bold,,
 djinn-blooded tales keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -12644,7 +12644,7 @@ While travelers learn to measure load,
 The spice can make the kindest coin,
 And turn a proud resolve to sign,,
 merchant princes keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -12656,7 +12656,7 @@ While travelers learn to measure load,
 The oath can make the kindest coin,
 And turn a proud resolve to sign,,
 courtly spies keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -12668,7 +12668,7 @@ While travelers learn to measure light,
 The harbor smoke can make the kindest cold,
 And turn a proud resolve to,
 bold, pashas keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -12680,7 +12680,7 @@ While travelers learn to measure go,
 The heat haze can make the kindest rime,
 And turn a proud resolve to time,,
 merchant princes keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -12692,7 +12692,7 @@ While travelers learn to measure hand,
 The silk can make the kindest spice,
 And turn a proud resolve to price,,
 old pacts keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -12704,7 +12704,7 @@ While travelers learn to measure go,
 The caper can make the kindest rime,
 And turn a proud resolve to,
 time, pashas keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -12716,7 +12716,7 @@ While travelers learn to measure go,
 The caper can make the kindest rime,
 And turn a proud resolve to,
 time, pashas keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -12728,7 +12728,7 @@ While travelers learn to measure hand,
 The caper can make the kindest spice,
 And turn a proud resolve to price,,
 courtly spies keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -12740,7 +12740,7 @@ While travelers learn to measure light,
 The oath can make the kindest cold,
 And turn a proud resolve to bold,,
 courtly spies keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -12752,7 +12752,7 @@ While travelers learn to measure light,
 The court can make the kindest cold,
 And turn a proud resolve to,
 bold, pashas keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -12764,7 +12764,7 @@ While travelers learn to measure go,
 The caper can make the kindest rime,
 And turn a proud resolve to time,,
 courtly spies keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -12776,7 +12776,7 @@ While travelers learn to measure light,
 The court can make the kindest cold,
 And turn a proud resolve to bold,,
 old pacts keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -12788,7 +12788,7 @@ While travelers learn to measure light,
 The heat haze can make the kindest cold,
 And turn a proud resolve to bold,,
 courtly spies keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -12800,7 +12800,7 @@ While travelers learn to measure hand,
 The oath can make the kindest spice,
 And turn a proud resolve to price,,
 courtly spies keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -12812,7 +12812,7 @@ While travelers learn to measure go,
 The whisper can make the kindest rime,
 And turn a proud resolve to time,,
 courtly spies keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -12824,7 +12824,7 @@ While travelers learn to measure load,
 The silk can make the kindest coin,
 And turn a proud resolve to sign,,
 courtly spies keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -12836,7 +12836,7 @@ While travelers learn to measure go,
 The silk can make the kindest rime,
 And turn a proud resolve to time,,
 merchant princes keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -12848,7 +12848,7 @@ While travelers learn to measure go,
 The harbor smoke can make the kindest rime,
 And turn a proud resolve to,
 time, pashas keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -12860,7 +12860,7 @@ While travelers learn to measure light,
 The oath can make the kindest cold,
 And turn a proud resolve to bold,,
 djinn-blooded tales keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -12872,7 +12872,7 @@ While travelers learn to measure light,
 The ledger can make the kindest cold,
 And turn a proud resolve to,
 bold, pashas keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -12884,7 +12884,7 @@ While travelers learn to measure light,
 The whisper can make the kindest cold,
 And turn a proud resolve to bold,,
 old pacts keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -12896,7 +12896,7 @@ While travelers learn to measure light,
 The spice can make the kindest cold,
 And turn a proud resolve to bold,,
 courtly spies keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -12908,7 +12908,7 @@ While travelers learn to measure hand,
 The harbor smoke can make the kindest spice,
 And turn a proud resolve to price,,
 old pacts keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -13255,7 +13255,7 @@ And pays the patient heart with flame.
 
 1.
 ```text
-Calimshan’s sun hides knives and spice,
+Calimshan's sun hides knives and spice,
 Every smile has weighed its price.
 ```
 
@@ -13547,10 +13547,10 @@ djinn-blooded tales keeps the old tale saw.
 
 1.
 ```text
-Along the Sword Coast’s salted spine,
+Along the Sword Coast's salted spine,
 Cities sharpen word and blade,
 Waterdeep trades in quiet sign,
-Baldur’s Gate in laws well made,
+Baldur's Gate in laws well made,
 Harbors teach the cost of trust,
 Tides remember every lie,
 What you build will stand or rust,
@@ -13564,7 +13564,7 @@ While travelers learn to measure hand,
 The tavern can make the kindest spice,
 And turn a proud resolve to price,
 Masked Lords keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -13576,7 +13576,7 @@ While travelers learn to measure go,
 The law can make the kindest rime,
 And turn a proud resolve to time,
 Flaming Fist keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -13588,7 +13588,7 @@ While travelers learn to measure go,
 The salt wind can make the kindest rime,
 And turn a proud resolve to time,
 Harper songs keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -13600,7 +13600,7 @@ While travelers learn to measure load,
 The coin can make the kindest coin,
 And turn a proud resolve to sign,
 Masked Lords keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -13612,7 +13612,7 @@ While travelers learn to measure go,
 The watch can make the kindest rime,
 And turn a proud resolve to,
 time, guildmasters keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -13624,7 +13624,7 @@ While travelers learn to measure hand,
 The caravan can make the kindest spice,
 And turn a proud resolve to price,
 Flaming Fist keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -13636,7 +13636,7 @@ While travelers learn to measure hand,
 The festival can make the kindest spice,
 And turn a proud resolve to,
 price, guildmasters keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -13648,7 +13648,7 @@ While travelers learn to measure light,
 The watch can make the kindest cold,
 And turn a proud resolve to bold,
 Masked Lords keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -13660,7 +13660,7 @@ While travelers learn to measure load,
 The watch can make the kindest coin,
 And turn a proud resolve to,
 sign, guildmasters keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -13672,19 +13672,19 @@ While travelers learn to measure load,
 The salt wind can make the kindest coin,
 And turn a proud resolve to sign,
 Harper songs keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
 
 12.
 ```text
-In Baldur’s Gate the guild lingers into sand,
+In Baldur's Gate the guild lingers into sand,
 While travelers learn to measure hand,
 The festival can make the kindest spice,
 And turn a proud resolve to price,
 Masked Lords keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -13696,7 +13696,7 @@ While travelers learn to measure load,
 The coin can make the kindest coin,
 And turn a proud resolve to sign,
 Harper songs keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -13708,19 +13708,19 @@ While travelers learn to measure light,
 The law can make the kindest cold,
 And turn a proud resolve to,
 bold, guildmasters keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
 
 15.
 ```text
-In Baldur’s Gate the tavern lingers into sand,
+In Baldur's Gate the tavern lingers into sand,
 While travelers learn to measure hand,
 The tavern can make the kindest spice,
 And turn a proud resolve to price,
 Harper songs keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -13732,7 +13732,7 @@ While travelers learn to measure load,
 The tavern can make the kindest coin,
 And turn a proud resolve to sign,
 Harper songs keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -13744,7 +13744,7 @@ While travelers learn to measure hand,
 The guild can make the kindest spice,
 And turn a proud resolve to price,
 Zhentarim whispers keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -13756,7 +13756,7 @@ While travelers learn to measure go,
 The coin can make the kindest rime,
 And turn a proud resolve to time,
 Masked Lords keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -13768,7 +13768,7 @@ While travelers learn to measure go,
 The mask can make the kindest rime,
 And turn a proud resolve to time,
 Harper songs keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -13780,7 +13780,7 @@ While travelers learn to measure light,
 The guild can make the kindest cold,
 And turn a proud resolve to bold,
 Harper songs keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -13792,7 +13792,7 @@ While travelers learn to measure light,
 The tavern can make the kindest cold,
 And turn a proud resolve to bold,
 Harper songs keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -13804,7 +13804,7 @@ While travelers learn to measure hand,
 The law can make the kindest spice,
 And turn a proud resolve to price,
 Flaming Fist keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -13816,7 +13816,7 @@ While travelers learn to measure light,
 The dock can make the kindest cold,
 And turn a proud resolve to bold,
 Harper songs keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -13828,7 +13828,7 @@ While travelers learn to measure load,
 The guild can make the kindest coin,
 And turn a proud resolve to,
 sign, guildmasters keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -13840,7 +13840,7 @@ While travelers learn to measure go,
 The festival can make the kindest rime,
 And turn a proud resolve to time,
 Flaming Fist keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -13852,7 +13852,7 @@ While travelers learn to measure light,
 The caravan can make the kindest cold,
 And turn a proud resolve to bold,
 Masked Lords keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -13864,7 +13864,7 @@ While travelers learn to measure go,
 The festival can make the kindest rime,
 And turn a proud resolve to time,
 Harper songs keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -13876,7 +13876,7 @@ While travelers learn to measure light,
 The caravan can make the kindest cold,
 And turn a proud resolve to,
 bold, guildmasters keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -13888,19 +13888,19 @@ While travelers learn to measure load,
 The caravan can make the kindest coin,
 And turn a proud resolve to,
 sign, guildmasters keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
 
 30.
 ```text
-In Baldur’s Gate the guild lingers into snow,
+In Baldur's Gate the guild lingers into snow,
 While travelers learn to measure go,
 The mask can make the kindest rime,
 And turn a proud resolve to time,
 Harper songs keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -13912,7 +13912,7 @@ While travelers learn to measure light,
 The mask can make the kindest cold,
 And turn a proud resolve to bold,
 Zhentarim whispers keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -13924,7 +13924,7 @@ While travelers learn to measure hand,
 The mask can make the kindest spice,
 And turn a proud resolve to price,
 Zhentarim whispers keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -13936,7 +13936,7 @@ While travelers learn to measure load,
 The guild can make the kindest coin,
 And turn a proud resolve to sign,
 Harper songs keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -13948,19 +13948,19 @@ While travelers learn to measure go,
 The mask can make the kindest rime,
 And turn a proud resolve to time,
 Zhentarim whispers keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
 
 35.
 ```text
-In Baldur’s Gate the mask lingers into night,
+In Baldur's Gate the mask lingers into night,
 While travelers learn to measure light,
 The salt wind can make the kindest cold,
 And turn a proud resolve to bold,
 Flaming Fist keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -13972,7 +13972,7 @@ While travelers learn to measure light,
 The law can make the kindest cold,
 And turn a proud resolve to,
 bold, guildmasters keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -13984,7 +13984,7 @@ While travelers learn to measure load,
 The caravan can make the kindest coin,
 And turn a proud resolve to sign,
 Zhentarim whispers keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -13996,7 +13996,7 @@ While travelers learn to measure hand,
 The caravan can make the kindest spice,
 And turn a proud resolve to price,
 Masked Lords keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -14013,10 +14013,10 @@ And charges more if you should stay.
 
 2.
 ```text
-Baldur’s Gate stands hard and high,
+Baldur's Gate stands hard and high,
 Steel laws grind mercy thin,
 The Coast decides who passes by,
-And what the price of entry’s been.
+And what the price of entry's been.
 ```
 
 3.
@@ -14045,7 +14045,7 @@ And pays the patient heart with year.
 
 6.
 ```text
-In Baldur’s Gate the coin draws close like fire,
+In Baldur's Gate the coin draws close like fire,
 And every promise bends with desire,,
 guildmasters watches bargains held with care,
 And pays the patient heart with air.
@@ -14149,7 +14149,7 @@ And pays the patient heart with load.
 
 19.
 ```text
-In Baldur’s Gate the guild draws close like gold,
+In Baldur's Gate the guild draws close like gold,
 And every promise bends with told,
 Zhentarim whispers watches bargains held with name,
 And pays the patient heart with flame.
@@ -14165,7 +14165,7 @@ And pays the patient heart with year.
 
 21.
 ```text
-In Baldur’s Gate the coin draws close like stone,
+In Baldur's Gate the coin draws close like stone,
 And every promise bends with alone,
 Flaming Fist watches bargains held with road,
 And pays the patient heart with load.
@@ -14221,7 +14221,7 @@ And pays the patient heart with through.
 
 28.
 ```text
-In Baldur’s Gate the coin draws close like stone,
+In Baldur's Gate the coin draws close like stone,
 And every promise bends with alone,
 Zhentarim whispers watches bargains held with road,
 And pays the patient heart with load.
@@ -14349,7 +14349,7 @@ Masks keep secrets bought and sold.
 
 2.
 ```text
-Baldur’s Gate weighs blood and law,
+Baldur's Gate weighs blood and law,
 The city eats what streets once saw.
 ```
 
@@ -14367,7 +14367,7 @@ Flaming Fist keeps the old tale bold.
 
 5.
 ```text
-Baldur’s Gate listens under salt wind and spice,
+Baldur's Gate listens under salt wind and spice,
 Harper songs keeps the old tale price.
 ```
 
@@ -14427,7 +14427,7 @@ Harper songs keeps the old tale name.
 
 15.
 ```text
-Baldur’s Gate listens under festival and night,
+Baldur's Gate listens under festival and night,
 Flaming Fist keeps the old tale light.
 ```
 
@@ -14613,7 +14613,7 @@ Zhentarim whispers keeps the old tale saw.
 
 46.
 ```text
-Baldur’s Gate listens under dock and flame,
+Baldur's Gate listens under dock and flame,
 Masked Lords keeps the old tale name.
 ```
 
@@ -14635,7 +14635,7 @@ Flaming Fist keeps the old tale alone.
 
 1.
 ```text
-From Luskan’s docks to Neverwinter’s steam,
+From Luskan's docks to Neverwinter's steam,
 The North sells chances, buys resolve,
 Old ruins whisper broken dreams,
 That only stubborn hands can solve,
@@ -14652,7 +14652,7 @@ While travelers learn to measure hand,
 The smoke can make the kindest spice,
 And turn a proud resolve to price,,
 pirate captains keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -14664,7 +14664,7 @@ While travelers learn to measure go,
 The ruin can make the kindest rime,
 And turn a proud resolve to time, orcs,
 of the north keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -14676,7 +14676,7 @@ While travelers learn to measure go,
 The road dust can make the kindest rime,
 And turn a proud resolve to time,,
 the Arcane Brotherhood keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -14688,7 +14688,7 @@ While travelers learn to measure load,
 The smoke can make the kindest coin,
 And turn a proud resolve to sign,,
 the Arcane Brotherhood keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -14700,7 +14700,7 @@ While travelers learn to measure load,
 The ruin can make the kindest coin,
 And turn a proud resolve to sign,,
 old kings keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -14712,7 +14712,7 @@ While travelers learn to measure light,
 The road dust can make the kindest cold,
 And turn a proud resolve to bold,,
 pirate captains keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -14724,19 +14724,19 @@ While travelers learn to measure go,
 The harbor can make the kindest rime,
 And turn a proud resolve to time,,
 the Arcane Brotherhood keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
 
 9.
 ```text
-In Helm’s Hold the road dust lingers into road,
+In Helm's Hold the road dust lingers into road,
 While travelers learn to measure load,
 The smoke can make the kindest coin,
 And turn a proud resolve to sign, orcs,
 of the north keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -14748,19 +14748,19 @@ While travelers learn to measure light,
 The ruin can make the kindest cold,
 And turn a proud resolve to bold,,
 pirate captains keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
 
 11.
 ```text
-In Helm’s Hold the road dust lingers into snow,
+In Helm's Hold the road dust lingers into snow,
 While travelers learn to measure go,
 The guild can make the kindest rime,
 And turn a proud resolve to time,,
 the Arcane Brotherhood keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -14772,7 +14772,7 @@ While travelers learn to measure hand,
 The sea fog can make the kindest spice,
 And turn a proud resolve to price,,
 the Arcane Brotherhood keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -14784,7 +14784,7 @@ While travelers learn to measure hand,
 The caravan can make the kindest spice,
 And turn a proud resolve to price,,
 mercenary companies keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -14796,7 +14796,7 @@ While travelers learn to measure hand,
 The smoke can make the kindest spice,
 And turn a proud resolve to price,,
 old kings keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -14808,7 +14808,7 @@ While travelers learn to measure light,
 The smoke can make the kindest cold,
 And turn a proud resolve to bold, orcs,
 of the north keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -14820,7 +14820,7 @@ While travelers learn to measure hand,
 The guild can make the kindest spice,
 And turn a proud resolve to price,,
 the Arcane Brotherhood keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -14832,7 +14832,7 @@ While travelers learn to measure load,
 The stone bridge can make the kindest coin,
 And turn a proud resolve to sign,,
 pirate captains keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -14844,7 +14844,7 @@ While travelers learn to measure hand,
 The guild can make the kindest spice,
 And turn a proud resolve to price,,
 mercenary companies keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -14856,7 +14856,7 @@ While travelers learn to measure go,
 The stone bridge can make the kindest rime,
 And turn a proud resolve to time,,
 pirate captains keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -14868,7 +14868,7 @@ While travelers learn to measure light,
 The rebuild can make the kindest cold,
 And turn a proud resolve to bold,,
 old kings keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -14880,7 +14880,7 @@ While travelers learn to measure hand,
 The guild can make the kindest spice,
 And turn a proud resolve to price,,
 mercenary companies keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -14892,7 +14892,7 @@ While travelers learn to measure hand,
 The guild can make the kindest spice,
 And turn a proud resolve to price,,
 pirate captains keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -14904,7 +14904,7 @@ While travelers learn to measure light,
 The smoke can make the kindest cold,
 And turn a proud resolve to bold, orcs,
 of the north keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -14916,7 +14916,7 @@ While travelers learn to measure load,
 The ruin can make the kindest coin,
 And turn a proud resolve to sign,,
 pirate captains keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -14928,7 +14928,7 @@ While travelers learn to measure load,
 The rebuild can make the kindest coin,
 And turn a proud resolve to sign,,
 pirate captains keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -14940,7 +14940,7 @@ While travelers learn to measure light,
 The road dust can make the kindest cold,
 And turn a proud resolve to bold,,
 old kings keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -14952,7 +14952,7 @@ While travelers learn to measure load,
 The guild can make the kindest coin,
 And turn a proud resolve to sign,,
 old kings keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -14964,7 +14964,7 @@ While travelers learn to measure go,
 The ruin can make the kindest rime,
 And turn a proud resolve to time,,
 the Arcane Brotherhood keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -14976,7 +14976,7 @@ While travelers learn to measure light,
 The ruin can make the kindest cold,
 And turn a proud resolve to bold, orcs,
 of the north keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -14988,7 +14988,7 @@ While travelers learn to measure go,
 The guild can make the kindest rime,
 And turn a proud resolve to time,,
 old kings keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -15000,7 +15000,7 @@ While travelers learn to measure go,
 The harbor can make the kindest rime,
 And turn a proud resolve to time,,
 mercenary companies keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -15012,7 +15012,7 @@ While travelers learn to measure go,
 The ruin can make the kindest rime,
 And turn a proud resolve to time,,
 pirate captains keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -15024,7 +15024,7 @@ While travelers learn to measure light,
 The stone bridge can make the kindest cold,
 And turn a proud resolve to bold,,
 the Arcane Brotherhood keeps counsel by the sea,
-And tests each vow that claims it’s free,
+And tests each vow that claims it's free,
 Those who endure will carve new stone,
 And leave the road a little less alone.
 ```
@@ -15036,7 +15036,7 @@ While travelers learn to measure go,
 The pirate can make the kindest rime,
 And turn a proud resolve to time,,
 the Arcane Brotherhood keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -15048,7 +15048,7 @@ While travelers learn to measure load,
 The stone bridge can make the kindest coin,
 And turn a proud resolve to sign, orcs,
 of the north keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -15060,7 +15060,7 @@ While travelers learn to measure load,
 The stone bridge can make the kindest coin,
 And turn a proud resolve to sign,,
 the Arcane Brotherhood keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -15072,7 +15072,7 @@ While travelers learn to measure go,
 The stone bridge can make the kindest rime,
 And turn a proud resolve to time, orcs,
 of the north keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -15084,7 +15084,7 @@ While travelers learn to measure hand,
 The rebuild can make the kindest spice,
 And turn a proud resolve to price,,
 pirate captains keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -15096,19 +15096,19 @@ While travelers learn to measure go,
 The stone bridge can make the kindest rime,
 And turn a proud resolve to time, orcs,
 of the north keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
 
 40.
 ```text
-In Helm’s Hold the smoke lingers into sand,
+In Helm's Hold the smoke lingers into sand,
 While travelers learn to measure hand,
 The guild can make the kindest spice,
 And turn a proud resolve to price,,
 pirate captains keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -15120,7 +15120,7 @@ While travelers learn to measure hand,
 The guild can make the kindest spice,
 And turn a proud resolve to price,,
 old kings keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -15132,7 +15132,7 @@ While travelers learn to measure go,
 The harbor can make the kindest rime,
 And turn a proud resolve to time,,
 mercenary companies keeps counsel by the wind,
-And tests each vow that claims it’s pinned,
+And tests each vow that claims it's pinned,
 Those who endure will carve new heart,
 And leave the road a little less start.
 ```
@@ -15144,7 +15144,7 @@ While travelers learn to measure load,
 The guild can make the kindest coin,
 And turn a proud resolve to sign, orcs,
 of the north keeps counsel by the law,
-And tests each vow that claims it’s saw,
+And tests each vow that claims it's saw,
 Those who endure will carve new true,
 And leave the road a little less through.
 ```
@@ -15156,7 +15156,7 @@ While travelers learn to measure hand,
 The ruin can make the kindest spice,
 And turn a proud resolve to price,,
 the Arcane Brotherhood keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -15168,7 +15168,7 @@ While travelers learn to measure hand,
 The sea fog can make the kindest spice,
 And turn a proud resolve to price,,
 mercenary companies keeps counsel by the oath,
-And tests each vow that claims it’s wroth,
+And tests each vow that claims it's wroth,
 Those who endure will carve new name,
 And leave the road a little less flame.
 ```
@@ -15185,7 +15185,7 @@ And pays in scars instead of tears.
 
 2.
 ```text
-Luskan’s towers lean and grin,
+Luskan's towers lean and grin,
 Pirate kings and quiet deals,
 The sea keeps what it drags within,
 And northbound truth is what it steals.
@@ -15193,7 +15193,7 @@ And northbound truth is what it steals.
 
 3.
 ```text
-In Helm’s Hold the rebuild draws close like tide,
+In Helm's Hold the rebuild draws close like tide,
 And every promise bends with wide,,
 old kings watches bargains held with near,
 And pays the patient heart with year.
@@ -15305,7 +15305,7 @@ And pays the patient heart with land.
 
 17.
 ```text
-In Helm’s Hold the guild draws close like fire,
+In Helm's Hold the guild draws close like fire,
 And every promise bends with desire, the,
 Arcane Brotherhood watches bargains held with care,
 And pays the patient heart with air.
@@ -15353,7 +15353,7 @@ And pays the patient heart with through.
 
 23.
 ```text
-In Helm’s Hold the harbor draws close like heat,
+In Helm's Hold the harbor draws close like heat,
 And every promise bends with sweet,,
 mercenary companies watches bargains held with hand,
 And pays the patient heart with land.
@@ -15377,7 +15377,7 @@ And pays the patient heart with load.
 
 26.
 ```text
-In Helm’s Hold the caravan draws close like fire,
+In Helm's Hold the caravan draws close like fire,
 And every promise bends with desire,,
 mercenary companies watches bargains held with care,
 And pays the patient heart with air.
@@ -15481,7 +15481,7 @@ And pays the patient heart with year.
 
 39.
 ```text
-In Helm’s Hold the road dust draws close like heat,
+In Helm's Hold the road dust draws close like heat,
 And every promise bends with sweet,,
 pirate captains watches bargains held with hand,
 And pays the patient heart with land.
@@ -15531,7 +15531,7 @@ old kings keeps the old tale load.
 
 5.
 ```text
-Helm’s Hold listens under stone bridge and
+Helm's Hold listens under stone bridge and
 sand, old kings keeps the old tale hand.
 ```
 
@@ -15663,7 +15663,7 @@ mercenary companies keeps the old tale free.
 
 27.
 ```text
-Helm’s Hold listens under guild and flame,
+Helm's Hold listens under guild and flame,
 pirate captains keeps the old tale name.
 ```
 
@@ -15765,7 +15765,7 @@ law, the Arcane Brotherhood keeps the old tale saw.
 
 44.
 ```text
-Helm’s Hold listens under smoke and spice,
+Helm's Hold listens under smoke and spice,
 pirate captains keeps the old tale price.
 ```
 
@@ -15789,7 +15789,7 @@ of the north keeps the old tale bold.
 
 ## Weather Module
 
-Source: `Modules/dwt_weather_0.2.0-alpha.1.js`
+Source: `Modules/fts_weather_0.2.0-alpha.1.js`
 
 - Fallback weather quip pools: 25
 - Built-in critical events: 19
@@ -16368,5 +16368,5 @@ These are the built-in sentence templates and vocabularies that `buildNarrative(
 
 ## Notes
 
-- `dwt_weather` can consume quips from `dwt_quips`, but the current `dwt_quips` corpus does not ship weather-specific lookup paths. Weather therefore relies on its own built-in fallback quips unless quips are supplied through mule data or a future corpus expansion.
+- `fts_weather` can consume quips from `fts_quips`, but the current `fts_quips` corpus does not ship weather-specific lookup paths. Weather therefore relies on its own built-in fallback quips unless quips are supplied through mule data or a future corpus expansion.
 - The calendar module requests `quips.festival.<key>.medium` inside `resolveFestivalLongQuip()`, despite the surrounding comments and fallback naming referring to ?long? quips. This inventory records the source text as shipped, not the intended naming.

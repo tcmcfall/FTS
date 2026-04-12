@@ -1,11 +1,11 @@
-// name:        dwt_mapMeta.js
+// name:        fts_mapMeta.js
 // version:     0.2.0-alpha.1
-// description: Unified map metadata capture for DWT.
-// depends:     dwt_core >= 0.1.0-alpha.1 (optional but recommended), Roll20 Mod API
-// provides:    !dwt --mapMeta | !dwt --mapMeta all | !dwt --mapMeta set depth <value>
+// description: Unified map metadata capture for FTS.
+// depends:     fts_core >= 0.1.0-alpha.1 (optional but recommended), Roll20 Mod API
+// provides:    !fts --mapMeta | !fts --mapMeta all | !fts --mapMeta set depth <value>
 // author:      tcm (AI-assisted)
 // Semantic Versioning (SemVer) Policy:
-// - DWT uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
+// - FTS uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
 // - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
 // - Increment PATCH for backward-compatible bug fixes.
 // - Increment MINOR for new backward-compatible functionality.
@@ -15,7 +15,7 @@
 // - Header comments, internal VERSION constants, filenames, generated module text, and documentation references must stay aligned.
 // - Dependency notes should use SemVer-friendly wording such as ">= 0.1.0-alpha.1" rather than informal forms like "5.1.0+".
 
-var dwt_mapMeta = dwt_mapMeta || (function () {
+var fts_mapMeta = fts_mapMeta || (function () {
   'use strict';
 
   var RT = (typeof globalThis !== 'undefined') ? globalThis
@@ -26,7 +26,7 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
 
   var VERSION = '0.2.0-alpha.1';
   var MODULE_KEY = 'mapmeta';
-  var MULE_NAME = 'dwt_mule';
+  var MULE_NAME = 'fts_mule';
   var ROOT_ABILITY = 'regions';
   var STATE_ROOT = 'mapmeta';
   var LOCALE_ORDER = ['offshore', 'coastal', 'inland', 'underwater', 'underdark'];
@@ -41,19 +41,19 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
   var _startupRegistered = false;
 
   function ensureMapMetaState() {
-    if (!state.dwt) state.dwt = {};
-    if (!state.dwt[STATE_ROOT]) {
-      state.dwt[STATE_ROOT] = {
+    if (!state.fts) state.fts = {};
+    if (!state.fts[STATE_ROOT]) {
+      state.fts[STATE_ROOT] = {
         last: null,
         byPage: {},
         flash: {},
         namingWarn: {}
       };
     }
-    if (!state.dwt[STATE_ROOT].byPage) state.dwt[STATE_ROOT].byPage = {};
-    if (!state.dwt[STATE_ROOT].flash) state.dwt[STATE_ROOT].flash = {};
-    if (!state.dwt[STATE_ROOT].namingWarn) state.dwt[STATE_ROOT].namingWarn = {};
-    return state.dwt[STATE_ROOT];
+    if (!state.fts[STATE_ROOT].byPage) state.fts[STATE_ROOT].byPage = {};
+    if (!state.fts[STATE_ROOT].flash) state.fts[STATE_ROOT].flash = {};
+    if (!state.fts[STATE_ROOT].namingWarn) state.fts[STATE_ROOT].namingWarn = {};
+    return state.fts[STATE_ROOT];
   }
 
   function esc(s) {
@@ -63,8 +63,8 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
   }
 
   function cssVars() {
-    return (RT.dwt && typeof RT.dwt.cssVars === 'function')
-      ? RT.dwt.cssVars()
+    return (RT.fts && typeof RT.fts.cssVars === 'function')
+      ? RT.fts.cssVars()
       : {
           card: '',
           btn: '',
@@ -345,8 +345,8 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
 
   function getActivePageForPlayer(pid) {
     try {
-      if (RT.dwt && typeof RT.dwt.getEffectivePageId === 'function') {
-        var effectiveId = RT.dwt.getEffectivePageId(pid);
+      if (RT.fts && typeof RT.fts.getEffectivePageId === 'function') {
+        var effectiveId = RT.fts.getEffectivePageId(pid);
         if (effectiveId) return getObj('page', effectiveId);
       }
     } catch (e) {}
@@ -373,8 +373,8 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
 
   function getOrCreateMule() {
     try {
-      if (RT.dwt && typeof RT.dwt.ensureMule === 'function') {
-        return RT.dwt.ensureMule();
+      if (RT.fts && typeof RT.fts.ensureMule === 'function') {
+        return RT.fts.ensureMule();
       }
     } catch (e) {}
 
@@ -428,7 +428,7 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
   function regionsRootQuality(text) {
     var parsed = safeParseJSON(text);
     if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return -1;
-    var score = (parsed.schema === 'dwt.regions.root.v1') ? 50 : 0;
+    var score = (parsed.schema === 'fts.regions.root.v1') ? 50 : 0;
     var regions = parsed.regions;
     if (!regions || typeof regions !== 'object' || Array.isArray(regions)) return score;
     var keys = Object.keys(regions);
@@ -436,7 +436,7 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
     for (var i = 0; i < keys.length; i++) {
       var payload = regions[keys[i]];
       if (!payload || typeof payload !== 'object' || Array.isArray(payload)) continue;
-      if (payload.schema === 'dwt.region.v4') score += 200;
+      if (payload.schema === 'fts.region.v4') score += 200;
       if (payload.weather && typeof payload.weather === 'object' && !Array.isArray(payload.weather)) score += 100;
       if (payload.region) score += 10;
       if (payload.locales) score += 10;
@@ -448,7 +448,7 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
     var parsed = safeParseJSON(text);
     if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return -1;
     var score = 0;
-    if (parsed.meta && parsed.meta.rootSchema === 'dwt.weather.root.v2') score += 200;
+    if (parsed.meta && parsed.meta.rootSchema === 'fts.weather.root.v2') score += 200;
     if (parsed.settings && (parsed.settings.units === 'imperial' || parsed.settings.units === 'metric')) score += 25;
     if (parsed.current && typeof parsed.current === 'object' && !Array.isArray(parsed.current)) score += 25;
     if (parsed.history && typeof parsed.history === 'object' && !Array.isArray(parsed.history)) score += 25;
@@ -547,17 +547,17 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
 
   function loadRegionsRoot(mule) {
     var raw = getAbilityAction(mule, ROOT_ABILITY);
-    if (!raw) return { schema: 'dwt.regions.root.v1', regions: {} };
+    if (!raw) return { schema: 'fts.regions.root.v1', regions: {} };
     try {
       var parsed = JSON.parse(raw);
       if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) parsed = {};
       if (!parsed.regions || typeof parsed.regions !== 'object' || Array.isArray(parsed.regions)) {
         parsed.regions = {};
       }
-      if (parsed.schema !== 'dwt.regions.root.v1') parsed.schema = 'dwt.regions.root.v1';
+      if (parsed.schema !== 'fts.regions.root.v1') parsed.schema = 'fts.regions.root.v1';
       return parsed;
     } catch (e) {
-      return { schema: 'dwt.regions.root.v1', regions: {} };
+      return { schema: 'fts.regions.root.v1', regions: {} };
     }
   }
 
@@ -625,6 +625,10 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
       raw_locale: '',
       region_key: '',
       locale_key: '',
+      page_scope: '',
+      page_scope_label: '',
+      default_locale_key: '',
+      default_locale_name: '',
       region_name: '',
       locale_name: '',
       name_pattern_ok: false,
@@ -644,9 +648,68 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
     };
   }
 
+  function pageScopeLabel(scope) {
+    if (scope === 'region') return 'Region Overview';
+    if (scope === 'global') return 'Global Overview';
+    return '';
+  }
+
+  function pageNamePatternAccepted(meta) {
+    meta = meta || emptyPageNameMeta('');
+    if (!meta.name_pattern_ok) return false;
+    if (meta.page_scope === 'global') return true;
+    if (meta.page_scope === 'region') return !!meta.region_valid;
+    return !!meta.region_valid && !!meta.locale_valid;
+  }
+
+  function defaultLocaleMetaForRegion(regionMeta) {
+    var key = canonicalLocaleKey(regionMeta && regionMeta.defaultLocale ? regionMeta.defaultLocale : '');
+    var def = localeDefinitionForKey(regionMeta || null, key);
+    return {
+      key: def ? canonicalLocaleKey(def.key) : key,
+      label: def ? String(def.label || '').trim() : ''
+    };
+  }
+
   function parsePageName(rawName, mule, opts) {
     var meta = emptyPageNameMeta(rawName);
     var parts = String(rawName || '').split('.');
+    var knownRegions = loadKnownRegions(mule || getOrCreateMule());
+
+    if (parts.length === 2) {
+      var rawLead = String(parts[0] || '').trim();
+      var rawTail = lower(String(parts[1] || '')).replace(/\s+/g, '').trim();
+      if (!rawLead || !rawTail) return meta;
+
+      if (rawTail === 'region') {
+        var regionKey2 = canonicalRegionKey(rawLead);
+        var regionMeta2 = knownRegions[regionKey2] || null;
+        var defaultLocale = defaultLocaleMetaForRegion(regionMeta2);
+
+        meta.name_pattern_ok = true;
+        meta.page_scope = 'region';
+        meta.page_scope_label = pageScopeLabel('region');
+        meta.raw_region = rawLead;
+        meta.region_key = regionKey2;
+        meta.region_name = regionMeta2 ? regionMeta2.displayName : rawLead;
+        meta.region_valid = !!regionMeta2;
+        meta.default_locale_key = defaultLocale.key;
+        meta.default_locale_name = defaultLocale.label;
+        meta.name = regionMeta2 ? regionMeta2.displayName : rawLead;
+        return meta;
+      }
+
+      if (rawTail === 'global') {
+        meta.name_pattern_ok = true;
+        meta.page_scope = 'global';
+        meta.page_scope_label = pageScopeLabel('global');
+        meta.name = rawLead;
+        return meta;
+      }
+
+      return meta;
+    }
+
     if (parts.length < 3) return meta;
 
     var rawRegion = String(parts[0] || '').trim();
@@ -655,11 +718,12 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
     if (!rawRegion || !rawLocale || !rawMap) return meta;
 
     meta.name_pattern_ok = true;
+    meta.page_scope = 'locale';
+    meta.page_scope_label = pageScopeLabel('locale');
     meta.raw_region = rawRegion;
     meta.raw_locale = rawLocale;
     meta.name = rawMap;
 
-    var knownRegions = loadKnownRegions(mule || getOrCreateMule());
     var regionKey = canonicalRegionKey(rawRegion);
     var regionMeta = knownRegions[regionKey] || null;
     var localeMeta = parseLocaleSpec(rawLocale, {
@@ -717,6 +781,10 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
       raw_locale: parsed.raw_locale,
       region_key: parsed.region_key,
       locale_key: parsed.locale_key,
+      page_scope: parsed.page_scope,
+      page_scope_label: parsed.page_scope_label,
+      default_locale_key: parsed.default_locale_key,
+      default_locale_name: parsed.default_locale_name,
       region_name: parsed.region_name,
       locale_name: parsed.locale_name,
       name_pattern_ok: parsed.name_pattern_ok,
@@ -777,6 +845,10 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
       raw_locale: '',
       region_key: '',
       locale_key: '',
+      page_scope: '',
+      page_scope_label: '',
+      default_locale_key: '',
+      default_locale_name: '',
       region_name: '',
       locale_name: '',
       name_pattern_ok: false,
@@ -893,7 +965,7 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
     if (!meta) {
       html += '<div><b>Map Information</b></div>';
       html += '<div>No page metadata captured yet. Use '
-        + (v.literal ? v.literal('!dwt --mapMeta') : '!dwt --mapMeta')
+        + (v.literal ? v.literal('!fts --mapMeta') : '!fts --mapMeta')
         + '.</div></div>';
       return html;
     }
@@ -905,10 +977,17 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
     var gridType = lower(meta.grid_type || '');
     var gridLabel = meta.grid_type || '';
     if (gridType === 'hexr' || gridType === 'hexv' || gridType === 'hex') gridLabel = 'hex';
-    if (meta.name_pattern_ok && meta.region_valid && meta.locale_valid && (meta.locale_name || meta.region_name)) {
-      var pieces = [];
+    var pieces = [];
+    if (meta.page_scope === 'locale' && meta.region_valid && meta.locale_valid && (meta.locale_name || meta.region_name)) {
       if (meta.locale_name) pieces.push(esc(meta.locale_name));
       if (meta.region_name) pieces.push(esc(meta.region_name));
+    } else if (meta.page_scope === 'region') {
+      pieces.push('Region Overview');
+      if (meta.region_name || meta.raw_region) pieces.push(esc(meta.region_name || meta.raw_region));
+    } else if (meta.page_scope === 'global') {
+      pieces.push('Global Overview');
+    }
+    if (pieces.length) {
       html += '<div><i>(' + pieces.join(', ') + ')</i></div>';
     }
 
@@ -957,9 +1036,9 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
     }
 
     if (isGM) {
-      var actionAttrs = (RT.dwt && typeof RT.dwt.actionLinkAttrs === 'function')
-        ? RT.dwt.actionLinkAttrs('!dwt --mapMeta all')
-        : ' role="button" href="' + (v.hrefAttr ? v.hrefAttr('!dwt --mapMeta all') : '!dwt --mapMeta all') + '"' + (v.btn ? (' style="' + v.btn + '"') : '');
+      var actionAttrs = (RT.fts && typeof RT.fts.actionLinkAttrs === 'function')
+        ? RT.fts.actionLinkAttrs('!fts --mapMeta all')
+        : ' role="button" href="' + (v.hrefAttr ? v.hrefAttr('!fts --mapMeta all') : '!fts --mapMeta all') + '"' + (v.btn ? (' style="' + v.btn + '"') : '');
       html += '<div style="margin-top:8px;"><a' + actionAttrs + '>'
         + 'Detailed Map Information</a></div>';
     }
@@ -1027,14 +1106,14 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
       storeMeta(meta);
       storeMetaToMule(meta);
     } catch (e) {
-      log('dwt_mapMeta captureDefaultPageAtInit err: ' + e);
+      log('fts_mapMeta captureDefaultPageAtInit err: ' + e);
     }
   }
 
   function syncWeatherToPage(pid, pageId) {
     try {
-      if (RT.dwt && typeof RT.dwt.weatherVerifySyncActivePage === 'function') {
-        RT.dwt.weatherVerifySyncActivePage(pid || 'API', { silent: true, pageId: pageId });
+      if (RT.fts && typeof RT.fts.weatherVerifySyncActivePage === 'function') {
+        RT.fts.weatherVerifySyncActivePage(pid || 'API', { silent: true, pageId: pageId });
       }
     } catch (e) {}
   }
@@ -1053,7 +1132,7 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
 
   function rewritePageNameWithDepth(page, rawSpec) {
     var spec = String(rawSpec || '').trim();
-    if (!spec) return { error: 'Use !dwt --mapMeta set depth <value>.' };
+    if (!spec) return { error: 'Use !fts --mapMeta set depth <value>.' };
 
     var mule = getOrCreateMule();
     var knownRegions = loadKnownRegions(mule);
@@ -1086,6 +1165,12 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
       return { error: 'The current page must already use a valid unified region/locale page name before depth or elevation can be set.' };
     }
 
+    if (current.page_scope !== 'locale') {
+      return {
+        error: 'Overview pages do not have a current locale. Use a locale token such as coastal or underwater_90, or provide a full locale page name.'
+      };
+    }
+
     var currentLocale = parseLocaleSpec(current.raw_locale, { mule: mule, allowMissingDepth: true, regionMeta: currentRegion });
 
     var parsedDepth = parseDepthSpec(spec, getWeatherUnits(mule));
@@ -1101,10 +1186,10 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
       var regionNames = loadedRegionDisplayNames(getOrCreateMule());
       if (!meta.name_pattern_ok) {
         sendChat(
-          'dwt',
+          'fts',
           '/w gm Map name "' + esc(meta.raw_name || '') + '" does not use '
-            + 'region.locale.mapname or region.locale_depth.mapname.'
-            + '<br><br>Rename appropriately to enable regional and locale-based weather. '
+            + 'region.locale.mapname, region.locale_depth.mapname, region.region, or mapname.global.'
+            + '<br><br>Rename appropriately to enable regional, overview, and global mapping support. '
             + 'Use bare depth values for feet/meters in the current weather units, append mi/km for large-unit input, and prefix with a "+" for elevation.'
             + '<br><br>Case and spaces are ignored; canonical names are lower-case with no spaces.'
         );
@@ -1112,18 +1197,21 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
       }
       if (!meta.region_valid) {
         sendChat(
-          'dwt',
+          'fts',
           '/w gm Region "' + esc(meta.raw_region || '') + '" is not one of the loaded unified region values'
             + (regionNames.length ? ' (' + esc(regionNames.join(', ')) + ')' : '')
             + '.'
         );
         return;
       }
+      if (meta.page_scope === 'global' || meta.page_scope === 'region') {
+        return;
+      }
       if (!meta.locale_valid) {
         var localeMsg = meta.depth_error
           ? meta.depth_error
           : 'Locale is not valid for the loaded region. Use one of that region\'s configured locale keys, each with an optional _<depth> or _+<elevation> token.';
-        sendChat('dwt', '/w gm ' + esc(localeMsg));
+        sendChat('fts', '/w gm ' + esc(localeMsg));
       }
     } catch (e) {}
   }
@@ -1132,6 +1220,7 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
     meta = meta || emptyMeta();
     return [
       lower(String(meta.raw_name || '')).replace(/\s+/g, ''),
+      lower(String(meta.page_scope || '')),
       !!meta.name_pattern_ok,
       !!meta.region_valid,
       !!meta.locale_valid,
@@ -1142,7 +1231,7 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
   function maybeWhisperNamingIssues(pid, meta) {
     if (!pid) return;
     var stateRoot = ensureMapMetaState();
-    if (meta && meta.name_pattern_ok && meta.region_valid && meta.locale_valid) {
+    if (meta && pageNamePatternAccepted(meta)) {
       delete stateRoot.namingWarn[pid];
       return;
     }
@@ -1195,7 +1284,7 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
     } else {
       return {
         error: 'Unrecognized value for --mapMeta: "' + esc(rawVal)
-          + '". Use "!dwt --mapMeta", "!dwt --mapMeta all", or "!dwt --mapMeta set depth <value>".'
+          + '". Use "!fts --mapMeta", "!fts --mapMeta all", or "!fts --mapMeta set depth <value>".'
       };
     }
 
@@ -1209,49 +1298,49 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
     var regions = loadedRegionDisplayNames(getOrCreateMule());
     var locales = loadedLocaleSummaries(getOrCreateMule());
     return [
-      'Capture active page map info (truncated):', '!dwt --mapMeta',
-      'Capture and show all details (one-shot):', '!dwt --mapMeta all',
-      'Set depth or elevation on the current page:', '!dwt --mapMeta set depth 90 | !dwt --mapMeta set depth +100 | !dwt --mapMeta set depth 2mi',
-      'Or switch the current page to a locale with optional position:', '!dwt --mapMeta set depth underwater_90 | !dwt --mapMeta set depth coastal_+100',
-      'Where data is stored:', 'dwt_mule -> ability "mapMeta" (JSON)',
+      'Capture active page map info (truncated):', '!fts --mapMeta',
+      'Capture and show all details (one-shot):', '!fts --mapMeta all',
+      'Set depth or elevation on the current page:', '!fts --mapMeta set depth 90 | !fts --mapMeta set depth +100 | !fts --mapMeta set depth 2mi',
+      'Or switch the current page to a locale with optional position:', '!fts --mapMeta set depth underwater_90 | !fts --mapMeta set depth coastal_+100',
+      'Where data is stored:', 'fts_mule -> ability "mapMeta" (JSON)',
       'Also stored on mule:', 'currentMap, currentMapID, currentRegion, currentLocale, currentDepth, currentDepthMetric, currentDepthImperial, currentDepthMeters',
-      'Naming convention:', 'Pages use region.locale.mapname or region.locale_depth.mapname.',
-      'Examples:', 'frozenfar.coastal.iceplains | moonshaes.underwater_90.sunkenhall | swordcoast.underdark_2mi.deeproad | swordcoast.coastal_+100.cliffwatch',
+      'Naming convention:', 'Pages use region.locale.mapname, region.locale_depth.mapname, region.region, or mapname.global.',
+      'Examples:', 'frozenfar.coastal.iceplains | moonshaes.underwater_90.sunkenhall | swordcoast.underdark_2mi.deeproad | swordcoast.coastal_+100.cliffwatch | landsofintrigue.region | faerun.global',
       'Depth tokens:', 'Bare depth values use the current weather units (feet for imperial, meters for metric). Append mi or km to force large units, and prefix with a "+" for elevation. Case and spaces are ignored; canonical names are lower-case with no spaces.',
-      'Valid Regions:', regions.length ? regions.join(', ') : 'Load one or more dwt_region.* modules first.',
-      'Valid Locales:', locales.length ? locales.join(', ') : 'Load one or more dwt_region.* modules first.'
+      'Valid Regions:', regions.length ? regions.join(', ') : 'Load one or more fts_region.* modules first.',
+      'Valid Locales:', locales.length ? locales.join(', ') : 'Load one or more fts_region.* modules first.'
     ];
   }
 
   function registerWithCore() {
     try {
-      if (!(RT.dwt && !_registered && typeof RT.dwt.registerCommands === 'function')) return;
+      if (!(RT.fts && !_registered && typeof RT.fts.registerCommands === 'function')) return;
 
-      RT.dwt.registerCommands({
+      RT.fts.registerCommands({
         mapmeta: {
           access: 'player',
           handler: handleMapMetaCommand
         }
       });
 
-      RT.dwt.addLogCard(1, function (pid) {
+      RT.fts.addLogCard(1, function (pid) {
         try {
           return renderConfigHTML(pid);
         } catch (e) {
-          log('dwt_mapMeta logCard err: ' + e);
+          log('fts_mapMeta logCard err: ' + e);
           return '';
         }
       });
 
-      RT.dwt.addHelpSection(20, 'Map Information', helpLines);
-      RT.dwt.mapMetaSyncActivePage = syncPageMeta;
-      if (typeof RT.dwt.refreshHelpHandout === 'function') {
-        RT.dwt.refreshHelpHandout(null);
+      RT.fts.addHelpSection(20, 'Map Information', helpLines);
+      RT.fts.mapMetaSyncActivePage = syncPageMeta;
+      if (typeof RT.fts.refreshHelpHandout === 'function') {
+        RT.fts.refreshHelpHandout(null);
       }
 
       _registered = true;
     } catch (e2) {
-      log('dwt_mapMeta registerWithCore err: ' + e2);
+      log('fts_mapMeta registerWithCore err: ' + e2);
     }
   }
 
@@ -1266,27 +1355,27 @@ var dwt_mapMeta = dwt_mapMeta || (function () {
     if (_startupRegistered) return;
     _startupRegistered = true;
 
-    RT.dwtQ = RT.dwtQ || [];
-    RT.dwtQ.push(function (dwt) {
+    RT.ftsQ = RT.ftsQ || [];
+    RT.ftsQ.push(function (fts) {
       try {
-        if (dwt && typeof dwt.registerStartup === 'function') {
-          dwt.registerStartup(MODULE_KEY, function () {
+        if (fts && typeof fts.registerStartup === 'function') {
+          fts.registerStartup(MODULE_KEY, function () {
             mapMetaStartup();
           });
         }
       } catch (e) {
-        log('dwt_mapMeta dwtQ err: ' + e);
+        log('fts_mapMeta ftsQ err: ' + e);
       }
     });
 
     try {
-      if (RT.dwt && typeof RT.dwt.registerStartup === 'function') {
-        RT.dwt.registerStartup(MODULE_KEY, function () {
+      if (RT.fts && typeof RT.fts.registerStartup === 'function') {
+        RT.fts.registerStartup(MODULE_KEY, function () {
           mapMetaStartup();
         });
       }
     } catch (e2) {
-      log('dwt_mapMeta registerStartup err: ' + e2);
+      log('fts_mapMeta registerStartup err: ' + e2);
     }
   }
 

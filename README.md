@@ -1,9 +1,9 @@
-# DWT
-Date | Weather | Trade
+# FTS
+Fantasy Trade Simulator
 
 What It Is
 
-DWT is a Roll20 Mod/API suite that unifies campaign calendar, weather, map metadata, and travel/route tools behind a single !dwt command shell. The core module also owns a shared Campaign Log panel, help handout, UI palette, and startup provisioning for companion modules.
+FTS is a Roll20 Mod/API suite that unifies campaign calendar, weather, map metadata, and travel/route tools behind a single !fts command shell. The core module also owns a shared Campaign Log panel, help handout, UI palette, and startup provisioning for companion modules.
 
 Who It's For
 
@@ -11,16 +11,16 @@ Primary persona: a Roll20 GM running a fantasy campaign who wants in-game time, 
 
 What It Does
 
-1.	Provides a unified !dwt panel, help system, and Campaign Log macro.
+1.	Provides a unified !fts panel, help system, and Campaign Log macro.
 2.	Creates and updates a Campaign Calendar handout with Harptos dates and navigation links.
 3.	Tracks weather state, history, regional currents, critical events, derived marine surface chop, and an animated windsock token on the active page, with surface, underwater, and underdark layer families driven by page naming and live conditions. Underwater pages now render current strength, temperature shift, and visibility against the active page depth, while underdark pages default to cave-still airflow unless a draft or critical event is in play.
-4.	Loads unified `dwt.region.v4` region modules with Harptos month and festival weather periods, required `weather.climateControl` diurnal/governor settings, explicit per-segment `drift.timeofdaySegments`, depth-aware seasonal current readings, configurable locale `waterProfile` data, manual weather tables, and built-in critical-event templates.
+4.	Loads unified `fts.region.v4` region modules with Harptos month and festival weather periods, required `weather.climateControl` diurnal/governor settings, explicit per-segment `drift.timeofdaySegments`, depth-aware seasonal current readings, configurable locale `waterProfile` data, manual weather tables, and built-in critical-event templates.
 5.	Captures active-page map metadata and stores it as JSON for reuse by other modules, including region and locale page metadata plus optional depth or elevation metadata on any unified locale page.
 6.	Builds named routes and static map locations from token positions and map metadata.
 
-Current shipped region modules live in `Modules/Region Modules/dwt_region.<regionKey>_0.1.0-alpha.1.js`.
+Current shipped region modules live in `Modules/Region Modules/fts_region.<regionKey>_0.1.0-alpha.1.js`.
 
-Source verification: run `python Tools/verify_region_modules.py` to validate every shipped region module against the active `dwt_weather` period set and required `dwt.region.v4` structure.
+Source verification: run `python Tools/verify_region_modules.py` to validate every shipped region module against the active `fts_weather` period set and required `fts.region.v4` structure.
 
 Canonical weather/current sources used by the shipped modules:
 
@@ -34,6 +34,6 @@ Canonical weather/current sources used by the shipped modules:
 - U.S. National Park Service cave-climate guidance for near-constant underdark temperatures and mostly dead-calm airflow
 - USGS streamflow-measurement guidance for 20/60/80% inland and coastal water-column sampling
 
-The underwater visibility bands are conservative body-type heuristics informed by NOAA light-depth and Kd490 guidance; DWT does not fetch live water-clarity grids at runtime.
+The underwater visibility bands are conservative body-type heuristics informed by NOAA light-depth and Kd490 guidance; FTS does not fetch live water-clarity grids at runtime.
 
-Surface `chop` is currently modeled only for offshore and coastal surface locales. It is treated as local wind-driven wave roughness, so `!dwt --weather set chop none|light|moderate|heavy|severe` simply raises or lowers the live wind band to the nearest compliant state, and dead calm always yields chop `none`.
+Surface `chop` is currently modeled only for offshore and coastal surface locales. It is treated as local wind-driven wave roughness, so `!fts --weather set chop none|light|moderate|heavy|severe` simply raises or lowers the live wind band to the nearest compliant state, and dead calm always yields chop `none`.

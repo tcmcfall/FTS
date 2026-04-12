@@ -1,34 +1,24 @@
-// dwt_template_popupDropdown.js
+// fts_template_popupDropdown.js
 // Purpose: Template module demonstrating a one-click pop-up (Roll Query) with dropdowns for Year / Month-or-Festival / Day / Time.
-// Relationship: Standalone DWT template. Integrates with dwt_core if present (adds a card & help). Publishes selections to dwt_mule_calendar.
-// Version: 0.2.0-alpha.1
-// Dependencies: Roll20 API sandbox. (Optional) dwt_core (for palette + log/help registry). (Optional) Meta-Toolbox for broader mule usage.
-// Semantic Versioning (SemVer) Policy:
-// - DWT uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
-// - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
-// - Increment PATCH for backward-compatible bug fixes.
-// - Increment MINOR for new backward-compatible functionality.
-// - Increment MAJOR only when the public API becomes stable and/or incompatible breaking changes are introduced.
-// - Pre-release labels such as alpha, beta, or rc mark unstable builds and sort lower than the matching normal release.
-// - Once a version is released, its contents must not be changed; further edits require a new version.
-// - Header comments, internal VERSION constants, filenames, generated module text, and documentation references must stay aligned.
-// - Dependency notes should use SemVer-friendly wording such as ">= 0.1.0-alpha.1" rather than informal forms like "5.1.0+".
+// Relationship: Standalone FTS template. Integrates with fts_core if present (adds a card & help). Publishes selections to fts_mule_calendar.
+// Version: 1.0.0
+// Dependencies: Roll20 API sandbox. (Optional) fts_core (for palette + log/help registry). (Optional) Meta-Toolbox for broader mule usage.
 //
 // === Help & Config (Template Reference)
 // Category: Pop-up Dropdown Pattern
 // Purpose: Provide a "Set Date" button that, with a single click, opens Roll Query dropdowns for Year, Month/Festival, Day, and Time.
-//          On submit, selections are validated (festival/day exclusivity; Shieldmeet leap-year requirement), written to state.dwt.now,
-//          and mirrored to the mule `dwt_mule`. The mule is auto-healed (created if missing).
+//          On submit, selections are validated (festival/day exclusivity; Shieldmeet leap-year requirement), written to state.fts.now,
+//          and mirrored to the mule `fts_mule`. The mule is auto-healed (created if missing).
 // ===
 
 (function(){
   'use strict';
 
   // === Constants & Version ====================================================
-  var SCRIPT = 'dwt_tpl';              // command namespace
-  var VERSION = '0.2.0-alpha.1';
-  var CORE_MULE = 'dwt_mule';
-  var CAL_MULE  = 'dwt_mule';
+  var SCRIPT = 'fts_tpl';              // command namespace
+  var VERSION = '1.0.0';
+  var CORE_MULE = 'fts_mule';
+  var CAL_MULE  = 'fts_mule';
   var TITLE     = 'Set Date';
   var MIN_YEAR  = 1350;
   var MAX_YEAR  = 1600;
@@ -52,7 +42,7 @@
     { key:'Midwinter',      afterMonth:1,  label:'Midwinter (between Hammer & Alturiak)' },
     { key:'Greengrass',     afterMonth:4,  label:'Greengrass (between Tarsakh & Mirtul)' },
     { key:'Midsummer',      afterMonth:7,  label:'Midsummer (between Flamerule & Eleasis)' },
-    { key:'Shieldmeet',     afterMonth:7,  label:'Shieldmeet (day after Midsummer — leap years only)', leap:true },
+    { key:'Shieldmeet',     afterMonth:7,  label:'Shieldmeet (day after Midsummer - leap years only)', leap:true },
     { key:'Highharvestide', afterMonth:9,  label:'Highharvestide (between Eleint & Marpenoth)' },
     { key:'Feast of the Moon', afterMonth:11, label:'Feast of the Moon (between Uktar & Nightal)' }
   ];
@@ -63,8 +53,8 @@
   function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
   function hrefAttr(s){ return String(s||'').replace(/"/g,'&quot;'); }
   function isGM(pid){ try{ return typeof playerIsGM==='function' && playerIsGM(pid); }catch(e){ return false; } }
-  function say(html){ sendChat('dwt', html); }
-  function whisperTo(pid, html){ var p=getObj('player',pid), who=p?(p.get('displayname')||'GM'):'GM'; sendChat('dwt', '/w \"'+who+'\" '+html); }
+  function say(html){ sendChat('fts', html); }
+  function whisperTo(pid, html){ var p=getObj('player',pid), who=p?(p.get('displayname')||'GM'):'GM'; sendChat('fts', '/w \"'+who+'\" '+html); }
 
   // === Core-awareness (palette) ==============================================
   function getCoreMule(){ return findObjs({_type:'character', name: CORE_MULE})[0] || null; }
@@ -76,19 +66,19 @@
     var core = getCoreMule();
     var fromCore = getAttr(core, 'palette');
     if (fromCore) return fromCore;
-    if (state.dwt && state.dwt.ui && state.dwt.ui.palette) return state.dwt.ui.palette;
+    if (state.fts && state.fts.ui && state.fts.ui.palette) return state.fts.ui.palette;
     return 'none';
   }
   var PALETTES = {
     none: null,
-    dark: { bg:'#222', fg:'#eee', border:'#111', tableBorder:'#555', card:'#2f2f2f', accent:'#9b6dff' },
+    dark: { bg:'#222', fg:'#eee', border:'#111', tableBorder:'#555', card:'#2f2f2f', accent:'#3a7' },
     parchment: { bg:'#f8f1e1', fg:'#3b2f1a', border:'#111', tableBorder:'#b79b74', card:'#efe3c7', accent:'#9a6e37' },
     contrast: { bg:'#000', fg:'#fff', border:'#111', tableBorder:'#888', card:'#111', accent:'#0aa' },
     powder:{ bg:'#eef6ff', fg:'#1f2a44', border:'#7aa7d9', tableBorder:'#9ec3ea', card:'#f2f7ff', accent:'#9ec3ea' }
   };
   function cssVars(){
     var pal = PALETTES[currentPalette()];
-    if(!pal){ return { container:'', title:'', card:'', link:'text-decoration:none; color:#ba2e68;' }; }
+    if(!pal){ return { container:'', title:'', card:'', link:'text-decoration:none; color:#4ea3ff;' }; }
     return {
       container:'display:block;width:80%;margin:0 auto;border:3px solid '+pal.border+';padding:10px 12px;background:'+pal.bg+';color:'+pal.fg+';font:14px/1.32 Georgia,serif;',
       title:'font-weight:bold;font-size:17px;margin-bottom:6px;color:'+pal.fg+';',
@@ -101,10 +91,10 @@
 
   // === State (shared with suite) =============================================
   function assureState(){
-    state.dwt = state.dwt || {};
-    state.dwt.version = state.dwt.version || VERSION;
-    state.dwt.now = state.dwt.now || { year:1492, month:6, day:14, time:'Eventide', festival:'' };
-    state.dwt.ui  = state.dwt.ui  || { palette:'none' };
+    state.fts = state.fts || {};
+    state.fts.version = state.fts.version || VERSION;
+    state.fts.now = state.fts.now || { year:1492, month:6, day:14, time:'Eventide', festival:'' };
+    state.fts.ui  = state.fts.ui  || { palette:'none' };
   }
 
   // === Mule (calendar) =======================================================
@@ -124,7 +114,7 @@
   }
   function mirrorNowToMule(){
     var c = ensureCalendarMule();
-    var n = state.dwt.now||{};
+    var n = state.fts.now||{};
     setAttrDirect(c, 'year', n.year||1492);
     setAttrDirect(c, 'month', n.month||6);
     setAttrDirect(c, 'day', n.day||14);
@@ -159,7 +149,7 @@
   }
   function renderCard(pid){
     var v = cssVars(); assureState();
-    var now = state.dwt.now;
+    var now = state.fts.now;
 
     // Build 1-click Roll Query button (Year + Month/Festival (+Day) + Time)
     var years = []; for (var y=MIN_YEAR; y<=MAX_YEAR; y++){ years.push(y); }
@@ -212,7 +202,7 @@
 
   function applySetFromFlags(flags, pid){
     var changed=false; assureState();
-    var now = state.dwt.now;
+    var now = state.fts.now;
 
     // Prompts handled by roll-query; here we only validate supplied tokens.
     // Year
@@ -220,7 +210,7 @@
       if (flags.year==='keep'){ /* no-op */ }
       else {
         var Y=parseInt(flags.year,10);
-        if (isNaN(Y) || Y<MIN_YEAR || Y>MAX_YEAR){ whisperTo(pid,'Year must be '+MIN_YEAR+'–'+MAX_YEAR+'.'); return false; }
+        if (isNaN(Y) || Y<MIN_YEAR || Y>MAX_YEAR){ whisperTo(pid,'Year must be '+MIN_YEAR+'-'+MAX_YEAR+'.'); return false; }
         now.year = Y; changed=true;
       }
     }
@@ -229,7 +219,7 @@
       if (flags.month==='keep'){ /* no-op */ }
       else {
         var M=parseInt(flags.month,10);
-        if (isNaN(M) || M<1 || M>12){ whisperTo(pid,'Month must be 1–12.'); return false; }
+        if (isNaN(M) || M<1 || M>12){ whisperTo(pid,'Month must be 1-12.'); return false; }
         now.month = M; now.festival=''; changed=true;
       }
     }
@@ -238,7 +228,7 @@
       if (flags.day==='keep'){ /* no-op */ }
       else {
         var D=parseInt(flags.day,10);
-        if (isNaN(D) || D<1 || D>30){ whisperTo(pid,'Day must be 1–30.'); return false; }
+        if (isNaN(D) || D<1 || D>30){ whisperTo(pid,'Day must be 1-30.'); return false; }
         now.day = D; now.festival=''; changed=true;
       }
     }
@@ -281,21 +271,21 @@
 
   // === Integration: Core (log card + help) ===================================
   function registerWithCore(){
-    if (!globalThis.dwt) return;
+    if (!globalThis.fts) return;
     try{
-      if (typeof dwt.addLogCard==='function'){
-        dwt.addLogCard(15, function(pid){ return renderCard(pid); }); // appears above Core
+      if (typeof fts.addLogCard==='function'){
+        fts.addLogCard(15, function(pid){ return renderCard(pid); }); // appears above Core
       }
-      if (typeof dwt.addHelpSection==='function'){
-        dwt.addHelpSection(15, 'Template: Pop-up Dropdown', function(){
+      if (typeof fts.addHelpSection==='function'){
+        fts.addHelpSection(15, 'Template: Pop-up Dropdown', function(){
           return [
             'Open Set Date panel:', '!'+SCRIPT,
             'One-click Set Date (opens dropdown choices):', '!'+SCRIPT+' --setdate (via button)',
             '',
             'Parameters (validated, GM or player as you prefer):',
-            '--year N ( '+MIN_YEAR+'–'+MAX_YEAR+' or keep )',
-            '--month 1–12 (or keep)',
-            '--day 1–30 (or keep)',
+            '--year N ( '+MIN_YEAR+'-'+MAX_YEAR+' or keep )',
+            '--month 1-12 (or keep)',
+            '--day 1-30 (or keep)',
             '--festival midwinter|greengrass|midsummer|shieldmeet|highharvestide|feast of the moon (or keep)',
             '--time deepnight|firstlight|daytide|eventide (or keep)',
             '',
@@ -321,7 +311,7 @@
       // This flag is a marker. The actual values are in other flags populated by the roll query.
       var changed = applySetFromFlags(flags, pid);
       var v = cssVars();
-      var html = shell(TITLE) + '<div style=\"'+v.card+'\">'+esc(narrativeLine(state.dwt.now))+'</div>' + endShell();
+      var html = shell(TITLE) + '<div style=\"'+v.card+'\">'+esc(narrativeLine(state.fts.now))+'</div>' + endShell();
       whisperTo(pid, html);
       return;
     }
@@ -335,7 +325,7 @@
     assureState();
     ensureCalendarMule();
     registerWithCore();
-    log('dwt_template_popupDropdown v'+VERSION+' ready.');
+    log('fts_template_popupDropdown v'+VERSION+' ready.');
   });
   on('chat:message', handleMessage);
 })();

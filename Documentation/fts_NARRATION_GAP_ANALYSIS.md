@@ -1,4 +1,4 @@
-# DWT Narration Gap Analysis
+# FTS Narration Gap Analysis
 
 Generated on 2026-03-28 from the built-in narration inventory and direct source review of the runtime modules.
 
@@ -6,12 +6,12 @@ Historical note: this analysis reflects the pre-overhaul quip layout and should 
 
 ## Executive Summary
 
-- The strongest existing quip material currently lives in the festival, season, and generic pools in `Modules/dwt_quips_0.1.0-alpha.1.js`.
+- The strongest existing quip material currently lives in the festival, season, and generic pools in `Modules/fts_quips_0.1.0-alpha.1.js`.
 - The weakest narration lives in the region-specific quip pools for Frozenfar, Lands of Intrigue, Sword Coast, and Sword Coast North. These are not exact duplicates, but they are heavily template-driven and frequently degrade into awkward or broken phrasing.
-- `dwt_weather` has solid system-facing narrative templates, but its fallback quips are too thin to carry a full flavor layer on their own.
-- `dwt_calendar` has structural drift from `dwt_quips`: incomplete overlay coverage, a festival-key mismatch, and a long/medium lookup mismatch.
+- `fts_weather` has solid system-facing narrative templates, but its fallback quips are too thin to carry a full flavor layer on their own.
+- `fts_calendar` has structural drift from `fts_quips`: incomplete overlay coverage, a festival-key mismatch, and a long/medium lookup mismatch.
 - All current quip buckets already respect the required line counts: short `2`, medium `4`, long `8`.
-- Recommendation: use the strongest existing pools as reference material, rewrite the weak region pools from scratch, and align calendar and weather around the canonical campaign standard in `Documentation/dwt_QUIP_CANONICAL_STANDARD.md`.
+- Recommendation: use the strongest existing pools as reference material, rewrite the weak region pools from scratch, and align calendar and weather around the canonical campaign standard in `Documentation/fts_QUIP_CANONICAL_STANDARD.md`.
 
 ## Canonical Campaign Standard Impact
 
@@ -34,7 +34,7 @@ What this changes:
 
 ### Exact Duplicates
 
-- Exact duplicate full entries in the `dwt_quips` corpus: `0`
+- Exact duplicate full entries in the `fts_quips` corpus: `0`
 - Conclusion: the main problem is not copy-paste duplication. The real problem is structural duplication through repeated templates with swapped nouns, places, and factions.
 
 ### Structural Duplication
@@ -99,7 +99,7 @@ Result:
 
 ### System Narrator vs Bardic Narrator
 
-`dwt_weather` uses grounded, simulation-facing narration:
+`fts_weather` uses grounded, simulation-facing narration:
 
 - temperature and sky reporting
 - wind/current statements
@@ -112,7 +112,7 @@ Result:
 
 - When the campaign log combines a hard-edged weather report with a poetic quip, the switch can feel abrupt.
 - This is not automatically bad, but it needs to be intentional.
-- The overhaul should decide whether DWT has one narrator voice or a layered voice model:
+- The overhaul should decide whether FTS has one narrator voice or a layered voice model:
   - system report
   - flavor quip
   - event stinger
@@ -120,7 +120,7 @@ Result:
 
 ### Calendar Fallback Voice vs Quips-Corpus Voice
 
-`dwt_calendar` fallback festival quips are compact, aphoristic four-line pieces. They are readable and usable, but they are simpler and blunter than the stronger festival pools in `dwt_quips`.
+`fts_calendar` fallback festival quips are compact, aphoristic four-line pieces. They are readable and usable, but they are simpler and blunter than the stronger festival pools in `fts_quips`.
 
 Result:
 
@@ -155,12 +155,12 @@ Assessment:
 
 Current state:
 
-- `dwt_weather` ships Moonshae weather fallback quips under `quips.weather.moonshaes.*`
+- `fts_weather` ships Moonshae weather fallback quips under `quips.weather.moonshaes.*`
 - the quips corpus has no `quips.moonshaes.long|medium|short`
 
 Result:
 
-- Moonshaes exists as a weather region and as a region module, but not as a first-class narration region in `dwt_quips`.
+- Moonshaes exists as a weather region and as a region module, but not as a first-class narration region in `fts_quips`.
 
 Assessment:
 
@@ -186,13 +186,13 @@ Assessment:
 
 ### D. Calendar and Quips Are Out of Contract
 
-Current issues in `Modules/dwt_calendar_0.2.0-alpha.1.js`:
+Current issues in `Modules/fts_calendar_0.2.0-alpha.1.js`:
 
 - `FESTIVAL_QUIP` only covers six festivals.
 - Calendar-local fallback pools also include `uktar` and `midwinters_eve`.
 - `resolveFestivalLongQuip()` requests `quips.festival.<key>.medium`.
 - The comments and fallback naming still refer to long quips.
-- Calendar uses `midwinters_eve`, while `dwt_quips` uses `midwinterseve`.
+- Calendar uses `midwinters_eve`, while `fts_quips` uses `midwinterseve`.
 
 Result:
 
@@ -205,7 +205,7 @@ Assessment:
 
 ### E. Weather Flavor Is Too Shallow
 
-Current state in `Modules/dwt_weather_0.2.0-alpha.1.js`:
+Current state in `Modules/fts_weather_0.2.0-alpha.1.js`:
 
 - `FALLBACK_WEATHER_QUIPS` contains 25 region-locale paths.
 - Each path currently ships with one fallback line.
@@ -348,7 +348,7 @@ Suggested red flags:
 
 ## 6. Recommended Immediate Next Moves
 
-1. Normalize festival keys and length semantics between `dwt_calendar` and `dwt_quips`.
+1. Normalize festival keys and length semantics between `fts_calendar` and `fts_quips`.
 2. Add Moonshaes region quip placeholders so the architecture is complete.
 3. Rewrite the four existing region corpora from scratch.
 4. Backfill Uktar medium and long content.

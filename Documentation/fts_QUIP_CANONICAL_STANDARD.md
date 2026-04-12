@@ -1,4 +1,4 @@
-# DWT Quip Canonical Standard
+# FTS Quip Canonical Standard
 
 This document records the authoritative quip standard for the campaign.
 

@@ -1,29 +1,29 @@
-// name:        dwt_geo.js
+// name:        fts_geo.js
 // version:     0.2.0-alpha.1
 // description: Geolocation & Route module (core-aware). Reads mapMeta and token
 //              coordinates, builds per-map named routes and static map points,
-//              and stores data on dwt_mule as mapRoutes.* and mapPoints.*.
-// depends:     dwt_core >= 0.1.0-alpha.1, dwt_mapMeta >= 0.1.0-alpha.1, Roll20 Mod API
-// provides:    !dwt --geo list routes
-//              !dwt --geo start route <routeName>
-//              !dwt --geo set routepoint <pointName>
-//              !dwt --geo end route
-//              !dwt --geo goto route <routeName>
-//              !dwt --geo goto routepoint <routeName (current if omitted)> <index|pointName>
-//              !dwt --geo prev routepoint
-//              !dwt --geo next routepoint
-//              !dwt --geo delete route <routeName>
-//              !dwt --geo delete routepoint <routeName (current if omitted)> <index|pointName>
-//              !dwt --geo rename route <oldName> <newName>
-//              !dwt --geo rename routepoint <oldName> <newName>
-//              !dwt --geo list locations
-//              !dwt --geo set location <locationName>
-//              !dwt --geo goto location <locationName>
-//              !dwt --geo delete location <locationName>
-//              !dwt --geo rename location <oldName> <newName>
+//              and stores data on fts_mule as mapRoutes.* and mapPoints.*.
+// depends:     fts_core >= 0.1.0-alpha.1, fts_mapMeta >= 0.1.0-alpha.1, Roll20 Mod API
+// provides:    !fts --geo list routes
+//              !fts --geo start route <routeName>
+//              !fts --geo set routepoint <pointName>
+//              !fts --geo end route
+//              !fts --geo goto route <routeName>
+//              !fts --geo goto routepoint <routeName (current if omitted)> <index|pointName>
+//              !fts --geo prev routepoint
+//              !fts --geo next routepoint
+//              !fts --geo delete route <routeName>
+//              !fts --geo delete routepoint <routeName (current if omitted)> <index|pointName>
+//              !fts --geo rename route <oldName> <newName>
+//              !fts --geo rename routepoint <oldName> <newName>
+//              !fts --geo list locations
+//              !fts --geo set location <locationName>
+//              !fts --geo goto location <locationName>
+//              !fts --geo delete location <locationName>
+//              !fts --geo rename location <oldName> <newName>
 // author:      tcm (AI-assisted)
 // Semantic Versioning (SemVer) Policy:
-// - DWT uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
+// - FTS uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
 // - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
 // - Increment PATCH for backward-compatible bug fixes.
 // - Increment MINOR for new backward-compatible functionality.
@@ -33,7 +33,7 @@
 // - Header comments, internal VERSION constants, filenames, generated module text, and documentation references must stay aligned.
 // - Dependency notes should use SemVer-friendly wording such as ">= 0.1.0-alpha.1" rather than informal forms like "5.1.0+".
 
-var dwt_geo = dwt_geo || (function () {
+var fts_geo = fts_geo || (function () {
   'use strict';
 
   /* ========== Intro / Root ========== */
@@ -46,7 +46,7 @@ var dwt_geo = dwt_geo || (function () {
 
   var VERSION    = '0.2.0-alpha.1';
   var STATE_ROOT = 'geo';
-  var DWT_MULE   = 'dwt_mule';
+  var FTS_MULE   = 'fts_mule';
   var GEO_HANDOUT_NAME = 'Map Locations and Routes';
 
   var _registered = false;
@@ -63,8 +63,8 @@ var dwt_geo = dwt_geo || (function () {
   }
 
   function cssVars(){
-    return (RT.dwt && typeof RT.dwt.cssVars === 'function')
-      ? RT.dwt.cssVars()
+    return (RT.fts && typeof RT.fts.cssVars === 'function')
+      ? RT.fts.cssVars()
       : {
           container:'',
           title:'',
@@ -83,22 +83,22 @@ var dwt_geo = dwt_geo || (function () {
   }
 
   function ensureGeoState(){
-    if(!state.dwt){ state.dwt = {}; }
-    if(!state.dwt[STATE_ROOT]){
-      state.dwt[STATE_ROOT] = {
+    if(!state.fts){ state.fts = {}; }
+    if(!state.fts[STATE_ROOT]){
+      state.fts[STATE_ROOT] = {
         routes: {},          // mapKey → { routeKey → route }
         points: {},          // mapKey → { pointKey → point }
         currentRoute: {},    // pid → { mapKey, routeKey }
         lastSelection: {}    // pid → [{_id,_type}]
       };
     }else{
-      var S = state.dwt[STATE_ROOT];
+      var S = state.fts[STATE_ROOT];
       if(!S.routes){ S.routes = {}; }
       if(!S.points){ S.points = {}; }
       if(!S.currentRoute){ S.currentRoute = {}; }
       if(!S.lastSelection){ S.lastSelection = {}; }
     }
-    return state.dwt[STATE_ROOT];
+    return state.fts[STATE_ROOT];
   }
 
   function normalizeKey(name){
@@ -106,9 +106,9 @@ var dwt_geo = dwt_geo || (function () {
   }
 
   function normalizeGeoKeyComponent(s){
-    // Use the same normalizer as other DWT identifiers (calendar, etc.).
-    var norm = (RT.dwt && RT.dwt.normalizeName)
-      ? RT.dwt.normalizeName
+    // Use the same normalizer as other FTS identifiers (calendar, etc.).
+    var norm = (RT.fts && RT.fts.normalizeName)
+      ? RT.fts.normalizeName
       : function(x){
           return String(x||'')
             .toLowerCase()
@@ -175,7 +175,7 @@ var dwt_geo = dwt_geo || (function () {
   function regionsRootQuality(text){
     var parsed = safeParseJSON(text);
     if(!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return -1;
-    var score = (parsed.schema === 'dwt.regions.root.v1') ? 50 : 0;
+    var score = (parsed.schema === 'fts.regions.root.v1') ? 50 : 0;
     var regions = parsed.regions;
     if(!regions || typeof regions !== 'object' || Array.isArray(regions)) return score;
     var keys = Object.keys(regions);
@@ -183,7 +183,7 @@ var dwt_geo = dwt_geo || (function () {
     for(var i=0;i<keys.length;i++){
       var payload = regions[keys[i]];
       if(!payload || typeof payload !== 'object' || Array.isArray(payload)) continue;
-      if(payload.schema === 'dwt.region.v4') score += 200;
+      if(payload.schema === 'fts.region.v4') score += 200;
       if(payload.weather && typeof payload.weather === 'object' && !Array.isArray(payload.weather)) score += 100;
       if(payload.region) score += 10;
       if(payload.locales) score += 10;
@@ -195,7 +195,7 @@ var dwt_geo = dwt_geo || (function () {
     var parsed = safeParseJSON(text);
     if(!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return -1;
     var score = 0;
-    if(parsed.meta && parsed.meta.rootSchema === 'dwt.weather.root.v2') score += 200;
+    if(parsed.meta && parsed.meta.rootSchema === 'fts.weather.root.v2') score += 200;
     if(parsed.settings && (parsed.settings.units === 'imperial' || parsed.settings.units === 'metric')) score += 25;
     if(parsed.current && typeof parsed.current === 'object' && !Array.isArray(parsed.current)) score += 25;
     if(parsed.history && typeof parsed.history === 'object' && !Array.isArray(parsed.history)) score += 25;
@@ -236,12 +236,12 @@ var dwt_geo = dwt_geo || (function () {
 
   function getOrCreateMule(){
     try{
-      if(RT.dwt && typeof RT.dwt.ensureMule === 'function'){
-        return RT.dwt.ensureMule();
+      if(RT.fts && typeof RT.fts.ensureMule === 'function'){
+        return RT.fts.ensureMule();
       }
     }catch(e){}
 
-    var matches = findObjs({_type:'character', name:DWT_MULE}) || [];
+    var matches = findObjs({_type:'character', name:FTS_MULE}) || [];
     var mule = null;
     var bestScore = -1;
     for(var i=0;i<matches.length;i++){
@@ -253,7 +253,7 @@ var dwt_geo = dwt_geo || (function () {
     }
     if(!mule){
       mule = createObj('character',{
-        name: DWT_MULE,
+        name: FTS_MULE,
         archived:false,
         inplayerjournals:'',
         controlledby:''
@@ -361,7 +361,7 @@ var dwt_geo = dwt_geo || (function () {
     try{
       h.set('notes', buildGeoHandoutHTML(meta));
     }catch(e){
-      log('dwt_geo ensureGeoHandout err: '+e);
+      log('fts_geo ensureGeoHandout err: '+e);
     }
     return h;
   }
@@ -437,7 +437,7 @@ var dwt_geo = dwt_geo || (function () {
         var p   = pointsForMap[key];
         if(!p) continue;
         var label = p.name || key;
-        var href  = esc('!dwt --geo goto location '+label);
+        var href  = esc('!fts --geo goto location '+label);
         html += '<li style="font-size:11px;">'
               + '<a href="'+href+'"'+(v.link?(' style="'+v.link+'"'):'')+'>'+esc(label)+'</a>'
               + '</li>';
@@ -476,7 +476,7 @@ var dwt_geo = dwt_geo || (function () {
         var rLabel = r.name || rKey;
         var count  = (r.points && r.points.length) || 0;
 
-        var baseHref = esc('!dwt --geo goto route '+rLabel);
+        var baseHref = esc('!fts --geo goto route '+rLabel);
 
         html += '<li style="font-size:11px;">'
               + '<a href="'+baseHref+'"'+(v.link?(' style="'+v.link+'"'):'')+'>'+esc(rLabel)+'</a>';
@@ -490,7 +490,7 @@ var dwt_geo = dwt_geo || (function () {
           for(var idx=0; idx<count; idx++){
             var pt      = r.points[idx] || {};
             var ptLabel = pt.label || pt.name || (rLabel+' #'+(idx+1));
-            var dotHref = esc('!dwt --geo goto route '+rLabel+' '+idx);
+            var dotHref = esc('!fts --geo goto route '+rLabel+' '+idx);
 
             html += '&nbsp;<a href="'+dotHref+'" '
                   + 'style="font-size:20px;text-decoration:none;line-height:1;" '
@@ -532,7 +532,7 @@ var dwt_geo = dwt_geo || (function () {
       var meta = JSON.parse(json);
       return meta || null;
     }catch(e){
-      log('dwt_geo readMapMetaFromMule JSON error: '+e);
+      log('fts_geo readMapMetaFromMule JSON error: '+e);
       return null;
     }
   }
@@ -896,7 +896,7 @@ var dwt_geo = dwt_geo || (function () {
     }
 
     if(removedRoutes || removedPoints){
-      sendChat('dwt','/w gm Removed '+removedRoutes+' orphan route(s) and '+removedPoints+' orphan map point(s) whose maps no longer exist.');
+      sendChat('fts','/w gm Removed '+removedRoutes+' orphan route(s) and '+removedPoints+' orphan map point(s) whose maps no longer exist.');
     }
   }
 
@@ -936,7 +936,7 @@ var dwt_geo = dwt_geo || (function () {
     }
 
     if(removed){
-      sendChat('dwt','/w gm Cleaned '+removed+' obsolete mapRoutes/mapPoints entries from dwt_mule.');
+      sendChat('fts','/w gm Cleaned '+removed+' obsolete mapRoutes/mapPoints entries from fts_mule.');
     }
 
     // Re-sync from state back to mule
@@ -967,7 +967,7 @@ var dwt_geo = dwt_geo || (function () {
       ensureGeoHandout(meta);
 
     }catch(e){
-      log('dwt_geo refreshGeoForActivePage err: '+e);
+      log('fts_geo refreshGeoForActivePage err: '+e);
     }
   }
 
@@ -1025,7 +1025,7 @@ var dwt_geo = dwt_geo || (function () {
 
     var meta = readMapMetaFromMule();
     if(!meta){
-      return { error:'No map metadata found. Use "!dwt --mapMeta all" first.' };
+      return { error:'No map metadata found. Use "!fts --mapMeta all" first.' };
     }
     var mapKey = mapKeyFromMeta(meta);
     if(!mapKey){
@@ -1039,7 +1039,7 @@ var dwt_geo = dwt_geo || (function () {
     var token = tokens[0];
 
     if(token.get('pageid') !== meta.id){
-      return { error:'Selected token is not on the page captured by mapMeta. Run "!dwt --mapMeta all" on this page first.' };
+      return { error:'Selected token is not on the page captured by mapMeta. Run "!fts --mapMeta all" on this page first.' };
     }
 
     var got = getOrCreateRoute(S, mapKey, raw, pid, meta, token);
@@ -1059,7 +1059,7 @@ var dwt_geo = dwt_geo || (function () {
     S.currentRoute[pid] = { mapKey: mapKey, routeKey: key };
     syncRoutesToMule();
 
-    sendChat('dwt','/w gm Started route "'+esc(route.name)+'" on map "'+esc(mapKey)+'" with 1 point.');
+    sendChat('fts','/w gm Started route "'+esc(route.name)+'" on map "'+esc(mapKey)+'" with 1 point.');
     return { changed:false };
   }
 
@@ -1074,12 +1074,12 @@ var dwt_geo = dwt_geo || (function () {
 
     var active = S.currentRoute[pid];
     if(!active || !active.routeKey || !active.mapKey){
-      return { error:'You have no active route. Use "!dwt --startRoute <name>" first.' };
+      return { error:'You have no active route. Use "!fts --startRoute <name>" first.' };
     }
 
     var meta = readMapMetaFromMule();
     if(!meta){
-      return { error:'No map metadata found. Use "!dwt --mapMeta all" first.' };
+      return { error:'No map metadata found. Use "!fts --mapMeta all" first.' };
     }
     var mapKey = mapKeyFromMeta(meta);
     if(!mapKey){
@@ -1104,7 +1104,7 @@ var dwt_geo = dwt_geo || (function () {
     var token = tokens[0];
 
     if(token.get('pageid') !== meta.id){
-      return { error:'Selected token is not on the page captured by mapMeta. Run "!dwt --mapMeta all" on this page first.' };
+      return { error:'Selected token is not on the page captured by mapMeta. Run "!fts --mapMeta all" on this page first.' };
     }
 
     var idx = route.points.length+1;
@@ -1117,7 +1117,7 @@ var dwt_geo = dwt_geo || (function () {
     addPointToRoute(route, point);
     syncRoutesToMule();
 
-    sendChat('dwt','/w gm Added route point "'+esc(pointLabel)+'" to route "'+esc(route.name)+'" on "'+esc(mapKey)+'" (total '+route.points.length+' points).');
+    sendChat('fts','/w gm Added route point "'+esc(pointLabel)+'" to route "'+esc(route.name)+'" on "'+esc(mapKey)+'" (total '+route.points.length+' points).');
     return { changed:false };
   }
 
@@ -1145,7 +1145,7 @@ var dwt_geo = dwt_geo || (function () {
     route.updated_at = (new Date()).toISOString();
     syncRoutesToMule();
 
-    sendChat('dwt','/w gm Ended route "'+esc(route.name)+'" on "'+esc(active.mapKey)+'" ('+route.points.length+' points).');
+    sendChat('fts','/w gm Ended route "'+esc(route.name)+'" on "'+esc(active.mapKey)+'" ('+route.points.length+' points).');
     return { changed:false };
   }
 
@@ -1159,7 +1159,7 @@ var dwt_geo = dwt_geo || (function () {
 
     var meta = readMapMetaFromMule();
     if(!meta){
-      return { error:'No map metadata found. Use "!dwt --mapMeta all" first.' };
+      return { error:'No map metadata found. Use "!fts --mapMeta all" first.' };
     }
     var mapKey = mapKeyFromMeta(meta) || '(unknown)';
 
@@ -1188,17 +1188,17 @@ var dwt_geo = dwt_geo || (function () {
         if(!r) continue;
         var isActive = (active && active.mapKey === mapKey && active.routeKey === key);
         var activeText = isActive ? ' (active)' : '';
-        html += '<div><b>'+esc(r.name)+'</b>'+esc(activeText)+' — '+r.points.length+' points</div>';
+        html += '<div><b>'+esc(r.name)+'</b>'+esc(activeText)+' - '+r.points.length+' points</div>';
       }
       html += '</div>';
     }
 
     html += '<div style="margin-top:6px;font-size:10px;color:#AAA;">'
-          + 'Commands: !dwt --geo start route &lt;name&gt;, !dwt --geo set routepoint [name], !dwt --geo end route, !dwt --geo delete route &lt;name&gt;'
+          + 'Commands: !fts --geo start route &lt;name&gt;, !fts --geo set routepoint [name], !fts --geo end route, !fts --geo delete route &lt;name&gt;'
           + '</div>';
     html += '</div>';
 
-    sendChat('dwt','/w gm '+html);
+    sendChat('fts','/w gm '+html);
     return { changed:false };
   }
 
@@ -1216,7 +1216,7 @@ var dwt_geo = dwt_geo || (function () {
 
     var meta = readMapMetaFromMule();
     if(!meta){
-      return { error:'No map metadata found. Use "!dwt --mapMeta all" first.' };
+      return { error:'No map metadata found. Use "!fts --mapMeta all" first.' };
     }
     var mapKey = mapKeyFromMeta(meta);
     if(!mapKey){
@@ -1242,7 +1242,7 @@ var dwt_geo = dwt_geo || (function () {
     }
 
     syncRoutesToMule();
-    sendChat('dwt','/w gm Deleted route "'+esc(r.name)+'" on "'+esc(mapKey)+'".');
+    sendChat('fts','/w gm Deleted route "'+esc(r.name)+'" on "'+esc(mapKey)+'".');
     return { changed:false };
   }
 
@@ -1262,7 +1262,7 @@ var dwt_geo = dwt_geo || (function () {
 
     var meta = readMapMetaFromMule();
     if(!meta){
-      return { error:'No map metadata found. Use "!dwt --mapMeta all" first.' };
+      return { error:'No map metadata found. Use "!fts --mapMeta all" first.' };
     }
     var mapKey = mapKeyFromMeta(meta);
     if(!mapKey){
@@ -1276,7 +1276,7 @@ var dwt_geo = dwt_geo || (function () {
     var token = tokens[0];
 
     if(token.get('pageid') !== meta.id){
-      return { error:'Selected token is not on the page captured by mapMeta. Run "!dwt --mapMeta all" on this page first.' };
+      return { error:'Selected token is not on the page captured by mapMeta. Run "!fts --mapMeta all" on this page first.' };
     }
 
     var pointData = buildGeoPoint(token, meta, label);
@@ -1297,7 +1297,7 @@ var dwt_geo = dwt_geo || (function () {
 
     syncPointsToMule();
 
-    sendChat('dwt','/w gm Stored map point "'+esc(label)+'" on "'+esc(mapKey)+'".');
+    sendChat('fts','/w gm Stored map point "'+esc(label)+'" on "'+esc(mapKey)+'".');
     return { changed:false };
   }
 
@@ -1315,7 +1315,7 @@ var dwt_geo = dwt_geo || (function () {
 
     var meta = readMapMetaFromMule();
     if(!meta){
-      return { error:'No map metadata found. Use "!dwt --mapMeta all" first.' };
+      return { error:'No map metadata found. Use "!fts --mapMeta all" first.' };
     }
     var mapKey = mapKeyFromMeta(meta);
     if(!mapKey){
@@ -1332,7 +1332,7 @@ var dwt_geo = dwt_geo || (function () {
     delete pointsForMap[key];
     syncPointsToMule();
 
-    sendChat('dwt','/w gm Deleted map point "'+esc(label)+'" from "'+esc(mapKey)+'".');
+    sendChat('fts','/w gm Deleted map point "'+esc(label)+'" from "'+esc(mapKey)+'".');
     return { changed:false };
   }
 
@@ -1347,12 +1347,12 @@ var dwt_geo = dwt_geo || (function () {
       return { error:'Only the gm may use --mapGotoPoint.' };
     }
     if(!label){
-      return { error:'Usage: !dwt --geo goto location <location name>.' };
+      return { error:'Usage: !fts --geo goto location <location name>.' };
     }
 
     var meta = readMapMetaFromMule();
     if(!meta){
-      return { error:'No map metadata found. Use "!dwt --mapMeta all" first.' };
+      return { error:'No map metadata found. Use "!fts --mapMeta all" first.' };
     }
     var mapKey = mapKeyFromMeta(meta);
     if(!mapKey){
@@ -1391,7 +1391,7 @@ var dwt_geo = dwt_geo || (function () {
     try{
       sendPing(left, top, pageid, null, true);
     }catch(e){
-      log('dwt_geo mapGotoPoint sendPing err: '+e);
+      log('fts_geo mapGotoPoint sendPing err: '+e);
     }
 
     // No GM whisper here; map recenters silently.
@@ -1406,12 +1406,12 @@ var dwt_geo = dwt_geo || (function () {
       return { error:'Only the gm may use --mapGotoRoute.' };
     }
     if(!raw){
-      return { error:'Usage: !dwt --geo goto route <route name>.' };
+      return { error:'Usage: !fts --geo goto route <route name>.' };
     }
 
     // Support optional index selection for direct point jumps (used by route bullets).
     // Accepted form:
-    //   "!dwt --geo goto route The Old Road 2"
+    //   "!fts --geo goto route The Old Road 2"
     var name  = raw;
     var index = 0;
 
@@ -1426,7 +1426,7 @@ var dwt_geo = dwt_geo || (function () {
 
     var meta = readMapMetaFromMule();
     if(!meta){
-      return { error:'No map metadata found. Use "!dwt --mapMeta all" first.' };
+      return { error:'No map metadata found. Use "!fts --mapMeta all" first.' };
     }
     var mapKey = mapKeyFromMeta(meta);
     if(!mapKey){
@@ -1480,7 +1480,7 @@ var dwt_geo = dwt_geo || (function () {
     try{
       sendPing(left, top, pageid, null, true);
     }catch(e){
-      log('dwt_geo mapGotoRoute sendPing err: '+e);
+      log('fts_geo mapGotoRoute sendPing err: '+e);
     }
 
     // No GM whisper here; map recenters silently.
@@ -1494,12 +1494,12 @@ var dwt_geo = dwt_geo || (function () {
     }
     name = String(name||'').trim();
     if(!name){
-      return { error:'Usage: !dwt --geo prev routepoint/--mapRouteNext <route name>.' };
+      return { error:'Usage: !fts --geo prev routepoint/--mapRouteNext <route name>.' };
     }
 
     var meta = readMapMetaFromMule();
     if(!meta){
-      return { error:'No map metadata found. Use "!dwt --mapMeta all" first.' };
+      return { error:'No map metadata found. Use "!fts --mapMeta all" first.' };
     }
     var mapKey = mapKeyFromMeta(meta);
     if(!mapKey){
@@ -1558,7 +1558,7 @@ var dwt_geo = dwt_geo || (function () {
     try{
       sendPing(left, top, pageid, null, true);
     }catch(e){
-      log('dwt_geo stepRouteForGM sendPing err: '+e);
+      log('fts_geo stepRouteForGM sendPing err: '+e);
     }
 
     // No GM whisper here; stepping is silent.
@@ -1573,12 +1573,12 @@ var dwt_geo = dwt_geo || (function () {
       return { error:'Only the gm may use --renMapPoint.' };
     }
     if(!raw){
-      return { error:'Usage: !dwt --renMapPoint <current name|selected> <new name>.' };
+      return { error:'Usage: !fts --renMapPoint <current name|selected> <new name>.' };
     }
 
     var parts = raw.split(/\s+/);
     if(parts.length < 2){
-      return { error:'Usage: !dwt --renMapPoint <current name|selected> <new name>.' };
+      return { error:'Usage: !fts --renMapPoint <current name|selected> <new name>.' };
     }
 
     var currentName = parts[0];
@@ -1602,7 +1602,7 @@ var dwt_geo = dwt_geo || (function () {
 
     var meta = readMapMetaFromMule();
     if(!meta){
-      return { error:'No map metadata found. Use "!dwt --mapMeta all" first.' };
+      return { error:'No map metadata found. Use "!fts --mapMeta all" first.' };
     }
     var mapKey = mapKeyFromMeta(meta);
     if(!mapKey){
@@ -1634,7 +1634,7 @@ var dwt_geo = dwt_geo || (function () {
     target.name = newName;
     syncPointsToMule();
 
-    sendChat('dwt','/w gm Renamed map point "'+esc(oldName)+'" to "'+esc(newName)+'" on "'+esc(mapKey)+'".');
+    sendChat('fts','/w gm Renamed map point "'+esc(oldName)+'" to "'+esc(newName)+'" on "'+esc(mapKey)+'".');
     return { changed:false };
   }
 
@@ -1646,12 +1646,12 @@ var dwt_geo = dwt_geo || (function () {
       return { error:'Only the gm may use --renRoute.' };
     }
     if(!raw){
-      return { error:'Usage: !dwt --renRoute <current name> <new name>.' };
+      return { error:'Usage: !fts --renRoute <current name> <new name>.' };
     }
 
     var parts = raw.split(/\s+/);
     if(parts.length < 2){
-      return { error:'Usage: !dwt --renRoute <current name> <new name>.' };
+      return { error:'Usage: !fts --renRoute <current name> <new name>.' };
     }
 
     var currentName = parts[0];
@@ -1663,7 +1663,7 @@ var dwt_geo = dwt_geo || (function () {
 
     var meta = readMapMetaFromMule();
     if(!meta){
-      return { error:'No map metadata found. Use "!dwt --mapMeta all" first.' };
+      return { error:'No map metadata found. Use "!fts --mapMeta all" first.' };
     }
     var mapKey = mapKeyFromMeta(meta);
     if(!mapKey){
@@ -1695,7 +1695,7 @@ var dwt_geo = dwt_geo || (function () {
     target.name = newName;
     syncRoutesToMule();
 
-    sendChat('dwt','/w gm Renamed route "'+esc(oldName)+'" to "'+esc(newName)+'" on "'+esc(mapKey)+'".');
+    sendChat('fts','/w gm Renamed route "'+esc(oldName)+'" to "'+esc(newName)+'" on "'+esc(mapKey)+'".');
     return { changed:false };
   }
 
@@ -1707,12 +1707,12 @@ var dwt_geo = dwt_geo || (function () {
       return { error:'Only the gm may use --renRoutePoint.' };
     }
     if(!raw){
-      return { error:'Usage: !dwt --renRoutePoint <current point name|selected> <new name>.' };
+      return { error:'Usage: !fts --renRoutePoint <current point name|selected> <new name>.' };
     }
 
     var parts = raw.split(/\s+/);
     if(parts.length < 2){
-      return { error:'Usage: !dwt --renRoutePoint <current point name|selected> <new name>.' };
+      return { error:'Usage: !fts --renRoutePoint <current point name|selected> <new name>.' };
     }
 
     var currentName = parts[0];
@@ -1736,7 +1736,7 @@ var dwt_geo = dwt_geo || (function () {
 
     var meta = readMapMetaFromMule();
     if(!meta){
-      return { error:'No map metadata found. Use "!dwt --mapMeta all" first.' };
+      return { error:'No map metadata found. Use "!fts --mapMeta all" first.' };
     }
     var mapKey = mapKeyFromMeta(meta);
     if(!mapKey){
@@ -1780,14 +1780,14 @@ var dwt_geo = dwt_geo || (function () {
 
     syncRoutesToMule();
 
-    sendChat('dwt','/w gm Renamed route point "'+esc(oldLabel)+'" to "'+esc(newName)+'" in route "'+esc(route.name||'')+'" on "'+esc(mapKey)+'".');
+    sendChat('fts','/w gm Renamed route point "'+esc(oldLabel)+'" to "'+esc(newName)+'" in route "'+esc(route.name||'')+'" on "'+esc(mapKey)+'".');
     return { changed:false };
   }
 
 
 
   /* ========== Standardized Geo Command Surface ========== */
-  /* !dwt --geo <action> <target> <value...> */
+  /* !fts --geo <action> <target> <value...> */
 
   function _geoError(msg){
     return { error: String(msg||'Geo command error.') };
@@ -1810,7 +1810,7 @@ var dwt_geo = dwt_geo || (function () {
     }
     var meta = readMapMetaFromMule();
     if(!meta){
-      return _geoError('No map metadata found. Use "!dwt --mapMeta all" first.');
+      return _geoError('No map metadata found. Use "!fts --mapMeta all" first.');
     }
     var mapKey = mapKeyFromMeta(meta) || '(unknown)';
     var S = ensureGeoState();
@@ -1838,7 +1838,7 @@ var dwt_geo = dwt_geo || (function () {
       html += '</div>';
     }
     html += '</div>';
-    sendChat('dwt','/w gm '+html);
+    sendChat('fts','/w gm '+html);
     return { changed:false };
   }
 
@@ -1850,7 +1850,7 @@ var dwt_geo = dwt_geo || (function () {
 
     var meta = readMapMetaFromMule();
     if(!meta){
-      return _geoError('No map metadata found. Use "!dwt --mapMeta all" first.');
+      return _geoError('No map metadata found. Use "!fts --mapMeta all" first.');
     }
     var mapKey = mapKeyFromMeta(meta);
     if(!mapKey){
@@ -1868,7 +1868,7 @@ var dwt_geo = dwt_geo || (function () {
       if(cur && cur.mapKey === mapKey && cur.routeKey){
         routeKey = cur.routeKey;
       }else{
-        return _geoError('No current route is set. Use "!dwt --geo goto route <routeName>" or start a route.');
+        return _geoError('No current route is set. Use "!fts --geo goto route <routeName>" or start a route.');
       }
     }
 
@@ -1935,7 +1935,7 @@ var dwt_geo = dwt_geo || (function () {
     }
 
     var removedLabel = (removed && (removed.label || removed.name)) || ('Point '+(idx+1));
-    sendChat('dwt','/w gm Deleted route point "'+esc(removedLabel)+'" from route "'+esc(route.name||'')+'".');
+    sendChat('fts','/w gm Deleted route point "'+esc(removedLabel)+'" from route "'+esc(route.name||'')+'".');
     return { changed:false };
   }
 
@@ -1947,7 +1947,7 @@ var dwt_geo = dwt_geo || (function () {
 
     var meta = readMapMetaFromMule();
     if(!meta){
-      return _geoError('No map metadata found. Use "!dwt --mapMeta all" first.');
+      return _geoError('No map metadata found. Use "!fts --mapMeta all" first.');
     }
     var mapKey = mapKeyFromMeta(meta);
     if(!mapKey){
@@ -1982,7 +1982,7 @@ var dwt_geo = dwt_geo || (function () {
         route = routesForMap[routeKey];
       }
       if(!route){
-        return _geoError('No current route is set. Use "!dwt --geo goto route <routeName>" first.');
+        return _geoError('No current route is set. Use "!fts --geo goto route <routeName>" first.');
       }
     }
 
@@ -2031,7 +2031,7 @@ var dwt_geo = dwt_geo || (function () {
     try{
       sendPing(left, top, pageid, null, true);
     }catch(e){
-      log('dwt_geo geoGotoRoutePoint sendPing err: '+e);
+      log('fts_geo geoGotoRoutePoint sendPing err: '+e);
     }
 
     return { changed:false };
@@ -2045,7 +2045,7 @@ var dwt_geo = dwt_geo || (function () {
 
     var meta = readMapMetaFromMule();
     if(!meta){
-      return _geoError('No map metadata found. Use "!dwt --mapMeta all" first.');
+      return _geoError('No map metadata found. Use "!fts --mapMeta all" first.');
     }
     var mapKey = mapKeyFromMeta(meta);
     if(!mapKey){
@@ -2055,7 +2055,7 @@ var dwt_geo = dwt_geo || (function () {
     var S = ensureGeoState();
     var cur = S.currentRoute[pid];
     if(!cur || cur.mapKey !== mapKey || !cur.routeKey){
-      return _geoError('No current route is set. Use "!dwt --geo goto route <routeName>" first.');
+      return _geoError('No current route is set. Use "!fts --geo goto route <routeName>" first.');
     }
 
     var routesForMap = getRoutesForMap(S, mapKey);
@@ -2081,7 +2081,7 @@ var dwt_geo = dwt_geo || (function () {
     try{
       sendPing(left, top, pageid, null, true);
     }catch(e){
-      log('dwt_geo geoPrevNextRoutePoint sendPing err: '+e);
+      log('fts_geo geoPrevNextRoutePoint sendPing err: '+e);
     }
 
     return { changed:false };
@@ -2091,7 +2091,7 @@ var dwt_geo = dwt_geo || (function () {
     var pid = args.pid;
     var expr = String(args.val||'').trim();
     if(!expr){
-      return _geoError('Usage: !dwt --geo <action> <target> <value...>');
+      return _geoError('Usage: !fts --geo <action> <target> <value...>');
     }
 
     var parts = _splitArgs(expr);
@@ -2106,7 +2106,7 @@ var dwt_geo = dwt_geo || (function () {
       if(target === 'locations'){
         return _geoListLocations({ pid:pid, val:'' });
       }
-      return _geoError('Usage: !dwt --geo list routes|locations');
+      return _geoError('Usage: !fts --geo list routes|locations');
     }
 
     // start route <routeName>
@@ -2149,7 +2149,7 @@ var dwt_geo = dwt_geo || (function () {
       // If 3+ parts: could be routeName + selector, or selector only.
       // We treat the last token as selector, and the preceding tokens (from 2..n-2) as optional routeName.
       if(parts.length < 3){
-        return _geoError('Usage: !dwt --geo goto routepoint <routeName (optional)> <index|pointName>');
+        return _geoError('Usage: !fts --geo goto routepoint <routeName (optional)> <index|pointName>');
       }
       var selector = parts[parts.length-1];
       var routeMaybe = '';
@@ -2182,7 +2182,7 @@ var dwt_geo = dwt_geo || (function () {
     // delete routepoint <routeName (optional)> <index|pointName>
     if(action === 'delete' && target === 'routepoint'){
       if(parts.length < 3){
-        return _geoError('Usage: !dwt --geo delete routepoint <routeName (optional)> <index|pointName>');
+        return _geoError('Usage: !fts --geo delete routepoint <routeName (optional)> <index|pointName>');
       }
       var sel = parts[parts.length-1];
       var rMaybe = '';
@@ -2210,7 +2210,7 @@ var dwt_geo = dwt_geo || (function () {
       return handleRenRoutePoint({ pid:pid, val:restP });
     }
 
-    return _geoError('Unknown geo command. Use: !dwt --geo list routes|locations');
+    return _geoError('Unknown geo command. Use: !fts --geo list routes|locations');
   }
 
   /* ========== Core Integration (Help + Log Card) ========== */
@@ -2230,8 +2230,8 @@ var dwt_geo = dwt_geo || (function () {
 
     if(h && h.id){
       var url       = 'https://journal.roll20.net/handout/'+h.id;
-      var actionAttrs = (RT.dwt && typeof RT.dwt.actionLinkAttrs === 'function')
-        ? RT.dwt.actionLinkAttrs(url)
+      var actionAttrs = (RT.fts && typeof RT.fts.actionLinkAttrs === 'function')
+        ? RT.fts.actionLinkAttrs(url)
         : ' role="button" href="'+(v.hrefAttr ? v.hrefAttr(url) : url)+'"'+(btnStyle ? (' style="'+btnStyle+'"') : '');
       html += '<a'+actionAttrs+' target="_blank">Show Map Locations and Routes</a>';
     }
@@ -2242,51 +2242,51 @@ var dwt_geo = dwt_geo || (function () {
 
   function registerWithCore(){
     try{
-      if(RT.dwt && !_registered && typeof RT.dwt.registerCommands === 'function'){
+      if(RT.fts && !_registered && typeof RT.fts.registerCommands === 'function'){
         
-RT.dwt.registerCommands({
+RT.fts.registerCommands({
   'geo': {
     access:'gm',
     handler:handleGeoCommand
   }
 });
 
-if(typeof RT.dwt.addLogCard === 'function'){
-          RT.dwt.addLogCard(25, function(pid){
+if(typeof RT.fts.addLogCard === 'function'){
+          RT.fts.addLogCard(25, function(pid){
             try{
               return renderConfigHTML(pid);
             }catch(e){
-              log('dwt_geo logCard err: '+e);
+              log('fts_geo logCard err: '+e);
               return '';
             }
           });
         }
 
-        if(typeof RT.dwt.addHelpSection === 'function'){
+        if(typeof RT.fts.addHelpSection === 'function'){
           
-if(typeof RT.dwt.addHelpSection === 'function'){
-  RT.dwt.addHelpSection(25, 'Geolocation and Routes', function(){
+if(typeof RT.fts.addHelpSection === 'function'){
+  RT.fts.addHelpSection(25, 'Geolocation and Routes', function(){
     return [
       'Routes:', '',
-      '!dwt --geo list routes',
-      '!dwt --geo start route <routeName>',
-      '!dwt --geo set routepoint <pointName>',
-      '!dwt --geo end route',
-      '!dwt --geo goto route <routeName>',
-      '!dwt --geo goto routepoint <routeName (current if omitted)> <index|pointName>',
-      '!dwt --geo prev routepoint',
-      '!dwt --geo next routepoint',
-      '!dwt --geo delete route <routeName>',
-      '!dwt --geo delete routepoint <routeName (current if omitted)> <index|pointName>',
-      '!dwt --geo rename route <oldName> <newName>',
-      '!dwt --geo rename routepoint <oldName> <newName>',
+      '!fts --geo list routes',
+      '!fts --geo start route <routeName>',
+      '!fts --geo set routepoint <pointName>',
+      '!fts --geo end route',
+      '!fts --geo goto route <routeName>',
+      '!fts --geo goto routepoint <routeName (current if omitted)> <index|pointName>',
+      '!fts --geo prev routepoint',
+      '!fts --geo next routepoint',
+      '!fts --geo delete route <routeName>',
+      '!fts --geo delete routepoint <routeName (current if omitted)> <index|pointName>',
+      '!fts --geo rename route <oldName> <newName>',
+      '!fts --geo rename routepoint <oldName> <newName>',
       '',
       'Locations:', '',
-      '!dwt --geo list locations',
-      '!dwt --geo set location <locationName>',
-      '!dwt --geo goto location <locationName>',
-      '!dwt --geo delete location <locationName>',
-      '!dwt --geo rename location <oldName> <newName>'
+      '!fts --geo list locations',
+      '!fts --geo set location <locationName>',
+      '!fts --geo goto location <locationName>',
+      '!fts --geo delete location <locationName>',
+      '!fts --geo rename location <oldName> <newName>'
     ];
   });
 }
@@ -2295,7 +2295,7 @@ if(typeof RT.dwt.addHelpSection === 'function'){
         _registered = true;
       }
     }catch(e){
-      log('dwt_geo registerWithCore err: '+e);
+      log('fts_geo registerWithCore err: '+e);
     }
   }
 
@@ -2316,27 +2316,27 @@ if(typeof RT.dwt.addHelpSection === 'function'){
 
     if(!_startupRegistered){
       try{
-        if(RT.dwt && typeof RT.dwt.registerStartup === 'function'){
-          RT.dwt.registerStartup('geo', moduleStartup);
+        if(RT.fts && typeof RT.fts.registerStartup === 'function'){
+          RT.fts.registerStartup('geo', moduleStartup);
           _startupRegistered = true;
         }
       }catch(e){
-        log('dwt_geo startup registration err: '+e);
+        log('fts_geo startup registration err: '+e);
       }
     }
 
     if(!_startupRegistered){
       try{
-        RT.dwtQ = RT.dwtQ || [];
-        RT.dwtQ.push(function(dwt){
-          if(!_startupRegistered && dwt && typeof dwt.registerStartup === 'function'){
-            dwt.registerStartup('geo', moduleStartup);
+        RT.ftsQ = RT.ftsQ || [];
+        RT.ftsQ.push(function(fts){
+          if(!_startupRegistered && fts && typeof fts.registerStartup === 'function'){
+            fts.registerStartup('geo', moduleStartup);
             _startupRegistered = true;
           }
           registerWithCore();
         });
       }catch(e){
-        log('dwt_geo dwtQ err: '+e);
+        log('fts_geo ftsQ err: '+e);
       }
     }
   }
@@ -2349,7 +2349,7 @@ if(typeof RT.dwt.addHelpSection === 'function'){
 
 on('ready', function(){
   'use strict';
-  try{ dwt_geo.init(); }catch(e){ log('dwt_geo init err: '+e); }
+  try{ fts_geo.init(); }catch(e){ log('fts_geo init err: '+e); }
 });
 
 
@@ -2359,7 +2359,7 @@ on('chat:message', function(msg){
   try{
     if(msg.type!=='api') return;
     var content = String(msg.content||'').trim();
-    if(content.indexOf('!dwt') !== 0) return;
+    if(content.indexOf('!fts') !== 0) return;
     var lower = content.toLowerCase();
     // Capture selection for geo commands that require a selected token.
 // (start route, set routepoint, set location)
@@ -2377,14 +2377,14 @@ if(!(geoTail.indexOf('start route')===0 ||
   return;
 }
 
-    if(!state.dwt){ state.dwt = {}; }
-    if(!state.dwt.geo){
-      state.dwt.geo = { routes:{}, points:{}, currentRoute:{}, lastSelection:{} };
+    if(!state.fts){ state.fts = {}; }
+    if(!state.fts.geo){
+      state.fts.geo = { routes:{}, points:{}, currentRoute:{}, lastSelection:{} };
     }else{
-      if(!state.dwt.geo.routes){ state.dwt.geo.routes = {}; }
-      if(!state.dwt.geo.points){ state.dwt.geo.points = {}; }
-      if(!state.dwt.geo.currentRoute){ state.dwt.geo.currentRoute = {}; }
-      if(!state.dwt.geo.lastSelection){ state.dwt.geo.lastSelection = {}; }
+      if(!state.fts.geo.routes){ state.fts.geo.routes = {}; }
+      if(!state.fts.geo.points){ state.fts.geo.points = {}; }
+      if(!state.fts.geo.currentRoute){ state.fts.geo.currentRoute = {}; }
+      if(!state.fts.geo.lastSelection){ state.fts.geo.lastSelection = {}; }
     }
 
     var sels = msg.selected || [];
@@ -2394,10 +2394,10 @@ if(!(geoTail.indexOf('start route')===0 ||
       if(!s || !s._id || !s._type) continue;
       out.push({ _id:s._id, _type:s._type });
     }
-    state.dwt.geo.lastSelection[msg.playerid || ''] = out;
+    state.fts.geo.lastSelection[msg.playerid || ''] = out;
 
   }catch(e){
-    log('dwt_geo selection listener err: '+e);
+    log('fts_geo selection listener err: '+e);
   }
 });
 

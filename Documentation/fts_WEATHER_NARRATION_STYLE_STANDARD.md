@@ -1,12 +1,12 @@
-# DWT Weather Narration Style Standard
+# FTS Weather Narration Style Standard
 
-This document defines the target prose style for live weather narration in DWT.
+This document defines the target prose style for live weather narration in FTS.
 
 Source references:
 
-- [dwt_QUIP_CANONICAL_STANDARD.md](V:\Programs\Git Repository\DWT\Documentation\dwt_QUIP_CANONICAL_STANDARD.md)
-- [dwt_WEATHER_NARRATIVE_PERMUTATIONS.md](V:\Programs\Git Repository\DWT\Documentation\dwt_WEATHER_NARRATIVE_PERMUTATIONS.md)
-- [dwt_WEATHER_NARRATIVE_REVIEW_PACKET.md](V:\Programs\Git Repository\DWT\Documentation\dwt_WEATHER_NARRATIVE_REVIEW_PACKET.md)
+- [fts_QUIP_CANONICAL_STANDARD.md](V:\Programs\Git Repository\FTS\Documentation\fts_QUIP_CANONICAL_STANDARD.md)
+- [fts_WEATHER_NARRATIVE_PERMUTATIONS.md](V:\Programs\Git Repository\FTS\Documentation\fts_WEATHER_NARRATIVE_PERMUTATIONS.md)
+- [fts_WEATHER_NARRATIVE_REVIEW_PACKET.md](V:\Programs\Git Repository\FTS\Documentation\fts_WEATHER_NARRATIVE_REVIEW_PACKET.md)
 
 ## Purpose
 
