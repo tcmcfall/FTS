@@ -4517,6 +4517,7 @@
         refreshChatView(pid);
         return;
       }
+      clearSession(pid);
       setView(pid, 'bind');
       clearStatus(pid);
       clearCachedSelection(pid);
