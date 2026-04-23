@@ -1,14 +1,43 @@
+    var _ftsCoreSyncRoot = (typeof globalThis!=='undefined') ? globalThis
+                         : (typeof window!=='undefined')     ? window
+                         : (typeof self!=='undefined')       ? self
+                         : (typeof global!=='undefined')     ? global
+                         : this;
+
+    // Page-change handling is delegated into core once it has initialized.
+    try{
+      on('change:campaign:playerpageid', function(obj, prev){
+        try{
+          if(_ftsCoreSyncRoot.RT && _ftsCoreSyncRoot.RT.fts && typeof _ftsCoreSyncRoot.RT.fts.autoOpenCampaignMenuForPageChange==='function'){
+            _ftsCoreSyncRoot.RT.fts.autoOpenCampaignMenuForPageChange('ribbon', {
+              campaign: (typeof Campaign === 'function') ? Campaign() : null
+            });
+          }
+        }catch(e2){ log('fts core autosync playerpageid err: '+e2); }
+      });
+      on('change:campaign:playerspecificpages', function(obj, prev){
+        try{
+          if(_ftsCoreSyncRoot.RT && _ftsCoreSyncRoot.RT.fts && typeof _ftsCoreSyncRoot.RT.fts.autoOpenCampaignMenuForPageChange==='function'){
+            _ftsCoreSyncRoot.RT.fts.autoOpenCampaignMenuForPageChange('split', {
+              campaign: (typeof Campaign === 'function') ? Campaign() : null,
+              prev: prev || {}
+            });
+          }
+        }catch(e3){ log('fts core autosync playerspecificpages err: '+e3); }
+      });
+    }catch(e1){}
+
 // name:        fts_core.js
 // version:     0.2.0-alpha.1
 // description: unified Fantasy Trade Simulator shell: registry/router/help & unified Campaign Log, palette owner.
 // depends:     Meta-Toolbox (APILogic + Muler) : https://wiki.roll20.net/Meta-Toolbox
-// provides:    !fts (unified panel), !fts --help, !fts --core set palette <value> [sc], fts.addLogCard(...), fts.cssVars() for modules
+// provides:    !fts (unified panel), !fts --help, !fts --core set palette <value>, fts.addLogCard(...), fts.cssVars() for modules
 // author:      tcm (AI-assisted)
 // Semantic Versioning (SemVer) Policy:
 // - FTS uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
 // - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
-// - Increment PATCH for non-breaking bug fixes.
-// - Increment MINOR for new non-breaking functionality.
+// - Increment PATCH for backward-compatible bug fixes.
+// - Increment MINOR for new backward-compatible functionality.
 // - Increment MAJOR only when the public API becomes stable and/or incompatible breaking changes are introduced.
 // - Pre-release labels such as alpha, beta, or rc mark unstable builds and sort lower than the matching normal release.
 // - Once a version is released, its contents must not be changed; further edits require a new version.
@@ -26,18 +55,13 @@
 
   var VERSION   = '0.2.0-alpha.1';
   var CORE_MULE = 'fts_mule';
-  var HELP_HANDOUT_NAME = 'FTS Help';
-  var SCRIPTCARDS_THEME_LABEL_ACTIVE = 'fts_palette_active';
-  var SCRIPTCARDS_THEME_LABEL_PREFIX = 'fts_palette_';
 
   var fts = { VERSION: VERSION, COMMANDS:{}, HELP_SECTIONS:[], LOG_CARDS:[] };
 
   function ensureCoreState(){
     if (!root.state) root.state = {};
     if (!root.state.fts) root.state.fts = {};
-    if (!root.state.fts.ui) root.state.fts.ui = { palette: 'parchment', scriptcardTheme: '' };
-    if (!root.state.fts.ui.palette) root.state.fts.ui.palette = 'parchment';
-    if (typeof root.state.fts.ui.scriptcardTheme !== 'string') root.state.fts.ui.scriptcardTheme = '';
+    if (!root.state.fts.ui) root.state.fts.ui = { palette: 'parchment' };
     return root.state.fts;
   }
   var STARTUP_HOOKS = [];
@@ -282,6 +306,11 @@
         return root.RT.fts.mapMetaSyncActivePage(pid, { pageId: pageId });
       }
     }catch(e){}
+    try{
+      if(root.fts_mapMeta && typeof root.fts_mapMeta.syncPageMeta === 'function'){
+        return root.fts_mapMeta.syncPageMeta(pid, { pageId: pageId });
+      }
+    }catch(e2){}
     return null;
   }
 
@@ -312,12 +341,12 @@
       try{ runStartupHooks(opts.reason || 'command'); }catch(e3){ log('fts core runStartupHooks ['+(opts.reason||'menu')+'] err: '+e3); }
     }
     try{ syncCampaignContextForPlayer(pids[0], { pageId: opts.pageId }); }catch(e4){ log('fts core context sync err: '+e4); }
-    if(opts.refreshMapRecords){
+    if(opts.refreshGeo){
       try{
-        if(root.RT && root.RT.fts_mapMeta && typeof root.RT.fts_mapMeta.refreshActiveMapRecords === 'function'){
-          root.RT.fts_mapMeta.refreshActiveMapRecords({ pageId: opts.pageId });
+        if(root.fts_geo && typeof root.fts_geo.refreshGeoForActivePage === 'function'){
+          root.fts_geo.refreshGeoForActivePage();
         }
-      }catch(e5){ log('fts core mapMeta route/point refresh err: '+e5); }
+      }catch(e5){ log('fts core geo page refresh err: '+e5); }
     }
     for(var j=0;j<pids.length;j++){
       whisper(pids[j], campaignLogPanel(pids[j], opts));
@@ -348,14 +377,14 @@
       }
       for(var pageKey in grouped){
         if(grouped.hasOwnProperty(pageKey)){
-          whisperCampaignMenuBatch(grouped[pageKey], { pageId: pageKey, refreshMapRecords:true });
+          whisperCampaignMenuBatch(grouped[pageKey], { pageId: pageKey });
         }
       }
       return;
     }
 
     var targets = ribbonPlayerIds(nowPSP).concat(gmPlayerIds());
-    whisperCampaignMenuBatch(targets, { pageId: ribbonPageId, refreshMapRecords:true });
+    whisperCampaignMenuBatch(targets, { pageId: ribbonPageId, refreshGeo:true });
   }
 
   function addHelpSection(order, title, linesFn){
@@ -364,13 +393,6 @@
   }
   function registerCommands(map){
     map=map||{}; for (var k in map){ if(map.hasOwnProperty(k)){ fts.COMMANDS[String(k||'').toLowerCase()] = map[k]; } }
-  }
-  function parseCommandSegment(segment){
-    var text = String(segment || '').trim();
-    if(!text) return null;
-    var m = text.match(/^([A-Za-z0-9]+)\b(.*)$/);
-    if(!m) return null;
-    return { key:String(m[1] || '').toLowerCase(), val:String(m[2] || '').trim() };
   }
   var PALETTES = {
     none: null,
@@ -403,231 +425,6 @@
       btnBg:'#a73f55', btnText:'#fff7f8', btnBorder:'#7f2e3f'
     }
   };
-  var PALETTE_NAMES = ['none','dark','mint','parchment','powder','rosebud'];
-
-  function paletteCommandSyntax(){
-    return '!fts --core set palette <'+PALETTE_NAMES.join('|')+'> [sc]';
-  }
-
-  function paletteSelectionQueryCommand(){
-    return '!fts --core set palette ?{Palette|'+PALETTE_NAMES.join('|')+'} ?{Apply matching ScriptCard theme?|Yes,sc|No,}';
-  }
-
-  function scriptCardsAvailability(){
-    try{
-      if(root.API_Meta && (root.API_Meta.ScriptCards || root.API_Meta.Scriptcards)){
-        return { available:true, status:'available', reason:'API_Meta marker detected.' };
-      }
-    }catch(e){}
-    try{
-      if(root.ScriptCards || root.Scriptcards){
-        return { available:true, status:'available', reason:'Root ScriptCards object detected.' };
-      }
-    }catch(e2){}
-    try{
-      if(root.state && (root.state.ScriptCards || root.state.Scriptcards)){
-        return { available:true, status:'available', reason:'ScriptCards state detected.' };
-      }
-    }catch(e3){}
-    try{
-      if((findObjs({_type:'character', name:'ScriptCards_Storage'}) || [])[0]){
-        return { available:true, status:'available', reason:'ScriptCards_Storage character detected.' };
-      }
-    }catch(e4){}
-    try{
-      if((findObjs({_type:'character', name:'ScriptCards_Triggers'}) || [])[0]){
-        return { available:true, status:'available', reason:'ScriptCards_Triggers character detected.' };
-      }
-    }catch(e5){}
-    return { available:false, status:'unverified', reason:'No ScriptCards runtime markers detected.' };
-  }
-
-  function paletteThemeData(name){
-    name = String(name || '').trim().toLowerCase();
-    var pal = PALETTES[name];
-    if(pal){
-      return {
-        key: name,
-        bg: pal.bg,
-        fg: pal.fg,
-        border: pal.border,
-        tableBorder: pal.tableBorder,
-        cell: pal.cell,
-        card: pal.card,
-        accent: pal.accent,
-        accentText: pal.accentText || pal.bg,
-        btnBg: pal.btnBg || 'transparent',
-        btnText: pal.btnText || pal.accent,
-        btnBorder: pal.btnBorder || pal.accent,
-        today: pal.today || '',
-        todayText: pal.todayText || pal.fg,
-        note: pal.note || '',
-        subtle: pal.subtle || pal.fg
-      };
-    }
-    return {
-      key: 'none',
-      bg: '#ffffff',
-      fg: '#111111',
-      border: '#d0d0d0',
-      tableBorder: '#d0d0d0',
-      cell: '#ffffff',
-      card: '#f7f7f7',
-      accent: '#f1f1f1',
-      accentText: '#111111',
-      btnBg: '#ffffff',
-      btnText: '#ba2e68',
-      btnBorder: '#d0d0d0',
-      today: '',
-      todayText: '',
-      note: '',
-      subtle: ''
-    };
-  }
-
-  function scriptCardThemeSettings(name){
-    var pal = paletteThemeData(name);
-    return {
-      titleFontFace: 'Georgia',
-      titleFontSize: '17px',
-      subtitleFontFace: 'Georgia',
-      subtitleFontSize: '13px',
-      bodyFontFace: 'Georgia',
-      bodyFontSize: '14px',
-      buttonFontFace: 'Georgia',
-      buttonFontSize: '13px',
-      titleCardBackground: pal.accent,
-      titleFontColor: pal.accentText,
-      subtitleFontColor: pal.accentText,
-      tableBGcolor: pal.bg,
-      tableBorder: '3px solid '+pal.border+';',
-      titleCardBottomBorder: '1px solid '+pal.tableBorder+';',
-      tableBorderRadius: '0px;',
-      tableShadow: '0px 0px 0px 0px transparent;',
-      oddRowBackground: pal.cell,
-      oddRowFontColor: pal.fg,
-      evenRowBackground: pal.card,
-      evenRowFontColor: pal.fg,
-      buttonBackground: pal.btnBg,
-      buttonTextColor: pal.btnText,
-      buttonBorderColor: pal.btnBorder,
-      usersetting0: pal.key,
-      usersetting1: pal.today || '',
-      usersetting2: pal.todayText || '',
-      usersetting3: pal.note || '',
-      usersetting4: pal.subtle || '',
-      usersetting5: pal.bg,
-      usersetting6: pal.fg,
-      usersetting7: pal.border,
-      usersetting8: pal.tableBorder,
-      usersetting9: pal.card
-    };
-  }
-
-  function buildScriptCardThemeMacro(name){
-    var pal = paletteThemeData(name);
-    var settings = scriptCardThemeSettings(pal.key);
-    var lines = [
-      '!scriptcard {{',
-      '  --/|FTS ScriptCards theme: '+pal.key
-    ];
-    Object.keys(settings).forEach(function(k){
-      lines.push('  --#'+k+'|'+String(settings[k] || ''));
-    });
-    lines.push('  --Ssettings|'+pal.key);
-    lines.push('  --Ssettings|'+SCRIPTCARDS_THEME_LABEL_PREFIX+pal.key);
-    lines.push('  --Ssettings|'+SCRIPTCARDS_THEME_LABEL_ACTIVE);
-    lines.push('  --#hideCard|1');
-    lines.push('  --X|');
-    lines.push('}}');
-    return lines.join('\n');
-  }
-
-  function syncScriptCardThemesToMule(character, opts){
-    if(!character) return { available:false, status:'unverified', reason:'No mule character.' };
-    opts = opts || {};
-    var palette = String(opts.palette || currentPalette() || 'none').trim().toLowerCase();
-    var activeTheme = String(opts.scriptcardTheme || '').trim().toLowerCase();
-    var availability = opts.availability || scriptCardsAvailability();
-    var themes = {};
-
-    for(var i=0;i<PALETTE_NAMES.length;i++){
-      var key = PALETTE_NAMES[i];
-      themes[key] = {
-        labels: [key, SCRIPTCARDS_THEME_LABEL_PREFIX+key],
-        macro: buildScriptCardThemeMacro(key)
-      };
-    }
-
-    upsertAbility(character, 'scriptcards', JSON.stringify({
-      version: VERSION,
-      palette: palette,
-      activeTheme: activeTheme,
-      availability: availability.status,
-      reason: availability.reason,
-      activeLabel: SCRIPTCARDS_THEME_LABEL_ACTIVE,
-      themes: themes
-    }, null, 2));
-
-    setAttrDirect(character, 'scriptcard_theme', activeTheme);
-    setAttrDirect(character, 'scriptcards_status', availability.status);
-    return availability;
-  }
-
-  function applyScriptCardThemeForPalette(name){
-    var pal = paletteThemeData(name);
-    var availability = scriptCardsAvailability();
-    var themeMacro = buildScriptCardThemeMacro(pal.key);
-
-    try{
-      sendChat('fts', themeMacro);
-      if(!availability.available){
-        return {
-          applied:false,
-          availability:availability,
-          note:'Palette updated and a best-effort ScriptCards theme apply was sent, but ScriptCards availability could not be confirmed. Matching theme entries were refreshed inside fts_mule -> scriptcards.'
-        };
-      }
-      return { applied:true, availability:availability };
-    }catch(e){
-      log('fts core ScriptCards apply err: '+e);
-      return {
-        applied:false,
-        availability:availability,
-        note:'Palette updated, but applying the matching ScriptCards theme failed gracefully: '+e
-      };
-    }
-  }
-
-  function parsePaletteSelection(value, requireSetKeyword){
-    var raw = String(value || '').trim();
-    if(requireSetKeyword){
-      var m = raw.match(/^set\s+palette(?:\s+(.+))?$/i);
-      if(!m){
-        return { error:'Unknown core command. Use: '+paletteCommandSyntax() };
-      }
-      raw = String(m[1] || '').trim();
-    }
-
-    if(!raw){
-      return { error:'Missing palette value. Use: '+paletteCommandSyntax() };
-    }
-
-    var parts = raw.split(/\s+/);
-    var palette = String(parts.shift() || '').trim().toLowerCase();
-    var applyScriptCards = false;
-
-    if(parts.length){
-      if(parts.length === 1 && /^sc$/i.test(parts[0])){
-        applyScriptCards = true;
-      }else{
-        return { error:'Unknown palette switch. Use: '+paletteCommandSyntax() };
-      }
-    }
-
-    return { palette:palette, applyScriptCards:applyScriptCards };
-  }
-
   function currentPalette(){ var S=ensureCoreState(); return (S.ui && S.ui.palette) || 'none'; }
 
   function cssVars(){
@@ -691,7 +488,7 @@
       dayLine: dayLine,
       dot: dot,
 
-      // Help/Handout styles (palette-aware, used by the FTS Help handout)
+      // Help/Handout styles (palette-aware, used by the Fantasy Trade Simulator Help handout)
       helpColsTable: 'width:100%;border-collapse:separate;border-spacing:10px 0;',
       helpCol: 'width:50%;vertical-align:top;',
       helpSingleCol: 'width:100%;max-width:720px;margin:0 auto;',
@@ -736,16 +533,13 @@
     fts.LOG_CARDS.sort(function(a,b){ return a.order - b.order; });
   }
 
-  function helpPanel(pid, opts){
-    opts = opts || {};
+  function helpPanel(pid){
     var v = cssVars();
-    var html = (opts.includeTitle === false)
-      ? '<div style="' + (v.container || '') + '">'
-      : shell(HELP_HANDOUT_NAME);
+    var html = shell('Fantasy Trade Simulator Help');
 
     // Global note (ubiquitous by design; do not repeat inside each module section).
     html += '<div style="margin:6px 0 10px 0;'+(currentPalette()==='dark' ? 'opacity:0.92;' : 'opacity:0.95;')+'font-size:12.5px;">'
-         +  esc('Value inputs are fault-tolerant and normalize where stored as keys; command and switch tokens use the documented one-token forms.')
+         +  esc('Inputs are fault-tolerant, automatically normalized to lower-case with no spaces. Command switches are stackable.')
          +  '</div>';
 
     function helpKey(s){
@@ -764,15 +558,16 @@
       }
     }
 
-    // Ordering (always): Core, Calendar, Weather, Map Information, Map Records and Routes, then everything else.
+    // Ordering (always): Core, Calendar, Weather, Map Information, Geolocation and Routes, then everything else.
     var ORDER = {
       'core': 10,
       'calendar': 20,
       'weather': 30,
       'mapinformation': 40,
       'mapmeta': 40,
-      'maprecordsandroutes': 50,
-      'maprecords': 50,
+      'geolocationandroutes': 50,
+      'geolocationroutes': 50,
+      'geo': 50,
       'routes': 50
     };
     sections.sort(function(a,b){
@@ -830,8 +625,7 @@
       var raw = dropRedundantTitleLine(sec.title, sec.lines||[]);
 
       var helpCmd = '!fts --help';
-      var palCmd  = paletteCommandSyntax();
-      var palSyncCmd = '!fts --core set palette mint sc';
+      var palCmd  = '!fts --core set palette <none|dark|mint|parchment|powder|rosebud>';
 
       // Prefer actual registered commands if present.
       for(var i=0;i<raw.length;i++){
@@ -843,7 +637,6 @@
         }
         if(/^!fts\s+--help\b/i.test(line)) helpCmd = line.replace(/\s+/g,' ').trim();
         if(/^!fts\s+--core\s+set\s+palette\b/i.test(line)) palCmd = line.replace(/\s+/g,' ').trim();
-        if(/^!fts\s+--core\s+set\s+palette\s+\S+\s+sc\b/i.test(line)) palSyncCmd = line.replace(/\s+/g,' ').trim();
       }
 
       var out = '';
@@ -856,8 +649,6 @@
 
       out += renderHeading('Palette switch');
       out += renderCodeBlock(palCmd);
-      out += renderTextBlock('Add sc at the end to also apply the matching ScriptCards theme if ScriptCards is available.');
-      out += renderCodeBlock(palSyncCmd);
 
       out +=   '</div>';
       out += '</div>';
@@ -898,7 +689,7 @@
 
       if(!navCmd) navCmd = '!fts --calendar today | back | forward <value>';
       if(!backExample) backExample = '!fts --calendar back 4m';
-      if(!setCmd) setCmd = '!fts --calendar set hour|timeOfDay|day|monthOrFestival|season|year <value>';
+      if(!setCmd) setCmd = '!fts --calendar set hour|timeofday|day|month/festival|season|year <value>';
 
       var out = '';
       out += '<div style="'+v.helpSectionCard+'">';
@@ -1109,7 +900,7 @@
 
 
   function helpHandout(){
-    return findObjs({_type:'handout', name:HELP_HANDOUT_NAME})[0] || null;
+    return findObjs({_type:'handout', name:'Fantasy Trade Simulator Help'})[0] || null;
   }
 
   function upsertHelpHandout(html){
@@ -1117,13 +908,13 @@
 
     if(!h){
       h = createObj('handout', {
-        name: HELP_HANDOUT_NAME,
+        name: 'Fantasy Trade Simulator Help',
         inplayerjournals: 'all',
         controlledby: ''
       });
     } else {
       try{
-        h.set({ name:HELP_HANDOUT_NAME, inplayerjournals:'all', controlledby:'' });
+        h.set({ inplayerjournals:'all', controlledby:'' });
       }catch(e){}
     }
 
@@ -1136,7 +927,7 @@
 
   function refreshHelpHandout(pid){
     try{
-      return upsertHelpHandout(helpPanel(pid||null, { includeTitle:false }));
+      return upsertHelpHandout(helpPanel(pid||null));
     }catch(e){
       log('refreshHelpHandout err: '+e);
       return null;
@@ -1199,26 +990,13 @@
     }
   }
   function mirrorCoreToMule(){
-    var S = ensureCoreState();
-    var palette = (S.ui&&S.ui.palette)||'none';
-    var scriptcardTheme = (S.ui && typeof S.ui.scriptcardTheme === 'string') ? S.ui.scriptcardTheme : '';
+    var S = ensureCoreState(), palette = (S.ui&&S.ui.palette)||'none';
     var ch = ensureMule();
-    var availability = syncScriptCardThemesToMule(ch, {
-      palette: palette,
-      scriptcardTheme: scriptcardTheme
-    });
-    upsertAbility(ch, 'core', JSON.stringify({
-      version: VERSION,
-      palette: palette,
-      scriptcardTheme: scriptcardTheme,
-      scriptcardsStatus: availability.status
-    }));
+    upsertAbility(ch, 'core', JSON.stringify({ version: VERSION, palette: palette }));
     mergeVersionEntry(ch, 'core', VERSION);
 
     // Attributes mirror for non-Meta-Toolbox consumers.
     setAttrDirect(ch, 'palette', palette);
-    setAttrDirect(ch, 'scriptcard_theme', scriptcardTheme);
-    setAttrDirect(ch, 'scriptcards_status', availability.status);
     setAttrDirect(ch, 'version', VERSION);
     return ch;
   }
@@ -1237,7 +1015,7 @@
     }
 
     // Ensure a help handout exists and is up-to-date.
-    var helpHtml = helpPanel(pid, { includeTitle:false });
+    var helpHtml = helpPanel(pid);
     var h = null;
     try{
       if (helpHtml){
@@ -1247,9 +1025,9 @@
 
     html += '<div>';
 
-    // GM-only Set Palette control (styled like mapMeta config button). Opens sequential Roll Query dropdowns.
+    // GM-only Set Palette control (styled like mapMeta config button). Opens a Roll Query dropdown to choose a palette.
     if (isGM){
-      var paletteCmd = paletteSelectionQueryCommand();
+      var paletteCmd = '!fts --core set palette ?{Palette|none|dark|mint|parchment|powder|rosebud}';
       html += '<div><a'+actionLinkAttrs(paletteCmd)+'>Set Palette</a></div>';
     }
 
@@ -1274,65 +1052,32 @@
     return html;
   }
 
-  function applyPaletteChange(value, opts){
+  function applyPaletteChange(value){
     var S = ensureCoreState();
-    opts = opts || {};
     var p = String(value||'').trim().toLowerCase();
-    var legal = {};
-    for(var i=0;i<PALETTE_NAMES.length;i++){ legal[PALETTE_NAMES[i]] = 1; }
+    var legal = {none:1,dark:1,mint:1,parchment:1,powder:1,rosebud:1};
     if (legal[p]){
-      var changed = (String((S.ui && S.ui.palette) || 'none').toLowerCase() !== p);
       S.ui.palette = p;
-      var pid = String(opts.pid || '');
-
-      var applySC = !!opts.applyScriptCards;
-      if(applySC){
-        var scResult = applyScriptCardThemeForPalette(p);
-        if(scResult.applied){
-          if(String((S.ui && S.ui.scriptcardTheme) || '').toLowerCase() !== p){ changed = true; }
-          S.ui.scriptcardTheme = p;
-        }
-        mirrorCoreToMule();
-        if(changed){
-          try{
-            if(root.RT && root.RT.fts_mapPointWizard && typeof root.RT.fts_mapPointWizard.refresh === 'function'){
-              root.RT.fts_mapPointWizard.refresh(pid);
-            }
-          }catch(e3){
-            log('fts core palette notify mapPointWizard err: '+e3);
-          }
-        }
-        return {
-          changed: true,
-          note: scResult.note || ''
-        };
-      }
-
       mirrorCoreToMule();
-      if(changed){
-        try{
-          if(root.RT && root.RT.fts_mapPointWizard && typeof root.RT.fts_mapPointWizard.refresh === 'function'){
-            root.RT.fts_mapPointWizard.refresh(pid);
-          }
-        }catch(e4){
-          log('fts core palette notify mapPointWizard err: '+e4);
-        }
-      }
-      return {changed:changed};
+      return {changed:true};
     }
     return {error:'Unknown palette: '+p};
   }
 
   registerCommands({
     'core': { access:'player', handler:function(a){
-      var parsed = parsePaletteSelection(a.val, true);
-      if(parsed.error){ return {error:parsed.error}; }
-      return applyPaletteChange(parsed.palette, { applyScriptCards: parsed.applyScriptCards, pid: a.pid });
+      var expr = String(a.val||'').trim();
+      var m = expr.match(/^set\s+palette(?:\s+(.+))?$/i);
+      if (!m){
+        return {error:'Unknown core command. Use: !fts --core set palette <none|dark|mint|parchment|powder|rosebud>'};
+      }
+      if (!String(m[1]||'').trim()){
+        return {error:'Missing palette value. Use: !fts --core set palette <none|dark|mint|parchment|powder|rosebud>'};
+      }
+      return applyPaletteChange(m[1]);
     }},
     'palette': { access:'player', handler:function(a){
-      var parsed = parsePaletteSelection(a.val, false);
-      if(parsed.error){ return {error:parsed.error}; }
-      return applyPaletteChange(parsed.palette, { applyScriptCards: parsed.applyScriptCards, pid: a.pid });
+      return applyPaletteChange(a.val);
     }},
     // Pass-through for --calendar: do NOT echo the unified panel.
     'calendar': { access:'player', handler:function(a){
@@ -1352,12 +1097,12 @@
         //
         // Supported surface:
         //   today | back <#d/m/y> | forward <#d/m/y>
-        //   set <hour|timeOfDay|day|month|festival|monthOrFestival|season|year> <value...>
+        //   set <hour|timeofday|day|month|festival|month/festival|season|year> <value...>
         //
         // The calendar module enforces GM-only restrictions for set operations.
 
-        if (root.RT && root.RT.fts_calendar && typeof root.RT.fts_calendar._ns === 'function'){
-          root.RT.fts_calendar._ns(expr, a.pid);
+        if (root.fts_calendar && typeof root.fts_calendar._ns === 'function'){
+          root.fts_calendar._ns(expr, a.pid);
           return { changed:false };
         }
         return { error:'Calendar module missing.', changed:false };
@@ -1375,18 +1120,20 @@
 
     var pid = msg.playerid;
 
+    if (/--help(\s|$)/i.test(content)){ whisper(pid, helpPanel(pid)); return; }
+
     var parts = content.split(/\s+--/), flags = {};
     for (var i=1;i<parts.length;i++){
-      var parsed = parseCommandSegment(parts[i]);
-      if (!parsed || !parsed.key) continue;
-      flags[parsed.key] = parsed.val;
+      var m = parts[i].match(/^([A-Za-z-]+)(?:\s+(.+))?$/);
+      if (!m) continue;
+      flags[String(m[1]||'').toLowerCase()] = String(m[2]||'').trim();
     }
 
     var anyFlags = Object.keys(flags).length>0;
     var filtered={}, keys=[];
     for (var k in flags){
       if (!flags.hasOwnProperty(k)) continue;
-      if (k==='help'){ whisper(pid, helpPanel(pid)); return; }
+      if (k==='help') continue;
       if (fts.COMMANDS.hasOwnProperty(k)){ filtered[k]=flags[k]; keys.push(k); }
     }
 
@@ -1398,7 +1145,6 @@
       whisperCampaignMenuBatch([pid], {
         pageId: fts.getEffectivePageId(pid) || (function(){ try{ return String(Campaign().get('playerpageid') || ''); }catch(e){ return ''; } })(),
         runStartup: true,
-        refreshMapRecords: true,
         reason: 'command',
         msg: msg
       });
@@ -1408,16 +1154,8 @@
     for (var i2=0;i2<keys.length;i2++){
       var cmd = fts.COMMANDS[keys[i2]];
       try{
-        if(!cmd || typeof cmd.handler !== 'function'){
-          continue;
-        }
-        if(cmd && String(cmd.access || '').toLowerCase() === 'gm' && !playerIsGM(pid)){
-          whisper(pid, '<div>'+esc('Only the GM may use this command.')+'</div>');
-          continue;
-        }
         var res = cmd.handler({ pid:pid, key:keys[i2], val:filtered[keys[i2]] });
         if (res && res.error){ whisper(pid, '<div>'+esc(res.error)+'</div>'); }
-        if (res && res.note){ whisper(pid, '<div>'+esc(res.note)+'</div>'); }
         if (res && res.changed){ whisper(pid, campaignLogPanel(pid)); }
       }catch(e){ whisper(pid, '<div>Error: '+esc(e)+'</div>'); }
     }
@@ -1433,7 +1171,6 @@
       }
     }catch(e){log('ensureCampaignLogMacroForPlayer err: '+e);}
   }
-
   function ensureGlobalCampaignLogMacro(){
     try{
       // Use a real playerid (prefer a GM); empty playerid is invalid in newer sandboxes.
@@ -1501,26 +1238,26 @@
   fts.refreshHelpHandout = refreshHelpHandout;
   fts.runStartupHooks    = runStartupHooks;
   fts.autoOpenCampaignMenuForPageChange = autoOpenCampaignMenuForPageChange;
-  fts.scriptCardsAvailability = scriptCardsAvailability;
-  fts.buildScriptCardThemeMacro = buildScriptCardThemeMacro;
-  fts.applyScriptCardThemeForPalette = applyScriptCardThemeForPalette;
   fts.esc                = esc;
   fts.hrefAttr           = hrefAttr;
   fts.literal            = literal;
 
 
-  // Publish both namespace shapes used by current modules:
-  // root.RT.fts for explicit shared namespacing, and root.fts for RT = globalThis access.
+  // Publish to both root.fts and Meta-Toolbox RT.fts for consistent module registration.
+  // (Some modules register through RT.fts; core also exposes root.fts for convenience.)
   try{
     root.RT = root.RT || {};
     root.RT.fts = fts;
-    root.fts = fts;
   }catch(e){}
+
+  root.fts = fts;
+  if (root.ftsQ && root.ftsQ.length){
+    try{ for (var qi=0; qi<root.ftsQ.length; qi++){ try{ root.ftsQ[qi](fts); }catch(e){ log('ftsQ fn err: '+e);} } root.ftsQ=[]; }catch(e){ log('ftsQ fatal: '+e); }
+  }
 
   addHelpSection(999, 'Core', function(){ return [
     'Show Help:', '!fts --help',
-    'Palette switch:', paletteCommandSyntax(),
-    'Palette + ScriptCards sync:', '!fts --core set palette mint sc'
+    'Palette switch:', '!fts --core set palette <none|dark|mint|parchment|powder|rosebud>'
   ]; });
 
   on('chat:message', handleMessage);
@@ -1529,33 +1266,13 @@
     mirrorCoreToMule();
     try{ runStartupHooks('ready'); }catch(e){ log('fts core startup err: '+e); }
     try{
-      upsertHelpHandout(helpPanel(null, { includeTitle:false }));
+      upsertHelpHandout(helpPanel(null));
     }catch(e){}
     provisionBarMacros();
   });
   on('change:player:_online', function(p){
-    try{
-      if(p && p.id){
-        ensureCampaignLogMacroForPlayer(p.id);
-      }
-    }catch(e){ log('online macro provision err: '+e); }
+    try{ if(p && p.id){ ensureCampaignLogMacroForPlayer(p.id); } }catch(e){ log('online macro provision err: '+e); }
   });
-  try{
-    on('change:campaign:playerpageid', function(obj, prev){
-      try{
-        fts.autoOpenCampaignMenuForPageChange('ribbon', {
-          campaign: (typeof Campaign === 'function') ? Campaign() : null
-        });
-      }catch(e2){ log('fts core autosync playerpageid err: '+e2); }
-    });
-    on('change:campaign:playerspecificpages', function(obj, prev){
-      try{
-        fts.autoOpenCampaignMenuForPageChange('split', {
-          campaign: (typeof Campaign === 'function') ? Campaign() : null,
-          prev: prev || {}
-        });
-      }catch(e3){ log('fts core autosync playerspecificpages err: '+e3); }
-    });
-  }catch(e1){}
 
 })();
+
