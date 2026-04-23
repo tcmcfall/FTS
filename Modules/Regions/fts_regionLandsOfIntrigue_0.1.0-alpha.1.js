@@ -15689,17 +15689,43 @@
   ]
 };
 
+  var _regionRegistered = false;
+
   function registerRegion(){
+    if(_regionRegistered) return true;
     try{
       if(!(RT.fts_weather && typeof RT.fts_weather.registerRegionEntry === 'function')){
-        log(MODULE_NAME + ' skipped registration: fts_weather is unavailable.');
-        return;
+        return false;
       }
       RT.fts_weather.registerRegionEntry(REGION_ENTRY, MODULE_NAME, VERSION);
+      _regionRegistered = true;
+      return true;
     }catch(e){
       log(MODULE_NAME + ' registration error: ' + e);
+      return false;
     }
   }
 
-  on('ready', registerRegion);
+  function scheduleRegionRegistration(attemptsLeft){
+    attemptsLeft = (attemptsLeft | 0);
+    if(registerRegion()) return;
+    if(attemptsLeft <= 0){
+      log(MODULE_NAME + ' skipped registration: fts_weather is unavailable.');
+      return;
+    }
+    setTimeout(function(){
+      scheduleRegionRegistration(attemptsLeft - 1);
+    }, 250);
+  }
+
+  on('ready', function(){
+    scheduleRegionRegistration(40);
+  });
+
+  on('chat:message', function(msg){
+    if(_regionRegistered) return;
+    if(!msg || msg.type !== 'api') return;
+    if(!/^!fts(\b|$)/i.test(String(msg.content || '').trim())) return;
+    scheduleRegionRegistration(2);
+  });
 })();
