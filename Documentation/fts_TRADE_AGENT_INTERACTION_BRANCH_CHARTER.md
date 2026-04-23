@@ -58,7 +58,7 @@ That means:
 
 - `fts_calendar` remains the authoritative owner of date and time state
 - `fts_weather` remains the authoritative owner of regional and locale weather state
-- `fts_geo` remains the authoritative owner of map routes and map points
+- `fts_mapMeta` remains the authoritative owner of map metadata, routes, and map points
 - the future trade/actor/scheduler layers must integrate with those systems without duplicating their core responsibilities
 
 ### 2. Preserve Reusability
@@ -176,7 +176,7 @@ How can FTS model trade agents, markets, routes, and conflicts in a way that is:
 - modular
 - reusable
 - token- and NPC-friendly
-- compatible with existing FTS calendar, weather, and geo modules
+- compatible with existing FTS calendar, weather, and mapMeta modules
 - sufficiently deep to create emergent outcomes
 - understandable enough to remain pleasant to use
 
@@ -463,7 +463,7 @@ It does need to prevent the project from drifting into a pile of disconnected on
 
 This branch is not currently intended to:
 
-- replace or rewrite the existing calendar, weather, mapMeta, or geo modules
+- replace or rewrite the existing calendar, weather, mapMeta, or atlas modules
 - require every automated actor to be represented by a live token at all times
 - force all trade simulation into literal six-second combat rounds
 - create a perfect real-world economics simulator
@@ -511,7 +511,7 @@ The future modules should integrate with:
 
 - `fts_calendar` for authoritative time
 - `fts_weather` for weather and route-condition modifiers
-- `fts_geo` for route and point identity, position, and travel structure
+- `fts_mapMeta` for route and point identity, position, and travel structure
 - `fts_core` for routing, help, shared UI, and menu integration
 
 ## Branch Success Criteria

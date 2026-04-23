@@ -1,17 +1,29 @@
 // name:        fts_mapPointWizard.js
 // version:     0.2.0-alpha.1
-// description: Guided static trade-point authoring wizard for selected tokens. Uses GM-only chooser handouts for canonical trade-point data, a GM-only category-based trade-goods handout, writes standardized GM notes, player tooltip text, and locks the token in place.
+// description: Guided static location authoring wizard for selected tokens. Uses section-based chat prompts, writes standardized GM notes, player tooltip text, and locks the token in place.
 // depends:     Roll20 Mod API. (Optional) fts_core >= 0.2.0-alpha.1 for palette-aware UI, menu card, and help integration. (Optional) fts_mapMeta >= 0.2.0-alpha.1 for page-name-aware region/locale defaults.
 // provides:    !fts --mapPointWizard
 //              !fts --mapPointWizard start
+//              !fts --mapPointWizard panel
+//              !fts --mapPointWizard back
+//              !fts --mapPointWizard next
+//              !fts --mapPointWizard finish
+//              !fts --mapPointWizard chooser --field <fieldKey>
+//              !fts --mapPointWizard tradeView [--group <groupKey>]
 // author:      tcm (AI-assisted)
-//
-// This module intentionally keeps the durable GM-only handout surface from the
-// older wizard, but replaces inline option panels with GM-only chooser
-// handouts. Trade goods use a dedicated GM-only category handout because
-// Roll20 handouts can host HTML links, but not live form logic or JavaScript.
-// We therefore emulate radio-button behavior with API command links that apply
-// mutually exclusive per-period selections.
+// Semantic Versioning (SemVer) Policy:
+// - FTS uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
+// - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
+// - Increment PATCH for non-breaking bug fixes.
+// - Increment MINOR for new non-breaking functionality.
+// - Increment MAJOR only when the public API becomes stable and/or incompatible breaking changes are introduced.
+// - Pre-release labels such as alpha, beta, or rc mark unstable builds and sort lower than the matching normal release.
+// - Once a version is released, its contents must not be changed; further edits require a new version.
+// - Header comments, internal VERSION constants, filenames, generated module text, and documentation references must stay aligned.
+// - Dependency notes should use SemVer-friendly wording such as ">= 0.1.0-alpha.1" rather than informal forms like "5.1.0+".
+// This module is primarily chat-driven. Trade-category calendars are edited in
+// an ephemeral handout while other interactions stay in whisper panels.
+// API command links apply mutually exclusive per-period selections.
 //
 (function(){
   'use strict';
@@ -28,13 +40,42 @@
   var FTS_MULE   = 'fts_mule';
   var TITLE      = 'Map Point Wizard';
   var STATE_ROOT = 'mapPointWizard';
-  var HANDOUT_NAME = 'Map Point Wizard';
-  var WIZARD_MENU_HANDOUT_NAME = 'Wizard Menu';
-  var TRADE_GOODS_HANDOUT_NAME = 'Trade Goods Categories';
+  var TRADE_PANEL_TITLE = 'Trade Goods Categories';
   var LIBRARY_ABILITY = 'mapPointWizard';
   var TRADE_STANCE_ORDER = ['has', 'wants', 'needs'];
   var TOOLTIP_MAX_CHARS = 150;
   var TOOLTIP_LINE_BREAK = '\u2028';
+  var WIZARD_ACTIONS = {
+    panel:1, start:1, cancel:1, reset:1, resume:1, finish:1, back:1, next:1, section:1,
+    chooser:1, tradeview:1, pick:1, set:1,
+    multiadd:1, multicustom:1, multiedit:1, multiremove:1, multiclear:1,
+    tradeclear:1, tradewindow:1, tradecell:1, tradegroupadd:1
+  };
+  var WIZARD_FLAG_ALIASES = {
+    token:'token', confirm:'confirm', force:'force', field:'field', value:'value',
+    label:'label', score:'score', group:'group', good:'good', window:'window', key:'key', move:'move',
+    stance:'stance', action:'action', period:'period', note:'note',
+    cargounits:'cu'
+  };
+  var SECTION_SEQUENCE = [
+    { key:'bind',          view:'bind',                  label:'Bind Token',       requiresSession:false },
+    { key:'template',      view:'chooser:template',      label:'Template',         requiresSession:true  },
+    { key:'name',          view:'step:name',             label:'Name',             requiresSession:true  },
+    { key:'region',        view:'chooser:region',        label:'Region',           requiresSession:true  },
+    { key:'locale',        view:'chooser:locale',        label:'Locale',           requiresSession:true  },
+    { key:'population',    view:'step:population',       label:'Population',       requiresSession:true  },
+    { key:'development',   view:'chooser:development',   label:'Development',      requiresSession:true  },
+    { key:'wealth',        view:'chooser:wealth',        label:'Wealth',           requiresSession:true  },
+    { key:'cultures',      view:'chooser:cultures',      label:'Cultures',         requiresSession:true  },
+    { key:'faiths',        view:'chooser:faiths',        label:'Faiths',           requiresSession:true  },
+    { key:'factions',      view:'chooser:factions',      label:'Factions',         requiresSession:true  },
+    { key:'allies',        view:'chooser:allies',        label:'Allies',           requiresSession:true  },
+    { key:'enemies',       view:'chooser:enemies',       label:'Enemies',          requiresSession:true  },
+    { key:'offense_types', view:'chooser:offense_types', label:'Offense Types',    requiresSession:true  },
+    { key:'defense_types', view:'chooser:defense_types', label:'Defense Types',    requiresSession:true  },
+    { key:'trade',         view:'trade',                 label:'Trade Goods',      requiresSession:true  },
+    { key:'review',        view:'review',                label:'Review',           requiresSession:true  }
+  ];
 
   /* ======================================================================== */
   /* Canonical Libraries                                                      */
@@ -148,7 +189,7 @@
     { key:'weapons_and_ammunition', label:'Weapons and Ammunition' }
   ];
 
-  // Group descriptions drive the GM-facing trade-goods handout. Keep them
+  // Group descriptions drive the GM-facing trade-goods panel. Keep them
   // short, plain-language, and easy for a GM to extend alongside the library.
   var TRADE_GOOD_GROUP_DETAILS = {
     alchemy_and_medicine:'Potent substances, remedies, and ritual consumables drawn from the PHB tool and gear tables.',
@@ -177,6 +218,54 @@
       TRADE_GOOD_GROUP_MAP[group.key] = { key:group.key, label:group.label };
     }
   })();
+
+  function upsertTradeGoodGroupRecord(groupKey, label, desc){
+    groupKey = normalizeKey(groupKey || '');
+    label = String(label || '').trim();
+    desc = String(desc || '').trim();
+    if(!groupKey || !label) return null;
+    if(TRADE_GOOD_GROUP_MAP[groupKey]){
+      TRADE_GOOD_GROUP_MAP[groupKey].label = label;
+      for(var i=0;i<TRADE_GOOD_GROUPS.length;i++){
+        if(String(TRADE_GOOD_GROUPS[i].key || '') === groupKey){
+          TRADE_GOOD_GROUPS[i].label = label;
+          break;
+        }
+      }
+    }else{
+      TRADE_GOOD_GROUP_MAP[groupKey] = { key:groupKey, label:label };
+      TRADE_GOOD_GROUPS.push({ key:groupKey, label:label });
+    }
+    if(desc) TRADE_GOOD_GROUP_DETAILS[groupKey] = desc;
+    return { key:groupKey, label:label, desc:desc };
+  }
+
+  function normalizeCustomTradeGroupRecord(raw){
+    raw = raw || {};
+    var key = normalizeKey(raw.key || '');
+    var label = String(raw.label || raw.name || '').trim();
+    var desc = String(raw.desc || raw.description || '').trim();
+    if(!key && label) key = 'custom_' + normalizeKey(label);
+    if(!key) return null;
+    if(!label) label = titleCaseToken(String(key || '').replace(/^custom_/, ''));
+    if(String(key).indexOf('custom_') !== 0) key = 'custom_' + key;
+    return { key:key, label:label, desc:desc };
+  }
+
+  function syncCustomTradeGroupsFromStateRoot(root){
+    var source = Array.isArray(root && root.customTradeGroups) ? root.customTradeGroups : [];
+    var seen = {};
+    var out = [];
+    for(var i=0;i<source.length;i++){
+      var normalized = normalizeCustomTradeGroupRecord(source[i]);
+      if(!normalized) continue;
+      if(seen[normalized.key]) continue;
+      seen[normalized.key] = true;
+      upsertTradeGoodGroupRecord(normalized.key, normalized.label, normalized.desc);
+      out.push(normalized);
+    }
+    if(root) root.customTradeGroups = out;
+  }
 
   var CULTURES = [
     { key:'amnian',               label:'Amnian' },
@@ -312,7 +401,7 @@
 
   var SINGLE_CHOOSER_FIELDS = ['template', 'region', 'locale', 'development', 'wealth'];
   var CHOOSER_FIELD_ORDER = SINGLE_CHOOSER_FIELDS.concat(['cultures', 'faiths', 'factions', 'allies', 'enemies', 'offense_types', 'defense_types']);
-  var CHOOSER_HANDOUT_NAMES = {
+  var CHOOSER_PANEL_TITLES = {
     template:'Map Point Templates',
     region:'Map Point Regions',
     locale:'Map Point Locales',
@@ -381,7 +470,7 @@
     },
     {
       key:'minor_trade_hub',
-      label:'Minor Trade Hub',
+      label:'Minor Market Location',
       summary:'Modest inland market center with steady caravan traffic and practical civic infrastructure.',
       defaults:{
         locale:'inland',
@@ -402,7 +491,7 @@
     },
     {
       key:'moderate_trade_hub',
-      label:'Moderate Trade Hub',
+      label:'Moderate Market Location',
       summary:'Established trade city with deeper reserves, stronger customs presence, and broader seasonal throughput.',
       defaults:{
         locale:'coastal',
@@ -423,7 +512,7 @@
     },
     {
       key:'major_trade_hub',
-      label:'Major Trade Hub',
+      label:'Major Market Location',
       summary:'Major regional trade city with exceptional throughput, powerful institutions, and year-round cargo demand.',
       defaults:{
         locale:'coastal',
@@ -462,10 +551,6 @@
     return String(s || '').replace(/"/g, '&quot;');
   }
 
-  function isHandoutUrl(s){
-    return /^https:\/\/journal\.roll20\.net\/handout\//i.test(String(s || '').trim());
-  }
-
   function lower(s){
     return String(s || '').toLowerCase();
   }
@@ -477,7 +562,7 @@
   function sortLabelObjectsInPlace(list){
     if(!Array.isArray(list)) return list;
     list.sort(function(a, b){
-      return String((a && a.label) || '').localeCompare(String((b && b.label) || ''));
+      return alphaNumericCompare(String((a && a.label) || ''), String((b && b.label) || ''));
     });
     return list;
   }
@@ -498,14 +583,41 @@
   function playerName(pid){
     try{
       var p = getObj('player', pid);
-      return p ? (p.get('displayname') || 'GM') : 'GM';
+      return p ? String(p.get('displayname') || 'GM') : 'GM';
     }catch(e){
       return 'GM';
     }
   }
 
   function whisper(pid, html){
-    sendChat('fts', '/w "' + playerName(pid) + '" ' + html);
+    pid = String(pid || '').trim();
+    if(!pid) return;
+    try{
+      sendChat('fts', '/w "' + playerName(pid) + '" ' + String(html || ''));
+    }catch(e){}
+  }
+
+  function whisperCampaignMenu(pid){
+    pid = String(pid || '').trim();
+    var targetPid = pid;
+    if(!isGM(targetPid)){
+      targetPid = firstGMPlayerId() || targetPid;
+    }
+    if(!targetPid) return;
+    try{
+      sendChat('player|' + targetPid, '!fts');
+    }catch(e){}
+  }
+
+  function firstGMPlayerId(){
+    try{
+      var players = findObjs({ _type:'player' }) || [];
+      for(var i=0;i<players.length;i++){
+        var pid = String((players[i] && players[i].id) || '');
+        if(pid && isGM(pid)) return pid;
+      }
+    }catch(e){}
+    return '';
   }
 
   function isSelfChatMessage(msg){
@@ -520,6 +632,16 @@
 
   function titleCaseToken(s){
     return String(s || '').replace(/[_-]+/g, ' ').replace(/\b([a-z])/g, function(m){ return m.toUpperCase(); });
+  }
+
+  function alphaNumericCompare(a, b){
+    var left = String(a || '');
+    var right = String(b || '');
+    try{
+      return left.localeCompare(right, undefined, { numeric:true, sensitivity:'base' });
+    }catch(e){
+      return left.localeCompare(right);
+    }
   }
 
   function uniqueStrings(list){
@@ -621,9 +743,36 @@
     };
   }
 
+  function currentPaletteName(){
+    try{
+      if(RT.fts && typeof RT.fts.ensureCoreState === 'function'){
+        var S = RT.fts.ensureCoreState();
+        return String((((S || {}).ui || {}).palette) || 'none').toLowerCase();
+      }
+    }catch(e){}
+    return 'none';
+  }
+
+  function controlAreaStyle(){
+    var palette = currentPaletteName();
+    var map = {
+      none:{ bg:'rgba(80, 92, 108, 0.08)', border:'rgba(80, 92, 108, 0.20)' },
+      dark:{ bg:'rgba(155, 109, 255, 0.10)', border:'rgba(155, 109, 255, 0.26)' },
+      mint:{ bg:'rgba(82, 125, 82, 0.10)', border:'rgba(82, 125, 82, 0.26)' },
+      parchment:{ bg:'rgba(154, 110, 55, 0.10)', border:'rgba(154, 110, 55, 0.26)' },
+      powder:{ bg:'rgba(122, 167, 217, 0.12)', border:'rgba(122, 167, 217, 0.28)' },
+      rosebud:{ bg:'rgba(186, 46, 104, 0.10)', border:'rgba(186, 46, 104, 0.26)' }
+    };
+    var tone = map[palette] || map.none;
+    return (cssVars().card || '') + 'border:1px solid ' + tone.border + ';background:' + tone.bg + ';';
+  }
+
   function shell(title){
     var v = cssVars();
-    return '<div style="' + (v.container || '') + '"><div style="' + (v.title || '') + '">' + esc(title) + '</div>';
+    var container = String(v.container || '');
+    if(container && !/;\s*$/.test(container)) container += ';';
+    container += 'max-width:520px;width:80%;box-sizing:border-box;margin-left:auto;margin-right:auto;text-align:left;';
+    return '<div style="' + container + '"><div style="' + (v.title || '') + '">' + esc(title) + '</div>';
   }
 
   function endShell(){ return '</div>'; }
@@ -655,12 +804,6 @@
     return attrs + ' style="' + extraStyle + '"';
   }
 
-  function mergeAttr(attrs, name, value){
-    attrs = String(attrs || '');
-    if(new RegExp('\\s' + name + '=', 'i').test(attrs)) return attrs;
-    return attrs + ' ' + name + '="' + esc(value) + '"';
-  }
-
   function actionLink(href, label, selected){
     var attrs = ' href="' + hrefAttr(href) + '" style="' + linkStyle(selected) + '"';
     if(String(href || '').charAt(0) !== '#' && RT.fts && typeof RT.fts.actionLinkAttrs === 'function'){
@@ -684,21 +827,10 @@
 
   function inlineActionLink(href, label, selected){
     var attrs = ' href="' + hrefAttr(href) + '" style="' + inlineLinkStyle(selected) + '"';
-    if(String(href || '').charAt(0) !== '#' && !isHandoutUrl(href) && RT.fts && typeof RT.fts.actionLinkAttrs === 'function'){
+    if(String(href || '').charAt(0) !== '#' && RT.fts && typeof RT.fts.actionLinkAttrs === 'function'){
       attrs = RT.fts.actionLinkAttrs(href);
       attrs = mergeStyleAttr(attrs, inlineLinkStyle(selected));
     }
-    return '<a' + attrs + '>' + esc(label) + '</a>';
-  }
-
-  function directHandoutActionLink(href, label, selected){
-    var attrs = ' href="' + hrefAttr(href) + '" style="' + linkStyle(selected) + '"';
-    if(RT.fts && typeof RT.fts.actionLinkAttrs === 'function'){
-      attrs = RT.fts.actionLinkAttrs(href);
-      attrs = mergeStyleAttr(attrs, linkStyle(selected));
-    }
-    attrs = mergeAttr(attrs, 'target', '_blank');
-    attrs = mergeAttr(attrs, 'rel', 'noopener noreferrer');
     return '<a' + attrs + '>' + esc(label) + '</a>';
   }
 
@@ -955,7 +1087,7 @@
 
   function sortedTradeGoodGroups(){
     return TRADE_GOOD_GROUPS.slice().sort(function(a, b){
-      return String(a.label || '').localeCompare(String(b.label || ''));
+      return alphaNumericCompare(String(a.label || ''), String(b.label || ''));
     });
   }
 
@@ -972,148 +1104,154 @@
     return !!enabled;
   }
 
-  function tradeGoodsTopAnchorName(){
-    return 'fts_tradegoods_top';
+  function normalizeSectionView(view){
+    view = String(view || '').trim();
+    if(!view || view === 'panel') return 'bind';
+    for(var i=0;i<SECTION_SEQUENCE.length;i++){
+      if(SECTION_SEQUENCE[i].view === view) return view;
+    }
+    return 'bind';
   }
 
-  function tradeGoodsCategoryAnchorName(groupKey){
-    return 'fts_tradegoods_' + normalizeKey(groupKey);
+  function sectionMetaByView(view){
+    view = normalizeSectionView(view);
+    for(var i=0;i<SECTION_SEQUENCE.length;i++){
+      if(SECTION_SEQUENCE[i].view === view) return SECTION_SEQUENCE[i];
+    }
+    return SECTION_SEQUENCE[0];
   }
 
-  /* ======================================================================== */
-  /* GM-Only Handout Surface                                                   */
-  /* ======================================================================== */
-
-  function managedHandoutByName(name){
-    return findObjs({_type:'handout', name:name})[0] || null;
+  function sectionMetaByKey(key){
+    key = normalizeKey(key || '');
+    for(var i=0;i<SECTION_SEQUENCE.length;i++){
+      if(SECTION_SEQUENCE[i].key === key) return SECTION_SEQUENCE[i];
+    }
+    return null;
   }
 
-  function ensureManagedHandout(name){
-    var h = managedHandoutByName(name);
-    if(!h){
-      h = createObj('handout', {
-        name: name,
-        inplayerjournals: '',
-        controlledby: ''
-      });
+  function sectionIndexByView(view){
+    view = normalizeSectionView(view);
+    for(var i=0;i<SECTION_SEQUENCE.length;i++){
+      if(SECTION_SEQUENCE[i].view === view) return i;
+    }
+    return 0;
+  }
+
+  function currentView(pid){
+    return normalizeSectionView(ensureState().view[String(pid || '')] || 'bind');
+  }
+
+  function setView(pid, view){
+    view = normalizeSectionView(view);
+    ensureState().view[String(pid || '')] = view;
+    return view;
+  }
+
+  function sectionIndexForPlayer(pid){
+    return sectionIndexByView(currentView(pid));
+  }
+
+  function currentSectionMeta(pid){
+    return sectionMetaByView(currentView(pid));
+  }
+
+  function moveSection(pid, direction){
+    var index = sectionIndexForPlayer(pid);
+    if(lower(direction) === 'back'){
+      index = Math.max(0, index - 1);
     }else{
-      try{ h.set({ inplayerjournals:'', controlledby:'' }); }catch(e){}
+      index = Math.min(SECTION_SEQUENCE.length - 1, index + 1);
     }
-    return h;
+    return setView(pid, SECTION_SEQUENCE[index].view);
   }
 
-  function wizardHandout(){
-    return managedHandoutByName(HANDOUT_NAME);
+  function currentTradeGroup(pid){
+    return String(ensureState().tradeGroup[String(pid || '')] || '');
   }
 
-  function wizardMenuHandout(){
-    return managedHandoutByName(WIZARD_MENU_HANDOUT_NAME);
+  function setTradeGroup(pid, groupKey){
+    groupKey = normalizeKey(groupKey || '');
+    if(!TRADE_GOOD_GROUP_MAP[groupKey]) groupKey = '';
+    ensureState().tradeGroup[String(pid || '')] = groupKey;
+    return groupKey;
   }
 
-  function recreateWizardHandout(html){
-    var existing = findObjs({_type:'handout', name:HANDOUT_NAME}) || [];
-    for(var i=0;i<existing.length;i++){
-      try{ existing[i].remove(); }catch(e1){}
+  function tradeHandoutId(pid){
+    return String((ensureState().tradeHandout || {})[String(pid || '')] || '');
+  }
+
+  function setTradeHandoutId(pid, handoutId){
+    pid = String(pid || '');
+    handoutId = String(handoutId || '');
+    if(!pid) return '';
+    if(!handoutId){
+      delete ensureState().tradeHandout[pid];
+      return '';
     }
-    var h = createObj('handout', {
-      name: HANDOUT_NAME,
-      inplayerjournals: '',
-      controlledby: ''
-    });
-    if(html != null){
-      try{ h.set('notes', html); }catch(e2){ log('fts_mapPointWizard recreateWizardHandout err: ' + e2); }
+    ensureState().tradeHandout[pid] = handoutId;
+    return handoutId;
+  }
+
+  function currentTradeHandout(pid){
+    var id = tradeHandoutId(pid);
+    if(!id) return null;
+    return getObj('handout', id) || null;
+  }
+
+  function destroyTradeHandout(pid){
+    var handout = currentTradeHandout(pid);
+    if(handout && typeof handout.remove === 'function'){
+      try{ handout.remove(); }catch(e){}
     }
-    return h;
+    setTradeHandoutId(pid, '');
   }
 
-  function chooserHandoutName(field){
-    return CHOOSER_HANDOUT_NAMES[field] || ('Map Point ' + titleCaseToken(field));
+  /* ======================================================================== */
+  /* Chat Surface                                                              */
+  /* ======================================================================== */
+
+  function chooserPanelTitle(field){
+    return CHOOSER_PANEL_TITLES[field] || ('Map Point ' + titleCaseToken(field));
   }
 
-  function upsertWizardHandout(html){
-    var h = ensureManagedHandout(HANDOUT_NAME);
-    if(html != null){
-      try{ h.set('notes', html); }catch(e2){ log('fts_mapPointWizard upsertWizardHandout err: ' + e2); }
-    }
-    return h;
+  function renderChooserPanel(pid, field){
+    return renderChooserViewPanel(field, pid);
   }
 
-  function upsertWizardMenuHandout(html){
-    var h = ensureManagedHandout(WIZARD_MENU_HANDOUT_NAME);
-    if(html != null){
-      try{ h.set('notes', html); }catch(e2){ log('fts_mapPointWizard upsertWizardMenuHandout err: ' + e2); }
-    }
-    return h;
-  }
-
-  function upsertTradeGoodsHandout(html){
-    var h = ensureManagedHandout(TRADE_GOODS_HANDOUT_NAME);
-    if(html != null){
-      try{ h.set('notes', html); }catch(e2){ log('fts_mapPointWizard upsertTradeGoodsHandout err: ' + e2); }
-    }
-    return h;
-  }
-
-  function upsertChooserHandout(field, html){
-    if(!field) return null;
-    var h = ensureManagedHandout(chooserHandoutName(field));
-    if(html != null){
-      try{ h.set('notes', html); }catch(e2){ log('fts_mapPointWizard upsertChooserHandout err: ' + e2); }
-    }
-    return h;
-  }
-
-  function handoutUrl(handout){
-    return (handout && handout.id) ? ('https://journal.roll20.net/handout/' + handout.id) : '';
-  }
-
-  function handoutAnchorUrl(handout, anchorName){
-    var base = handoutUrl(handout);
-    anchorName = String(anchorName || '').trim();
-    if(!anchorName) return base;
-    return base ? (base + '#' + anchorName) : ('#' + anchorName);
-  }
-
-  function renderHandoutFooter(){
-    return '<div style="' + (cssVars().card || '') + '">'
-      + '<div><b>GM-Only Workflow:</b> This handout is the primary map-point authoring surface. '
-      + 'Choose buttons open their own GM-only chooser handouts. Trade goods open their own GM-only category handout. If Roll20 does not redraw refreshed notes right away, close and reopen the handout and click again.</div>'
-      + '</div>';
-  }
-
-  function renderWizardHandout(pid){
+  function renderTradePanel(pid){
     var session = currentSession(pid);
     if(currentBlankView(pid)) session = null;
-    var html = session ? renderEditorHandout(pid, session) : renderLauncher(pid);
-    return html + renderHandoutFooter();
+    return session ? renderTradeGoodsSelectionPanel(pid, session) : renderTradeGoodsSelectionLauncher(pid);
   }
 
-  function refreshWizardHandout(pid){
-    try{
-      return upsertWizardHandout(renderWizardHandout(pid));
-    }catch(e){
-      log('fts_mapPointWizard refreshWizardHandout err: ' + e);
-      return null;
+  function renderActivePanel(pid){
+    var view = currentView(pid);
+    if(view === 'bind') return renderBindSectionPanel(pid);
+    if(view === 'step:name') return renderNameSectionPanel(pid);
+    if(view === 'step:population') return renderPopulationSectionPanel(pid);
+    if(view === 'review') return renderReviewSectionPanel(pid);
+    if(view === 'trade') return renderTradePanel(pid);
+    if(view.indexOf('chooser:') === 0){
+      var field = normalizeKey(view.slice('chooser:'.length));
+      if(field && (MULTI_LIBRARY[field] || SINGLE_CHOOSER_FIELDS.indexOf(field) !== -1)){
+        return renderChooserPanel(pid, field);
+      }
+      setView(pid, 'bind');
+      return renderBindSectionPanel(pid);
     }
+    setView(pid, 'bind');
+    return renderBindSectionPanel(pid);
   }
 
-  function renderWizardMenuHandout(){
-    var html = shell(WIZARD_MENU_HANDOUT_NAME);
-    var v = cssVars();
-    html += '<div style="' + (v.card || '') + '">';
-    html += '<div>This GM-only handout is the shared launcher for your wizard handouts.</div>';
-    html += '<div style="margin-top:4px;">For now, use it to open the Map Point Wizard for the token you currently have selected.</div>';
-    html += actionLink(openMapPointWizardFromMenuHref(), 'Open Map Point Wizard');
-    html += '</div>';
-    html += endShell();
-    return html;
-  }
-
-  function refreshWizardMenuHandout(){
+  function refreshChatView(pid){
+    pid = String(pid || '').trim();
+    if(!pid) return null;
     try{
-      return upsertWizardMenuHandout(renderWizardMenuHandout());
+      var html = renderActivePanel(pid);
+      whisper(pid, html);
+      return html;
     }catch(e){
-      log('fts_mapPointWizard refreshWizardMenuHandout err: ' + e);
+      log('fts_mapPointWizard refreshChatView err: ' + e);
       return null;
     }
   }
@@ -1126,14 +1264,30 @@
     if(!RT.state) RT.state = {};
     if(!RT.state.fts) RT.state.fts = {};
     if(!RT.state.fts[STATE_ROOT]){
-      RT.state.fts[STATE_ROOT] = { sessions:{}, lastSelection:{}, blankView:{}, recentMessages:{} };
+      RT.state.fts[STATE_ROOT] = {
+        sessions:{},
+        lastSelection:{},
+        blankView:{},
+        recentMessages:{},
+        status:{},
+        view:{},
+        tradeGroup:{},
+        tradeHandout:{},
+        customTradeGroups:[]
+      };
     }else{
       var S = RT.state.fts[STATE_ROOT];
       if(!S.sessions) S.sessions = {};
       if(!S.lastSelection) S.lastSelection = {};
       if(!S.blankView) S.blankView = {};
       if(!S.recentMessages) S.recentMessages = {};
+      if(!S.status) S.status = {};
+      if(!S.view) S.view = {};
+      if(!S.tradeGroup) S.tradeGroup = {};
+      if(!S.tradeHandout) S.tradeHandout = {};
+      if(!S.customTradeGroups) S.customTradeGroups = [];
     }
+    syncCustomTradeGroupsFromStateRoot(RT.state.fts[STATE_ROOT]);
     return RT.state.fts[STATE_ROOT];
   }
 
@@ -1288,7 +1442,7 @@
       if(template) out.push(template);
     }
     out.sort(function(a, b){
-      return String(a.label || '').localeCompare(String(b.label || ''));
+      return alphaNumericCompare(String(a.label || ''), String(b.label || ''));
     });
     return out;
   }
@@ -1308,7 +1462,7 @@
     return Object.keys(merged).map(function(key){
       return merged[key];
     }).sort(function(a, b){
-      return String(a.label || '').localeCompare(String(b.label || ''));
+      return alphaNumericCompare(String(a.label || ''), String(b.label || ''));
     });
   }
 
@@ -1352,7 +1506,7 @@
         if(template) tradeTemplates.push(template);
       });
       tradeTemplates.sort(function(a, b){
-        return String(a.label || '').localeCompare(String(b.label || ''));
+        return alphaNumericCompare(String(a.label || ''), String(b.label || ''));
       });
 
       out[regionKey] = {
@@ -1386,7 +1540,7 @@
       out.push({ key: keys[i], label: known[keys[i]].displayName || keys[i] });
     }
     out.sort(function(a, b){
-      return String(a.label || '').localeCompare(String(b.label || ''));
+      return alphaNumericCompare(String(a.label || ''), String(b.label || ''));
     });
     return out;
   }
@@ -1402,7 +1556,7 @@
       out.push({ key: localeKey, label: def.label || titleCaseToken(localeKey) });
     }
     out.sort(function(a, b){
-      return String(a.label || '').localeCompare(String(b.label || ''));
+      return alphaNumericCompare(String(a.label || ''), String(b.label || ''));
     });
     return out;
   }
@@ -1515,7 +1669,59 @@
 
   function clearSession(pid){
     delete ensureState().sessions[String(pid || '')];
+    destroyTradeHandout(pid);
     setBlankView(pid, true);
+  }
+
+  function currentStatus(pid){
+    return ensureState().status[String(pid || '')] || null;
+  }
+
+  function clearStatus(pid){
+    delete ensureState().status[String(pid || '')];
+  }
+
+  function setStatus(pid, level, text){
+    text = String(text || '').trim();
+    if(!text){
+      clearStatus(pid);
+      return;
+    }
+    ensureState().status[String(pid || '')] = {
+      level: lower(level || 'info'),
+      text: text
+    };
+  }
+
+  function clearPendingFinishChoice(session){
+    if(session && session.pendingFinishChoice){
+      delete session.pendingFinishChoice;
+    }
+  }
+
+  function clearTemplateAppliedSummary(session){
+    if(session && session.lastAppliedTemplate){
+      delete session.lastAppliedTemplate;
+    }
+  }
+
+  function setTemplateAppliedSummary(session, template){
+    if(!session) return;
+    template = template || {};
+    var data = session.data || {};
+    session.lastAppliedTemplate = {
+      key: String(template.key || ''),
+      label: String(template.displayLabel || template.label || template.key || 'Template'),
+      region: String(data.region || ''),
+      locale: String(data.locale || ''),
+      population: String(data.population || ''),
+      development: String(data.development || ''),
+      wealth: String(data.wealth || ''),
+      cultures: Array.isArray(data.cultures) ? data.cultures.length : 0,
+      faiths: Array.isArray(data.faiths) ? data.faiths.length : 0,
+      factions: Array.isArray(data.factions) ? data.factions.length : 0,
+      tradeCategories: normalizeTradeGoods(data.tradeGoods || []).length
+    };
   }
 
   function selectedTokenFromEntries(entries){
@@ -1551,6 +1757,10 @@
     return selectedTokenFromEntries(entries);
   }
 
+  function clearCachedSelection(pid){
+    delete ensureState().lastSelection[String(pid || '')];
+  }
+
   function shouldIgnoreRapidRepeat(pid, content){
     var stateRoot = ensureState();
     var recent = stateRoot.recentMessages || {};
@@ -1571,6 +1781,94 @@
       return selectedTokenFromEntries(msg.selected);
     }
     return lastSelectedTokenForPlayer(pid);
+  }
+
+  function getEffectivePageId(pid){
+    if(RT.fts && typeof RT.fts.getEffectivePageId === 'function'){
+      return String(RT.fts.getEffectivePageId(pid) || '');
+    }
+    try{
+      var campaign = Campaign();
+      var specific = campaign.get('playerspecificpages') || {};
+      if(pid && specific[pid]) return String(specific[pid] || '');
+      return String(campaign.get('playerpageid') || '');
+    }catch(e){
+      return '';
+    }
+  }
+
+  function getMapMetaState(){
+    if(!RT.state) RT.state = {};
+    if(!RT.state.fts) RT.state.fts = {};
+    if(!RT.state.fts.mapmeta){
+      RT.state.fts.mapmeta = { last:null, byPage:{}, flash:{}, namingWarn:{} };
+    }
+    if(!RT.state.fts.mapmeta.byPage) RT.state.fts.mapmeta.byPage = {};
+    return RT.state.fts.mapmeta;
+  }
+
+  function getMapRecordsState(){
+    if(!RT.state) RT.state = {};
+    if(!RT.state.fts) RT.state.fts = {};
+    if(!RT.state.fts.mapRecords){
+      RT.state.fts.mapRecords = { routes:{}, points:{}, currentRoute:{}, lastSelection:{} };
+    }
+    if(!RT.state.fts.mapRecords.routes) RT.state.fts.mapRecords.routes = {};
+    if(!RT.state.fts.mapRecords.points) RT.state.fts.mapRecords.points = {};
+    return RT.state.fts.mapRecords;
+  }
+
+  function mapKeyFromPageMeta(meta, page){
+    var name = '';
+    if(meta){
+      name = String(meta.name || meta.raw_name || meta.page_name || '');
+      if(!name && meta.id) return 'map' + String(meta.id || '');
+    }
+    if(!name && page){
+      name = String(page.get('name') || '');
+      if(!name && page.id) return 'map' + String(page.id || '');
+    }
+    return lower(name).replace(/[^a-z0-9]+/g, '');
+  }
+
+  function pageMetaForPage(page){
+    if(!page) return null;
+    var meta = getMapMetaState().byPage[String(page.id || '')] || null;
+    if(meta) return meta;
+    try{
+      if(RT.fts_mapMeta && typeof RT.fts_mapMeta.parsePageName === 'function'){
+        return RT.fts_mapMeta.parsePageName(page.get('name') || '', getOrCreateMule(), { allowMissingDepth:true });
+      }
+    }catch(e){}
+    return null;
+  }
+
+  function contextPageForWizard(pid, session){
+    var page = null;
+    if(session && session.pageId){
+      page = getObj('page', session.pageId);
+      if(page) return page;
+    }
+    var token = lastSelectedTokenForPlayer(pid);
+    if(token){
+      page = getObj('page', token.get('pageid') || '');
+      if(page) return page;
+    }
+    var pageId = getEffectivePageId(pid);
+    return pageId ? getObj('page', pageId) : null;
+  }
+
+  function summarizeContextLabels(labels, emptyText){
+    labels = Array.isArray(labels) ? labels : [];
+    if(!labels.length) return muted('<i>' + esc(emptyText) + '</i>');
+    var out = [];
+    for(var i=0;i<labels.length && i<6;i++){
+      out.push(badge(labels[i]));
+    }
+    if(labels.length > 6){
+      out.push(badge('+' + String(labels.length - 6) + ' more'));
+    }
+    return '<div style="margin-top:6px;">' + out.join('') + '</div>';
   }
 
   function resolveExplicitSelectedToken(msg, explicitTokenId){
@@ -1600,8 +1898,10 @@
 
     var known = loadKnownRegions();
     if(!Object.keys(known).length){
-      return { error:'No regions are loaded yet. Load one or more fts_region.* modules first.' };
+      return { error:'No regions are loaded yet. Load one or more fts_regionRegionName modules first.' };
     }
+
+    destroyTradeHandout(pid);
 
     var session = {
       tokenId: token.id,
@@ -1677,7 +1977,6 @@
     var windowTotals = normalizedTradeWindowTotals(raw);
     var rawPeriods = (raw.periods && typeof raw.periods === 'object' && !Array.isArray(raw.periods)) ? raw.periods : {};
     var rawPeriodNotes = (raw.periodNotes && typeof raw.periodNotes === 'object' && !Array.isArray(raw.periodNotes)) ? raw.periodNotes : {};
-    var legacyNote = stringOrBlank(raw.note);
     var periodNotes = {};
 
     Object.keys(windowTotals).forEach(function(windowKey){
@@ -1706,8 +2005,6 @@
       var note = stringOrBlank(rawPeriodNotes[periodKey]);
       if(note){
         periodNotes[periodKey] = note;
-      }else if(legacyNote && !Object.keys(rawPeriodNotes).length){
-        periodNotes[periodKey] = legacyNote;
       }
     });
 
@@ -1780,9 +2077,9 @@
       var bFirst = sortPeriodKeys(Object.keys(b.periods || {}))[0] || '';
       var periodCmp = periodSortValue(aFirst) - periodSortValue(bFirst);
       if(periodCmp !== 0) return periodCmp;
-      var groupCmp = tradeGoodGroupLabel(a.group).localeCompare(tradeGoodGroupLabel(b.group));
+      var groupCmp = alphaNumericCompare(tradeGoodGroupLabel(a.group), tradeGoodGroupLabel(b.group));
       if(groupCmp !== 0) return groupCmp;
-      return tradeGoodLabel(a.goodKey).localeCompare(tradeGoodLabel(b.goodKey));
+      return alphaNumericCompare(tradeGoodLabel(a.goodKey), tradeGoodLabel(b.goodKey));
     });
     return out;
   }
@@ -1791,7 +2088,7 @@
     return normalizeTradeGoods(list).filter(function(entry){
       return entry.stance === stance;
     }).sort(function(a, b){
-      var labelCmp = tradeGoodLabel(a.goodKey).localeCompare(tradeGoodLabel(b.goodKey));
+      var labelCmp = alphaNumericCompare(tradeGoodLabel(a.goodKey), tradeGoodLabel(b.goodKey));
       if(labelCmp !== 0) return labelCmp;
       var aFirst = sortPeriodKeys(Object.keys((a && a.periods) || {}))[0] || '';
       var bFirst = sortPeriodKeys(Object.keys((b && b.periods) || {}))[0] || '';
@@ -1933,7 +2230,7 @@
   function sortFieldValues(field, values){
     values = uniqueStrings(values || []);
     values.sort(function(a, b){
-      return String(valueLabel(field, a, null) || '').localeCompare(String(valueLabel(field, b, null) || ''));
+      return alphaNumericCompare(String(valueLabel(field, a, null) || ''), String(valueLabel(field, b, null) || ''));
     });
     return values;
   }
@@ -2158,21 +2455,35 @@
     return root + (expr ? (' ' + expr) : '');
   }
 
-  function openMapPointWizardFromMenuHref(){
-    return commandExpr('menuopen --token @{selected|token_id}');
-  }
-
   function startWithSelectedHref(){
-    return commandExpr('start --token @{selected|token_id}');
+    return commandExpr('start');
   }
 
-  function finishWithSelectedHref(){
-    return commandExpr('finish --token @{selected|token_id}');
+  function saveAndExitHref(){
+    return commandExpr('finish');
+  }
+
+  function backSectionHref(){
+    return commandExpr('back');
+  }
+
+  function nextSectionHref(){
+    return commandExpr('next');
+  }
+
+  function sectionHref(sectionKey){
+    return commandExpr('section --key ' + normalizeKey(sectionKey || ''));
+  }
+
+  function resetWizardHref(){
+    return commandExpr('reset --confirm ' + buildRollQuery('Reset this wizard and discard all unsaved changes?', [
+      { label:'No', value:'no' },
+      { label:'Yes', value:'yes' }
+    ]));
   }
 
   function chooserHref(field){
-    var handout = ensureManagedHandout(chooserHandoutName(field));
-    return handoutUrl(handout);
+    return commandExpr('chooser --field ' + normalizeKey(field));
   }
 
   function fieldSetHref(field, prompt, currentValue){
@@ -2195,7 +2506,7 @@
 
   function multiCustomHref(field){
     var prompt = 'Custom ' + (MULTI_LIBRARY[field] ? MULTI_LIBRARY[field].label : titleCaseToken(field));
-    var expr = 'multicustom --field ' + field + ' --label ?{' + escapeRollQueryValue(prompt) + '|}';
+    var expr = 'multiCustom --field ' + field + ' --label ?{' + escapeRollQueryValue(prompt) + '|}';
     if(isStrengthTypeField(field)){
       expr += ' --score ?{Point Value|1}';
     }
@@ -2203,7 +2514,16 @@
   }
 
   function tradeCategoryClearHref(groupKey){
-    return commandExpr('tradeclear --group ' + groupKey);
+    return commandExpr('tradeClear --group ' + groupKey);
+  }
+
+  function tradePanelHref(groupKey){
+    groupKey = normalizeKey(groupKey || '');
+    return commandExpr('tradeView' + (groupKey ? (' --group ' + groupKey) : ''));
+  }
+
+  function tradeCategoryCustomHref(){
+    return commandExpr('tradeGroupAdd --label ?{Custom Trade Category|}');
   }
 
   function tradeNotePromptValue(note){
@@ -2211,7 +2531,7 @@
   }
 
   function tradeSetActionValue(defaultCu, note){
-    return 'set --cu ?{CU|' + escapeRollQueryValue(defaultCu) + '}'
+    return 'set --cargoUnits ?{CU|' + escapeRollQueryValue(defaultCu) + '}'
       + ' --note ?{Transaction Note (optional)|' + escapeRollQueryValue(tradeNotePromptValue(note)) + '}';
   }
 
@@ -2286,6 +2606,60 @@
     return '<div style="' + (cssVars().card || '') + '">' + rows.join('') + '</div>';
   }
 
+  function renderCurrentMapContext(pid, session){
+    var page = contextPageForWizard(pid, session);
+    var html = '<div style="' + (cssVars().card || '') + '">';
+    html += '<div><b>Current Map Context</b></div>';
+    if(!page){
+      html += muted('<i>No active page context is available for this wizard right now.</i>');
+      html += '</div>';
+      return html;
+    }
+
+    var meta = pageMetaForPage(page);
+    var mapKey = mapKeyFromPageMeta(meta, page);
+    var records = getMapRecordsState();
+    var points = mapKey ? (records.points[mapKey] || {}) : {};
+    var routes = mapKey ? (records.routes[mapKey] || {}) : {};
+    var pointLabels = Object.keys(points).sort().map(function(pointKey){
+      var point = points[pointKey];
+      return String((point && point.name) || pointKey || '');
+    });
+    var routeLabels = Object.keys(routes).sort().map(function(routeKey){
+      var route = routes[routeKey];
+      return String((route && route.name) || routeKey || '');
+    });
+    var regionLabel = '(unavailable)';
+    var localeLabel = '(unavailable)';
+
+    if(meta){
+      if(meta.region_key){
+        regionLabel = resolveRegionLabel(meta.region_key);
+      }else if(meta.region_name || meta.raw_region){
+        regionLabel = String(meta.region_name || meta.raw_region || '(unavailable)');
+      }
+      if(meta.page_scope === 'region'){
+        localeLabel = 'Region Scope';
+      }else if(meta.page_scope === 'global'){
+        localeLabel = 'Global Scope';
+      }else if(meta.locale_key){
+        localeLabel = resolveLocaleLabel(meta.region_key || '', meta.locale_key);
+      }else if(meta.locale_name || meta.raw_locale){
+        localeLabel = String(meta.locale_name || meta.raw_locale || '(unavailable)');
+      }
+    }
+
+    html += renderInlineField('Current Page', renderSingleValue(page.get('name') || 'Unnamed Page'), '');
+    html += renderInlineField('Region', renderSingleValue(regionLabel), '');
+    html += renderInlineField('Locale', renderSingleValue(localeLabel), '');
+    html += renderInlineField('Stored Map Points', renderSingleValue(String(pointLabels.length)), '');
+    html += summarizeContextLabels(pointLabels, 'No stored map points on this map.');
+    html += renderInlineField('Stored Routes', renderSingleValue(String(routeLabels.length)), '');
+    html += summarizeContextLabels(routeLabels, 'No stored routes on this map.');
+    html += '</div>';
+    return html;
+  }
+
   function gridLinkStyle(selected){
     return linkStyle(selected)
       + 'display:flex;align-items:center;justify-content:center;'
@@ -2295,7 +2669,7 @@
 
   function gridActionLink(href, label, selected){
     var attrs = ' href="' + hrefAttr(href) + '" style="' + gridLinkStyle(selected) + '"';
-    if(String(href || '').charAt(0) !== '#' && !isHandoutUrl(href) && RT.fts && typeof RT.fts.actionLinkAttrs === 'function'){
+    if(String(href || '').charAt(0) !== '#' && RT.fts && typeof RT.fts.actionLinkAttrs === 'function'){
       attrs = RT.fts.actionLinkAttrs(href);
       attrs = mergeStyleAttr(attrs, gridLinkStyle(selected));
     }
@@ -2304,7 +2678,7 @@
 
   function renderActionGrid(items, columns){
     items = Array.isArray(items) ? items : [];
-    columns = Math.max(1, asInt(columns) || 3);
+    columns = Math.max(1, asInt(columns) || 2);
     if(!items.length) return '';
     var html = '<table style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:12px 18px;margin-top:10px;">';
     for(var i=0;i<items.length;i += columns){
@@ -2319,12 +2693,6 @@
     }
     html += '</table>';
     return html;
-  }
-
-  function renderAnchorTarget(anchorName){
-    anchorName = String(anchorName || '').trim();
-    if(!anchorName) return '';
-    return '<a id="' + esc(anchorName) + '" name="' + esc(anchorName) + '" style="display:block;height:0;line-height:0;font-size:0;overflow:hidden;">&#8203;</a>';
   }
 
   function renderSectionHeading(label){
@@ -2393,14 +2761,14 @@
     var currentNote = (current && current.stance === stance) ? tradePeriodNote(current.entry, periodKey) : '';
     if(current && current.stance === stance){
       return commandExpr(
-        'tradecell --good ' + goodKey
+        'tradeCell --good ' + goodKey
         + ' --period ' + periodKey
         + ' --stance ' + stance
         + ' --action ' + tradeEditActionValue(defaultCu, currentNote)
       );
     }
     return commandExpr(
-      'tradecell --good ' + goodKey
+      'tradeCell --good ' + goodKey
       + ' --period ' + periodKey
       + ' --stance ' + stance
       + ' --action ' + tradeSetActionValue(defaultCu, '')
@@ -2495,14 +2863,14 @@
     var noteState = tradeWindowNoteState(entry, windowKey);
     if(state && state.selected){
       return commandExpr(
-        'tradewindow --good ' + goodKey
+          'tradeWindow --good ' + goodKey
         + ' --window ' + windowKey
         + ' --stance ' + stance
         + ' --action ' + tradeEditActionValue(defaultCu, noteState.value)
       );
     }
     return commandExpr(
-      'tradewindow --good ' + goodKey
+      'tradeWindow --good ' + goodKey
       + ' --window ' + windowKey
       + ' --stance ' + stance
       + ' --action ' + tradeSetActionValue(defaultCu, '')
@@ -2614,117 +2982,201 @@
     return html;
   }
 
-  function renderTradeBucket(bucket, entries){
-    var html = '<div style="margin-top:10px;"><b>' + esc(tradeStanceLabel(bucket)) + '</b></div>';
-    if(!entries.length){
-      html += muted('<i>No entries configured.</i>');
-      return html;
-    }
-    for(var i=0;i<entries.length;i++){
-      var entry = entries[i];
-      html += '<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(0,0,0,0.12);">';
-      html += '<div><b>' + esc(tradeGoodLabel(entry.goodKey)) + '</b></div>';
-      html += '<div style="margin-top:4px;">' + tradeScheduleLines(entry).map(function(line){
-        return '<div>' + esc(line) + '</div>';
-      }).join('') + '</div>';
-      html += '</div>';
-    }
-    return html;
+  function resolveTradeGroupForPanel(pid){
+    var groupKey = currentTradeGroup(pid);
+    if(groupKey && TRADE_GOOD_GROUP_MAP[groupKey]) return groupKey;
+    var groups = sortedTradeGoodGroups();
+    return groups.length ? String(groups[0].key || '') : '';
   }
 
-  function renderTradeWindow(pid, session){
-    var list = normalizeTradeGoods(session.data.tradeGoods || []);
-    var libraryHandout = ensureManagedHandout(TRADE_GOODS_HANDOUT_NAME);
-    var libraryUrl = handoutUrl(libraryHandout);
-    var html = '<div style="' + (cssVars().card || '') + '">';
-    html += '<div><b>Trade Goods</b></div>';
-    html += '<div style="margin-top:4px;">Choose Trade Goods opens the GM-only <b>Trade Goods Categories</b> handout, where each category exposes season and calendar controls plus per-transaction notes on season, month, and festival entries.</div>';
-    html += '<div style="margin-top:4px;">'
-      + (libraryUrl ? inlineActionLink(libraryUrl, 'Choose Trade Goods', false) : '<i>Trade goods handout unavailable.</i>')
-      + '</div>';
-    html += muted('Month columns use month numbers. Festival columns are color-coded and use icons. Season controls fill every month and festival within that season. Cargo Units accept 0.1 CU increments.');
-    html += renderTradeBucket('has', tradeEntriesForStance(list, 'has'));
-    html += renderTradeBucket('wants', tradeEntriesForStance(list, 'wants'));
-    html += renderTradeBucket('needs', tradeEntriesForStance(list, 'needs'));
-    html += '</div>';
-    return html;
-  }
-
-  function renderTradeGoodsCategoryIndex(){
-    var handout = ensureManagedHandout(TRADE_GOODS_HANDOUT_NAME);
+  function renderTradeGoodsCategoryIndex(pid, activeGroupKey){
     var html = '<div style="margin-top:10px;"><b>Category Index</b></div>';
-    html += renderActionGrid(sortedTradeGoodGroups().map(function(group){
-      return {
-        href: handoutAnchorUrl(handout, tradeGoodsCategoryAnchorName(group.key)),
-        label: group.label,
-        selected: false
-      };
-    }), 3);
+    html += '<div style="margin-top:6px;">' + inlineActionLink(tradeCategoryCustomHref(), 'Add Custom Entry', false) + '</div>';
+    html += '<div style="margin-top:10px;"><b>Toggle Trade Category Selections</b></div>';
+    html += '<div style="margin-top:6px;">';
+    sortedTradeGoodGroups().forEach(function(group){
+      var selected = String(group.key || '') === String(activeGroupKey || '');
+      var marker = selected ? '[x] ' : '[ ] ';
+      html += compactToggleLink(tradePanelHref(group.key), marker + group.label, selected);
+    });
+    html += '</div>';
+    html += '<div style="margin-top:10px;"><b>Toggle Trade Category Selections</b></div>';
     return html;
   }
 
-  function renderTradeGoodsSelectionToolbar(){
+  function renderTradeGoodsSelectionToolbar(pid, activeGroupKey){
     var html = '<div style="' + (cssVars().card || '') + '">';
-    html += renderAnchorTarget(tradeGoodsTopAnchorName());
-    html += '<div><b>How to Use This Handout</b></div>';
-    html += '<div style="margin-top:4px;">Each category below includes a category-wide season and calendar matrix. Use the category index to jump to the matching category farther down this handout, set Cargo Units directly on the matrices, and attach note text to each individual season, month, or festival transaction.</div>';
-    html += renderTradeGoodsCategoryIndex();
+    html += '<div style="margin-top:4px;">Each category includes a season matrix plus full calendar matrix. Use the selectable list below (including custom entries), then set Cargo Units directly on the matrices and attach note text to each season, month, or festival transaction.</div>';
+    html += renderTradeGoodsCategoryIndex(pid, activeGroupKey);
     html += '</div>';
     return html;
   }
 
-  function renderTradeCategoryControls(groupKey){
-    var handout = ensureManagedHandout(TRADE_GOODS_HANDOUT_NAME);
+  function renderTradeCategoryControls(pid, groupKey){
     var html = '<div style="margin-top:8px;">';
     html += inlineActionLink(tradeCategoryClearHref(groupKey), 'Clear Calendar', false);
     html += '</div>';
     html += '<div style="margin-top:8px;">';
-    html += inlineActionLink(handoutAnchorUrl(handout, tradeGoodsTopAnchorName()), 'Return to Top', false);
+    html += inlineActionLink(tradePanelHref(groupKey), 'Refresh Category', false);
     html += '</div>';
     return html;
   }
 
-  function renderTradeGoodsSelectionCategories(list){
+  function renderTradeGoodsSelectionCategories(list, pid, activeGroupKey){
+    var group = TRADE_GOOD_GROUP_MAP[activeGroupKey] ? findByKey(TRADE_GOOD_GROUPS, activeGroupKey) : null;
+    if(!group){
+      return '<div style="' + (cssVars().card || '') + '"><div><i>No trade-goods categories are available.</i></div></div>';
+    }
     var html = '';
-    sortedTradeGoodGroups().forEach(function(group){
-      var target = tradeCategoryTarget(group);
-      var cardStyle = (cssVars().card || '');
-      html += '<div style="' + cardStyle + '">';
-      html += renderAnchorTarget(tradeGoodsCategoryAnchorName(group.key));
-      html += renderSectionHeading(group.label);
-      html += '<div style="margin-top:4px;">' + esc(tradeGoodGroupDescription(group.key)) + '</div>';
-      html += muted('Use the category-wide grids below to record general trade posture for the entire ' + lower(group.label) + ' category.');
-      html += renderTradeSeasonMatrix(list, target);
-      html += renderTradeGoodsMatrix(list, target);
-      html += renderTradeCategoryControls(group.key);
-      html += '</div>';
-    });
+    var target = tradeCategoryTarget(group);
+    var cardStyle = (cssVars().card || '');
+    html += '<div style="' + cardStyle + '">';
+    html += renderSectionHeading(group.label);
+    html += '<div style="margin-top:4px;">' + esc(tradeGoodGroupDescription(group.key)) + '</div>';
+    html += muted('Use the category-wide grids below to record general trade posture for the entire ' + lower(group.label) + ' category.');
+    html += renderTradeSeasonMatrix(list, target);
+    html += renderTradeGoodsMatrix(list, target);
+    html += renderTradeCategoryControls(pid, group.key);
+    html += '</div>';
     return html;
   }
 
-  function renderTradeGoodsSelectionFooter(){
-    return '<div style="' + (cssVars().card || '') + '">'
-      + actionLink(commandExpr('tradeclear'), 'Clear All Trade Calendars', false)
-      + '</div>';
+  function tradeCategoryEchoLine(list, groupKey, stance){
+    var entry = tradeEntryFor(list, stance, tradeGroupTargetKey(groupKey));
+    return entry ? tradeScheduleSummary(entry) : 'none';
   }
 
-  function renderTradeGoodsSelectionHandout(pid, session){
-    var list = normalizeTradeGoods(session.data.tradeGoods || []);
-    var html = shell(TRADE_GOODS_HANDOUT_NAME);
-    html += renderTradeGoodsSelectionToolbar();
-    html += renderTradeGoodsSelectionCategories(list);
-    html += renderTradeGoodsSelectionFooter();
+  function tradeCategoryEchoLines(list, groupKey, stance){
+    var entry = tradeEntryFor(list, stance, tradeGroupTargetKey(groupKey));
+    return entry ? tradeScheduleLines(entry) : [];
+  }
+
+  function tradeCategoryHasValues(list, groupKey){
+    for(var i=0;i<TRADE_STANCE_ORDER.length;i++){
+      if(tradeEntryFor(list, TRADE_STANCE_ORDER[i], tradeGroupTargetKey(groupKey))) return true;
+    }
+    return false;
+  }
+
+  function renderTradeCategoryEchoSummary(list){
+    var groups = sortedTradeGoodGroups();
+    var html = '<div style="' + (cssVars().card || '') + '">';
+    html += '<div><b>Current Values (All Trade Categories)</b></div>';
+    var rendered = 0;
+    for(var i=0;i<groups.length;i++){
+      var group = groups[i];
+      if(!tradeCategoryHasValues(list, group.key)) continue;
+      rendered += 1;
+      html += '<div style="margin-top:8px;padding-top:6px;border-top:1px solid rgba(0,0,0,0.14);">';
+      html += '<div><b>' + esc(group.label) + '</b></div>';
+      for(var si=0;si<TRADE_STANCE_ORDER.length;si++){
+        var stance = TRADE_STANCE_ORDER[si];
+        if(!tradeEntryFor(list, stance, tradeGroupTargetKey(group.key))) continue;
+        var lines = tradeCategoryEchoLines(list, group.key, stance);
+        html += '<div style="margin-top:4px;"><b>' + esc(tradeStanceLabel(stance)) + ':</b></div>';
+        html += '<ul style="margin:2px 0 0 18px;padding:0;">';
+        for(var li=0;li<lines.length;li++){
+          html += '<li style="margin:2px 0;">' + esc(lines[li]) + '</li>';
+        }
+        html += '</ul>';
+      }
+      html += '</div>';
+    }
+    if(!rendered){
+      html += '<div style="margin-top:6px;"><i>No trade category values are currently set.</i></div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  function tradeHandoutName(pid, session){
+    var token = session ? tokenDisplayName(getObj('graphic', session.tokenId), session.tokenId) : 'Location';
+    return 'Map Point Wizard Trade Categories - ' + token + ' - ' + playerName(pid || '');
+  }
+
+  function renderTradeHandoutNotes(pid, session, activeGroupKey){
+    var list = normalizeTradeGoods((session && session.data && session.data.tradeGoods) || []);
+    var html = '<div style="font:14px/1.32 Georgia,serif;color:#111;">';
+    html += '<h3 style="margin:0 0 8px 0;">Map Point Wizard Trade Categories</h3>';
+    html += '<div style="margin-bottom:8px;">Bound location: <b>' + esc(boundTokenSpecifics(session)) + '</b></div>';
+    html += renderTradeGoodsSelectionToolbar(pid, activeGroupKey);
+    html += renderTradeGoodsSelectionCategories(list, pid, activeGroupKey);
+    html += '<div style="' + (cssVars().card || '') + '">';
+    html += actionLink(tradePanelHref(activeGroupKey), 'Refresh Handout', false);
+    html += '</div>';
+    html += renderTradeCategoryEchoSummary(list);
+    html += '<div style="' + (cssVars().card || '') + '"><i>This handout can be closed when finished.</i></div>';
+    html += '</div>';
+    return html;
+  }
+
+  function ensureTradeHandout(pid, session){
+    if(!session) return null;
+    var activeGroupKey = resolveTradeGroupForPanel(pid);
+    setTradeGroup(pid, activeGroupKey);
+    var handout = currentTradeHandout(pid);
+    if(!handout){
+      handout = createObj('handout', {
+        name: tradeHandoutName(pid, session),
+        inplayerjournals: '',
+        controlledby: String(pid || ''),
+        archived: false
+      });
+      if(!handout) return null;
+      setTradeHandoutId(pid, handout.id);
+    }
+    try{
+      handout.set({
+        name: tradeHandoutName(pid, session),
+        inplayerjournals: '',
+        controlledby: String(pid || ''),
+        notes: renderTradeHandoutNotes(pid, session, activeGroupKey)
+      });
+    }catch(e){
+      log('fts_mapPointWizard ensureTradeHandout err: ' + e);
+      return null;
+    }
+    return {
+      handout: handout,
+      activeGroupKey: activeGroupKey,
+      url: 'https://journal.roll20.net/handout/' + handout.id
+    };
+  }
+
+  function renderTradeHandoutOpenLink(url, label){
+    return '<a href="' + hrefAttr(url || '#') + '" target="_blank" rel="noopener noreferrer" style="' + linkStyle(false) + '">' + esc(label) + '</a>';
+  }
+
+  function renderTradeGoodsSelectionFooter(pid){
+    var html = '<div style="' + (cssVars().card || '') + '">';
+    html += actionLink(commandExpr('tradeClear'), 'Clear All Trade Calendars', false);
+    html += '</div>';
+    html += renderSectionNavigation(pid);
+    return html;
+  }
+
+  function renderTradeGoodsSelectionPanel(pid, session){
+    var handoutState = ensureTradeHandout(pid, session);
+    var html = shell(TITLE);
+    html += renderStatusBanner(pid);
+    html += sectionProgressCard(pid);
+    html += '<div style="' + (cssVars().card || '') + '">';
+    html += '<div style="margin-top:4px;">Trade category calendars are edited in an ephemeral handout for easier viewing and scrolling.</div>';
+    if(handoutState && handoutState.url){
+      html += renderTradeHandoutOpenLink(handoutState.url, 'Open Trade Categories Handout');
+      html += actionLink(tradePanelHref(handoutState.activeGroupKey), 'Refresh Handout Contents', false);
+    }else{
+      html += '<div style="margin-top:6px;">Could not open the trade handout right now.</div>';
+    }
+    html += '</div>';
+    html += renderTradeGoodsSelectionFooter(pid);
     html += endShell();
     return html;
   }
 
   function renderTradeGoodsSelectionLauncher(pid){
-    var html = shell(TRADE_GOODS_HANDOUT_NAME);
-    html += '<div style="' + (cssVars().card || '') + '">';
-    html += '<div>No active Map Point Wizard session is open. Reopen this handout from the main Map Point Wizard when you need trade-goods editing.</div>';
-    html += '</div>';
-    html += endShell();
-    return html;
+    setView(pid, 'bind');
+    return renderBindSectionPanel(pid);
   }
 
   function chooserFieldLabel(field){
@@ -2751,8 +3203,18 @@
 
   function sortedSingleChooserOptions(field, session){
     var options = singleFieldOptionsForChooser(field, session);
+    if(field === 'development' || field === 'wealth'){
+      return options.slice().sort(function(a, b){
+        var left = asInt((a && a.key) || '');
+        var right = asInt((b && b.key) || '');
+        if(left !== null && right !== null) return left - right;
+        if(left !== null) return -1;
+        if(right !== null) return 1;
+        return alphaNumericCompare(String((a && a.label) || ''), String((b && b.label) || ''));
+      });
+    }
     return options.slice().sort(function(a, b){
-      return String(a.label || '').localeCompare(String(b.label || ''));
+      return alphaNumericCompare(String(a.label || ''), String(b.label || ''));
     });
   }
 
@@ -2760,7 +3222,7 @@
     var library = MULTI_LIBRARY[field];
     var options = library && Array.isArray(library.options) ? library.options.slice() : [];
     options.sort(function(a, b){
-      return optionButtonLabel(field, a).localeCompare(optionButtonLabel(field, b));
+      return alphaNumericCompare(optionButtonLabel(field, a), optionButtonLabel(field, b));
     });
     return options;
   }
@@ -2787,22 +3249,22 @@
         : 'Choose a region first to load its available locales.';
     }
     if(field === 'development' || field === 'wealth'){
-      return 'These fields stay on the standardized five-step trade hub scale.';
+      return 'These fields stay on the standardized five-step location scale.';
     }
     if(field === 'offense_types' || field === 'defense_types'){
       return 'Each selected type adds weighted points. The overall strength tier updates automatically.';
     }
-    return 'Built-in options are alphabetized. Add custom entries when this trade hub needs something local or unusual.';
+    return 'Built-in options are alphabetized. Add custom entries when this location needs something local or unusual.';
   }
 
   function renderChooserToolbar(field, session){
     var html = '<div style="' + (cssVars().card || '') + '">';
-    html += '<div><b>How to Use This Handout</b></div>';
+    html += '<div><b>How to Use This Chat Panel</b></div>';
     html += '<div style="margin-top:4px;">' + esc(chooserFieldDescription(field, session)) + '</div>';
     if(MULTI_LIBRARY[field]){
-      html += '<div style="margin-top:4px;">Use the built-in list below for canonical entries. Custom entries can be added, removed individually, or cleared all at once.</div>';
+      html += '<div style="margin-top:4px;">Use the selectable list below for canonical entries, and use <b>Add Custom Entry</b> when this location needs something local or unusual.</div>';
     }else{
-      html += '<div style="margin-top:4px;">Click an option to set it. The selected value updates immediately.</div>';
+      html += '<div style="margin-top:4px;">Click a list entry to set it. The selected value updates immediately.</div>';
     }
     html += '</div>';
     return html;
@@ -2813,26 +3275,122 @@
     var current = session.data[field] || '';
     var html = '';
     html += '<div style="' + (cssVars().card || '') + '">';
-    html += '<div><b>' + esc(chooserFieldLabel(field)) + '</b></div>';
     html += '<div style="margin-top:4px;"><b>Current:</b> ' + esc(current ? valueLabel(field, current, session) : 'Not set') + '</div>';
     if(field === 'locale' && !session.data.region){
       html += muted('<i>Choose a region first.</i>');
-    }
-    if(current){
-      html += '<div style="margin-top:6px;">' + inlineActionLink(commandExpr('pick --field ' + field + ' --value clear'), 'Clear ' + chooserFieldLabel(field), false) + '</div>';
     }
     if(!options.length){
       html += muted('<i>No options available yet.</i>');
       html += '</div>';
       return html;
     }
-    html += renderActionGrid(options.map(function(option){
+    html += '<div style="margin-top:8px;">';
+    for(var i=0;i<options.length;i++){
+      var selected = String(options[i].key) === String(current || '');
+      var marker = selected ? '[x] ' : '[ ] ';
+      html += compactToggleLink(
+        commandExpr('pick --field ' + field + ' --value ' + encodeCommandValue(options[i].key)),
+        marker + optionButtonLabel(field, options[i]),
+        selected
+      );
+    }
+    var noneSelected = !String(current || '');
+    html += compactToggleLink(
+      commandExpr('pick --field ' + field + ' --value clear'),
+      (noneSelected ? '[x] ' : '[ ] ') + 'None',
+      noneSelected
+    );
+    html += '</div>';
+    html += '</div>';
+    return html;
+  }
+
+  function isCompactToggleField(field){
+    field = normalizeKey(field || '');
+    return (
+      field === 'cultures'
+      || field === 'faiths'
+      || field === 'factions'
+      || field === 'allies'
+      || field === 'enemies'
+      || field === 'offense_types'
+      || field === 'defense_types'
+    );
+  }
+
+  function compactToggleTone(selected){
+    var palette = currentPaletteName();
+    var map = {
+      none:      { fg:'#1f2a37', bg:'rgba(80,92,108,0.05)',   border:'rgba(80,92,108,0.28)',   bgSelected:'rgba(80,92,108,0.18)',   borderSelected:'rgba(80,92,108,0.48)' },
+      dark:      { fg:'#ece7ff', bg:'rgba(155,109,255,0.08)', border:'rgba(155,109,255,0.34)', bgSelected:'rgba(155,109,255,0.20)', borderSelected:'rgba(155,109,255,0.56)' },
+      mint:      { fg:'#163122', bg:'rgba(82,125,82,0.08)',   border:'rgba(82,125,82,0.34)',   bgSelected:'rgba(82,125,82,0.20)',   borderSelected:'rgba(82,125,82,0.56)' },
+      parchment: { fg:'#3b2811', bg:'rgba(154,110,55,0.08)',  border:'rgba(154,110,55,0.34)',  bgSelected:'rgba(154,110,55,0.20)',  borderSelected:'rgba(154,110,55,0.56)' },
+      powder:    { fg:'#113149', bg:'rgba(122,167,217,0.08)', border:'rgba(122,167,217,0.34)', bgSelected:'rgba(122,167,217,0.22)', borderSelected:'rgba(122,167,217,0.58)' },
+      rosebud:   { fg:'#4a0f2b', bg:'rgba(186,46,104,0.08)',  border:'rgba(186,46,104,0.34)',  bgSelected:'rgba(186,46,104,0.22)',  borderSelected:'rgba(186,46,104,0.58)' }
+    };
+    var tone = map[palette] || map.none;
+    return {
+      color: tone.fg,
+      background: selected ? tone.bgSelected : tone.bg,
+      border: selected ? tone.borderSelected : tone.border
+    };
+  }
+
+  function compactToggleLink(href, label, selected){
+    var tone = compactToggleTone(selected);
+    var style = 'display:block;margin-top:4px;padding:4px 6px;text-decoration:none;line-height:1.25;'
+      + 'border:1px solid ' + tone.border + ';background:' + tone.background + ';color:' + tone.color + ';'
+      + 'border-radius:4px;';
+    style += selected ? 'font-weight:bold;' : '';
+    var attrs = ' href="' + hrefAttr(href) + '" style="' + style + '"';
+    if(String(href || '').charAt(0) !== '#' && RT.fts && typeof RT.fts.actionLinkAttrs === 'function'){
+      attrs = RT.fts.actionLinkAttrs(href);
+      attrs = mergeStyleAttr(attrs, style);
+    }
+    return '<a' + attrs + '>' + esc(label) + '</a>';
+  }
+
+  function compactToggleOptions(field, session){
+    var values = uniqueStrings((session && session.data && session.data[field]) || []);
+    var options = sortedMultiChooserOptions(field).map(function(option){
       return {
-        href: commandExpr('pick --field ' + field + ' --value ' + encodeCommandValue(option.key)),
-        label: option.label,
-        selected: String(option.key) === String(current || '')
+        key: String(option.key || ''),
+        label: selectedValueText(field, option.key, session)
       };
-    }), 3);
+    });
+    var seen = {};
+    for(var i=0;i<options.length;i++){
+      seen[String(options[i].key || '')] = true;
+    }
+    for(var j=0;j<values.length;j++){
+      var value = String(values[j] || '');
+      if(!value || seen[value]) continue;
+      seen[value] = true;
+      options.push({
+        key: value,
+        label: selectedValueText(field, value, session)
+      });
+    }
+    options.sort(function(a, b){
+      return alphaNumericCompare(String(a.label || ''), String(b.label || ''));
+    });
+    return options;
+  }
+
+  function renderCompactMultiToggleList(field, session){
+    var values = session.data[field] || [];
+    var options = compactToggleOptions(field, session);
+    var html = '<div style="margin-top:6px;">';
+    for(var i=0;i<options.length;i++){
+      var selected = values.indexOf(options[i].key) !== -1;
+      var action = selected ? 'multiRemove' : 'multiAdd';
+      var marker = selected ? '[x] ' : '[ ] ';
+      html += compactToggleLink(
+        commandExpr(action + ' --field ' + field + ' --value ' + encodeCommandValue(options[i].key)),
+        marker + optionButtonLabel(field, options[i]),
+        selected
+      );
+    }
     html += '</div>';
     return html;
   }
@@ -2846,7 +3404,7 @@
       var titleText = 'Remove ' + selectedValueText(field, value, session) + ' from ' + chooserFieldLabel(field);
       html += '<div style="margin-top:6px;padding:8px;border:1px solid rgba(0,0,0,0.12);background:rgba(255,255,255,0.55);">';
       html += '<div><span style="display:inline-block;max-width:88%;vertical-align:top;"><b>' + esc(selectedValueText(field, value, session)) + '</b></span>'
-        + '<span style="float:right;">' + iconActionLink(commandExpr('multiremove --field ' + field + ' --value ' + encodeCommandValue(value)), '&#10005;', titleText) + '</span></div>';
+         + '<span style="float:right;">' + iconActionLink(commandExpr('multiRemove --field ' + field + ' --value ' + encodeCommandValue(value)), '&#10005;', titleText) + '</span></div>';
       html += '<div style="clear:both;"></div>';
       html += '</div>';
     }
@@ -2857,95 +3415,73 @@
   function renderMultiChooserSection(field, session){
     var library = MULTI_LIBRARY[field];
     var values = session.data[field] || [];
+    var toggleCategoryLabel = (function(){
+      var map = {
+        cultures:'Culture',
+        faiths:'Faith',
+        factions:'Faction',
+        allies:'Ally',
+        enemies:'Enemy',
+        offense_types:'Offense Type',
+        defense_types:'Defense Type'
+      };
+      return map[normalizeKey(field || '')] || chooserFieldLabel(field);
+    }());
+    var toggleHeading = 'Toggle ' + toggleCategoryLabel + ' Selections';
     var html = '';
     html += '<div style="' + (cssVars().card || '') + '">';
-    html += '<div><b>' + esc(library.label) + '</b></div>';
-    html += '<div style="margin-top:6px;"><b>Current Selections</b></div>';
-    html += renderMultiChooserSelectionRows(field, session);
-    html += '<div style="margin-top:6px;">' + inlineActionLink(multiCustomHref(field), 'Add Custom Entry', false);
-    if(values.length){
-      html += inlineActionLink(commandExpr('multiclear --field ' + field), 'Clear ' + library.label, false);
+    if(isCompactToggleField(field)){
+      html += '<div style="margin-top:4px;"><b>Selected:</b> ' + esc(String(values.length)) + '</div>';
+      html += '<div style="margin-top:6px;">' + inlineActionLink(multiCustomHref(field), 'Add Custom Entry', false) + '</div>';
+      html += '<div style="margin-top:10px;"><b>' + esc(toggleHeading) + '</b></div>';
+      html += renderCompactMultiToggleList(field, session);
+      html += '<div style="margin-top:10px;"><b>' + esc(toggleHeading) + '</b></div>';
+    }else{
+      html += '<div style="margin-top:6px;"><b>Current Selections</b></div>';
+      html += renderMultiChooserSelectionRows(field, session);
+      html += '<div style="margin-top:6px;">' + inlineActionLink(multiCustomHref(field), 'Add Custom Entry', false);
+      if(values.length){
+        html += inlineActionLink(commandExpr('multiClear --field ' + field), 'Clear ' + library.label, false);
+      }
+      html += '</div>';
+      html += '<div style="margin-top:10px;"><b>Built-In Options</b></div>';
+      var options = sortedMultiChooserOptions(field);
+      html += renderActionGrid(options.map(function(option){
+        var selected = values.indexOf(option.key) !== -1;
+        var action = selected ? 'multiRemove' : 'multiAdd';
+        return {
+          href: commandExpr(action + ' --field ' + field + ' --value ' + encodeCommandValue(option.key)),
+          label: optionButtonLabel(field, option),
+          selected: selected
+        };
+      }), 2);
+      html += '<div style="margin-top:10px;">' + actionLink(commandExpr('multiClear --field ' + field), 'Reset', false) + '</div>';
     }
-    html += '</div>';
-    html += '<div style="margin-top:10px;"><b>Built-In Options</b></div>';
-    var options = sortedMultiChooserOptions(field);
-    html += renderActionGrid(options.map(function(option){
-      var selected = values.indexOf(option.key) !== -1;
-      var action = selected ? 'multiremove' : 'multiadd';
-      return {
-        href: commandExpr(action + ' --field ' + field + ' --value ' + encodeCommandValue(option.key)),
-        label: optionButtonLabel(field, option),
-        selected: selected
-      };
-    }), 3);
-    html += '<div style="margin-top:10px;">' + actionLink(commandExpr('multiclear --field ' + field), 'Reset', false) + '</div>';
     html += '</div>';
     return html;
   }
 
-  function renderChooserEditorHandout(field, pid, session){
-    var html = shell(chooserHandoutName(field));
+  function renderChooserEditorPanel(field, pid, session){
+    var html = shell(TITLE);
+    html += renderStatusBanner(pid);
+    html += sectionProgressCard(pid);
     html += renderChooserToolbar(field, session);
     if(MULTI_LIBRARY[field]) html += renderMultiChooserSection(field, session);
     else html += renderSingleChooserSection(field, session);
+    html += renderSectionNavigation(pid);
     html += endShell();
     return html;
   }
 
   function renderChooserLauncher(field, pid){
-    var html = shell(chooserHandoutName(field));
-    html += '<div style="' + (cssVars().card || '') + '">';
-    html += '<div>No active Map Point Wizard session is open. Reopen this chooser from the main Map Point Wizard to set <b>' + esc(chooserFieldLabel(field)) + '</b>.</div>';
-    html += '</div>';
-    html += endShell();
-    return html;
+    setView(pid, 'bind');
+    return renderBindSectionPanel(pid);
   }
 
-  function renderChooserHandout(field, pid){
+  function renderChooserViewPanel(field, pid){
     var session = currentSession(pid);
     if(currentBlankView(pid)) session = null;
-    return session ? renderChooserEditorHandout(field, pid, session) : renderChooserLauncher(field, pid);
-  }
-
-  function refreshChooserHandout(pid, field){
-    try{
-      return upsertChooserHandout(field, renderChooserHandout(field, pid));
-    }catch(e){
-      log('fts_mapPointWizard refreshChooserHandout err: ' + e);
-      return null;
-    }
-  }
-
-  function renderTradeGoodsHandout(pid){
-    var session = currentSession(pid);
-    if(currentBlankView(pid)) session = null;
-    return session ? renderTradeGoodsSelectionHandout(pid, session) : renderTradeGoodsSelectionLauncher(pid);
-  }
-
-  function refreshTradeGoodsHandout(pid){
-    try{
-      return upsertTradeGoodsHandout(renderTradeGoodsHandout(pid));
-    }catch(e){
-      log('fts_mapPointWizard refreshTradeGoodsHandout err: ' + e);
-      return null;
-    }
-  }
-
-  function refreshChooserHandouts(pid){
-    var out = {};
-    for(var i=0;i<CHOOSER_FIELD_ORDER.length;i++){
-      out[CHOOSER_FIELD_ORDER[i]] = refreshChooserHandout(pid, CHOOSER_FIELD_ORDER[i]);
-    }
-    return out;
-  }
-
-  function refreshAllHandouts(pid){
-    return {
-      wizardMenu: refreshWizardMenuHandout(),
-      wizard: refreshWizardHandout(pid),
-      choosers: refreshChooserHandouts(pid),
-      tradeGoods: refreshTradeGoodsHandout(pid)
-    };
+    return session ? renderChooserEditorPanel(field, pid, session) : renderChooserLauncher(field, pid);
   }
 
   function renderReviewBlock(session){
@@ -2996,82 +3532,193 @@
     return '<div style="margin-top:6px;">' + rows.join('') + '</div>';
   }
 
-  function renderEditorHandout(pid, session){
-    var template = resolveTemplateRecord(session.data.template);
-    var html = shell(TITLE);
-    html += renderSummary(session);
-
-    html += '<div style="' + (cssVars().card || '') + '">';
-    html += '<div><b>Template</b></div>';
-    html += '<div style="margin-top:4px;">Templates live in the wizard by default. Choosing a region keeps those baselines available and adds any region-specific trade-point templates supplied by loaded region modules.</div>';
-    html += renderInlineField(
-      'Current Template',
-      renderSingleValue(template ? template.displayLabel : 'None selected'),
-      inlineActionLink(chooserHref('template'), 'Choose Template', false)
-    );
-    if(template && template.desc){
-      html += muted(esc(template.desc));
+  function renderStatusBanner(pid){
+    var status = currentStatus(pid);
+    if(!status || !status.text) return '';
+    var tone = {
+      border:'rgba(44, 90, 160, 0.35)',
+      bg:'rgba(44, 90, 160, 0.08)',
+      title:'Notice'
+    };
+    if(status.level === 'error'){
+      tone = {
+        border:'rgba(122, 27, 27, 0.38)',
+        bg:'rgba(122, 27, 27, 0.08)',
+        title:'Attention'
+      };
+    }else if(status.level === 'success'){
+      tone = {
+        border:'rgba(38, 112, 52, 0.38)',
+        bg:'rgba(38, 112, 52, 0.10)',
+        title:'Saved'
+      };
     }
+    return '<div style="' + (cssVars().card || '')
+      + 'border:1px solid ' + tone.border + ';background:' + tone.bg + ';">'
+      + '<div><b>' + tone.title + '</b></div>'
+      + '<div style="margin-top:4px;">' + esc(status.text) + '</div>'
+      + '</div>';
+  }
+
+  function renderPendingFinishChoice(session){
+    var pending = session && session.pendingFinishChoice;
+    if(!pending) return '';
+    var originalHref = commandExpr('finish --force yes --token ' + String(pending.originalTokenId || ''));
+    var currentHref = pending.currentTokenId
+      ? commandExpr('finish --force yes --token ' + String(pending.currentTokenId || ''))
+      : '';
+    var html = '<div style="' + (cssVars().card || '') + '">';
+    html += '<div><b>Save Selection Check</b></div>';
+    html += '<div style="margin-top:4px;">This session started on <b>' + esc(pending.originalLabel || 'Original Token') + '</b>.</div>';
+    html += '<div style="margin-top:4px;">Current selection: <b>' + esc(pending.currentLabel || 'No token selected') + '</b>.</div>';
+    html += '<div style="margin-top:4px;">Choose where these changes should be written.</div>';
+    html += actionLink(originalHref, 'Save to Original Token', false);
+    if(currentHref && String(pending.currentTokenId || '') !== String(pending.originalTokenId || '')){
+      html += actionLink(currentHref, 'Save to Current Selection', false);
+    }
+    html += actionLink(commandExpr('resume'), 'Cancel Save Prompt', false);
     html += '</div>';
-
-    html += '<div style="' + (cssVars().card || '') + '">';
-    html += '<div><b>Core Details</b></div>';
-    html += renderInlineField('Name', renderSingleValue(session.data.name || 'Not set'), inlineActionLink(fieldSetHref('name', 'Trade Hub Name', session.data.name || ''), 'Set Name', false));
-    html += renderInlineField('Region', renderSingleValue(session.data.region ? resolveRegionLabel(session.data.region) : 'Not set'), inlineActionLink(chooserHref('region'), 'Choose Region', false));
-    html += renderInlineField('Locale', renderSingleValue(session.data.locale ? resolveLocaleLabel(session.data.region, session.data.locale) : 'Not set'), inlineActionLink(chooserHref('locale'), 'Choose Locale', false));
-    html += renderInlineField('Population', renderSingleValue(session.data.population || 'Not set'), inlineActionLink(fieldSetHref('population', 'Average Population', session.data.population || ''), 'Set Population', false));
-    html += renderInlineField('Development', renderSingleValue(session.data.development ? (session.data.development + ' - ' + valueLabel('development', session.data.development, session)) : 'Not set'), inlineActionLink(chooserHref('development'), 'Choose Development', false));
-    html += renderInlineField('Wealth', renderSingleValue(session.data.wealth ? (session.data.wealth + ' - ' + valueLabel('wealth', session.data.wealth, session)) : 'Not set'), inlineActionLink(chooserHref('wealth'), 'Choose Wealth', false));
-    html += '</div>';
-
-    html += '<div style="' + (cssVars().card || '') + '">';
-    html += '<div><b>Identity and Relationships</b></div>';
-    html += renderMultiField('cultures', session);
-    html += renderMultiField('faiths', session);
-    html += renderMultiField('factions', session);
-    html += renderMultiField('allies', session);
-    html += renderMultiField('enemies', session);
-    html += '</div>';
-
-    html += '<div style="' + (cssVars().card || '') + '">';
-    html += '<div><b>Strength</b></div>';
-    html += renderInlineField('Offense Strength', renderSingleValue(strengthSummaryText('offense', session.data)), inlineActionLink(chooserHref('offense_types'), 'Choose Offense Types', false));
-    html += renderMultiField('offense_types', session, false);
-    html += renderInlineField('Defense Strength', renderSingleValue(strengthSummaryText('defense', session.data)), inlineActionLink(chooserHref('defense_types'), 'Choose Defense Types', false));
-    html += renderMultiField('defense_types', session, false);
-    html += '</div>';
-
-    html += renderTradeWindow(pid, session);
-
-    html += '<div style="' + (cssVars().card || '') + '">';
-    html += '<div><b>Review and Finish</b></div>';
-    html += '<div style="margin-top:4px;">Save writes the current configuration to the token this wizard session started from. If your current selection no longer matches that token, the wizard will warn before saving.</div>';
-    html += renderReviewBlock(session);
-    html += actionLink(finishWithSelectedHref(), 'Save to Token', false);
-    html += '</div>';
-
-    html += endShell();
     return html;
   }
 
-  function renderLauncher(pid){
+  function renderTemplateAppliedSummaryCard(session){
+    var applied = session && session.lastAppliedTemplate;
+    if(!applied) return '';
+    var rowA = [
+      'Region: ' + resolveRegionLabel(applied.region || ''),
+      'Locale: ' + resolveLocaleLabel(applied.region || '', applied.locale || ''),
+      'Population: ' + (String(applied.population || '').trim() || 'unset')
+    ];
+    var rowB = [
+      'Development: ' + (String(applied.development || '').trim() || 'unset'),
+      'Wealth: ' + (String(applied.wealth || '').trim() || 'unset'),
+      'Cultures: ' + String(applied.cultures || 0),
+      'Faiths: ' + String(applied.faiths || 0),
+      'Factions: ' + String(applied.factions || 0),
+      'Trade Categories: ' + String(applied.tradeCategories || 0)
+    ];
+    var html = '<div style="' + (cssVars().card || '') + '">';
+    html += '<div><b>Template Applied:</b> ' + esc(applied.label || applied.key || 'Unknown') + '</div>';
+    html += '<div style="margin-top:4px;">' + esc(rowA.join(' | ')) + '</div>';
+    html += '<div style="margin-top:4px;">' + esc(rowB.join(' | ')) + '</div>';
+    html += '</div>';
+    return html;
+  }
+
+  function sectionSession(pid){
+    var session = currentSession(pid);
+    if(currentBlankView(pid)) return null;
+    return session || null;
+  }
+
+  function sectionProgressCard(pid){
+    var index = sectionIndexForPlayer(pid);
+    var meta = currentSectionMeta(pid);
+    var html = '<div style="' + (cssVars().card || '') + '">';
+    html += '<div><b>Section ' + String(index + 1) + ' of ' + String(SECTION_SEQUENCE.length) + ': ' + esc(meta.label) + '</b></div>';
+    html += '</div>';
+    return html;
+  }
+
+  function disabledNavButton(label){
+    return '<span style="' + linkStyle(false) + 'opacity:0.45;cursor:not-allowed;">' + esc(label) + '</span>';
+  }
+
+  function renderSectionNavigation(pid){
+    var section = currentSectionMeta(pid);
+    var index = sectionIndexForPlayer(pid);
+    var session = sectionSession(pid);
+    var prevEnabled = index > 0;
+    var nextMeta = SECTION_SEQUENCE[index + 1] || null;
+    var nextEnabled = !!nextMeta && (!nextMeta.requiresSession || !!session);
+    var saveEnabled = !!session;
+
+    var html = '<div style="' + controlAreaStyle() + '">';
+    html += prevEnabled ? actionLink(backSectionHref(), 'Back', false) : disabledNavButton('Back');
+    html += nextEnabled ? actionLink(nextSectionHref(), 'Next', false) : disabledNavButton('Next');
+    html += actionLink(resetWizardHref(), 'Reset', false);
+    html += saveEnabled ? actionLink(saveAndExitHref(), 'Save and Exit', false) : disabledNavButton('Save and Exit');
+    html += '</div>';
+    return html;
+  }
+
+  function boundTokenSpecifics(session){
+    if(!session || !session.tokenId) return 'none';
+    var token = getObj('graphic', session.tokenId);
+    var page = getObj('page', session.pageId || (token ? token.get('pageid') : ''));
+    var label = tokenDisplayName(token, session.tokenId);
+    var pageLabel = page ? String(page.get('name') || 'Unknown Page') : 'Unknown Page';
+    return label + ' [token ' + String(session.tokenId || '') + '] on ' + pageLabel;
+  }
+
+  function renderBindSectionPanel(pid){
+    var session = sectionSession(pid);
     var html = shell(TITLE);
-    var v = cssVars();
-    html += '<div style="' + (v.card || '') + '">';
-    html += '<div>This GM-only handout is the primary map-point wizard surface. Select a token on the map, then start the wizard. Each choose-style control opens its own GM-only chooser handout, while trade goods open <b>Trade Goods Categories</b> for category-based authoring.</div>';
-    html += actionLink(startWithSelectedHref(), 'Start Map Point Wizard');
+    html += renderStatusBanner(pid);
+    html += sectionProgressCard(pid);
+    html += '<div style="' + controlAreaStyle() + '">';
+    html += '<div><b>How To Use This Wizard</b></div>';
+    html += '<div style="margin-top:4px;">Select the token you want to update/generate as a map point (location). Click <b>Start / Bind Selected Token</b> to begin.</div>';
+    html += '<div style="margin-top:4px;">Current bound token: <b>' + esc(boundTokenSpecifics(session)) + '</b></div>';
+    html += actionLink(startWithSelectedHref(), 'Start / Bind Selected Token', false);
     html += '</div>';
+    html += renderSectionNavigation(pid);
     html += endShell();
     return html;
   }
 
-  function renderWizardMenuLaunchCard(token, handout){
-    var html = shell(WIZARD_MENU_HANDOUT_NAME);
+  function renderNameSectionPanel(pid){
+    var session = sectionSession(pid);
+    if(!session){
+      setView(pid, 'bind');
+      return renderBindSectionPanel(pid);
+    }
+    var html = shell(TITLE);
+    html += renderStatusBanner(pid);
+    html += sectionProgressCard(pid);
+    html += renderTemplateAppliedSummaryCard(session);
     html += '<div style="' + (cssVars().card || '') + '">';
-    html += '<div><b>' + esc(tokenDisplayName(token)) + '</b> is ready in the Map Point Wizard.</div>';
-    html += '<div style="margin-top:4px;">Open the handout below to continue editing that selected token.</div>';
-    html += directHandoutActionLink(handoutUrl(handout), 'Open Map Point Wizard');
+    html += '<div style="margin-top:4px;">Set the map point name that will be saved to the bound token.</div>';
+    html += renderInlineField('Current Name', renderSingleValue(session.data.name || 'Not set'), inlineActionLink(fieldSetHref('name', 'Map Point Name', session.data.name || ''), 'Set Name', false));
     html += '</div>';
+    html += renderSectionNavigation(pid);
+    html += endShell();
+    return html;
+  }
+
+  function renderPopulationSectionPanel(pid){
+    var session = sectionSession(pid);
+    if(!session){
+      setView(pid, 'bind');
+      return renderBindSectionPanel(pid);
+    }
+    var html = shell(TITLE);
+    html += renderStatusBanner(pid);
+    html += sectionProgressCard(pid);
+    html += '<div style="' + (cssVars().card || '') + '">';
+    html += '<div style="margin-top:4px;">Set the average population for this map point. Use a whole number equal to or greater than zero.</div>';
+    html += renderInlineField('Current Population', renderSingleValue(session.data.population || 'Not set'), inlineActionLink(fieldSetHref('population', 'Average Population', session.data.population || ''), 'Set Population', false));
+    html += '</div>';
+    html += renderSectionNavigation(pid);
+    html += endShell();
+    return html;
+  }
+
+  function renderReviewSectionPanel(pid){
+    var session = sectionSession(pid);
+    if(!session){
+      setView(pid, 'bind');
+      return renderBindSectionPanel(pid);
+    }
+    var html = shell(TITLE);
+    html += renderStatusBanner(pid);
+    html += sectionProgressCard(pid);
+    html += '<div style="' + (cssVars().card || '') + '">';
+    html += '<div style="margin-top:4px;">Review all values below, then use <b>Save and Exit</b> when you are ready.</div>';
+    html += renderReviewBlock(session);
+    html += '</div>';
+    html += renderPendingFinishChoice(session);
+    html += renderSectionNavigation(pid);
     html += endShell();
     return html;
   }
@@ -3107,7 +3754,7 @@
     var wants = tradeEntriesForPeriod(data.tradeGoods || [], 'wants', periodKey).map(entryLabel);
     var needs = tradeEntriesForPeriod(data.tradeGoods || [], 'needs', periodKey).map(entryLabel);
     var lines = [
-      String(data.name || '').trim() || 'Trade Hub',
+      String(data.name || '').trim() || 'Location',
       tooltipLineForStance('has', has),
       tooltipLineForStance('wants', wants),
       tooltipLineForStance('needs', needs)
@@ -3115,7 +3762,7 @@
     var tooltip = lines.join(TOOLTIP_LINE_BREAK);
     if(tooltip.length <= TOOLTIP_MAX_CHARS) return tooltip;
     lines = [
-      String(data.name || '').trim() || 'Trade Hub',
+      String(data.name || '').trim() || 'Location',
       tooltipLineForStance('has', has, 'compact'),
       tooltipLineForStance('wants', wants, 'compact'),
       tooltipLineForStance('needs', needs, 'compact')
@@ -3123,7 +3770,7 @@
     tooltip = lines.join(TOOLTIP_LINE_BREAK);
     if(tooltip.length <= TOOLTIP_MAX_CHARS) return tooltip;
     lines = [
-      String(data.name || '').trim() || 'Trade Hub',
+      String(data.name || '').trim() || 'Location',
       tooltipLineForStance('has', has, 'count'),
       tooltipLineForStance('wants', wants, 'count'),
       tooltipLineForStance('needs', needs, 'count')
@@ -3223,6 +3870,9 @@
   function finishSelectionState(session, msg, explicitTokenId){
     var sessionToken = getObj('graphic', session.tokenId);
     var selectedToken = resolveExplicitSelectedToken(msg, explicitTokenId);
+    if(!selectedToken && sessionToken){
+      selectedToken = sessionToken;
+    }
     var selectedId = String((selectedToken && selectedToken.id) || '');
     var sessionId = String(session.tokenId || '');
     return {
@@ -3232,26 +3882,44 @@
     };
   }
 
-  function renderFinishSelectionWarning(session, selectionState){
-    var originalLabel = tokenDisplayName(selectionState.sessionToken, session.tokenId);
-    var currentLabel = selectionState.selectedToken ? tokenDisplayName(selectionState.selectedToken) : 'No token selected';
-    var originalHref = commandExpr('finish --force yes --token ' + String(session.tokenId || ''));
-    var currentHref = selectionState.selectedToken
-      ? commandExpr('finish --force yes --token ' + String(selectionState.selectedToken.id || ''))
-      : '';
-    var html = shell(TITLE);
-    html += '<div style="' + (cssVars().card || '') + '">';
-    html += '<div><b>Save Selection Check</b></div>';
-    html += '<div style="margin-top:4px;">This wizard session started on <b>' + esc(originalLabel) + '</b>.</div>';
-    html += '<div style="margin-top:4px;">Current selection: <b>' + esc(currentLabel) + '</b>.</div>';
-    html += '<div style="margin-top:4px;">Choose whether to save these changes to the original token or to the current token (if another is selected).</div>';
-    html += actionLink(originalHref, 'Save to Original Token', false);
-    if(currentHref && !selectionState.matches){
-      html += actionLink(currentHref, 'Save to Current Selection', false);
+  function syncMapLocationFromWizard(pid, token, session){
+    token = token || null;
+    if(!token || !token.id) return;
+    var label = stringOrBlank((session && session.data && session.data.name) || token.get('name') || '');
+    if(!label) return;
+
+    try{
+      var mapRecords = getMapRecordsState();
+      if(!mapRecords.lastSelection) mapRecords.lastSelection = {};
+      mapRecords.lastSelection[String(pid || '')] = [{ _id:String(token.id || ''), _type:'graphic' }];
+    }catch(selectionErr){
+      log('fts_mapPointWizard syncMapLocationFromWizard selection err: ' + selectionErr);
     }
-    html += '</div>';
-    html += endShell();
-    return html;
+
+    try{
+      if(typeof mapMetaRecordsSection !== 'undefined'
+        && mapMetaRecordsSection
+        && typeof mapMetaRecordsSection.handleCommand === 'function'){
+        var result = mapMetaRecordsSection.handleCommand({
+          pid: String(pid || ''),
+          val: 'set location ' + label,
+          silent: true
+        });
+        if(result && result.error){
+          log('fts_mapPointWizard syncMapLocationFromWizard mapMeta command err: ' + result.error);
+        }
+      }
+    }catch(commandErr){
+      log('fts_mapPointWizard syncMapLocationFromWizard mapMeta command exception: ' + commandErr);
+    }
+
+    try{
+      if(RT.fts_mapMeta && typeof RT.fts_mapMeta.refreshActiveMapRecords === 'function'){
+        RT.fts_mapMeta.refreshActiveMapRecords();
+      }
+    }catch(refreshErr){
+      log('fts_mapPointWizard syncMapLocationFromWizard refresh err: ' + refreshErr);
+    }
   }
 
   function finalizeSession(pid, session, explicitTokenId){
@@ -3274,6 +3942,7 @@
     token.set('lockMovement', true);
 
     saveInstanceForToken(token.id, (page && page.id) || session.pageId, session.data);
+    syncMapLocationFromWizard(pid, token, session);
     clearSession(pid);
     setBlankView(pid, true);
     return { token:token, page:page, tooltip:tooltip, gmNotes:gmNotes };
@@ -3284,27 +3953,49 @@
   /* ======================================================================== */
 
   function isWizardCommandContent(content){
-    content = String(content || '').trim();
-    return /^!fts(\b|$)/i.test(content) && content.toLowerCase().indexOf('--' + lower(COMMAND)) !== -1;
+    return extractWizardCommandTail(content) !== null;
   }
 
   function extractWizardCommandTail(content){
     content = String(content || '').trim();
-    var idx = content.toLowerCase().indexOf('--' + lower(COMMAND));
-    return idx >= 0 ? content.slice(idx + ('--' + COMMAND).length).trim() : '';
+    if(!/^!fts(\b|$)/i.test(content)) return null;
+    var segments = content.split(/\s+--/);
+    for(var i=1;i<segments.length;i++){
+      var tokens = String(segments[i] || '').trim().split(/\s+/g).filter(function(tok){ return !!tok; });
+      if(lower(tokens[0] || '') === lower(COMMAND)){
+        var tail = tokens.slice(1).join(' ').trim();
+        for(var j=i+1;j<segments.length;j++){
+          tail += (tail ? ' ' : '') + '--' + String(segments[j] || '').trim();
+        }
+        return tail.trim();
+      }
+    }
+    return null;
   }
 
   function normalizeWizardAction(action){
-    return lower(action || '');
+    var key = lower(action || '');
+    return WIZARD_ACTIONS[key] ? key : key;
+  }
+
+  function normalizeWizardFlagKey(key){
+    var normalized = lower(key || '');
+    return WIZARD_FLAG_ALIASES[normalized] || normalized;
   }
 
   function normalizeWizardFlags(flags){
     flags = flags || {};
     var out = {};
     Object.keys(flags).forEach(function(key){
-      out[lower(key)] = flags[key];
+      out[normalizeWizardFlagKey(key)] = flags[key];
     });
     return out;
+  }
+
+  function parseFlagPart(part){
+    var tokens = String(part || '').trim().split(/\s+/g).filter(function(tok){ return !!tok; });
+    if(!tokens.length) return null;
+    return { key:normalizeWizardFlagKey(tokens[0]), value:tokens.slice(1).join(' ').trim() };
   }
 
   function parseFlags(text){
@@ -3313,12 +4004,9 @@
     if(!raw) return flags;
     var parts = (' ' + raw).split(/\s+--/);
     for(var i=1;i<parts.length;i++){
-      var part = String(parts[i] || '').trim();
-      if(!part) continue;
-      var spaceIdx = part.indexOf(' ');
-      var key = spaceIdx === -1 ? part : part.slice(0, spaceIdx);
-      var value = spaceIdx === -1 ? '' : part.slice(spaceIdx + 1).trim();
-      flags[lower(key)] = value;
+      var parsed = parseFlagPart(parts[i]);
+      if(!parsed || !parsed.key) continue;
+      flags[parsed.key] = parsed.value;
     }
     return flags;
   }
@@ -3326,10 +4014,14 @@
   function parseInnerCommand(text){
     text = String(text || '').trim();
     if(!text) return { action:'panel', flags:{} };
-    var firstSpace = text.indexOf(' ');
-    var action = lower(firstSpace === -1 ? text : text.slice(0, firstSpace));
-    var rest = firstSpace === -1 ? '' : text.slice(firstSpace + 1);
-    return { action:action, flags:parseFlags(rest) };
+    var flagIdx = text.search(/(^|\s)--/);
+    var actionText = flagIdx === -1 ? text : text.slice(0, flagIdx).trim();
+    var flagsText = flagIdx === -1 ? '' : text.slice(flagIdx).trim();
+    var actionTokens = actionText.split(/\s+/g).filter(function(tok){ return !!tok; });
+    if(!actionTokens.length){
+      return { action:'panel', flags:parseFlags(flagsText) };
+    }
+    return { action:normalizeWizardAction(actionTokens[0]), flags:parseFlags(flagsText) };
   }
 
   function applyPick(session, field, value){
@@ -3337,6 +4029,7 @@
     if(field === 'template'){
       if(!value || lower(value) === 'clear'){
         session.data.template = '';
+        clearTemplateAppliedSummary(session);
         return '';
       }
       var template = resolveTemplateChoice(session, value);
@@ -3347,6 +4040,7 @@
       resetBase.name = session.data.name || resetBase.name;
       session.data = mergeSnapshotIntoData(resetBase, template.defaults || {});
       session.data.template = template.key;
+      setTemplateAppliedSummary(session, template);
       return '';
     }
     if(field === 'region'){
@@ -3354,6 +4048,7 @@
         session.data.region = '';
         session.data.locale = '';
         session.data.template = '';
+        clearTemplateAppliedSummary(session);
         return '';
       }
       var known = loadKnownRegions();
@@ -3367,7 +4062,10 @@
       }
       if(!localeOk) session.data.locale = known[value].defaultLocale || '';
       var template = resolveTemplateRecord(session.data.template);
-      if(template && template.regionKey !== value) session.data.template = '';
+      if(template && template.regionKey !== value){
+        session.data.template = '';
+        clearTemplateAppliedSummary(session);
+      }
       return '';
     }
     if(field === 'locale'){
@@ -3564,6 +4262,63 @@
     return '';
   }
 
+  function findTradeGoodGroupByLabel(label){
+    var token = canonicalToken(label);
+    if(!token) return null;
+    var groups = sortedTradeGoodGroups();
+    for(var i=0;i<groups.length;i++){
+      if(canonicalToken(groups[i].label || '') === token) return groups[i];
+    }
+    return null;
+  }
+
+  function nextCustomTradeGroupKey(label){
+    var base = normalizeKey(label || '');
+    if(!base) return '';
+    var key = 'custom_' + base;
+    if(!TRADE_GOOD_GROUP_MAP[key]) return key;
+    var idx = 2;
+    while(TRADE_GOOD_GROUP_MAP[key + '_' + String(idx)]){
+      idx += 1;
+    }
+    return key + '_' + String(idx);
+  }
+
+  function saveCustomTradeGroupToState(group){
+    group = normalizeCustomTradeGroupRecord(group);
+    if(!group) return;
+    var S = ensureState();
+    var list = Array.isArray(S.customTradeGroups) ? S.customTradeGroups : [];
+    var replaced = false;
+    for(var i=0;i<list.length;i++){
+      if(String((list[i] && list[i].key) || '') === group.key){
+        list[i] = group;
+        replaced = true;
+        break;
+      }
+    }
+    if(!replaced) list.push(group);
+    S.customTradeGroups = list;
+  }
+
+  function applyTradeGroupAdd(pid, label){
+    label = String(label || '').trim();
+    if(!label) return { error:'Custom trade category label cannot be empty.' };
+    var existing = findTradeGoodGroupByLabel(label);
+    if(existing){
+      setTradeGroup(pid, existing.key);
+      return { group:existing };
+    }
+    var key = nextCustomTradeGroupKey(label);
+    if(!key) return { error:'Custom trade category label must include letters or numbers.' };
+    var desc = 'Custom trade category created by the GM for this campaign.';
+    var created = upsertTradeGoodGroupRecord(key, label, desc);
+    if(!created) return { error:'Could not create that custom trade category.' };
+    saveCustomTradeGroupToState(created);
+    setTradeGroup(pid, created.key);
+    return { group:created };
+  }
+
   function handleWizardMessage(msg){
     if(msg.type !== 'api') return;
     if(isSelfChatMessage(msg)) return;
@@ -3574,7 +4329,6 @@
 
     var pid = msg.playerid;
     if(!isGM(pid)){
-      whisper(pid, shell(TITLE) + '<div>Only the GM may use the Map Point Wizard.</div>' + endShell());
       return;
     }
 
@@ -3587,69 +4341,155 @@
     var session = currentSession(pid);
     var error = '';
     if(parsed.action === 'panel'){
+      setView(pid, 'bind');
       var explicitTokenId = String(parsed.flags.token || '').trim();
       if(explicitTokenId){
         var panelStart = startSession(pid, msg, explicitTokenId);
         if(panelStart.error){
-          whisper(pid, shell(TITLE) + '<div>' + esc(panelStart.error) + '</div>' + endShell());
+          setStatus(pid, 'error', panelStart.error);
+          refreshChatView(pid);
           return;
         }
+        clearPendingFinishChoice(panelStart.session);
         touchSession(panelStart.session);
         storeSession(pid, panelStart.session);
+        clearStatus(pid);
       }else{
-        var synced = syncSessionToCurrentSelection(pid, msg);
-        if(synced.error){
-          whisper(pid, shell(TITLE) + '<div>' + esc(synced.error) + '</div>' + endShell());
-          return;
-        }
+        if(session) clearPendingFinishChoice(session);
+        clearStatus(pid);
       }
-      refreshAllHandouts(pid);
+      refreshChatView(pid);
+      return;
+    }
+
+    if(parsed.action === 'section'){
+      var targetSection = sectionMetaByKey(parsed.flags.key || '');
+      if(!targetSection){
+        setStatus(pid, 'error', 'Choose a valid wizard section.');
+        refreshChatView(pid);
+        return;
+      }
+      if(targetSection.requiresSession && !session){
+        setStatus(pid, 'error', 'Start / Bind Selected Token before opening that section.');
+        setView(pid, 'bind');
+        refreshChatView(pid);
+        return;
+      }
+      setView(pid, targetSection.view);
+      clearStatus(pid);
+      refreshChatView(pid);
+      return;
+    }
+
+    if(parsed.action === 'back' || parsed.action === 'next'){
+      var currentIndex = sectionIndexForPlayer(pid);
+      var targetIndex = lower(parsed.action) === 'back'
+        ? Math.max(0, currentIndex - 1)
+        : Math.min(SECTION_SEQUENCE.length - 1, currentIndex + 1);
+      var targetMeta = SECTION_SEQUENCE[targetIndex];
+      if(targetMeta.requiresSession && !session){
+        setStatus(pid, 'error', 'Start / Bind Selected Token before moving to the next section.');
+        setView(pid, 'bind');
+        refreshChatView(pid);
+        return;
+      }
+      setView(pid, targetMeta.view);
+      clearStatus(pid);
+      refreshChatView(pid);
+      return;
+    }
+
+    if(parsed.action === 'chooser'){
+      var chooserField = normalizeKey(parsed.flags.field || '');
+      if(!(chooserField && (MULTI_LIBRARY[chooserField] || SINGLE_CHOOSER_FIELDS.indexOf(chooserField) !== -1))){
+        setStatus(pid, 'error', 'Choose a valid field for chooser view.');
+        setView(pid, 'bind');
+        refreshChatView(pid);
+        return;
+      }
+      if(!session){
+        setStatus(pid, 'error', 'No active Map Point Wizard session is open.');
+        setView(pid, 'bind');
+        refreshChatView(pid);
+        return;
+      }
+      setView(pid, 'chooser:' + chooserField);
+      clearStatus(pid);
+      refreshChatView(pid);
+      return;
+    }
+
+    if(parsed.action === 'tradeview'){
+      if(parsed.flags.group) setTradeGroup(pid, parsed.flags.group);
+      if(!session){
+        setStatus(pid, 'error', 'No active Map Point Wizard session is open.');
+        setView(pid, 'bind');
+        refreshChatView(pid);
+        return;
+      }
+      setView(pid, 'trade');
+      clearStatus(pid);
+      refreshChatView(pid);
       return;
     }
 
     if(parsed.action === 'start'){
-      var started = startSession(pid, msg, parsed.flags.token || '', true);
+      var startToken = String(parsed.flags.token || '').trim();
+      var started = startSession(pid, msg, startToken, !!startToken);
       if(started.error){
-        whisper(pid, shell(TITLE) + '<div>' + esc(started.error) + '</div>' + endShell());
+        setStatus(pid, 'error', started.error);
+        setView(pid, 'bind');
+        refreshChatView(pid);
         return;
       }
+      clearPendingFinishChoice(started.session);
       touchSession(started.session);
       storeSession(pid, started.session);
-      refreshAllHandouts(pid);
-      return;
-    }
-
-    if(parsed.action === 'menuopen'){
-      var menuStart = startSession(pid, msg, parsed.flags.token || '', true);
-      if(menuStart.error){
-        whisper(pid, shell(WIZARD_MENU_HANDOUT_NAME) + '<div>' + esc(menuStart.error) + '</div>' + endShell());
-        return;
-      }
-      touchSession(menuStart.session);
-      storeSession(pid, menuStart.session);
-      var refreshed = refreshAllHandouts(pid) || {};
-      var openedHandout = refreshed.wizard || wizardHandout() || ensureManagedHandout(HANDOUT_NAME);
-      whisper(pid, renderWizardMenuLaunchCard(menuStart.token, openedHandout));
+      setStatus(pid, 'info', tokenDisplayName(started.token) + ' is ready in the Map Point Wizard.');
+      setView(pid, 'chooser:template');
+      refreshChatView(pid);
       return;
     }
 
     if(parsed.action === 'cancel'){
       clearSession(pid);
+      clearStatus(pid);
       setBlankView(pid, true);
-      refreshAllHandouts(pid);
+      setView(pid, 'bind');
+      refreshChatView(pid);
+      return;
+    }
+
+    if(parsed.action === 'reset'){
+      if(lower(parsed.flags.confirm || '') !== 'yes'){
+        refreshChatView(pid);
+        return;
+      }
+      clearSession(pid);
+      setStatus(pid, 'info', 'Map Point Wizard was reset. Unsaved changes were discarded.');
+      setBlankView(pid, true);
+      setView(pid, 'bind');
+      refreshChatView(pid);
       return;
     }
 
     if(!session){
-      refreshAllHandouts(pid);
+      setStatus(pid, 'error', 'No active Map Point Wizard session is open.');
+      setView(pid, 'bind');
+      refreshChatView(pid);
       return;
     }
 
+    if(parsed.action !== 'finish'){
+      clearPendingFinishChoice(session);
+    }
     touchSession(session);
 
     if(parsed.action === 'resume'){
+      clearPendingFinishChoice(session);
+      clearStatus(pid);
       storeSession(pid, session);
-      refreshAllHandouts(pid);
+      refreshChatView(pid);
       return;
     }
 
@@ -3657,22 +4497,37 @@
       if(lower(parsed.flags.force || '') !== 'yes'){
         var selectionState = finishSelectionState(session, msg, parsed.flags.token || '');
         if(!selectionState.matches){
-          refreshAllHandouts(pid);
-          whisper(pid, renderFinishSelectionWarning(session, selectionState));
+          session.pendingFinishChoice = {
+            originalTokenId: String(session.tokenId || ''),
+            originalLabel: tokenDisplayName(selectionState.sessionToken, session.tokenId),
+            currentTokenId: String((selectionState.selectedToken && selectionState.selectedToken.id) || ''),
+            currentLabel: selectionState.selectedToken ? tokenDisplayName(selectionState.selectedToken) : 'No token selected'
+          };
+          setStatus(pid, 'info', 'Choose which token should receive these wizard changes.');
+          setView(pid, 'review');
+          refreshChatView(pid);
           return;
         }
       }
+      clearPendingFinishChoice(session);
       var finished = finalizeSession(pid, session, parsed.flags.token || '');
       if(finished.error){
-        refreshAllHandouts(pid);
-        whisper(pid, shell(TITLE) + '<div>' + esc(finished.error) + '</div>' + endShell());
+        setStatus(pid, 'error', finished.error);
+        setView(pid, 'review');
+        refreshChatView(pid);
         return;
       }
-      refreshAllHandouts(pid);
+      setView(pid, 'bind');
+      clearStatus(pid);
+      clearCachedSelection(pid);
+      whisper(pid, '<div>' + esc('Saved Map Point Wizard settings to ' + tokenDisplayName(finished.token) + '.') + '</div>');
+      whisperCampaignMenu(pid);
       return;
     }
 
-    if(parsed.action === 'pick') error = applyPick(session, lower(parsed.flags.field || ''), parsed.flags.value || '');
+    if(parsed.action === 'pick'){
+      error = applyPick(session, lower(parsed.flags.field || ''), parsed.flags.value || '');
+    }
     else if(parsed.action === 'set') error = applySet(session, lower(parsed.flags.field || ''), parsed.flags.value || '');
     else if(parsed.action === 'multiadd') error = applyMultiAdd(session, lower(parsed.flags.field || ''), parsed.flags.value || '');
     else if(parsed.action === 'multicustom') error = applyMultiCustom(session, lower(parsed.flags.field || ''), parsed.flags.label || '', parsed.flags.score || '');
@@ -3680,6 +4535,10 @@
     else if(parsed.action === 'multiremove') error = applyMultiRemove(session, lower(parsed.flags.field || ''), parsed.flags.value || '');
     else if(parsed.action === 'multiclear') error = applyMultiClear(session, lower(parsed.flags.field || ''));
     else if(parsed.action === 'tradeclear') error = applyTradeClear(session, parsed.flags.group || '');
+    else if(parsed.action === 'tradegroupadd'){
+      var addedTradeGroup = applyTradeGroupAdd(pid, parsed.flags.label || '');
+      error = addedTradeGroup.error || '';
+    }
     else if(parsed.action === 'tradewindow') error = applyTradeWindowChange(session, parsed.flags.good || '', parsed.flags.window || '', parsed.flags.stance || '', parsed.flags.action || '', parsed.flags.cu || '', parsed.flags.note || '');
     else if(parsed.action === 'tradecell') error = applyTradeCellChange(session, parsed.flags.good || '', parsed.flags.period || '', parsed.flags.stance || '', parsed.flags.action || '', parsed.flags.cu || '', parsed.flags.note || '');
     else error = 'Unknown Map Point Wizard command.';
@@ -3687,54 +4546,53 @@
     touchSession(session);
     storeSession(pid, session);
     if(error){
-      refreshAllHandouts(pid);
-      whisper(pid, shell(TITLE) + '<div>' + esc(error) + '</div>' + endShell());
+      setStatus(pid, 'error', error);
+      refreshChatView(pid);
       return;
     }
-    refreshAllHandouts(pid);
+    if(parsed.action === 'tradeclear' || parsed.action === 'tradegroupadd' || parsed.action === 'tradewindow' || parsed.action === 'tradecell'){
+      if(currentTradeHandout(pid)){
+        ensureTradeHandout(pid, session);
+      }
+    }
+    clearStatus(pid);
+    refreshChatView(pid);
   }
 
   /* ======================================================================== */
   /* Core Integration                                                          */
   /* ======================================================================== */
 
-  function renderConfigHTML(pid, opts){
-    opts = opts || {};
-    if(!isGM(pid)) return '';
-    var handout = refreshWizardMenuHandout() || wizardMenuHandout() || ensureManagedHandout(WIZARD_MENU_HANDOUT_NAME);
-    var html = '<div style="' + (cssVars().card || '') + '">';
-    html += directHandoutActionLink(handoutUrl(handout), 'Show Wizard Menu');
-    html += '</div>';
-    return html;
-  }
-
   function helpLines(){
     return [
       'Commands',
       '!fts --mapPointWizard',
       '!fts --mapPointWizard start',
+      '!fts --mapPointWizard panel',
+      '!fts --mapPointWizard back',
+      '!fts --mapPointWizard next',
+      '!fts --mapPointWizard reset --confirm yes',
+      '!fts --mapPointWizard finish',
+      '!fts --mapPointWizard tradeGroupAdd --label <name>',
       '',
       'GM-only behavior',
-      'Show Wizard Menu opens the GM-only Wizard Menu handout.',
-      'Open Map Point Wizard from that menu requires a selected token before the Map Point Wizard handout link is surfaced.',
-      'Choose Template, Choose Region, Choose Locale, Choose Development, Choose Wealth, and the other choose-style controls open their own GM-only chooser handouts instead of expanding the wizard.',
-      'Choose Trade Goods opens the GM-only Trade Goods Categories handout. Its category index uses same-handout bookmarks, and each season, month, or festival transaction stores its own note alongside Cargo Unit values.',
-      'Culture, faith, faction, ally, enemy, offense-type, and defense-type chooser handouts support built-in options plus custom entries, per-entry removal, and clear-all actions.',
-      'Trade goods are stored as structured category-level has / wants / needs entries with one stance per category and calendar period.',
+      'Wizard Menu is the primary GM launcher for Map Point Wizard.',
+      'Wizard Menu opens the section-based chat wizard after refreshing shared FTS state.',
+      'The first section binds the selected token; later sections ask one focused question at a time.',
+      'Every section ends with Back, Next, Reset, and Save and Exit buttons.',
+      'Trade goods are edited in an ephemeral handout opened from the trade section and stay category-level with has / wants / needs calendar entries.',
+      'Trade category selection uses compact toggle lists and supports custom GM-added categories.',
       'Templates are built into the wizard by default, and each loaded region may add or override templates through tradePoints.templates.',
       'Offense and defense levels are derived automatically from the selected offense and defense types using weighted point values.',
       'Start Map Point Wizard binds to the currently selected token only and warns if nothing is selected.',
-      'Save writes a standardized [FTS_TRADEPOINT] block to gmnotes, writes a player-facing current-trade tooltip, stores an instance snapshot in the mule, enables tooltip display, disables the token menu, sets lockMovement to true, and warns if the current selection no longer matches the session token before offering save-to-original or save-to-current options.',
-      'Successful refreshes and saves update handouts silently; only validation and permission problems whisper to chat.'
+      'Save and Exit writes a standardized [FTS_TRADEPOINT] block to gmnotes, writes a player-facing current-trade tooltip, stores an instance snapshot in the mule, enables tooltip display, disables the token menu, and sets lockMovement to true.',
+      'Reset discards unsaved session changes and returns to the bind-token section.'
     ];
   }
 
   function registerWithCore(){
     try{
-      if(!(RT.fts && typeof RT.fts.addLogCard === 'function' && typeof RT.fts.addHelpSection === 'function')) return;
-      RT.fts.addLogCard(24, function(pid, opts){
-        try{ return renderConfigHTML(pid, opts); }catch(e){ log('fts_mapPointWizard logCard err: ' + e); return ''; }
-      });
+      if(!(RT.fts && typeof RT.fts.addHelpSection === 'function')) return;
       RT.fts.addHelpSection(24, 'Map Point Wizard', helpLines);
       if(typeof RT.fts.refreshHelpHandout === 'function'){
         RT.fts.refreshHelpHandout(null);
@@ -3747,7 +4605,6 @@
   function startup(){
     ensureState();
     mergeVersionEntry(getOrCreateMule(), MODULE_KEY, VERSION);
-    refreshAllHandouts('');
     registerWithCore();
   }
 
@@ -3768,5 +4625,18 @@
       log('fts_mapPointWizard selection cache err: ' + e);
     }
   });
+
+  try{
+    RT.fts_mapPointWizard = {
+      refresh: function(pid){
+        return refreshChatView(pid || '');
+      },
+      getLaunchCommand: function(){
+        return commandExpr('panel');
+      }
+    };
+  }catch(e2){
+    log('fts_mapPointWizard export err: ' + e2);
+  }
 
 })();

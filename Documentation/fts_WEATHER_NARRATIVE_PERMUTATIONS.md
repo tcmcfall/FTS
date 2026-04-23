@@ -1,6 +1,6 @@
-# FTS Weather Narrative Permutations
+﻿# FTS Weather Narrative Permutations
 
-Source of truth: [Modules/fts_weather_0.2.0-alpha.1.js](V:\Programs\Git Repository\FTS\Modules\fts_weather_0.2.0-alpha.1.js), especially `buildNarrative()` at lines `4824-4877` and its helper functions.
+Source of truth: [Modules/Core/fts_weather_0.2.0-alpha.1.js](../Modules/Core/fts_weather_0.2.0-alpha.1.js), especially `buildNarrative()` at lines `4824-4877` and its helper functions.
 
 ## Scope
 
@@ -427,3 +427,4 @@ This section is intended to make change review easier by isolating the exact sum
   - subterranean airflow and subterranean visibility phrasing
 - The most open-ended slots are event names and explicit precipitation type strings supplied by data.
 - If more natural explicit precipitation wording is desired, the current canonicalization of custom precipitation types is likely a good follow-up candidate for revision.
+

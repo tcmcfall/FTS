@@ -4,8 +4,8 @@ This packet turns the live weather-summary grammar into representative sample ou
 
 Source of truth:
 
-- [fts_weather_0.2.0-alpha.1.js](V:\Programs\Git Repository\FTS\Modules\fts_weather_0.2.0-alpha.1.js)
-- [fts_WEATHER_NARRATIVE_PERMUTATIONS.md](V:\Programs\Git Repository\FTS\Documentation\fts_WEATHER_NARRATIVE_PERMUTATIONS.md)
+- [fts_weather_0.2.0-alpha.1.js](../Modules/Core/fts_weather_0.2.0-alpha.1.js)
+- [fts_WEATHER_NARRATIVE_PERMUTATIONS.md](./fts_WEATHER_NARRATIVE_PERMUTATIONS.md)
 
 Important note:
 

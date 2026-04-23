@@ -10,8 +10,8 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-WEATHER_MODULE = ROOT / "Modules" / "fts_weather_0.2.0-alpha.1.js"
-REGION_DIR = ROOT / "Modules" / "Region Modules"
+WEATHER_MODULE = ROOT / "Modules" / "Core" / "fts_weather_0.2.0-alpha.1.js"
+REGION_DIR = ROOT / "Modules" / "Regions"
 CANONICAL_LOCALES = ["offshore", "coastal", "inland", "underwater", "underdark"]
 SEASONS = ["winter", "spring", "summer", "autumn"]
 CURRENT_SAMPLE_KEYS = ["surface", "shallow", "mid", "deep"]
@@ -38,7 +38,12 @@ REQUIRED_LOCALE_KEYS = [
     "biome",
     "climateMode",
 ]
-REGION_FILE_PATTERN = "fts_region.*_*.js"
+REGION_FILE_PATTERN = "fts_region*_*.js"
+
+
+def canonical_region_key(value: str) -> str:
+    text = str(value if value is not None else "").lower()
+    return re.sub(r"[^a-z0-9]+", "", text)
 
 
 def load_period_order(weather_path: Path) -> list[str]:
@@ -61,17 +66,43 @@ def load_period_order(weather_path: Path) -> list[str]:
 def extract_region_entry(path: Path) -> dict:
     text = path.read_text(encoding="utf-8")
     start_marker = "var REGION_ENTRY = "
-    end_marker = "\n\n  function queueRegion(){"
     start = text.find(start_marker)
     if start < 0:
         raise RuntimeError(f"{path.name}: REGION_ENTRY start marker not found")
     start += len(start_marker)
-    end = text.find(end_marker, start)
-    if end < 0:
-        raise RuntimeError(f"{path.name}: REGION_ENTRY end marker not found")
+    while start < len(text) and text[start].isspace():
+        start += 1
+    if start >= len(text) or text[start] != "{":
+        raise RuntimeError(f"{path.name}: REGION_ENTRY does not start with an object literal")
+
+    depth = 0
+    in_string = False
+    escaped = False
+    end = None
+    for idx in range(start, len(text)):
+        char = text[idx]
+        if in_string:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+            continue
+        if char == '"':
+            in_string = True
+        elif char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                end = idx + 1
+                break
+
+    if end is None:
+        raise RuntimeError(f"{path.name}: REGION_ENTRY object literal is unterminated")
+
     raw = text[start:end].strip()
-    if raw.endswith(";"):
-        raw = raw[:-1].rstrip()
     try:
         return json.loads(raw)
     except json.JSONDecodeError as exc:
@@ -205,11 +236,11 @@ def validate_region_entry(path: Path, entry: dict, period_order: list[str]) -> l
         issues.append(f"schema is {entry.get('schema')!r}, expected 'fts.region.v4'")
     if not isinstance(region_name, str) or not region_name.strip():
         issues.append("region is missing")
-    match = re.match(r"^fts_region\.(?P<region>.+?)_\d", path.name)
-    stem_region = match.group("region") if match else ""
+    match = re.match(r"^fts_region(?P<region>[A-Za-z0-9]+)_\d", path.name)
+    stem_region = canonical_region_key(match.group("region")) if match else ""
     if not stem_region:
-        issues.append("filename does not match expected fts_region.<region>_<version>.js pattern")
-    elif isinstance(region_name, str) and region_name != stem_region:
+        issues.append("filename does not match expected fts_regionRegionName_<version>.js pattern")
+    elif isinstance(region_name, str) and canonical_region_key(region_name) != stem_region:
         issues.append(f"region {region_name!r} does not match filename key {stem_region!r}")
     locales = entry.get("locales")
     if not isinstance(locales, list) or not locales:

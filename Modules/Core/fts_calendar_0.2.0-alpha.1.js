@@ -2,6 +2,9 @@
 // version:     0.2.0-alpha.1
 // description: Campaign Calendar module (unified with Core UI). Ensures/updates 'Campaign Calendar' handout,
 //              mirrors state to fts_mule, consolidates navigation under --calendar, exposes _ns for Core.
+// depends:     fts_core >= 0.2.0-alpha.1 (recommended), Meta-Toolbox (APILogic + Muler)
+// provides:    !fts --calendar today | --calendar back <#d/m/y> | --calendar forward <#d/m/y> | --calendar set <hour|timeOfDay|day|monthOrFestival|season|year> <value> | --calendar show <hour|timeOfDay|day|monthOrFestival|season|year>
+// author:      tcm (AI-assisted)
 //
 // NOTE!!!      Regarding the Show Calendar link that is displayed in the unified menu:
 //				Roll20 constrains us here: Handouts can store HTML, but no JS. 
@@ -24,21 +27,18 @@
 //              The Meta-Toolbox plumbing (ZeroFrame + hrefAttr) makes sure those links survive Roll20's HTML sanitizing
 //              and actually fire as API commands instead of getting mangled.
 //
-// depends:     Meta-Toolbox (APILogic + Muler)
-// provides:    !fts --calendar today | --calendar back <#d/m/y> | --calendar forward <#d/m/y> | --calendar set <hour|timeofday|day|month/festival|season|year> <value> | --calendar show <hour|timeofday|day|month/festival|season|year>
-// author:      tcm (AI-assisted)
 // Semantic Versioning (SemVer) Policy:
 // - FTS uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
 // - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
-// - Increment PATCH for backward-compatible bug fixes.
-// - Increment MINOR for new backward-compatible functionality.
+// - Increment PATCH for non-breaking bug fixes.
+// - Increment MINOR for new non-breaking functionality.
 // - Increment MAJOR only when the public API becomes stable and/or incompatible breaking changes are introduced.
 // - Pre-release labels such as alpha, beta, or rc mark unstable builds and sort lower than the matching normal release.
 // - Once a version is released, its contents must not be changed; further edits require a new version.
 // - Header comments, internal VERSION constants, filenames, generated module text, and documentation references must stay aligned.
 // - Dependency notes should use SemVer-friendly wording such as ">= 0.1.0-alpha.1" rather than informal forms like "5.1.0+".
 
-var fts_calendar = fts_calendar || (function () {
+var fts_calendar = (function () {
   'use strict';
 
   /* ========== Intro ========== */
@@ -50,7 +50,7 @@ var fts_calendar = fts_calendar || (function () {
 
   var VERSION='0.2.0-alpha.1', HANDOUT_NAME='Campaign Calendar', FTS_MULE='fts_mule';
   var MIN_Y=1300, MAX_Y=1600;
-  var _registered=false;
+  var _registered=false, _startupRegistered=false;
 
   var MONTHS=[{name:'Hammer (Deepwinter)',short:'Hammer'},{name:'Alturiak (The Claw of Winter)',short:'Alturiak'},
               {name:'Ches (The Claw of Sunsets)',short:'Ches'},{name:'Tarsakh (The Claw of Storms)',short:'Tarsakh'},
@@ -84,11 +84,11 @@ var fts_calendar = fts_calendar || (function () {
 
   function ensureCalendarState(){
     if(!state.fts) state.fts={};
-    // Core owns palette only; units removed from all modules as of 2.7.x.
+    // Core owns palette only; weather owns unit preference.
     if(!state.fts.ui) state.fts.ui={ palette:'parchment' };
     if(!state.fts.now){
       // Default campaign date for mule mirrors: 0000 hours, early predawn, 1 Hammer, Winter 1492.
-      // Season is derived at mirror time; hour/minute tracked for timeofday display.
+      // Season is derived at mirror time; hour/minute tracked for timeOfDay display.
       state.fts.now={ year:1492, month:1, day:1, hour:0, minute:0, timeofday:'early morning', festival:'' };
     }
     if(!state.fts.view){
@@ -1269,7 +1269,7 @@ function festivalBgLayout(key){
       var showFields = parseCalendarFieldList(restShow);
       if(!showFields.length){
         if(restShow){
-          whisperToPlayer(pid, '<b>Calendar</b><br>' + esc('Use !fts --calendar show hour | timeofday | day | month/festival | season | year.'));
+          whisperToPlayer(pid, '<b>Calendar</b><br>' + esc('Use !fts --calendar show hour | timeOfDay | day | monthOrFestival | season | year.'));
         }else{
           whisperToPlayer(pid, '<b>Calendar</b><br>' + esc(currentDateLine()));
         }
@@ -1336,7 +1336,7 @@ function festivalBgLayout(key){
     return String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');
   }
 
-  // Timeofday helpers for early/late predawn, morning, afternoon, and evening.
+  // timeOfDay helpers for early/late predawn, morning, afternoon, and evening.
   // early predawn   : 0000-0259
   // late predawn    : 0300-0559
   // early morning   : 0600-0859
@@ -1371,7 +1371,7 @@ function festivalBgLayout(key){
     return null;
   }
 
-  // First minute of each timeofday band, as HH:MM.
+  // First minute of each timeOfDay band, as HH:MM.
   function timeofdayStartHM(label){
     if(label==='early predawn')    return { hour:0,  minute:0 };
     if(label==='late predawn')     return { hour:3,  minute:0 };
@@ -1464,19 +1464,28 @@ function festivalBgLayout(key){
       'day':1,
       'month':1,
       'festival':1,
-      'monthfestival':1,
+      'monthorfestival':1,
       'season':1,
       'year':1
     };
   }
 
   function canonicalCalendarFieldToken(tok){
-    var c = canonicalToken(tok);
-    return c === 'monthfestival' ? 'monthfestival' : c;
+    var c = String(tok || '').trim().toLowerCase();
+    if(c === 'monthorfestival') return 'monthfestival';
+    return calendarFieldKeys()[c] ? c : '';
   }
 
   function isCalendarFieldToken(tok){
-    return !!calendarFieldKeys()[canonicalCalendarFieldToken(tok)];
+    return !!canonicalCalendarFieldToken(tok);
+  }
+
+  function readCalendarField(parts, index){
+    var raw = parts[index] || '';
+    if(isCalendarFieldToken(raw)){
+      return { key:canonicalCalendarFieldToken(raw), next:index + 1 };
+    }
+    return null;
   }
 
   function parseCalendarAssignments(raw){
@@ -1484,12 +1493,13 @@ function festivalBgLayout(key){
     var assigns = [];
     var i = 0;
     while(i < parts.length){
-      var fTok = parts[i++];
-      if(!isCalendarFieldToken(fTok)){ break; }
+      var field = readCalendarField(parts, i);
+      if(!field){ break; }
 
-      var key = canonicalCalendarFieldToken(fTok);
+      var key = field.key;
+      i = field.next;
       var vToks = [];
-      while(i < parts.length && !isCalendarFieldToken(parts[i])){
+      while(i < parts.length && !readCalendarField(parts, i)){
         vToks.push(parts[i++]);
       }
       assigns.push({k:key, v:vToks.join(' ')});
@@ -1500,9 +1510,11 @@ function festivalBgLayout(key){
   function parseCalendarFieldList(raw){
     var parts = String(raw||'').trim().split(/\s+/g).filter(function(x){ return !!x; });
     var fields = [];
-    for(var i=0;i<parts.length;i++){
-      if(!isCalendarFieldToken(parts[i])) break;
-      fields.push(canonicalCalendarFieldToken(parts[i]));
+    for(var i=0;i<parts.length;){
+      var field = readCalendarField(parts, i);
+      if(!field) break;
+      fields.push(field.key);
+      i = field.next;
     }
     return fields;
   }
@@ -1566,13 +1578,13 @@ function festivalBgLayout(key){
     kind = canonicalCalendarFieldToken(kind);
 
     if(kind === 'hour') return 'Hour: ' + hhmm;
-    if(kind === 'timeofday') return 'Timeofday: ' + timeofday;
+    if(kind === 'timeofday') return 'timeOfDay: ' + timeofday;
     if(kind === 'day') return now.festival ? 'Day: festival date in progress' : ('Day: ' + now.day);
     if(kind === 'month') return now.festival ? 'Month: festival date in progress' : ('Month: ' + monthName + ' (' + now.month + ')');
     if(kind === 'festival') return 'Festival: ' + (now.festival ? festivalDisplayName(now.festival) : 'none');
     if(kind === 'monthfestival') return now.festival
-      ? ('Month/Festival: ' + festivalDisplayName(now.festival))
-      : ('Month/Festival: ' + monthName + ' (' + now.month + ')');
+      ? ('monthOrFestival: ' + festivalDisplayName(now.festival))
+      : ('monthOrFestival: ' + monthName + ' (' + now.month + ')');
     if(kind === 'season'){
       var season = now.festival ? seasonKeyFromFestival(now.festival) : seasonKeyFromMonth(now.month);
       return 'Season: ' + season.charAt(0).toUpperCase() + season.slice(1);
@@ -1650,7 +1662,7 @@ function festivalBgLayout(key){
 
     }else if(kind==='monthfestival'){
       // Unified setter: attempts month first (by number or name), otherwise festival.
-      if(!v){ return { error:'Month/festival requires a value.' }; }
+      if(!v){ return { error:'monthOrFestival requires a value.' }; }
       var mIdx2 = monthIndexFromToken(v);
       if(mIdx2){
         newNow.month = mIdx2;
@@ -1658,7 +1670,7 @@ function festivalBgLayout(key){
         if(newNow.day<1 || newNow.day>30){ newNow.day = 1; }
       }else{
         var festKey2 = festivalKeyFromToken(v);
-        if(!festKey2){ return { error:'Unknown month/festival: '+v }; }
+        if(!festKey2){ return { error:'Unknown monthOrFestival: '+v }; }
         if(festKey2==='shieldmeet' && !isLeap(newNow.year)){
           return { error:'Shieldmeet can only be specified in leap years.' };
         }
@@ -1677,7 +1689,7 @@ function festivalBgLayout(key){
         ? seasonKeyFromFestival(newNow.festival)
         : seasonKeyFromMonth(newNow.month);
       if(expectedSeason && sKey!==expectedSeason){
-        return { error:'Season '+v+' does not match the current date (month/festival).' };
+        return { error:'Season '+v+' does not match the current date (monthOrFestival).' };
       }
       // Season is derived; nothing to change, but return a confirmation.
       return { ok:true, text: 'Season '+expectedSeason.charAt(0).toUpperCase()+expectedSeason.slice(1)+' confirmed for current date.' };
@@ -1693,10 +1705,10 @@ function festivalBgLayout(key){
       newNow.timeofday = timeofdayFromHM(hm.hour, hm.minute);
 
     }else if(kind==='timeofday'){
-      if(!v){ return { error:'Timeofday requires one of: early predawn, late predawn, early morning, late morning, early afternoon, late afternoon, early evening, late evening.' }; }
+      if(!v){ return { error:'timeOfDay requires one of: early predawn, late predawn, early morning, late morning, early afternoon, late afternoon, early evening, late evening.' }; }
       var timeofdayLabel = timeofdayLabelFromToken(v);
       if(!timeofdayLabel){
-        return { error:'Unknown timeofday: '+v };
+        return { error:'Unknown timeOfDay: '+v };
       }
       var hm2 = timeofdayStartHM(timeofdayLabel);
       newNow.timeofday = timeofdayLabel;
@@ -1728,12 +1740,9 @@ function festivalBgLayout(key){
       var shortName = (MONTHS[mIdx] && MONTHS[mIdx].short) ? MONTHS[mIdx].short : '';
       line = 'It is currently '+timeofday+' on '+now.day+' '+shortName+', '+now.year+' DR.';
     }
-    var btn = (h && h.id)
+    var btn = (h && h.id && RT.fts && typeof RT.fts.actionLinkAttrs === 'function')
       ? '<a'
-        + ((RT.fts && typeof RT.fts.actionLinkAttrs === 'function')
-            ? RT.fts.actionLinkAttrs('https://journal.roll20.net/handout/'+h.id)
-            : (' role="button" href="'+hrefAttr('https://journal.roll20.net/handout/'+h.id)+'"'
-              + (v.btn?(' style="'+v.btn+'"'):'')))
+        + RT.fts.actionLinkAttrs('https://journal.roll20.net/handout/'+h.id)
         + ' target="_blank"><span style="font-weight:bold;">Show Calendar</span></a>'
       : '';
     // Weather injects its live narrative into this card, so keep the calendar line and button in the shared shell.
@@ -1757,8 +1766,8 @@ function festivalBgLayout(key){
            'Calendar navigation: !fts --calendar today | back | forward <value as #d/m/y>',
            '(day/month/year : !fts --calendar back 4m would move calendar view back 4 months)',
            '',
-           'Set current date/timeofday (GM only): !fts --calendar set hour | timeofday | day | month/festival | season | year <value>',
-           'Show current date/timeofday fields: !fts --calendar show hour | timeofday | day | month/festival | season | year',
+           'Set current date/timeOfDay (GM only): !fts --calendar set hour | timeOfDay | day | monthOrFestival | season | year <value>',
+           'Show current date/timeOfDay fields: !fts --calendar show hour | timeOfDay | day | monthOrFestival | season | year',
            '',
            'Inputs are normalized to lower-case, no spaces (e.g. "Feast of the Moon" -> feastofthemoon).',
            'Months can be specified either by name or number. (!fts --calendar set month 1 | hammer | Deep WinTER would all be acceptable).',
@@ -1769,34 +1778,24 @@ function festivalBgLayout(key){
     }catch(e){}
   }
 
-    function calendarStartup(){
+  function calendarStartup(){
     ensureCalendarState();
     updateHandout(true);
     mirrorToMule();
+  }
+
+  function registerStartupHooks(){
+    if(_startupRegistered) return;
+    if(!(RT.fts && typeof RT.fts.registerStartup === 'function')) return;
+    RT.fts.registerStartup('calendar', calendarStartup);
+    _startupRegistered = true;
   }
 
   function init(){
     calendarStartup();
     // NOTE: calendar no longer binds its own !fts listener; Core routes --calendar here.
     registerWithCore();
-    try{
-      RT.ftsQ = RT.ftsQ || [];
-      RT.ftsQ.push(function(fts){
-        try{
-          if(fts && typeof fts.registerStartup === 'function'){
-            fts.registerStartup('calendar', function(mule, reason){
-              try{ calendarStartup(); }catch(e){}
-            });
-          }
-          registerWithCore();
-        }catch(e){}
-      });
-      if (RT.fts && typeof RT.fts.registerStartup === 'function'){
-        RT.fts.registerStartup('calendar', function(mule, reason){
-          try{ calendarStartup(); }catch(e){}
-        });
-      }
-    }catch(e){}
+    registerStartupHooks();
   }
 
   return {
@@ -1812,6 +1811,17 @@ function festivalBgLayout(key){
     }
   };
 }());
+
+try{
+  var _ftsCalendarRoot = (typeof globalThis !== 'undefined') ? globalThis
+                      : (typeof window !== 'undefined')     ? window
+                      : (typeof self !== 'undefined')       ? self
+                      : (typeof global !== 'undefined')     ? global
+                      : this;
+  _ftsCalendarRoot.RT = _ftsCalendarRoot.RT || {};
+  _ftsCalendarRoot.RT.fts_calendar = fts_calendar;
+  _ftsCalendarRoot.fts_calendar = fts_calendar;
+}catch(e){}
 
 on('ready', function(){ fts_calendar.init(); });
 

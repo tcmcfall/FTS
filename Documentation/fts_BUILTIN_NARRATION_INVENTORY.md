@@ -1,4 +1,4 @@
-# FTS Built-in Narration Inventory
+﻿# FTS Built-in Narration Inventory
 
 Generated on 2026-03-28 from the runtime modules in this workspace.
 
@@ -14,22 +14,19 @@ Historical note: this inventory records the pre-overhaul narration layout and is
 
 | Module | Built-in narration | Notes |
 | --- | --- | --- |
-| `Modules/fts_calendar_0.2.0-alpha.1.js` | Yes | Festival overlay lines plus calendar-local fallback festival quips. |
-| `Modules/fts_core_0.2.0-alpha.1.js` | No | Command shell, help, and UI text only; no atmospheric narration pool. |
-| `Modules/fts_geo_0.2.0-alpha.1.js` | No | Route/location logic only; no built-in narration pool. |
-| `Modules/fts_mapMeta_0.2.0-alpha.1.js` | No | Map metadata summaries only; no atmospheric narration pool. |
-| `Modules/fts_quips_0.1.0-alpha.1.js` | Yes | Authoritative quip corpus (festival, season, generic, and region pools). |
-| `Modules/fts_mapRegionWizard_0.2.0-alpha.1.js` | No | Generator/preset descriptions only; no runtime narration pool. |
-| `Modules/fts_weather_0.2.0-alpha.1.js` | Yes | Fallback weather quips, critical-event summaries/effect descriptors, and dynamic narrative templates. |
-| `Modules/Region Modules/fts_region.frozenfar_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
-| `Modules/Region Modules/fts_region.landsofintrigue_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
-| `Modules/Region Modules/fts_region.moonshaes_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
-| `Modules/Region Modules/fts_region.swordcoastnorth_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
-| `Modules/Region Modules/fts_region.swordcoast_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
+| `Modules/Core/fts_calendar_0.2.0-alpha.1.js` | Yes | Festival overlay lines plus calendar-local fallback festival quips. |
+| `Modules/Core/fts_core_0.2.0-alpha.1.js` | No | Command shell, help, and UI text only; no atmospheric narration pool. |
+| `Modules/Core/fts_mapMeta_0.2.0-alpha.1.js` | No | Map metadata, route, and location summaries only; no atmospheric narration pool. |
+| `Modules/Core/fts_weather_0.2.0-alpha.1.js` | Yes | Fallback weather quips, critical-event summaries/effect descriptors, and dynamic narrative templates. |
+| `Modules/Regions/fts_regionFrozenfar_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
+| `Modules/Regions/fts_regionLandsOfIntrigue_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
+| `Modules/Regions/fts_regionMoonshaes_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
+| `Modules/Regions/fts_regionSwordCoastNorth_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
+| `Modules/Regions/fts_regionSwordCoast_0.1.0-alpha.1.js` | No | Region configuration only; no standalone narration strings beyond metadata notes. |
 
 ## Calendar Module
 
-Source: `Modules/fts_calendar_0.2.0-alpha.1.js`
+Source: `Modules/Core/fts_calendar_0.2.0-alpha.1.js`
 
 - Festival overlay one-liners: 6
 - Calendar-local festival fallback quips: 32
@@ -384,7 +381,7 @@ Carry that forward.
 
 ## Quips Corpus Module
 
-Source: `Modules/fts_quips_0.1.0-alpha.1.js`
+Source: historical `fts_quips` corpus snapshot captured before the current module layout.
 
 - Lookup paths: 51
 - Total authored quip entries: 1900
@@ -15789,7 +15786,7 @@ of the north keeps the old tale bold.
 
 ## Weather Module
 
-Source: `Modules/fts_weather_0.2.0-alpha.1.js`
+Source: `Modules/Core/fts_weather_0.2.0-alpha.1.js`
 
 - Fallback weather quip pools: 25
 - Built-in critical events: 19
@@ -16368,5 +16365,6 @@ These are the built-in sentence templates and vocabularies that `buildNarrative(
 
 ## Notes
 
-- `fts_weather` can consume quips from `fts_quips`, but the current `fts_quips` corpus does not ship weather-specific lookup paths. Weather therefore relies on its own built-in fallback quips unless quips are supplied through mule data or a future corpus expansion.
+- `fts_weather` relies on its own built-in fallback quips unless quips are supplied through mule data or a future corpus expansion.
 - The calendar module requests `quips.festival.<key>.medium` inside `resolveFestivalLongQuip()`, despite the surrounding comments and fallback naming referring to ?long? quips. This inventory records the source text as shipped, not the intended naming.
+

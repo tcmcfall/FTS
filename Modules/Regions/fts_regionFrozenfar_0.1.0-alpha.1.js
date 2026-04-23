@@ -1,14 +1,14 @@
-// name:        fts_region.swordcoastnorth.js
+// name:        fts_regionFrozenfar.js
 // version:     0.1.0-alpha.1
-// description: Unified Sword Coast North region module for fts_weather and fts_mapMeta.
-// provides:    fts_mule ability: regions (root JSON; regions.swordcoastnorth), version entry fts_region.swordcoastnorth_0.1.0-alpha.1
-// depends:     fts_weather >= 0.1.0-alpha.1 (recommended), fts_core >= 0.1.0-alpha.1 (optional startup registration), Roll20 API.
+// description: Unified Frozenfar region module for fts_weather and fts_mapMeta.
+// provides:    fts_mule character macro / ability: regions (root JSON; regions.frozenfar), version entry fts_regionFrozenfar_0.1.0-alpha.1
+// depends:     fts_weather >= 0.2.0-alpha.1, Roll20 API.
 // author:      tcm (AI-assisted)
 // Semantic Versioning (SemVer) Policy:
 // - FTS uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
 // - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
-// - Increment PATCH for backward-compatible bug fixes.
-// - Increment MINOR for new backward-compatible functionality.
+// - Increment PATCH for non-breaking bug fixes.
+// - Increment MINOR for new non-breaking functionality.
 // - Increment MAJOR only when the public API becomes stable and/or incompatible breaking changes are introduced.
 // - Pre-release labels such as alpha, beta, or rc mark unstable builds and sort lower than the matching normal release.
 // - Once a version is released, its contents must not be changed; further edits require a new version.
@@ -38,10 +38,8 @@
 
   var RT = (typeof globalThis !== 'undefined') ? globalThis : this;
   var VERSION = '0.1.0-alpha.1';
-  var REGION_KEY = 'swordcoastnorth';
-  var MODULE_NAME = 'fts_region.' + REGION_KEY;
-  var _startupRegistered = false;
-
+  var REGION_KEY = 'frozenfar';
+  var MODULE_NAME = 'fts_regionFrozenfar';
   // Tolkien-inspired quip scaffold:
   // - short: 2 lines, AA
   // - medium: 4 lines, ACBC
@@ -51,8 +49,8 @@
 
   var REGION_ENTRY = {
   "schema": "fts.region.v4",
-  "region": "swordcoastnorth",
-  "displayName": "Sword Coast North",
+  "region": "frozenfar",
+  "displayName": "Frozenfar",
   "defaultLocale": "coastal",
   "locales": [
     "offshore",
@@ -63,76 +61,76 @@
   ],
   "campaignLocations": [
     {
-      "name": "Trackless Sea North Lanes",
+      "name": "Sea of Moving Ice",
       "locale": "offshore",
       "tags": [
         "sea",
-        "trade"
+        "arctic"
       ],
       "sources": [
         "Forgotten Realms setting reference",
         "Documentation/fts_README_weathermapping.docx"
       ],
-      "notes": "Use for stormy open-water routes, northern shipping lanes, and exposed approaches to the coast."
+      "notes": "Use for open-water, pack-ice, and sea-ice encounter maps north of the coast."
     },
     {
-      "name": "Neverwinter Coast",
+      "name": "Frozenfar Coast",
       "locale": "coastal",
       "tags": [
-        "city",
-        "harbor"
+        "shore",
+        "tundra"
+      ],
+      "sources": [
+        "Documentation/fts_README_weathermapping.docx",
+        "Campaign notes"
+      ],
+      "notes": "Use for exposed arctic shorelines, fishing camps, and icebound coastal settlements."
+    },
+    {
+      "name": "Icewind Dale",
+      "locale": "inland",
+      "tags": [
+        "tundra",
+        "valley"
       ],
       "sources": [
         "Forgotten Realms setting reference"
       ],
-      "notes": "Use for cold harbors, cliffside roads, and rainy settlements along the northern Sword Coast."
+      "notes": "Use for the dale, the tundra roads, and interior travel beyond the immediate coast."
     },
     {
-      "name": "Mirabar Hinterlands",
-      "locale": "inland",
-      "tags": [
-        "highlands",
-        "road"
-      ],
-      "sources": [
-        "Forgotten Realms setting reference",
-        "Campaign notes"
-      ],
-      "notes": "Use for inland caravan roads, uplands, and colder overland weather away from the sea."
-    },
-    {
-      "name": "Trackless Sea Shelf",
+      "name": "Sea of Moving Ice Deeps",
       "locale": "underwater",
       "tags": [
         "sea",
-        "shelf"
+        "depths"
       ],
       "sources": [
         "Campaign notes",
         "Documentation/fts_README_weathermapping.docx"
       ],
-      "notes": "Use for near-coast wrecks, kelp forests, and cold shelf-water encounters."
+      "notes": "Use for under-ice trenches, drowned caves, and frigid wreck sites."
     },
     {
-      "name": "Gauntlgrym Deep Roads",
+      "name": "Spine of the World Depths",
       "locale": "underdark",
       "tags": [
         "cavern",
-        "dwarf"
+        "underdark"
       ],
       "sources": [
-        "Forgotten Realms setting reference",
-        "Campaign notes"
+        "Campaign notes",
+        "Forgotten Realms setting reference"
       ],
-      "notes": "Use for deep roads, volcanic caverns, and ancient underways tied to Gauntlgrym."
+      "notes": "Use for buried passes, deep caverns, and old dwarf roads beneath the range."
     }
   ],
   "sourceNotes": [
-    "Climate analogue: Oregon / Northern California, per Documentation/fts_README_weathermapping.docx.",
+    "Climate analogue: Northern Alaska / Arctic Coast, per Documentation/fts_README_weathermapping.docx.",
     "Monthly temperature, precipitation, and prevailing-wind defaults are aligned to the analogue using ECMWF ERA5 climatology.",
     "Seasonal surface and subsurface water temperatures are checked against NOAA OISST and Copernicus Marine global ocean-physics guidance.",
     "Water-column sampling uses surface plus 20/60/80% depths for inland and coastal columns, while offshore defaults use 1, 5, and 10 fathoms.",
-    "Exact-clock diurnal controls follow a cool wet west-coast regime, with long winter fronts offshore and restrained summer drift under marine influence."
+    "Exact-clock diurnal controls follow arctic daylight compression and expansion, while marine and under-ice locales damp drift to reflect polar water inertia."
   ],
 
     "tradePoints": {
@@ -289,105 +287,105 @@
     "weather": {
       "region": {
         "short": [
-          "Sword Coast North keeps rain and pine in equal share with stone|And every black-rock harbor learns the west wind's weather tone",
-          "There mist can walk from sea to fir before the bells have rung|A northerner calls that common talk and keeps his oilskin hung",
-          "Where surf goes white below dark cliffs and ravens cross the foam|The weather teaches harder folk how small a lamp makes home"
+          "Frozenfar keeps its weather hard in rime, in salt, in stone|Yet folk there laugh with red-bit lips and call the cold their own",
+          "Where auroras stain the harbor green and pack-ice grips the bar|A weather-wise soul reads the sky as if it were a scar",
+          "In Frozenfar the sea bites white and cliffs bite black above|A tighter knot, a deeper fire, and both will pass for love"
         ],
         "medium": [
-          "The northern coast wakes wet and gray|With fir-smoke mixing into brine|A sailor reads the weather there|By how the headland gulls incline",
-          "Rain on pine and rain on quay|Are one long thought in northern lands|The folk of Sword Coast North keep calm|And tie bad weather with good hands",
-          "There sea-fog climbs the harbor stairs|And mountain cloud comes down by night|A drover says the wiser road|Is picked by patience, not by sight"
+          "Cold weather rules the northern quay|Where floes grind slow below the light|A pilot trusts his beard for truth|Before the dawn admits he's right",
+          "In Frozenfar the lamps burn low|And rime takes hold of spar and bone|Yet harbor folk keep working still|As if the gale were kin well known",
+          "The cliffs stand black, the surf stands white|The sky turns green in winter's glass|A northman says the clever thrive|By letting colder weather pass"
         ],
         "long": [
-          "Sword Coast North keeps black stone piers|And rain along the fir|The surf comes white beneath the cliffs|The sky stays close as fur|A harbor man reads coming squalls|By how the ravens turn|For northern weather there is stern|But not too stern to learn",
-          "Where pine-roads meet the harbor mud|And mountain streams run cold|The weather crosses all of it|In gray and green and gold|A sailor, ranger, smith, and dray|All listen for one sign|The shift in wind, the smell of rain|The dimming of the pine",
-          "The northern coast does not pretend|Its weather will stay still|It wets the quay, it hides the road|It drapes the logging hill|Yet folk there trim the lamps and work|Through fog and steady rain|For northern weather teaches pride|To bend and rise again"
+          "Frozenfar keeps an iron coast|With floes along the bar|The sea breathes mist, the cliffs breathe cold|Beneath the northern star|A pilot reads the wind by pain|That stiffens hand and cheek|For weather there speaks plain enough|To all who know its speech",
+          "When auroras lean above the bay|And ice begins to ring|The harbor shrinks to lamp and oath|And every board to spring|Yet folk of Frozenfar endure|With seal-oil fire and song|For in that hard and bitter land|Stout hearts have winter long",
+          "The snow comes slant in Frozenfar|The surf comes dark and steep|The dead are named beside the stove|Before the folk can sleep|A captain banks the embers high|And checks the frozen chain|For northland weather favors those|Who reckon twice with pain"
         ]
       },
       "locales": {
         "offshore": {
           "short": [
-            "Offshore the northern swells run dark beneath a woolen sky|And every crest seems carved of slate the minute squalls draw nigh",
-            "Beyond those northern headlands mist can swallow mast and bell|A helmsman there trusts sounding more than anything he can tell",
-            "Far offshore Sword Coast North keeps weather cold in breath and bone|And any crew that calls it mild will soon retract the tone"
+            "Off Frozenfar the pack-ice knocks like knuckles on a door|And every swell seems old enough to ask for one year more",
+            "The offshore dark runs black and green beneath a glassy cold|A sailor there keeps speech cut short and both hands hard and bold",
+            "Far offshore in Frozenfar the wind comes clean as pain|And even gulls look built of bone above the iron main"
           ],
           "medium": [
-            "Beyond the cliffs the swells breathe deep|And fog can take the coast from view|A captain knows offshore weather|By what the dull bells fail to do",
-            "The outer water north of there|Runs steel and green beneath the gray|A helmsman reefs before he must|And lets the heavy weather say",
-            "Offshore the sea keeps longer thoughts|Than harbor folk may guess ashore|The weather moves in colder lines|And asks a steadier hand at oar"
+            "Beyond the headlands floes drift slow|And grind in dull and patient time|A helmsman listens more than speaks|For offshore weather talks in rime",
+            "The outer swells are dark as ore|The sky sits low, the cold bites through|A northern mate will bless no chart|Until the gulls agree it true",
+            "Offshore in Frozenfar the wind|Can skin the boast from any lip|A prudent soul reefs early there|And learns humility from ship"
           ],
           "long": [
-            "Offshore beyond the northern piers|The swells come dark and steep|The fog can close around a mast|Before a crew can speak|A lookout strains for bell and bird|Where sight will not be enough|For offshore weather there can turn|From drear to outright rough",
-            "The outer lanes of northern coast|Run cold beneath the rain|The waves roll long, the headlands fade|The compass feels like chain|Yet crews that know those outer waters|Keep canvas humble there|For offshore weather on that coast|Respects the well-prepared",
-            "Far offshore Sword Coast northern weather|Broods in mist and swell|The shore grows small, the light grows thin|The hull begins to tell|A pilot feels the squall arrive|Before the cloud is plain|For offshore water keeps its news|Then hands it back as rain"
+            "Offshore the ice fields shift and groan|Beyond the harbor light|The swells rise black, the foam burns pale|Against the polar night|A lookout names the moving floes|Like kin he used to know|For offshore weather there can kill|The hand that learns too slow",
+            "The outer sea of Frozenfar|Is dark as hammered lead|The wind can flay the cheek to bone|Before the clouds have spread|A captain trusts a smaller sail|A tighter lash, a prayer|For offshore weather keeps no room|For fools or borrowed air",
+            "When pack-ice drifts across the lanes|And closes half the way|The bells ashore grow faint and small|Against the iron spray|Yet crews that know the northern deeps|Go on with steady hands|For offshore weather crowns the folk|Who bend before commands"
           ]
         },
         "coastal": {
           "short": [
-            "Along the northern harbor walls the rain runs dark as tea|And coastal weather salts the fir before it salts the sea",
-            "Black rock, white surf, and pine-smoke make that coast easy to know|A fishwife there can smell bad weather before the gulls fly low",
-            "On northern piers the fog comes in and makes the bell sound old|Yet every tavern lamp burns warm against the dripping cold"
+            "On Frozenfar's black coastal stones the surf leaves silver lace|And weather writes in salt and rime across the harbor face",
+            "The coastal wind tastes half of snow and half of iron foam|Yet every lamp beside the pier insists the quay is home",
+            "Along that coast the tide runs hard beneath a frost-bit sky|A fisher mends by lantern glow and lets the long squalls cry"
           ],
           "medium": [
-            "The coastal rain on northern stone|Can last from dawn to vesper bell|A harbor wife reads weather there|By how the gulls refuse to yell",
-            "Black cliffs, white foam, and bending fir|Make Sword Coast North a weather chart|The wise tie well, speak less, and wait|Before they trust the sea at heart",
-            "Along the coast the mist climbs up|From tide to stair to chapel flame|A fisher says the weather north|Changes slow, but hard the same"
+            "The coastal bells ring sharp with frost|The piers are white by dawn's first light|A harbor wife can smell bad weather|Long before the surf turns white",
+            "Black stone, white foam, and iron cold|Make Frozenfar's coast plain to read|A careful crew trusts lamp and reef|And never more than winter's speed",
+            "Along the coastal walls the spray|Turns rope and rail to salted glass|The wise step slow, speak low, and wait|For harsher weather yet to pass"
           ],
           "long": [
-            "Along the northern coastal roads|The rain comes in from west|It beads the wool, it wets the pine|It gives no harbor rest|A fisher hauls the last net home|Before the fog grows near|For coastal weather there can turn|From common wet to fear",
-            "The cliffs stand dark above the foam|The coves lie gray below|The mist can fold a harbor in|Before the bells all know|Yet coastal folk keep stew and fire|For any driven home|Because the weather takes enough|Without the adding of their own",
-            "When northern surf climbs hard and white|Against the harbor stair|The ropes grow black, the shutters knock|The cold gets in the air|A widow trims the tavern lamp|A boy runs in the line|For coastal weather there reminds|What must be done in time"
+            "The coastal rocks of Frozenfar|Wear rime instead of green|The surf strikes hard, the gulls fly low|The sky stays iron lean|A dockhand lifts the lantern shield|And squints into the foam|For coastal weather there makes clear|How dearly folk earn home",
+            "By black stone piers and frozen slips|The tide keeps up its war|It salts the rail, it stiffens net|It rattles every spar|Yet coastal folk keep soup and fire|For all who reach the quay|Because the weather takes enough|Without their help that day",
+            "When coastal spray comes knife and white|Across the harbor wall|The bells ring thin, the shutters shake|The saint-lamps burn though small|A fisher rows the last skiff in|And ties with numbing hands|For coastal weather honors most|The one who understands"
           ]
         },
         "inland": {
           "short": [
-            "Inland from the northern piers the roads run wet through fir and loam|And weather hangs in cedar smoke wherever folk make home",
-            "The inland wind smells half of pine and half of river rain|A rider there can taste the squall before it shows its stain",
-            "Far inland northern weather moves through ravine, ford, and hill|And wiser folk let storms pass by before they test their will"
+            "Inland in Frozenfar the snow lies wide as judgment laid|And every sled-track looks like script the winter itself made",
+            "The tundra wind combs birch and moss till both bow white and low|A traveler there trusts smoke at dusk more than the drifted road",
+            "Far inland all the weather speaks through antler, snow, and hide|And those who live by northern trails keep patience at their side"
           ],
           "medium": [
-            "Inland the roads grow dark with rain|Through fir and fern and river clay|A courier learns the weather there|By how the crows postpone the day",
-            "Pine-scent, wet bark, and swollen stream|Tell half the inland weather's mind|The rest is learned by waiting still|To hear what gust comes close behind",
-            "Where logging track and mountain road|Lie far from harbor bell and foam|The inland weather north still carries|Salt enough to smell like home"
+            "Inland the snowfields take the moon|And throw it back in patient blue|A trapper reads the weather there|By what the reindeer choose to do",
+            "The birches crack, the sled-runners sing|The sky goes pale from end to end|In Frozenfar the inland wise|Make weather into working friend",
+            "Where road is drift and hill is white|A chimney means more than a crown|The inland folk of Frozenfar know|How fast proud weather knocks men down"
           ],
           "long": [
-            "Inland from Sword Coast northern quays|The roads go brown and steep|The rain comes slant through cedar boughs|And soaks the ruts full deep|A ranger counts the drier miles|Before he leaves the inn|For inland weather there can wear|The stoutest patience thin",
-            "The firs drip long, the ditches swell|The creeks go loud with rain|Yet inland folk along that coast|Still work through mud and strain|A drover lifts his collar high|A logger slows the team|For inland weather grants its grace|To those who do not dream",
-            "Where rivers cut the logging roads|And mountains gather gray|The weather writes in mud and cloud|What sailors read in spray|A traveler watches cedar tops|To judge the coming gust|For inland weather by that coast|Turns bold resolve to crust"
+            "Far inland Frozenfar lies wide|In drift and birch and bone|The sky can arch for half a day|And still leave travelers lone|A trapper watches fox and deer|Before he shifts his line|For inland weather teaches most|The folk who read its sign",
+            "The tundra takes the snowfall first|And holds it without end|A sledge track lasts until the gale|Decides it needs to bend|Yet inland hearts burn slow and sure|Beside the evening flame|For Frozenfar rewards the ones|Who greet hard weather same",
+            "When daylight thins on inland drifts|And birches darken blue|The old trails vanish one by one|Though each was plain and true|A hunter banks his little fire|And waits the squall to tire|For inland weather loves the soul|That wastes no step nor fire"
           ]
         },
         "underwater": {
           "short": [
-            "Below the northern shoals the kelp bends dark through green and cold|And every current carries news the surface never told",
-            "Under that coast the light comes thin on wreck and barnacled spar|A diver there reads weather best by how the sand-clouds are",
-            "Sword Coast North below the keel is colder than the foam|And underwater weather there can feel less sea than stone"
+            "Below Frozenfar the water glows like bottle-glass and steel|And every current carries cold enough for bone to feel",
+            "Under the ice the green light bends on kelp and broken spar|The sea keeps quieter weather there, but never kinder far",
+            "Frozenfar below the waves is black, is green, is slow|A diver learns the weight of cold in every muted flow"
           ],
           "medium": [
-            "Below the northern coast the light|Falls green through kelp and broken mast|A diver feels the colder turns|Before he sees the bright shoals pass",
-            "The underwater roads run cold|Beneath black cliffs and weeping stone|North-coast currents teach the skin|To trust no seeming calm alone",
-            "Below the coves the weed bows slow|And pale fish move like bits of mail|A swimmer reads the underwater weather|By where the quieter pockets fail"
+            "Below the floes the daylight sifts|In green along the broken kelp|A diver knows the colder currents|Need no words to ask for help",
+            "The underwater roads run dark|Beneath the ice and whaling ground|In Frozenfar even the sea|Makes weather with a quieter sound",
+            "Cold water folds through reef and wreck|And presses thought to slower pace|A swimmer there learns northern calm|From every seal-dark passing face"
           ],
           "long": [
-            "Below the Sword Coast northern cliffs|The daylight filters green|It finds the kelp, it finds old wrecks|It shows what cold can mean|A diver moves with careful hands|And minds the pull below|For underwater weather there|Can change before signs show",
-            "The shoals along that colder coast|Keep current over stone|The water may look clear and kind|Yet never quite seems home|A swimmer reads the colder tongues|By skin before by sight|For underwater weather there|Can bend the course of light",
-            "Where anchors sleep in cedar-dark weed|And crabs patrol the spar|The sea keeps quieter weather there|But not less exacting far|A pearl-hand minds the turning flow|And watches silt-cloud roll|For underwater weather there|Will test a restless soul"
+            "Below the ice of Frozenfar|The daylight travels green|It finds the wrecks, it finds the weed|It shows what cold can mean|A diver moves with careful hands|Where silence rules the bar|For underwater weather there|Is slower, not less hard",
+            "The currents under Frozenfar|Run dark beneath the floe|They turn the kelp, they stir the silt|They pull the long weeds low|A swimmer reads them by the skin|Before the eye can tell|For underwater weather keeps|Its warnings mute but well",
+            "Where broken spars lie furred with weed|And seal-shapes pass above|The sea keeps house in northern green|Too cold for haste or love|A diver learns to spare his breath|And move with quieter art|For underwater weather there|Can seize a reckless heart"
           ]
         },
         "underdark": {
           "short": [
-            "Below the northern roads the deep keeps rime, old brick, and pine|And every draft through buried halls can feel like weather's sign",
-            "The underdark there smells of damp, of ore, of chimney stone|A traveler reads the deeps by flame more than by map alone",
-            "In northern deep ways stillness holds till one cold breath says go|And wiser folk heed that small draft more than the maps they know"
+            "Beneath Frozenfar the old dwarf roads wear rime instead of rain|And every draft comes cold enough to wake the rock to pain",
+            "The deep halls keep a frost-bit hush where lantern echoes roam|A traveler there trusts heated stone more than he trusts a home",
+            "In Frozenfar's underdark the air moves thin, then still, then wrong|And wise folk heed the smallest draft before it grows too strong"
           ],
           "medium": [
-            "Below the inns and logging roads|Old passages of worked stone lie|North-coast underdark weather turns|By breath that never sees the sky",
-            "The deep roads keep a colder damp|And hidden drafts through ore and beam|A lantern tells the wiser truth|Long before cracks show what they mean",
-            "In underways beneath the north|The air can sleep for half a day|Then one small chill along the wall|Will turn the wiser folk away"
+            "Below the cliffs the caverns breathe|With cold that never learns the day|A miner says the deeper drafts|Can turn a brave man's will away",
+            "Rime on chain and dripstone white|Mark routes the unwary should not choose|The underdark of Frozenfar|Makes weather out of little clues",
+            "The deep roads hold their silence long|Till one thin draft disturbs the flame|Then every wiser traveler knows|The cave has shifted all the same"
           ],
           "long": [
-            "Beneath the northern coastal roads|The older passages wind|With root through brick and damp through stone|And weather of their kind|A lantern gutters at one bend|Where hidden currents pass|For underdark weather there can speak|Through mortar, chill, and glass",
-            "The cellars, mines, and buried halls|Lie dark beneath the town|No gull is heard, no rain is seen|Yet cold drafts travel down|A scout lays hand to sweating stone|And watches lamplight thin|For underdark weather near that coast|Can start where none have been",
-            "In passages below the inns|The stillness carries pine|The air stays soft until some vent|Lets through a colder line|A traveler trusts that smaller sign|More than the brightest chart|For underdark weather there can test|The firmest northern heart"
+            "Beneath Frozenfar the stone goes cold|And keeps the cold it won|No tide is seen, no gull is heard|No memory of the sun|A lantern flickers at one turn|Where hidden drafts conspire|For underdark weather there can speak|By one uneasy fire",
+            "The old dwarf roads run dark and hard|With rime on rail and chain|A traveler hears the weather there|In whisper, not in rain|One colder breath along the wall|One sudden dying flame|These are the signs the deep earth gives|Before it shifts its frame",
+            "In caverns far below the quay|The silence carries weight|The air stays still until it stirs|And then the wise men wait|A scout lays palm to frozen stone|To see how lamplights bend|For underdark weather under Frozenfar|Can change before the end"
           ]
         }
       }
@@ -405,75 +403,67 @@
       "periods": {
         "hammer": {
           "temperature": {
-            "avgF": 45,
-            "lowF": 35,
-            "highF": 55
+            "avgF": 10,
+            "lowF": -15,
+            "highF": 25
           },
           "precipitation": {
-            "chancePct": 65,
-            "type": "rain",
+            "chancePct": 55,
+            "type": "snow",
             "intensityWeights": {
-              "light": 35,
-              "moderate": 40,
+              "light": 40,
+              "moderate": 35,
               "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 40
               },
               {
-                "value": "WSW",
+                "value": "NNE",
                 "weight": 25
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 20
               },
               {
-                "value": "WNW",
-                "weight": 15
+                "value": "ENE",
+                "weight": 10
               },
               {
                 "value": "NW",
-                "weight": 10
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
+                "value": 25,
                 "weight": 5
               },
               {
-                "value": 25,
-                "weight": 15
-              },
-              {
                 "value": 50,
-                "weight": 35
+                "weight": 15
               },
               {
                 "value": 75,
-                "weight": 30
+                "weight": 40
               },
               {
                 "value": 100,
-                "weight": 15
+                "weight": 40
               }
             ]
           },
           "critical": {
-            "chancePct": 22,
+            "chancePct": 35,
             "eventWeights": [
               {
-                "value": "sea_storm",
-                "weight": 10
-              },
-              {
-                "value": "winter_gale",
-                "weight": 12
+                "value": "blizzard",
+                "weight": 35
               }
             ],
             "severityWeights": {
@@ -484,7 +474,7 @@
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 2,
             "skies": 1,
             "wind": 2,
@@ -567,75 +557,67 @@
         },
         "midwinter": {
           "temperature": {
-            "avgF": 45,
-            "lowF": 35,
-            "highF": 55
+            "avgF": 10,
+            "lowF": -15,
+            "highF": 25
           },
           "precipitation": {
-            "chancePct": 65,
-            "type": "rain",
+            "chancePct": 55,
+            "type": "snow",
             "intensityWeights": {
-              "light": 35,
-              "moderate": 40,
+              "light": 40,
+              "moderate": 35,
               "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 40
               },
               {
-                "value": "WSW",
+                "value": "NNE",
                 "weight": 25
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 20
               },
               {
-                "value": "WNW",
-                "weight": 15
+                "value": "ENE",
+                "weight": 10
               },
               {
                 "value": "NW",
-                "weight": 10
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
+                "value": 25,
                 "weight": 5
               },
               {
-                "value": 25,
-                "weight": 15
-              },
-              {
                 "value": 50,
-                "weight": 35
+                "weight": 15
               },
               {
                 "value": 75,
-                "weight": 30
+                "weight": 40
               },
               {
                 "value": 100,
-                "weight": 15
+                "weight": 40
               }
             ]
           },
           "critical": {
-            "chancePct": 22,
+            "chancePct": 35,
             "eventWeights": [
               {
-                "value": "sea_storm",
-                "weight": 10
-              },
-              {
-                "value": "winter_gale",
-                "weight": 12
+                "value": "blizzard",
+                "weight": 35
               }
             ],
             "severityWeights": {
@@ -646,7 +628,7 @@
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 2,
             "skies": 1,
             "wind": 2,
@@ -729,75 +711,67 @@
         },
         "alturiak": {
           "temperature": {
-            "avgF": 45,
-            "lowF": 35,
-            "highF": 55
+            "avgF": 10,
+            "lowF": -15,
+            "highF": 25
           },
           "precipitation": {
-            "chancePct": 65,
-            "type": "rain",
+            "chancePct": 55,
+            "type": "snow",
             "intensityWeights": {
-              "light": 35,
-              "moderate": 40,
+              "light": 40,
+              "moderate": 35,
               "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 40
               },
               {
-                "value": "WSW",
+                "value": "NNE",
                 "weight": 25
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 20
               },
               {
-                "value": "WNW",
-                "weight": 15
+                "value": "ENE",
+                "weight": 10
               },
               {
                 "value": "NW",
-                "weight": 10
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
+                "value": 25,
                 "weight": 5
               },
               {
-                "value": 25,
-                "weight": 15
-              },
-              {
                 "value": 50,
-                "weight": 35
+                "weight": 15
               },
               {
                 "value": 75,
-                "weight": 30
+                "weight": 40
               },
               {
                 "value": 100,
-                "weight": 15
+                "weight": 40
               }
             ]
           },
           "critical": {
-            "chancePct": 22,
+            "chancePct": 35,
             "eventWeights": [
               {
-                "value": "sea_storm",
-                "weight": 10
-              },
-              {
-                "value": "winter_gale",
-                "weight": 12
+                "value": "blizzard",
+                "weight": 35
               }
             ],
             "severityWeights": {
@@ -808,7 +782,7 @@
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 2,
             "skies": 1,
             "wind": 2,
@@ -891,27 +865,27 @@
         },
         "ches": {
           "temperature": {
-            "avgF": 52,
-            "lowF": 42,
-            "highF": 62
+            "avgF": 25,
+            "lowF": 0,
+            "highF": 40
           },
           "precipitation": {
-            "chancePct": 50,
-            "type": "rain",
+            "chancePct": 45,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
+              "light": 40,
               "moderate": 35,
-              "heavy": 20
+              "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 35
               },
               {
-                "value": "WNW",
+                "value": "NNW",
                 "weight": 25
               },
               {
@@ -919,62 +893,58 @@
                 "weight": 20
               },
               {
-                "value": "SW",
+                "value": "W",
                 "weight": 15
               },
               {
-                "value": "N",
-                "weight": 10
+                "value": "NE",
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
+                "value": 25,
                 "weight": 10
               },
               {
-                "value": 25,
-                "weight": 20
-              },
-              {
                 "value": 50,
-                "weight": 35
+                "weight": 30
               },
               {
                 "value": 75,
-                "weight": 27
+                "weight": 40
               },
               {
                 "value": 100,
-                "weight": 8
+                "weight": 20
               }
             ]
           },
           "critical": {
-            "chancePct": 12,
+            "chancePct": 25,
             "eventWeights": [
               {
-                "value": "sea_storm",
-                "weight": 5
+                "value": "ice_storm",
+                "weight": 10
               },
               {
                 "value": "winter_gale",
-                "weight": 7
+                "weight": 15
               }
             ],
             "severityWeights": {
-              "light": 40,
+              "light": 30,
               "moderate": 35,
-              "heavy": 20,
-              "severe": 5
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
-            "temperature": 2,
-            "precipitation": 2,
+            "temperature": 3,
+            "precipitation": 1,
             "skies": 1,
-            "wind": 1,
-            "directionChangePct": 44,
+            "wind": 2,
+            "directionChangePct": 60,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -70,
@@ -1053,27 +1023,27 @@
         },
         "tarsakh": {
           "temperature": {
-            "avgF": 52,
-            "lowF": 42,
-            "highF": 62
+            "avgF": 25,
+            "lowF": 0,
+            "highF": 40
           },
           "precipitation": {
-            "chancePct": 50,
-            "type": "rain",
+            "chancePct": 45,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
+              "light": 40,
               "moderate": 35,
-              "heavy": 20
+              "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 35
               },
               {
-                "value": "WNW",
+                "value": "NNW",
                 "weight": 25
               },
               {
@@ -1081,62 +1051,58 @@
                 "weight": 20
               },
               {
-                "value": "SW",
+                "value": "W",
                 "weight": 15
               },
               {
-                "value": "N",
-                "weight": 10
+                "value": "NE",
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
+                "value": 25,
                 "weight": 10
               },
               {
-                "value": 25,
-                "weight": 20
-              },
-              {
                 "value": 50,
-                "weight": 35
+                "weight": 30
               },
               {
                 "value": 75,
-                "weight": 27
+                "weight": 40
               },
               {
                 "value": 100,
-                "weight": 8
+                "weight": 20
               }
             ]
           },
           "critical": {
-            "chancePct": 12,
+            "chancePct": 25,
             "eventWeights": [
               {
-                "value": "sea_storm",
-                "weight": 5
+                "value": "ice_storm",
+                "weight": 10
               },
               {
                 "value": "winter_gale",
-                "weight": 7
+                "weight": 15
               }
             ],
             "severityWeights": {
-              "light": 40,
+              "light": 30,
               "moderate": 35,
-              "heavy": 20,
-              "severe": 5
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
-            "temperature": 2,
-            "precipitation": 2,
+            "temperature": 3,
+            "precipitation": 1,
             "skies": 1,
-            "wind": 1,
-            "directionChangePct": 44,
+            "wind": 2,
+            "directionChangePct": 60,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -70,
@@ -1215,27 +1181,27 @@
         },
         "greengrass": {
           "temperature": {
-            "avgF": 52,
-            "lowF": 42,
-            "highF": 62
+            "avgF": 25,
+            "lowF": 0,
+            "highF": 40
           },
           "precipitation": {
-            "chancePct": 50,
-            "type": "rain",
+            "chancePct": 45,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
+              "light": 40,
               "moderate": 35,
-              "heavy": 20
+              "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 35
               },
               {
-                "value": "WNW",
+                "value": "NNW",
                 "weight": 25
               },
               {
@@ -1243,62 +1209,58 @@
                 "weight": 20
               },
               {
-                "value": "SW",
+                "value": "W",
                 "weight": 15
               },
               {
-                "value": "N",
-                "weight": 10
+                "value": "NE",
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
+                "value": 25,
                 "weight": 10
               },
               {
-                "value": 25,
-                "weight": 20
-              },
-              {
                 "value": 50,
-                "weight": 35
+                "weight": 30
               },
               {
                 "value": 75,
-                "weight": 27
+                "weight": 40
               },
               {
                 "value": 100,
-                "weight": 8
+                "weight": 20
               }
             ]
           },
           "critical": {
-            "chancePct": 12,
+            "chancePct": 25,
             "eventWeights": [
               {
-                "value": "sea_storm",
-                "weight": 5
+                "value": "ice_storm",
+                "weight": 10
               },
               {
                 "value": "winter_gale",
-                "weight": 7
+                "weight": 15
               }
             ],
             "severityWeights": {
-              "light": 40,
+              "light": 30,
               "moderate": 35,
-              "heavy": 20,
-              "severe": 5
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
-            "temperature": 2,
-            "precipitation": 2,
+            "temperature": 3,
+            "precipitation": 1,
             "skies": 1,
-            "wind": 1,
-            "directionChangePct": 44,
+            "wind": 2,
+            "directionChangePct": 60,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -70,
@@ -1377,27 +1339,27 @@
         },
         "mirtul": {
           "temperature": {
-            "avgF": 52,
-            "lowF": 42,
-            "highF": 62
+            "avgF": 25,
+            "lowF": 0,
+            "highF": 40
           },
           "precipitation": {
-            "chancePct": 50,
-            "type": "rain",
+            "chancePct": 45,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
+              "light": 40,
               "moderate": 35,
-              "heavy": 20
+              "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 35
               },
               {
-                "value": "WNW",
+                "value": "NNW",
                 "weight": 25
               },
               {
@@ -1405,62 +1367,58 @@
                 "weight": 20
               },
               {
-                "value": "SW",
+                "value": "W",
                 "weight": 15
               },
               {
-                "value": "N",
-                "weight": 10
+                "value": "NE",
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
+                "value": 25,
                 "weight": 10
               },
               {
-                "value": 25,
-                "weight": 20
-              },
-              {
                 "value": 50,
-                "weight": 35
+                "weight": 30
               },
               {
                 "value": 75,
-                "weight": 27
+                "weight": 40
               },
               {
                 "value": 100,
-                "weight": 8
+                "weight": 20
               }
             ]
           },
           "critical": {
-            "chancePct": 12,
+            "chancePct": 25,
             "eventWeights": [
               {
-                "value": "sea_storm",
-                "weight": 5
+                "value": "ice_storm",
+                "weight": 10
               },
               {
                 "value": "winter_gale",
-                "weight": 7
+                "weight": 15
               }
             ],
             "severityWeights": {
-              "light": 40,
+              "light": 30,
               "moderate": 35,
-              "heavy": 20,
-              "severe": 5
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
-            "temperature": 2,
-            "precipitation": 2,
+            "temperature": 3,
+            "precipitation": 1,
             "skies": 1,
-            "wind": 1,
-            "directionChangePct": 44,
+            "wind": 2,
+            "directionChangePct": 60,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -70,
@@ -1539,36 +1497,36 @@
         },
         "kythorn": {
           "temperature": {
-            "avgF": 60,
-            "lowF": 52,
-            "highF": 70
+            "avgF": 40,
+            "lowF": 25,
+            "highF": 55
           },
           "precipitation": {
-            "chancePct": 20,
+            "chancePct": 30,
             "type": "rain",
             "intensityWeights": {
-              "light": 75,
-              "moderate": 20,
-              "heavy": 5
+              "light": 60,
+              "moderate": 30,
+              "heavy": 10
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "NW",
-                "weight": 40
-              },
-              {
-                "value": "NNW",
-                "weight": 25
-              },
-              {
                 "value": "W",
-                "weight": 20
+                "weight": 30
               },
               {
                 "value": "WNW",
-                "weight": 10
+                "weight": 25
+              },
+              {
+                "value": "NW",
+                "weight": 25
+              },
+              {
+                "value": "NNW",
+                "weight": 15
               },
               {
                 "value": "SW",
@@ -1577,33 +1535,29 @@
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 20
-              },
-              {
                 "value": 25,
                 "weight": 25
               },
               {
                 "value": 50,
-                "weight": 35
+                "weight": 45
               },
               {
                 "value": 75,
-                "weight": 17
+                "weight": 25
               },
               {
                 "value": 100,
-                "weight": 3
+                "weight": 5
               }
             ]
           },
           "critical": {
-            "chancePct": 6,
+            "chancePct": 10,
             "eventWeights": [
               {
                 "value": "sea_storm",
-                "weight": 6
+                "weight": 10
               }
             ],
             "severityWeights": {
@@ -1618,7 +1572,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 32,
+            "directionChangePct": 40,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -70,
@@ -1697,36 +1651,36 @@
         },
         "flamerule": {
           "temperature": {
-            "avgF": 60,
-            "lowF": 52,
-            "highF": 70
+            "avgF": 40,
+            "lowF": 25,
+            "highF": 55
           },
           "precipitation": {
-            "chancePct": 20,
+            "chancePct": 30,
             "type": "rain",
             "intensityWeights": {
-              "light": 75,
-              "moderate": 20,
-              "heavy": 5
+              "light": 60,
+              "moderate": 30,
+              "heavy": 10
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "NW",
-                "weight": 40
-              },
-              {
-                "value": "NNW",
-                "weight": 25
-              },
-              {
                 "value": "W",
-                "weight": 20
+                "weight": 30
               },
               {
                 "value": "WNW",
-                "weight": 10
+                "weight": 25
+              },
+              {
+                "value": "NW",
+                "weight": 25
+              },
+              {
+                "value": "NNW",
+                "weight": 15
               },
               {
                 "value": "SW",
@@ -1735,33 +1689,29 @@
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 20
-              },
-              {
                 "value": 25,
                 "weight": 25
               },
               {
                 "value": 50,
-                "weight": 35
+                "weight": 45
               },
               {
                 "value": 75,
-                "weight": 17
+                "weight": 25
               },
               {
                 "value": 100,
-                "weight": 3
+                "weight": 5
               }
             ]
           },
           "critical": {
-            "chancePct": 6,
+            "chancePct": 10,
             "eventWeights": [
               {
                 "value": "sea_storm",
-                "weight": 6
+                "weight": 10
               }
             ],
             "severityWeights": {
@@ -1776,7 +1726,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 32,
+            "directionChangePct": 40,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -70,
@@ -1855,36 +1805,36 @@
         },
         "midsummer": {
           "temperature": {
-            "avgF": 60,
-            "lowF": 52,
-            "highF": 70
+            "avgF": 40,
+            "lowF": 25,
+            "highF": 55
           },
           "precipitation": {
-            "chancePct": 20,
+            "chancePct": 30,
             "type": "rain",
             "intensityWeights": {
-              "light": 75,
-              "moderate": 20,
-              "heavy": 5
+              "light": 60,
+              "moderate": 30,
+              "heavy": 10
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "NW",
-                "weight": 40
-              },
-              {
-                "value": "NNW",
-                "weight": 25
-              },
-              {
                 "value": "W",
-                "weight": 20
+                "weight": 30
               },
               {
                 "value": "WNW",
-                "weight": 10
+                "weight": 25
+              },
+              {
+                "value": "NW",
+                "weight": 25
+              },
+              {
+                "value": "NNW",
+                "weight": 15
               },
               {
                 "value": "SW",
@@ -1893,33 +1843,29 @@
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 20
-              },
-              {
                 "value": 25,
                 "weight": 25
               },
               {
                 "value": 50,
-                "weight": 35
+                "weight": 45
               },
               {
                 "value": 75,
-                "weight": 17
+                "weight": 25
               },
               {
                 "value": 100,
-                "weight": 3
+                "weight": 5
               }
             ]
           },
           "critical": {
-            "chancePct": 6,
+            "chancePct": 10,
             "eventWeights": [
               {
                 "value": "sea_storm",
-                "weight": 6
+                "weight": 10
               }
             ],
             "severityWeights": {
@@ -1934,7 +1880,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 32,
+            "directionChangePct": 40,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -70,
@@ -2013,36 +1959,36 @@
         },
         "shieldmeet": {
           "temperature": {
-            "avgF": 60,
-            "lowF": 52,
-            "highF": 70
+            "avgF": 40,
+            "lowF": 25,
+            "highF": 55
           },
           "precipitation": {
-            "chancePct": 20,
+            "chancePct": 30,
             "type": "rain",
             "intensityWeights": {
-              "light": 75,
-              "moderate": 20,
-              "heavy": 5
+              "light": 60,
+              "moderate": 30,
+              "heavy": 10
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "NW",
-                "weight": 40
-              },
-              {
-                "value": "NNW",
-                "weight": 25
-              },
-              {
                 "value": "W",
-                "weight": 20
+                "weight": 30
               },
               {
                 "value": "WNW",
-                "weight": 10
+                "weight": 25
+              },
+              {
+                "value": "NW",
+                "weight": 25
+              },
+              {
+                "value": "NNW",
+                "weight": 15
               },
               {
                 "value": "SW",
@@ -2051,33 +1997,29 @@
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 20
-              },
-              {
                 "value": 25,
                 "weight": 25
               },
               {
                 "value": 50,
-                "weight": 35
+                "weight": 45
               },
               {
                 "value": 75,
-                "weight": 17
+                "weight": 25
               },
               {
                 "value": 100,
-                "weight": 3
+                "weight": 5
               }
             ]
           },
           "critical": {
-            "chancePct": 6,
+            "chancePct": 10,
             "eventWeights": [
               {
                 "value": "sea_storm",
-                "weight": 6
+                "weight": 10
               }
             ],
             "severityWeights": {
@@ -2092,7 +2034,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 32,
+            "directionChangePct": 40,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -70,
@@ -2171,36 +2113,36 @@
         },
         "eleasis": {
           "temperature": {
-            "avgF": 60,
-            "lowF": 52,
-            "highF": 70
+            "avgF": 40,
+            "lowF": 25,
+            "highF": 55
           },
           "precipitation": {
-            "chancePct": 20,
+            "chancePct": 30,
             "type": "rain",
             "intensityWeights": {
-              "light": 75,
-              "moderate": 20,
-              "heavy": 5
+              "light": 60,
+              "moderate": 30,
+              "heavy": 10
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "NW",
-                "weight": 40
-              },
-              {
-                "value": "NNW",
-                "weight": 25
-              },
-              {
                 "value": "W",
-                "weight": 20
+                "weight": 30
               },
               {
                 "value": "WNW",
-                "weight": 10
+                "weight": 25
+              },
+              {
+                "value": "NW",
+                "weight": 25
+              },
+              {
+                "value": "NNW",
+                "weight": 15
               },
               {
                 "value": "SW",
@@ -2209,33 +2151,29 @@
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 20
-              },
-              {
                 "value": 25,
                 "weight": 25
               },
               {
                 "value": 50,
-                "weight": 35
+                "weight": 45
               },
               {
                 "value": 75,
-                "weight": 17
+                "weight": 25
               },
               {
                 "value": 100,
-                "weight": 3
+                "weight": 5
               }
             ]
           },
           "critical": {
-            "chancePct": 6,
+            "chancePct": 10,
             "eventWeights": [
               {
                 "value": "sea_storm",
-                "weight": 6
+                "weight": 10
               }
             ],
             "severityWeights": {
@@ -2250,7 +2188,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 32,
+            "directionChangePct": 40,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -70,
@@ -2329,71 +2267,71 @@
         },
         "eleint": {
           "temperature": {
-            "avgF": 52,
-            "lowF": 42,
-            "highF": 62
+            "avgF": 25,
+            "lowF": 0,
+            "highF": 40
           },
           "precipitation": {
-            "chancePct": 55,
-            "type": "rain",
+            "chancePct": 50,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
+              "light": 40,
               "moderate": 35,
-              "heavy": 20
+              "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 35
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 25
               },
               {
-                "value": "WSW",
+                "value": "ENE",
                 "weight": 20
               },
               {
-                "value": "NW",
+                "value": "E",
                 "weight": 15
               },
               {
-                "value": "S",
-                "weight": 10
+                "value": "NW",
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 8
-              },
-              {
                 "value": 25,
-                "weight": 17
+                "weight": 10
               },
               {
                 "value": 50,
-                "weight": 30
+                "weight": 25
               },
               {
                 "value": 75,
-                "weight": 30
+                "weight": 40
               },
               {
                 "value": 100,
-                "weight": 15
+                "weight": 25
               }
             ]
           },
           "critical": {
-            "chancePct": 18,
+            "chancePct": 30,
             "eventWeights": [
               {
+                "value": "blizzard",
+                "weight": 10
+              },
+              {
                 "value": "sea_storm",
-                "weight": 18
+                "weight": 20
               }
             ],
             "severityWeights": {
@@ -2404,11 +2342,11 @@
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 2,
             "skies": 1,
             "wind": 2,
-            "directionChangePct": 56,
+            "directionChangePct": 60,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -70,
@@ -2487,71 +2425,71 @@
         },
         "highharvestide": {
           "temperature": {
-            "avgF": 52,
-            "lowF": 42,
-            "highF": 62
+            "avgF": 25,
+            "lowF": 0,
+            "highF": 40
           },
           "precipitation": {
-            "chancePct": 55,
-            "type": "rain",
+            "chancePct": 50,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
+              "light": 40,
               "moderate": 35,
-              "heavy": 20
+              "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 35
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 25
               },
               {
-                "value": "WSW",
+                "value": "ENE",
                 "weight": 20
               },
               {
-                "value": "NW",
+                "value": "E",
                 "weight": 15
               },
               {
-                "value": "S",
-                "weight": 10
+                "value": "NW",
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 8
-              },
-              {
                 "value": 25,
-                "weight": 17
+                "weight": 10
               },
               {
                 "value": 50,
-                "weight": 30
+                "weight": 25
               },
               {
                 "value": 75,
-                "weight": 30
+                "weight": 40
               },
               {
                 "value": 100,
-                "weight": 15
+                "weight": 25
               }
             ]
           },
           "critical": {
-            "chancePct": 18,
+            "chancePct": 30,
             "eventWeights": [
               {
+                "value": "blizzard",
+                "weight": 10
+              },
+              {
                 "value": "sea_storm",
-                "weight": 18
+                "weight": 20
               }
             ],
             "severityWeights": {
@@ -2562,11 +2500,11 @@
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 2,
             "skies": 1,
             "wind": 2,
-            "directionChangePct": 56,
+            "directionChangePct": 60,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -70,
@@ -2645,71 +2583,71 @@
         },
         "marpenoth": {
           "temperature": {
-            "avgF": 52,
-            "lowF": 42,
-            "highF": 62
+            "avgF": 25,
+            "lowF": 0,
+            "highF": 40
           },
           "precipitation": {
-            "chancePct": 55,
-            "type": "rain",
+            "chancePct": 50,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
+              "light": 40,
               "moderate": 35,
-              "heavy": 20
+              "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 35
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 25
               },
               {
-                "value": "WSW",
+                "value": "ENE",
                 "weight": 20
               },
               {
-                "value": "NW",
+                "value": "E",
                 "weight": 15
               },
               {
-                "value": "S",
-                "weight": 10
+                "value": "NW",
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 8
-              },
-              {
                 "value": 25,
-                "weight": 17
+                "weight": 10
               },
               {
                 "value": 50,
-                "weight": 30
+                "weight": 25
               },
               {
                 "value": 75,
-                "weight": 30
+                "weight": 40
               },
               {
                 "value": 100,
-                "weight": 15
+                "weight": 25
               }
             ]
           },
           "critical": {
-            "chancePct": 18,
+            "chancePct": 30,
             "eventWeights": [
               {
+                "value": "blizzard",
+                "weight": 10
+              },
+              {
                 "value": "sea_storm",
-                "weight": 18
+                "weight": 20
               }
             ],
             "severityWeights": {
@@ -2720,11 +2658,11 @@
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 2,
             "skies": 1,
             "wind": 2,
-            "directionChangePct": 56,
+            "directionChangePct": 60,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -70,
@@ -2803,71 +2741,71 @@
         },
         "uktar": {
           "temperature": {
-            "avgF": 52,
-            "lowF": 42,
-            "highF": 62
+            "avgF": 25,
+            "lowF": 0,
+            "highF": 40
           },
           "precipitation": {
-            "chancePct": 55,
-            "type": "rain",
+            "chancePct": 50,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
+              "light": 40,
               "moderate": 35,
-              "heavy": 20
+              "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 35
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 25
               },
               {
-                "value": "WSW",
+                "value": "ENE",
                 "weight": 20
               },
               {
-                "value": "NW",
+                "value": "E",
                 "weight": 15
               },
               {
-                "value": "S",
-                "weight": 10
+                "value": "NW",
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 8
-              },
-              {
                 "value": 25,
-                "weight": 17
+                "weight": 10
               },
               {
                 "value": 50,
-                "weight": 30
+                "weight": 25
               },
               {
                 "value": 75,
-                "weight": 30
+                "weight": 40
               },
               {
                 "value": 100,
-                "weight": 15
+                "weight": 25
               }
             ]
           },
           "critical": {
-            "chancePct": 18,
+            "chancePct": 30,
             "eventWeights": [
               {
+                "value": "blizzard",
+                "weight": 10
+              },
+              {
                 "value": "sea_storm",
-                "weight": 18
+                "weight": 20
               }
             ],
             "severityWeights": {
@@ -2878,11 +2816,11 @@
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 2,
             "skies": 1,
             "wind": 2,
-            "directionChangePct": 56,
+            "directionChangePct": 60,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -70,
@@ -2961,71 +2899,71 @@
         },
         "feastofthemoon": {
           "temperature": {
-            "avgF": 52,
-            "lowF": 42,
-            "highF": 62
+            "avgF": 25,
+            "lowF": 0,
+            "highF": 40
           },
           "precipitation": {
-            "chancePct": 55,
-            "type": "rain",
+            "chancePct": 50,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
+              "light": 40,
               "moderate": 35,
-              "heavy": 20
+              "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 35
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 25
               },
               {
-                "value": "WSW",
+                "value": "ENE",
                 "weight": 20
               },
               {
-                "value": "NW",
+                "value": "E",
                 "weight": 15
               },
               {
-                "value": "S",
-                "weight": 10
+                "value": "NW",
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 8
-              },
-              {
                 "value": 25,
-                "weight": 17
+                "weight": 10
               },
               {
                 "value": 50,
-                "weight": 30
+                "weight": 25
               },
               {
                 "value": 75,
-                "weight": 30
+                "weight": 40
               },
               {
                 "value": 100,
-                "weight": 15
+                "weight": 25
               }
             ]
           },
           "critical": {
-            "chancePct": 18,
+            "chancePct": 30,
             "eventWeights": [
               {
+                "value": "blizzard",
+                "weight": 10
+              },
+              {
                 "value": "sea_storm",
-                "weight": 18
+                "weight": 20
               }
             ],
             "severityWeights": {
@@ -3036,11 +2974,11 @@
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 2,
             "skies": 1,
             "wind": 2,
-            "directionChangePct": 56,
+            "directionChangePct": 60,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -70,
@@ -3119,75 +3057,67 @@
         },
         "nightal": {
           "temperature": {
-            "avgF": 45,
-            "lowF": 35,
-            "highF": 55
+            "avgF": 10,
+            "lowF": -15,
+            "highF": 25
           },
           "precipitation": {
-            "chancePct": 65,
-            "type": "rain",
+            "chancePct": 55,
+            "type": "snow",
             "intensityWeights": {
-              "light": 35,
-              "moderate": 40,
+              "light": 40,
+              "moderate": 35,
               "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 40
               },
               {
-                "value": "WSW",
+                "value": "NNE",
                 "weight": 25
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 20
               },
               {
-                "value": "WNW",
-                "weight": 15
+                "value": "ENE",
+                "weight": 10
               },
               {
                 "value": "NW",
-                "weight": 10
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
+                "value": 25,
                 "weight": 5
               },
               {
-                "value": 25,
-                "weight": 15
-              },
-              {
                 "value": 50,
-                "weight": 35
+                "weight": 15
               },
               {
                 "value": 75,
-                "weight": 30
+                "weight": 40
               },
               {
                 "value": 100,
-                "weight": 15
+                "weight": 40
               }
             ]
           },
           "critical": {
-            "chancePct": 22,
+            "chancePct": 35,
             "eventWeights": [
               {
-                "value": "sea_storm",
-                "weight": 10
-              },
-              {
-                "value": "winter_gale",
-                "weight": 12
+                "value": "blizzard",
+                "weight": 35
               }
             ],
             "severityWeights": {
@@ -3198,7 +3128,7 @@
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 2,
             "skies": 1,
             "wind": 2,
@@ -3282,7 +3212,7 @@
       },
       "waterProfile": {
         "bodyType": "open_ocean",
-        "totalDepthFeet": 780,
+        "totalDepthFeet": 900,
         "sampleMode": "fixed_fathoms",
         "sampleFractions": {
           "shallow": 0.2,
@@ -3332,7 +3262,7 @@
       "inherits": "region",
       "waterProfile": {
         "bodyType": "coastline",
-        "totalDepthFeet": 110,
+        "totalDepthFeet": 120,
         "sampleMode": "fractional_depth",
         "sampleFractions": {
           "shallow": 0.2,
@@ -3383,58 +3313,50 @@
       "periods": {
         "hammer": {
           "temperature": {
-            "avgF": 38,
-            "lowF": 25,
-            "highF": 50
+            "avgF": -5,
+            "lowF": -35,
+            "highF": 10
           },
           "precipitation": {
-            "chancePct": 55,
-            "type": "rain",
+            "chancePct": 45,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
+              "light": 40,
               "moderate": 35,
-              "heavy": 20
+              "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
+                "value": "N",
+                "weight": 50
               },
               {
-                "value": "SW",
+                "value": "NNE",
                 "weight": 25
               },
               {
-                "value": "S",
-                "weight": 20
-              },
-              {
-                "value": "NW",
+                "value": "NE",
                 "weight": 15
               },
               {
                 "value": "E",
-                "weight": 5
+                "weight": 10
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 15
-              },
-              {
                 "value": 25,
-                "weight": 30
+                "weight": 25
               },
               {
                 "value": 50,
-                "weight": 35
+                "weight": 45
               },
               {
                 "value": 75,
-                "weight": 15
+                "weight": 25
               },
               {
                 "value": 100,
@@ -3443,30 +3365,30 @@
             ]
           },
           "critical": {
-            "chancePct": 12,
+            "chancePct": 30,
             "eventWeights": [
               {
                 "value": "blizzard",
-                "weight": 5
+                "weight": 20
               },
               {
                 "value": "winter_gale",
-                "weight": 7
+                "weight": 10
               }
             ],
             "severityWeights": {
-              "light": 40,
+              "light": 30,
               "moderate": 35,
-              "heavy": 20,
-              "severe": 5
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
             "temperature": 3,
-            "precipitation": 2,
+            "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 44,
+            "directionChangePct": 60,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -100,
@@ -3545,58 +3467,50 @@
         },
         "midwinter": {
           "temperature": {
-            "avgF": 38,
-            "lowF": 25,
-            "highF": 50
+            "avgF": -5,
+            "lowF": -35,
+            "highF": 10
           },
           "precipitation": {
-            "chancePct": 55,
-            "type": "rain",
+            "chancePct": 45,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
+              "light": 40,
               "moderate": 35,
-              "heavy": 20
+              "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
+                "value": "N",
+                "weight": 50
               },
               {
-                "value": "SW",
+                "value": "NNE",
                 "weight": 25
               },
               {
-                "value": "S",
-                "weight": 20
-              },
-              {
-                "value": "NW",
+                "value": "NE",
                 "weight": 15
               },
               {
                 "value": "E",
-                "weight": 5
+                "weight": 10
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 15
-              },
-              {
                 "value": 25,
-                "weight": 30
+                "weight": 25
               },
               {
                 "value": 50,
-                "weight": 35
+                "weight": 45
               },
               {
                 "value": 75,
-                "weight": 15
+                "weight": 25
               },
               {
                 "value": 100,
@@ -3605,30 +3519,30 @@
             ]
           },
           "critical": {
-            "chancePct": 12,
+            "chancePct": 30,
             "eventWeights": [
               {
                 "value": "blizzard",
-                "weight": 5
+                "weight": 20
               },
               {
                 "value": "winter_gale",
-                "weight": 7
+                "weight": 10
               }
             ],
             "severityWeights": {
-              "light": 40,
+              "light": 30,
               "moderate": 35,
-              "heavy": 20,
-              "severe": 5
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
             "temperature": 3,
-            "precipitation": 2,
+            "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 44,
+            "directionChangePct": 60,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -100,
@@ -3707,58 +3621,50 @@
         },
         "alturiak": {
           "temperature": {
-            "avgF": 38,
-            "lowF": 25,
-            "highF": 50
+            "avgF": -5,
+            "lowF": -35,
+            "highF": 10
           },
           "precipitation": {
-            "chancePct": 55,
-            "type": "rain",
+            "chancePct": 45,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
+              "light": 40,
               "moderate": 35,
-              "heavy": 20
+              "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
+                "value": "N",
+                "weight": 50
               },
               {
-                "value": "SW",
+                "value": "NNE",
                 "weight": 25
               },
               {
-                "value": "S",
-                "weight": 20
-              },
-              {
-                "value": "NW",
+                "value": "NE",
                 "weight": 15
               },
               {
                 "value": "E",
-                "weight": 5
+                "weight": 10
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 15
-              },
-              {
                 "value": 25,
-                "weight": 30
+                "weight": 25
               },
               {
                 "value": 50,
-                "weight": 35
+                "weight": 45
               },
               {
                 "value": 75,
-                "weight": 15
+                "weight": 25
               },
               {
                 "value": 100,
@@ -3767,30 +3673,30 @@
             ]
           },
           "critical": {
-            "chancePct": 12,
+            "chancePct": 30,
             "eventWeights": [
               {
                 "value": "blizzard",
-                "weight": 5
+                "weight": 20
               },
               {
                 "value": "winter_gale",
-                "weight": 7
+                "weight": 10
               }
             ],
             "severityWeights": {
-              "light": 40,
+              "light": 30,
               "moderate": 35,
-              "heavy": 20,
-              "severe": 5
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
             "temperature": 3,
-            "precipitation": 2,
+            "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 44,
+            "directionChangePct": 60,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -100,
@@ -3869,86 +3775,82 @@
         },
         "ches": {
           "temperature": {
-            "avgF": 52,
-            "lowF": 40,
-            "highF": 65
+            "avgF": 15,
+            "lowF": -10,
+            "highF": 35
           },
           "precipitation": {
-            "chancePct": 45,
-            "type": "rain",
+            "chancePct": 35,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
-              "moderate": 35,
-              "heavy": 20
+              "light": 55,
+              "moderate": 30,
+              "heavy": 15
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
-              },
-              {
                 "value": "NW",
-                "weight": 25
+                "weight": 40
               },
               {
-                "value": "SW",
-                "weight": 25
+                "value": "W",
+                "weight": 30
               },
               {
-                "value": "S",
+                "value": "N",
+                "weight": 20
+              },
+              {
+                "value": "NE",
                 "weight": 10
-              },
-              {
-                "value": "E",
-                "weight": 5
               }
             ],
             "strengthWeights": [
-              {
-                "value": 0,
-                "weight": 20
-              },
               {
                 "value": 25,
                 "weight": 35
               },
               {
                 "value": 50,
-                "weight": 30
+                "weight": 45
               },
               {
                 "value": 75,
-                "weight": 12
+                "weight": 18
               },
               {
                 "value": 100,
-                "weight": 3
+                "weight": 2
               }
             ]
           },
           "critical": {
-            "chancePct": 8,
+            "chancePct": 18,
             "eventWeights": [
               {
-                "value": "thunderstorm",
+                "value": "blizzard",
+                "weight": 10
+              },
+              {
+                "value": "ice_storm",
                 "weight": 8
               }
             ],
             "severityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 12,
-              "severe": 3
+              "light": 30,
+              "moderate": 35,
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 36,
+            "directionChangePct": 56,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -100,
@@ -4027,86 +3929,82 @@
         },
         "tarsakh": {
           "temperature": {
-            "avgF": 52,
-            "lowF": 40,
-            "highF": 65
+            "avgF": 15,
+            "lowF": -10,
+            "highF": 35
           },
           "precipitation": {
-            "chancePct": 45,
-            "type": "rain",
+            "chancePct": 35,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
-              "moderate": 35,
-              "heavy": 20
+              "light": 55,
+              "moderate": 30,
+              "heavy": 15
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
-              },
-              {
                 "value": "NW",
-                "weight": 25
+                "weight": 40
               },
               {
-                "value": "SW",
-                "weight": 25
+                "value": "W",
+                "weight": 30
               },
               {
-                "value": "S",
+                "value": "N",
+                "weight": 20
+              },
+              {
+                "value": "NE",
                 "weight": 10
-              },
-              {
-                "value": "E",
-                "weight": 5
               }
             ],
             "strengthWeights": [
-              {
-                "value": 0,
-                "weight": 20
-              },
               {
                 "value": 25,
                 "weight": 35
               },
               {
                 "value": 50,
-                "weight": 30
+                "weight": 45
               },
               {
                 "value": 75,
-                "weight": 12
+                "weight": 18
               },
               {
                 "value": 100,
-                "weight": 3
+                "weight": 2
               }
             ]
           },
           "critical": {
-            "chancePct": 8,
+            "chancePct": 18,
             "eventWeights": [
               {
-                "value": "thunderstorm",
+                "value": "blizzard",
+                "weight": 10
+              },
+              {
+                "value": "ice_storm",
                 "weight": 8
               }
             ],
             "severityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 12,
-              "severe": 3
+              "light": 30,
+              "moderate": 35,
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 36,
+            "directionChangePct": 56,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -100,
@@ -4185,86 +4083,82 @@
         },
         "greengrass": {
           "temperature": {
-            "avgF": 52,
-            "lowF": 40,
-            "highF": 65
+            "avgF": 15,
+            "lowF": -10,
+            "highF": 35
           },
           "precipitation": {
-            "chancePct": 45,
-            "type": "rain",
+            "chancePct": 35,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
-              "moderate": 35,
-              "heavy": 20
+              "light": 55,
+              "moderate": 30,
+              "heavy": 15
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
-              },
-              {
                 "value": "NW",
-                "weight": 25
+                "weight": 40
               },
               {
-                "value": "SW",
-                "weight": 25
+                "value": "W",
+                "weight": 30
               },
               {
-                "value": "S",
+                "value": "N",
+                "weight": 20
+              },
+              {
+                "value": "NE",
                 "weight": 10
-              },
-              {
-                "value": "E",
-                "weight": 5
               }
             ],
             "strengthWeights": [
-              {
-                "value": 0,
-                "weight": 20
-              },
               {
                 "value": 25,
                 "weight": 35
               },
               {
                 "value": 50,
-                "weight": 30
+                "weight": 45
               },
               {
                 "value": 75,
-                "weight": 12
+                "weight": 18
               },
               {
                 "value": 100,
-                "weight": 3
+                "weight": 2
               }
             ]
           },
           "critical": {
-            "chancePct": 8,
+            "chancePct": 18,
             "eventWeights": [
               {
-                "value": "thunderstorm",
+                "value": "blizzard",
+                "weight": 10
+              },
+              {
+                "value": "ice_storm",
                 "weight": 8
               }
             ],
             "severityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 12,
-              "severe": 3
+              "light": 30,
+              "moderate": 35,
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 36,
+            "directionChangePct": 56,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -100,
@@ -4343,62 +4237,208 @@
         },
         "mirtul": {
           "temperature": {
-            "avgF": 52,
-            "lowF": 40,
-            "highF": 65
+            "avgF": 15,
+            "lowF": -10,
+            "highF": 35
           },
           "precipitation": {
-            "chancePct": 45,
-            "type": "rain",
+            "chancePct": 35,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
-              "moderate": 35,
-              "heavy": 20
+              "light": 55,
+              "moderate": 30,
+              "heavy": 15
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
-              },
-              {
                 "value": "NW",
-                "weight": 25
+                "weight": 40
               },
               {
-                "value": "SW",
-                "weight": 25
+                "value": "W",
+                "weight": 30
               },
               {
-                "value": "S",
+                "value": "N",
+                "weight": 20
+              },
+              {
+                "value": "NE",
                 "weight": 10
-              },
-              {
-                "value": "E",
-                "weight": 5
               }
             ],
             "strengthWeights": [
-              {
-                "value": 0,
-                "weight": 20
-              },
               {
                 "value": 25,
                 "weight": 35
               },
               {
                 "value": 50,
-                "weight": 30
+                "weight": 45
               },
               {
                 "value": 75,
-                "weight": 12
+                "weight": 18
               },
               {
                 "value": 100,
-                "weight": 3
+                "weight": 2
+              }
+            ]
+          },
+          "critical": {
+            "chancePct": 18,
+            "eventWeights": [
+              {
+                "value": "blizzard",
+                "weight": 10
+              },
+              {
+                "value": "ice_storm",
+                "weight": 8
+              }
+            ],
+            "severityWeights": {
+              "light": 30,
+              "moderate": 35,
+              "heavy": 25,
+              "severe": 10
+            }
+          },
+          "drift": {
+            "temperature": 3,
+            "precipitation": 1,
+            "skies": 1,
+            "wind": 1,
+            "directionChangePct": 56,
+            "timeofdaySegments": {
+              "earlypredawn": {
+                "temperatureSwingPct": -100,
+                "temperatureDelta": -1,
+                "precipitationDelta": 0,
+                "skiesDelta": 0,
+                "windDelta": -1,
+                "windStrengthDeltaPct": -8,
+                "directionChangePct": 16
+              },
+              "latepredawn": {
+                "temperatureSwingPct": -70,
+                "temperatureDelta": 0,
+                "precipitationDelta": 0,
+                "skiesDelta": 0,
+                "windDelta": -1,
+                "windStrengthDeltaPct": -4,
+                "directionChangePct": 18
+              },
+              "earlymorning": {
+                "temperatureSwingPct": -20,
+                "temperatureDelta": 0,
+                "precipitationDelta": 0,
+                "skiesDelta": 0,
+                "windDelta": 0,
+                "windStrengthDeltaPct": 0,
+                "directionChangePct": 22
+              },
+              "latemorning": {
+                "temperatureSwingPct": 20,
+                "temperatureDelta": 0,
+                "precipitationDelta": 0,
+                "skiesDelta": 0,
+                "windDelta": 0,
+                "windStrengthDeltaPct": 4,
+                "directionChangePct": 26
+              },
+              "earlyafternoon": {
+                "temperatureSwingPct": 75,
+                "temperatureDelta": 1,
+                "precipitationDelta": 0,
+                "skiesDelta": 0,
+                "windDelta": 1,
+                "windStrengthDeltaPct": 10,
+                "directionChangePct": 32
+              },
+              "lateafternoon": {
+                "temperatureSwingPct": 60,
+                "temperatureDelta": 0,
+                "precipitationDelta": 0,
+                "skiesDelta": 0,
+                "windDelta": 1,
+                "windStrengthDeltaPct": 8,
+                "directionChangePct": 30
+              },
+              "earlyevening": {
+                "temperatureSwingPct": 5,
+                "temperatureDelta": 0,
+                "precipitationDelta": 0,
+                "skiesDelta": 0,
+                "windDelta": 0,
+                "windStrengthDeltaPct": 2,
+                "directionChangePct": 24
+              },
+              "lateevening": {
+                "temperatureSwingPct": -35,
+                "temperatureDelta": 0,
+                "precipitationDelta": 0,
+                "skiesDelta": 0,
+                "windDelta": -1,
+                "windStrengthDeltaPct": -4,
+                "directionChangePct": 20
+              }
+            }
+          }
+        },
+        "kythorn": {
+          "temperature": {
+            "avgF": 45,
+            "lowF": 30,
+            "highF": 65
+          },
+          "precipitation": {
+            "chancePct": 25,
+            "type": "rain",
+            "intensityWeights": {
+              "light": 60,
+              "moderate": 30,
+              "heavy": 10
+            }
+          },
+          "wind": {
+            "directionWeights": [
+              {
+                "value": "W",
+                "weight": 40
+              },
+              {
+                "value": "SW",
+                "weight": 30
+              },
+              {
+                "value": "NW",
+                "weight": 20
+              },
+              {
+                "value": "N",
+                "weight": 10
+              }
+            ],
+            "strengthWeights": [
+              {
+                "value": 25,
+                "weight": 45
+              },
+              {
+                "value": 50,
+                "weight": 45
+              },
+              {
+                "value": 75,
+                "weight": 9
+              },
+              {
+                "value": 100,
+                "weight": 1
               }
             ]
           },
@@ -4499,223 +4539,65 @@
             }
           }
         },
-        "kythorn": {
-          "temperature": {
-            "avgF": 70,
-            "lowF": 55,
-            "highF": 85
-          },
-          "precipitation": {
-            "chancePct": 20,
-            "type": "rain",
-            "intensityWeights": {
-              "light": 75,
-              "moderate": 20,
-              "heavy": 5
-            }
-          },
-          "wind": {
-            "directionWeights": [
-              {
-                "value": "NW",
-                "weight": 45
-              },
-              {
-                "value": "W",
-                "weight": 30
-              },
-              {
-                "value": "SW",
-                "weight": 20
-              },
-              {
-                "value": "S",
-                "weight": 5
-              }
-            ],
-            "strengthWeights": [
-              {
-                "value": 0,
-                "weight": 35
-              },
-              {
-                "value": 25,
-                "weight": 35
-              },
-              {
-                "value": 50,
-                "weight": 20
-              },
-              {
-                "value": 75,
-                "weight": 8
-              },
-              {
-                "value": 100,
-                "weight": 2
-              }
-            ]
-          },
-          "critical": {
-            "chancePct": 6,
-            "eventWeights": [
-              {
-                "value": "thunderstorm",
-                "weight": 6
-              }
-            ],
-            "severityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 12,
-              "severe": 3
-            }
-          },
-          "drift": {
-            "temperature": 2,
-            "precipitation": 1,
-            "skies": 1,
-            "wind": 1,
-            "directionChangePct": 32,
-            "timeofdaySegments": {
-              "earlypredawn": {
-                "temperatureSwingPct": -100,
-                "temperatureDelta": -1,
-                "precipitationDelta": 0,
-                "skiesDelta": 0,
-                "windDelta": -1,
-                "windStrengthDeltaPct": -8,
-                "directionChangePct": 16
-              },
-              "latepredawn": {
-                "temperatureSwingPct": -70,
-                "temperatureDelta": 0,
-                "precipitationDelta": 0,
-                "skiesDelta": 0,
-                "windDelta": -1,
-                "windStrengthDeltaPct": -4,
-                "directionChangePct": 18
-              },
-              "earlymorning": {
-                "temperatureSwingPct": -20,
-                "temperatureDelta": 0,
-                "precipitationDelta": 0,
-                "skiesDelta": 0,
-                "windDelta": 0,
-                "windStrengthDeltaPct": 0,
-                "directionChangePct": 22
-              },
-              "latemorning": {
-                "temperatureSwingPct": 20,
-                "temperatureDelta": 0,
-                "precipitationDelta": 0,
-                "skiesDelta": 0,
-                "windDelta": 0,
-                "windStrengthDeltaPct": 4,
-                "directionChangePct": 26
-              },
-              "earlyafternoon": {
-                "temperatureSwingPct": 75,
-                "temperatureDelta": 1,
-                "precipitationDelta": 0,
-                "skiesDelta": 0,
-                "windDelta": 1,
-                "windStrengthDeltaPct": 10,
-                "directionChangePct": 32
-              },
-              "lateafternoon": {
-                "temperatureSwingPct": 60,
-                "temperatureDelta": 0,
-                "precipitationDelta": 0,
-                "skiesDelta": 0,
-                "windDelta": 1,
-                "windStrengthDeltaPct": 8,
-                "directionChangePct": 30
-              },
-              "earlyevening": {
-                "temperatureSwingPct": 5,
-                "temperatureDelta": 0,
-                "precipitationDelta": 0,
-                "skiesDelta": 0,
-                "windDelta": 0,
-                "windStrengthDeltaPct": 2,
-                "directionChangePct": 24
-              },
-              "lateevening": {
-                "temperatureSwingPct": -35,
-                "temperatureDelta": 0,
-                "precipitationDelta": 0,
-                "skiesDelta": 0,
-                "windDelta": -1,
-                "windStrengthDeltaPct": -4,
-                "directionChangePct": 20
-              }
-            }
-          }
-        },
         "flamerule": {
           "temperature": {
-            "avgF": 70,
-            "lowF": 55,
-            "highF": 85
+            "avgF": 45,
+            "lowF": 30,
+            "highF": 65
           },
           "precipitation": {
-            "chancePct": 20,
+            "chancePct": 25,
             "type": "rain",
             "intensityWeights": {
-              "light": 75,
-              "moderate": 20,
-              "heavy": 5
+              "light": 60,
+              "moderate": 30,
+              "heavy": 10
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "NW",
-                "weight": 45
-              },
-              {
                 "value": "W",
-                "weight": 30
+                "weight": 40
               },
               {
                 "value": "SW",
+                "weight": 30
+              },
+              {
+                "value": "NW",
                 "weight": 20
               },
               {
-                "value": "S",
-                "weight": 5
+                "value": "N",
+                "weight": 10
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 35
-              },
-              {
                 "value": 25,
-                "weight": 35
+                "weight": 45
               },
               {
                 "value": 50,
-                "weight": 20
+                "weight": 45
               },
               {
                 "value": 75,
-                "weight": 8
+                "weight": 9
               },
               {
                 "value": 100,
-                "weight": 2
+                "weight": 1
               }
             ]
           },
           "critical": {
-            "chancePct": 6,
+            "chancePct": 8,
             "eventWeights": [
               {
                 "value": "thunderstorm",
-                "weight": 6
+                "weight": 8
               }
             ],
             "severityWeights": {
@@ -4730,7 +4612,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 32,
+            "directionChangePct": 36,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -100,
@@ -4809,67 +4691,63 @@
         },
         "midsummer": {
           "temperature": {
-            "avgF": 70,
-            "lowF": 55,
-            "highF": 85
+            "avgF": 45,
+            "lowF": 30,
+            "highF": 65
           },
           "precipitation": {
-            "chancePct": 20,
+            "chancePct": 25,
             "type": "rain",
             "intensityWeights": {
-              "light": 75,
-              "moderate": 20,
-              "heavy": 5
+              "light": 60,
+              "moderate": 30,
+              "heavy": 10
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "NW",
-                "weight": 45
-              },
-              {
                 "value": "W",
-                "weight": 30
+                "weight": 40
               },
               {
                 "value": "SW",
+                "weight": 30
+              },
+              {
+                "value": "NW",
                 "weight": 20
               },
               {
-                "value": "S",
-                "weight": 5
+                "value": "N",
+                "weight": 10
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 35
-              },
-              {
                 "value": 25,
-                "weight": 35
+                "weight": 45
               },
               {
                 "value": 50,
-                "weight": 20
+                "weight": 45
               },
               {
                 "value": 75,
-                "weight": 8
+                "weight": 9
               },
               {
                 "value": 100,
-                "weight": 2
+                "weight": 1
               }
             ]
           },
           "critical": {
-            "chancePct": 6,
+            "chancePct": 8,
             "eventWeights": [
               {
                 "value": "thunderstorm",
-                "weight": 6
+                "weight": 8
               }
             ],
             "severityWeights": {
@@ -4884,7 +4762,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 32,
+            "directionChangePct": 36,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -100,
@@ -4963,67 +4841,63 @@
         },
         "shieldmeet": {
           "temperature": {
-            "avgF": 70,
-            "lowF": 55,
-            "highF": 85
+            "avgF": 45,
+            "lowF": 30,
+            "highF": 65
           },
           "precipitation": {
-            "chancePct": 20,
+            "chancePct": 25,
             "type": "rain",
             "intensityWeights": {
-              "light": 75,
-              "moderate": 20,
-              "heavy": 5
+              "light": 60,
+              "moderate": 30,
+              "heavy": 10
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "NW",
-                "weight": 45
-              },
-              {
                 "value": "W",
-                "weight": 30
+                "weight": 40
               },
               {
                 "value": "SW",
+                "weight": 30
+              },
+              {
+                "value": "NW",
                 "weight": 20
               },
               {
-                "value": "S",
-                "weight": 5
+                "value": "N",
+                "weight": 10
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 35
-              },
-              {
                 "value": 25,
-                "weight": 35
+                "weight": 45
               },
               {
                 "value": 50,
-                "weight": 20
+                "weight": 45
               },
               {
                 "value": 75,
-                "weight": 8
+                "weight": 9
               },
               {
                 "value": 100,
-                "weight": 2
+                "weight": 1
               }
             ]
           },
           "critical": {
-            "chancePct": 6,
+            "chancePct": 8,
             "eventWeights": [
               {
                 "value": "thunderstorm",
-                "weight": 6
+                "weight": 8
               }
             ],
             "severityWeights": {
@@ -5038,7 +4912,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 32,
+            "directionChangePct": 36,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -100,
@@ -5117,67 +4991,63 @@
         },
         "eleasis": {
           "temperature": {
-            "avgF": 70,
-            "lowF": 55,
-            "highF": 85
+            "avgF": 45,
+            "lowF": 30,
+            "highF": 65
           },
           "precipitation": {
-            "chancePct": 20,
+            "chancePct": 25,
             "type": "rain",
             "intensityWeights": {
-              "light": 75,
-              "moderate": 20,
-              "heavy": 5
+              "light": 60,
+              "moderate": 30,
+              "heavy": 10
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "NW",
-                "weight": 45
-              },
-              {
                 "value": "W",
-                "weight": 30
+                "weight": 40
               },
               {
                 "value": "SW",
+                "weight": 30
+              },
+              {
+                "value": "NW",
                 "weight": 20
               },
               {
-                "value": "S",
-                "weight": 5
+                "value": "N",
+                "weight": 10
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 35
-              },
-              {
                 "value": 25,
-                "weight": 35
+                "weight": 45
               },
               {
                 "value": 50,
-                "weight": 20
+                "weight": 45
               },
               {
                 "value": 75,
-                "weight": 8
+                "weight": 9
               },
               {
                 "value": 100,
-                "weight": 2
+                "weight": 1
               }
             ]
           },
           "critical": {
-            "chancePct": 6,
+            "chancePct": 8,
             "eventWeights": [
               {
                 "value": "thunderstorm",
-                "weight": 6
+                "weight": 8
               }
             ],
             "severityWeights": {
@@ -5192,7 +5062,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 32,
+            "directionChangePct": 36,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -100,
@@ -5271,86 +5141,82 @@
         },
         "eleint": {
           "temperature": {
-            "avgF": 55,
-            "lowF": 42,
-            "highF": 68
+            "avgF": 20,
+            "lowF": -5,
+            "highF": 40
           },
           "precipitation": {
             "chancePct": 40,
-            "type": "rain",
+            "type": "snow",
             "intensityWeights": {
-              "light": 60,
+              "light": 55,
               "moderate": 30,
-              "heavy": 10
+              "heavy": 15
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
+                "value": "N",
+                "weight": 45
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 25
-              },
-              {
-                "value": "NW",
-                "weight": 25
-              },
-              {
-                "value": "S",
-                "weight": 10
               },
               {
                 "value": "E",
-                "weight": 5
+                "weight": 20
+              },
+              {
+                "value": "NW",
+                "weight": 10
               }
             ],
             "strengthWeights": [
-              {
-                "value": 0,
-                "weight": 20
-              },
               {
                 "value": 25,
                 "weight": 30
               },
               {
                 "value": 50,
-                "weight": 30
+                "weight": 45
               },
               {
                 "value": 75,
-                "weight": 15
+                "weight": 22
               },
               {
                 "value": 100,
-                "weight": 5
+                "weight": 3
               }
             ]
           },
           "critical": {
-            "chancePct": 10,
+            "chancePct": 20,
             "eventWeights": [
               {
-                "value": "winter_gale",
+                "value": "blizzard",
+                "weight": 10
+              },
+              {
+                "value": "ice_storm",
                 "weight": 10
               }
             ],
             "severityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 12,
-              "severe": 3
+              "light": 30,
+              "moderate": 35,
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 40,
+            "directionChangePct": 60,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -100,
@@ -5429,86 +5295,82 @@
         },
         "highharvestide": {
           "temperature": {
-            "avgF": 55,
-            "lowF": 42,
-            "highF": 68
+            "avgF": 20,
+            "lowF": -5,
+            "highF": 40
           },
           "precipitation": {
             "chancePct": 40,
-            "type": "rain",
+            "type": "snow",
             "intensityWeights": {
-              "light": 60,
+              "light": 55,
               "moderate": 30,
-              "heavy": 10
+              "heavy": 15
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
+                "value": "N",
+                "weight": 45
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 25
-              },
-              {
-                "value": "NW",
-                "weight": 25
-              },
-              {
-                "value": "S",
-                "weight": 10
               },
               {
                 "value": "E",
-                "weight": 5
+                "weight": 20
+              },
+              {
+                "value": "NW",
+                "weight": 10
               }
             ],
             "strengthWeights": [
-              {
-                "value": 0,
-                "weight": 20
-              },
               {
                 "value": 25,
                 "weight": 30
               },
               {
                 "value": 50,
-                "weight": 30
+                "weight": 45
               },
               {
                 "value": 75,
-                "weight": 15
+                "weight": 22
               },
               {
                 "value": 100,
-                "weight": 5
+                "weight": 3
               }
             ]
           },
           "critical": {
-            "chancePct": 10,
+            "chancePct": 20,
             "eventWeights": [
               {
-                "value": "winter_gale",
+                "value": "blizzard",
+                "weight": 10
+              },
+              {
+                "value": "ice_storm",
                 "weight": 10
               }
             ],
             "severityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 12,
-              "severe": 3
+              "light": 30,
+              "moderate": 35,
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 40,
+            "directionChangePct": 60,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -100,
@@ -5587,86 +5449,82 @@
         },
         "marpenoth": {
           "temperature": {
-            "avgF": 55,
-            "lowF": 42,
-            "highF": 68
+            "avgF": 20,
+            "lowF": -5,
+            "highF": 40
           },
           "precipitation": {
             "chancePct": 40,
-            "type": "rain",
+            "type": "snow",
             "intensityWeights": {
-              "light": 60,
+              "light": 55,
               "moderate": 30,
-              "heavy": 10
+              "heavy": 15
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
+                "value": "N",
+                "weight": 45
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 25
-              },
-              {
-                "value": "NW",
-                "weight": 25
-              },
-              {
-                "value": "S",
-                "weight": 10
               },
               {
                 "value": "E",
-                "weight": 5
+                "weight": 20
+              },
+              {
+                "value": "NW",
+                "weight": 10
               }
             ],
             "strengthWeights": [
-              {
-                "value": 0,
-                "weight": 20
-              },
               {
                 "value": 25,
                 "weight": 30
               },
               {
                 "value": 50,
-                "weight": 30
+                "weight": 45
               },
               {
                 "value": 75,
-                "weight": 15
+                "weight": 22
               },
               {
                 "value": 100,
-                "weight": 5
+                "weight": 3
               }
             ]
           },
           "critical": {
-            "chancePct": 10,
+            "chancePct": 20,
             "eventWeights": [
               {
-                "value": "winter_gale",
+                "value": "blizzard",
+                "weight": 10
+              },
+              {
+                "value": "ice_storm",
                 "weight": 10
               }
             ],
             "severityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 12,
-              "severe": 3
+              "light": 30,
+              "moderate": 35,
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 40,
+            "directionChangePct": 60,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -100,
@@ -5745,86 +5603,82 @@
         },
         "uktar": {
           "temperature": {
-            "avgF": 55,
-            "lowF": 42,
-            "highF": 68
+            "avgF": 20,
+            "lowF": -5,
+            "highF": 40
           },
           "precipitation": {
             "chancePct": 40,
-            "type": "rain",
+            "type": "snow",
             "intensityWeights": {
-              "light": 60,
+              "light": 55,
               "moderate": 30,
-              "heavy": 10
+              "heavy": 15
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
+                "value": "N",
+                "weight": 45
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 25
-              },
-              {
-                "value": "NW",
-                "weight": 25
-              },
-              {
-                "value": "S",
-                "weight": 10
               },
               {
                 "value": "E",
-                "weight": 5
+                "weight": 20
+              },
+              {
+                "value": "NW",
+                "weight": 10
               }
             ],
             "strengthWeights": [
-              {
-                "value": 0,
-                "weight": 20
-              },
               {
                 "value": 25,
                 "weight": 30
               },
               {
                 "value": 50,
-                "weight": 30
+                "weight": 45
               },
               {
                 "value": 75,
-                "weight": 15
+                "weight": 22
               },
               {
                 "value": 100,
-                "weight": 5
+                "weight": 3
               }
             ]
           },
           "critical": {
-            "chancePct": 10,
+            "chancePct": 20,
             "eventWeights": [
               {
-                "value": "winter_gale",
+                "value": "blizzard",
+                "weight": 10
+              },
+              {
+                "value": "ice_storm",
                 "weight": 10
               }
             ],
             "severityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 12,
-              "severe": 3
+              "light": 30,
+              "moderate": 35,
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 40,
+            "directionChangePct": 60,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -100,
@@ -5903,86 +5757,82 @@
         },
         "feastofthemoon": {
           "temperature": {
-            "avgF": 55,
-            "lowF": 42,
-            "highF": 68
+            "avgF": 20,
+            "lowF": -5,
+            "highF": 40
           },
           "precipitation": {
             "chancePct": 40,
-            "type": "rain",
+            "type": "snow",
             "intensityWeights": {
-              "light": 60,
+              "light": 55,
               "moderate": 30,
-              "heavy": 10
+              "heavy": 15
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
+                "value": "N",
+                "weight": 45
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 25
-              },
-              {
-                "value": "NW",
-                "weight": 25
-              },
-              {
-                "value": "S",
-                "weight": 10
               },
               {
                 "value": "E",
-                "weight": 5
+                "weight": 20
+              },
+              {
+                "value": "NW",
+                "weight": 10
               }
             ],
             "strengthWeights": [
-              {
-                "value": 0,
-                "weight": 20
-              },
               {
                 "value": 25,
                 "weight": 30
               },
               {
                 "value": 50,
-                "weight": 30
+                "weight": 45
               },
               {
                 "value": 75,
-                "weight": 15
+                "weight": 22
               },
               {
                 "value": 100,
-                "weight": 5
+                "weight": 3
               }
             ]
           },
           "critical": {
-            "chancePct": 10,
+            "chancePct": 20,
             "eventWeights": [
               {
-                "value": "winter_gale",
+                "value": "blizzard",
+                "weight": 10
+              },
+              {
+                "value": "ice_storm",
                 "weight": 10
               }
             ],
             "severityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 12,
-              "severe": 3
+              "light": 30,
+              "moderate": 35,
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 40,
+            "directionChangePct": 60,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -100,
@@ -6061,58 +5911,50 @@
         },
         "nightal": {
           "temperature": {
-            "avgF": 38,
-            "lowF": 25,
-            "highF": 50
+            "avgF": -5,
+            "lowF": -35,
+            "highF": 10
           },
           "precipitation": {
-            "chancePct": 55,
-            "type": "rain",
+            "chancePct": 45,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
+              "light": 40,
               "moderate": 35,
-              "heavy": 20
+              "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
+                "value": "N",
+                "weight": 50
               },
               {
-                "value": "SW",
+                "value": "NNE",
                 "weight": 25
               },
               {
-                "value": "S",
-                "weight": 20
-              },
-              {
-                "value": "NW",
+                "value": "NE",
                 "weight": 15
               },
               {
                 "value": "E",
-                "weight": 5
+                "weight": 10
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 15
-              },
-              {
                 "value": 25,
-                "weight": 30
+                "weight": 25
               },
               {
                 "value": 50,
-                "weight": 35
+                "weight": 45
               },
               {
                 "value": 75,
-                "weight": 15
+                "weight": 25
               },
               {
                 "value": 100,
@@ -6121,30 +5963,30 @@
             ]
           },
           "critical": {
-            "chancePct": 12,
+            "chancePct": 30,
             "eventWeights": [
               {
                 "value": "blizzard",
-                "weight": 5
+                "weight": 20
               },
               {
                 "value": "winter_gale",
-                "weight": 7
+                "weight": 10
               }
             ],
             "severityWeights": {
-              "light": 40,
+              "light": 30,
               "moderate": 35,
-              "heavy": 20,
-              "severe": 5
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
             "temperature": 3,
-            "precipitation": 2,
+            "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 44,
+            "directionChangePct": 60,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": -100,
@@ -6260,86 +6102,82 @@
       "periods": {
         "hammer": {
           "temperature": {
-            "avgF": 47,
-            "lowF": 43,
-            "highF": 51
+            "avgF": 16,
+            "lowF": 7,
+            "highF": 25
           },
           "precipitation": {
-            "chancePct": 58,
-            "type": "rain",
+            "chancePct": 50,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
+              "light": 40,
               "moderate": 35,
-              "heavy": 20
+              "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 40
               },
               {
-                "value": "WSW",
+                "value": "NNE",
                 "weight": 25
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 20
               },
               {
-                "value": "WNW",
-                "weight": 15
+                "value": "ENE",
+                "weight": 10
               },
               {
                 "value": "NW",
-                "weight": 10
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
+                "value": 25,
                 "weight": 5
               },
               {
-                "value": 25,
-                "weight": 15
-              },
-              {
                 "value": 50,
-                "weight": 65
+                "weight": 55
               },
               {
                 "value": 75,
-                "weight": 15
+                "weight": 40
               }
             ]
           },
           "critical": {
-            "chancePct": 13,
+            "chancePct": 21,
             "eventWeights": [
               {
                 "value": "maelstrom",
-                "weight": 6
+                "weight": 10
               },
               {
                 "value": "toxic_fog",
-                "weight": 5
+                "weight": 8
               }
             ],
             "severityWeights": {
-              "light": 40,
+              "light": 30,
               "moderate": 35,
-              "heavy": 20,
-              "severe": 5
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 2,
             "skies": 1,
-            "wind": 1,
-            "directionChangePct": 46,
+            "wind": 2,
+            "directionChangePct": 60,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -6418,86 +6256,82 @@
         },
         "midwinter": {
           "temperature": {
-            "avgF": 47,
-            "lowF": 43,
-            "highF": 51
+            "avgF": 16,
+            "lowF": 7,
+            "highF": 25
           },
           "precipitation": {
-            "chancePct": 58,
-            "type": "rain",
+            "chancePct": 50,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
+              "light": 40,
               "moderate": 35,
-              "heavy": 20
+              "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 40
               },
               {
-                "value": "WSW",
+                "value": "NNE",
                 "weight": 25
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 20
               },
               {
-                "value": "WNW",
-                "weight": 15
+                "value": "ENE",
+                "weight": 10
               },
               {
                 "value": "NW",
-                "weight": 10
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
+                "value": 25,
                 "weight": 5
               },
               {
-                "value": 25,
-                "weight": 15
-              },
-              {
                 "value": 50,
-                "weight": 65
+                "weight": 55
               },
               {
                 "value": 75,
-                "weight": 15
+                "weight": 40
               }
             ]
           },
           "critical": {
-            "chancePct": 13,
+            "chancePct": 21,
             "eventWeights": [
               {
                 "value": "maelstrom",
-                "weight": 6
+                "weight": 10
               },
               {
                 "value": "toxic_fog",
-                "weight": 5
+                "weight": 8
               }
             ],
             "severityWeights": {
-              "light": 40,
+              "light": 30,
               "moderate": 35,
-              "heavy": 20,
-              "severe": 5
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 2,
             "skies": 1,
-            "wind": 1,
-            "directionChangePct": 46,
+            "wind": 2,
+            "directionChangePct": 60,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -6576,86 +6410,82 @@
         },
         "alturiak": {
           "temperature": {
-            "avgF": 47,
-            "lowF": 43,
-            "highF": 51
+            "avgF": 16,
+            "lowF": 7,
+            "highF": 25
           },
           "precipitation": {
-            "chancePct": 58,
-            "type": "rain",
+            "chancePct": 50,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
+              "light": 40,
               "moderate": 35,
-              "heavy": 20
+              "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 40
               },
               {
-                "value": "WSW",
+                "value": "NNE",
                 "weight": 25
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 20
               },
               {
-                "value": "WNW",
-                "weight": 15
+                "value": "ENE",
+                "weight": 10
               },
               {
                 "value": "NW",
-                "weight": 10
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
+                "value": 25,
                 "weight": 5
               },
               {
-                "value": 25,
-                "weight": 15
-              },
-              {
                 "value": 50,
-                "weight": 65
+                "weight": 55
               },
               {
                 "value": 75,
-                "weight": 15
+                "weight": 40
               }
             ]
           },
           "critical": {
-            "chancePct": 13,
+            "chancePct": 21,
             "eventWeights": [
               {
                 "value": "maelstrom",
-                "weight": 6
+                "weight": 10
               },
               {
                 "value": "toxic_fog",
-                "weight": 5
+                "weight": 8
               }
             ],
             "severityWeights": {
-              "light": 40,
+              "light": 30,
               "moderate": 35,
-              "heavy": 20,
-              "severe": 5
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 2,
             "skies": 1,
-            "wind": 1,
-            "directionChangePct": 46,
+            "wind": 2,
+            "directionChangePct": 60,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -6734,27 +6564,27 @@
         },
         "ches": {
           "temperature": {
-            "avgF": 50,
-            "lowF": 46,
-            "highF": 54
+            "avgF": 23,
+            "lowF": 14,
+            "highF": 32
           },
           "precipitation": {
-            "chancePct": 45,
-            "type": "rain",
+            "chancePct": 40,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
-              "moderate": 35,
-              "heavy": 20
+              "light": 55,
+              "moderate": 30,
+              "heavy": 15
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 35
               },
               {
-                "value": "WNW",
+                "value": "NNW",
                 "weight": 25
               },
               {
@@ -6762,50 +6592,46 @@
                 "weight": 20
               },
               {
-                "value": "SW",
+                "value": "W",
                 "weight": 15
               },
               {
-                "value": "N",
-                "weight": 10
+                "value": "NE",
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
+                "value": 25,
                 "weight": 10
               },
               {
-                "value": 25,
-                "weight": 20
-              },
-              {
                 "value": 50,
-                "weight": 62
+                "weight": 70
               },
               {
                 "value": 75,
-                "weight": 8
+                "weight": 20
               }
             ]
           },
           "critical": {
-            "chancePct": 7,
+            "chancePct": 15,
             "eventWeights": [
               {
                 "value": "maelstrom",
-                "weight": 5
+                "weight": 8
               },
               {
                 "value": "toxic_fog",
-                "weight": 5
+                "weight": 6
               }
             ],
             "severityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 12,
-              "severe": 3
+              "light": 40,
+              "moderate": 35,
+              "heavy": 20,
+              "severe": 5
             }
           },
           "drift": {
@@ -6813,7 +6639,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 34,
+            "directionChangePct": 50,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -6892,27 +6718,27 @@
         },
         "tarsakh": {
           "temperature": {
-            "avgF": 50,
-            "lowF": 46,
-            "highF": 54
+            "avgF": 23,
+            "lowF": 14,
+            "highF": 32
           },
           "precipitation": {
-            "chancePct": 45,
-            "type": "rain",
+            "chancePct": 40,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
-              "moderate": 35,
-              "heavy": 20
+              "light": 55,
+              "moderate": 30,
+              "heavy": 15
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 35
               },
               {
-                "value": "WNW",
+                "value": "NNW",
                 "weight": 25
               },
               {
@@ -6920,50 +6746,46 @@
                 "weight": 20
               },
               {
-                "value": "SW",
+                "value": "W",
                 "weight": 15
               },
               {
-                "value": "N",
-                "weight": 10
+                "value": "NE",
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
+                "value": 25,
                 "weight": 10
               },
               {
-                "value": 25,
-                "weight": 20
-              },
-              {
                 "value": 50,
-                "weight": 62
+                "weight": 70
               },
               {
                 "value": 75,
-                "weight": 8
+                "weight": 20
               }
             ]
           },
           "critical": {
-            "chancePct": 7,
+            "chancePct": 15,
             "eventWeights": [
               {
                 "value": "maelstrom",
-                "weight": 5
+                "weight": 8
               },
               {
                 "value": "toxic_fog",
-                "weight": 5
+                "weight": 6
               }
             ],
             "severityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 12,
-              "severe": 3
+              "light": 40,
+              "moderate": 35,
+              "heavy": 20,
+              "severe": 5
             }
           },
           "drift": {
@@ -6971,7 +6793,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 34,
+            "directionChangePct": 50,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -7050,27 +6872,27 @@
         },
         "greengrass": {
           "temperature": {
-            "avgF": 50,
-            "lowF": 46,
-            "highF": 54
+            "avgF": 23,
+            "lowF": 14,
+            "highF": 32
           },
           "precipitation": {
-            "chancePct": 45,
-            "type": "rain",
+            "chancePct": 40,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
-              "moderate": 35,
-              "heavy": 20
+              "light": 55,
+              "moderate": 30,
+              "heavy": 15
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 35
               },
               {
-                "value": "WNW",
+                "value": "NNW",
                 "weight": 25
               },
               {
@@ -7078,50 +6900,46 @@
                 "weight": 20
               },
               {
-                "value": "SW",
+                "value": "W",
                 "weight": 15
               },
               {
-                "value": "N",
-                "weight": 10
+                "value": "NE",
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
+                "value": 25,
                 "weight": 10
               },
               {
-                "value": 25,
-                "weight": 20
-              },
-              {
                 "value": 50,
-                "weight": 62
+                "weight": 70
               },
               {
                 "value": 75,
-                "weight": 8
+                "weight": 20
               }
             ]
           },
           "critical": {
-            "chancePct": 7,
+            "chancePct": 15,
             "eventWeights": [
               {
                 "value": "maelstrom",
-                "weight": 5
+                "weight": 8
               },
               {
                 "value": "toxic_fog",
-                "weight": 5
+                "weight": 6
               }
             ],
             "severityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 12,
-              "severe": 3
+              "light": 40,
+              "moderate": 35,
+              "heavy": 20,
+              "severe": 5
             }
           },
           "drift": {
@@ -7129,7 +6947,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 34,
+            "directionChangePct": 50,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -7208,27 +7026,27 @@
         },
         "mirtul": {
           "temperature": {
-            "avgF": 50,
-            "lowF": 46,
-            "highF": 54
+            "avgF": 23,
+            "lowF": 14,
+            "highF": 32
           },
           "precipitation": {
-            "chancePct": 45,
-            "type": "rain",
+            "chancePct": 40,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
-              "moderate": 35,
-              "heavy": 20
+              "light": 55,
+              "moderate": 30,
+              "heavy": 15
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 35
               },
               {
-                "value": "WNW",
+                "value": "NNW",
                 "weight": 25
               },
               {
@@ -7236,50 +7054,46 @@
                 "weight": 20
               },
               {
-                "value": "SW",
+                "value": "W",
                 "weight": 15
               },
               {
-                "value": "N",
-                "weight": 10
+                "value": "NE",
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
+                "value": 25,
                 "weight": 10
               },
               {
-                "value": 25,
-                "weight": 20
-              },
-              {
                 "value": 50,
-                "weight": 62
+                "weight": 70
               },
               {
                 "value": 75,
-                "weight": 8
+                "weight": 20
               }
             ]
           },
           "critical": {
-            "chancePct": 7,
+            "chancePct": 15,
             "eventWeights": [
               {
                 "value": "maelstrom",
-                "weight": 5
+                "weight": 8
               },
               {
                 "value": "toxic_fog",
-                "weight": 5
+                "weight": 6
               }
             ],
             "severityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 12,
-              "severe": 3
+              "light": 40,
+              "moderate": 35,
+              "heavy": 20,
+              "severe": 5
             }
           },
           "drift": {
@@ -7287,7 +7101,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 34,
+            "directionChangePct": 50,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -7366,36 +7180,36 @@
         },
         "kythorn": {
           "temperature": {
-            "avgF": 54,
-            "lowF": 50,
-            "highF": 58
+            "avgF": 30,
+            "lowF": 23,
+            "highF": 37
           },
           "precipitation": {
-            "chancePct": 18,
+            "chancePct": 27,
             "type": "rain",
             "intensityWeights": {
-              "light": 75,
-              "moderate": 20,
-              "heavy": 5
+              "light": 60,
+              "moderate": 30,
+              "heavy": 10
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "NW",
-                "weight": 40
-              },
-              {
-                "value": "NNW",
-                "weight": 25
-              },
-              {
                 "value": "W",
-                "weight": 20
+                "weight": 30
               },
               {
                 "value": "WNW",
-                "weight": 10
+                "weight": 25
+              },
+              {
+                "value": "NW",
+                "weight": 25
+              },
+              {
+                "value": "NNW",
+                "weight": 15
               },
               {
                 "value": "SW",
@@ -7404,25 +7218,21 @@
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 20
-              },
-              {
                 "value": 25,
                 "weight": 25
               },
               {
                 "value": 50,
-                "weight": 52
+                "weight": 70
               },
               {
                 "value": 75,
-                "weight": 3
+                "weight": 5
               }
             ]
           },
           "critical": {
-            "chancePct": 5,
+            "chancePct": 6,
             "eventWeights": [
               {
                 "value": "maelstrom",
@@ -7445,7 +7255,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 30,
+            "directionChangePct": 32,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -7524,36 +7334,36 @@
         },
         "flamerule": {
           "temperature": {
-            "avgF": 54,
-            "lowF": 50,
-            "highF": 58
+            "avgF": 30,
+            "lowF": 23,
+            "highF": 37
           },
           "precipitation": {
-            "chancePct": 18,
+            "chancePct": 27,
             "type": "rain",
             "intensityWeights": {
-              "light": 75,
-              "moderate": 20,
-              "heavy": 5
+              "light": 60,
+              "moderate": 30,
+              "heavy": 10
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "NW",
-                "weight": 40
-              },
-              {
-                "value": "NNW",
-                "weight": 25
-              },
-              {
                 "value": "W",
-                "weight": 20
+                "weight": 30
               },
               {
                 "value": "WNW",
-                "weight": 10
+                "weight": 25
+              },
+              {
+                "value": "NW",
+                "weight": 25
+              },
+              {
+                "value": "NNW",
+                "weight": 15
               },
               {
                 "value": "SW",
@@ -7562,25 +7372,21 @@
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 20
-              },
-              {
                 "value": 25,
                 "weight": 25
               },
               {
                 "value": 50,
-                "weight": 52
+                "weight": 70
               },
               {
                 "value": 75,
-                "weight": 3
+                "weight": 5
               }
             ]
           },
           "critical": {
-            "chancePct": 5,
+            "chancePct": 6,
             "eventWeights": [
               {
                 "value": "maelstrom",
@@ -7603,7 +7409,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 30,
+            "directionChangePct": 32,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -7682,36 +7488,36 @@
         },
         "midsummer": {
           "temperature": {
-            "avgF": 54,
-            "lowF": 50,
-            "highF": 58
+            "avgF": 30,
+            "lowF": 23,
+            "highF": 37
           },
           "precipitation": {
-            "chancePct": 18,
+            "chancePct": 27,
             "type": "rain",
             "intensityWeights": {
-              "light": 75,
-              "moderate": 20,
-              "heavy": 5
+              "light": 60,
+              "moderate": 30,
+              "heavy": 10
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "NW",
-                "weight": 40
-              },
-              {
-                "value": "NNW",
-                "weight": 25
-              },
-              {
                 "value": "W",
-                "weight": 20
+                "weight": 30
               },
               {
                 "value": "WNW",
-                "weight": 10
+                "weight": 25
+              },
+              {
+                "value": "NW",
+                "weight": 25
+              },
+              {
+                "value": "NNW",
+                "weight": 15
               },
               {
                 "value": "SW",
@@ -7720,25 +7526,21 @@
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 20
-              },
-              {
                 "value": 25,
                 "weight": 25
               },
               {
                 "value": 50,
-                "weight": 52
+                "weight": 70
               },
               {
                 "value": 75,
-                "weight": 3
+                "weight": 5
               }
             ]
           },
           "critical": {
-            "chancePct": 5,
+            "chancePct": 6,
             "eventWeights": [
               {
                 "value": "maelstrom",
@@ -7761,7 +7563,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 30,
+            "directionChangePct": 32,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -7840,36 +7642,36 @@
         },
         "shieldmeet": {
           "temperature": {
-            "avgF": 54,
-            "lowF": 50,
-            "highF": 58
+            "avgF": 30,
+            "lowF": 23,
+            "highF": 37
           },
           "precipitation": {
-            "chancePct": 18,
+            "chancePct": 27,
             "type": "rain",
             "intensityWeights": {
-              "light": 75,
-              "moderate": 20,
-              "heavy": 5
+              "light": 60,
+              "moderate": 30,
+              "heavy": 10
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "NW",
-                "weight": 40
-              },
-              {
-                "value": "NNW",
-                "weight": 25
-              },
-              {
                 "value": "W",
-                "weight": 20
+                "weight": 30
               },
               {
                 "value": "WNW",
-                "weight": 10
+                "weight": 25
+              },
+              {
+                "value": "NW",
+                "weight": 25
+              },
+              {
+                "value": "NNW",
+                "weight": 15
               },
               {
                 "value": "SW",
@@ -7878,25 +7680,21 @@
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 20
-              },
-              {
                 "value": 25,
                 "weight": 25
               },
               {
                 "value": 50,
-                "weight": 52
+                "weight": 70
               },
               {
                 "value": 75,
-                "weight": 3
+                "weight": 5
               }
             ]
           },
           "critical": {
-            "chancePct": 5,
+            "chancePct": 6,
             "eventWeights": [
               {
                 "value": "maelstrom",
@@ -7919,7 +7717,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 30,
+            "directionChangePct": 32,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -7998,36 +7796,36 @@
         },
         "eleasis": {
           "temperature": {
-            "avgF": 54,
-            "lowF": 50,
-            "highF": 58
+            "avgF": 30,
+            "lowF": 23,
+            "highF": 37
           },
           "precipitation": {
-            "chancePct": 18,
+            "chancePct": 27,
             "type": "rain",
             "intensityWeights": {
-              "light": 75,
-              "moderate": 20,
-              "heavy": 5
+              "light": 60,
+              "moderate": 30,
+              "heavy": 10
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "NW",
-                "weight": 40
-              },
-              {
-                "value": "NNW",
-                "weight": 25
-              },
-              {
                 "value": "W",
-                "weight": 20
+                "weight": 30
               },
               {
                 "value": "WNW",
-                "weight": 10
+                "weight": 25
+              },
+              {
+                "value": "NW",
+                "weight": 25
+              },
+              {
+                "value": "NNW",
+                "weight": 15
               },
               {
                 "value": "SW",
@@ -8036,25 +7834,21 @@
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 20
-              },
-              {
                 "value": 25,
                 "weight": 25
               },
               {
                 "value": 50,
-                "weight": 52
+                "weight": 70
               },
               {
                 "value": 75,
-                "weight": 3
+                "weight": 5
               }
             ]
           },
           "critical": {
-            "chancePct": 5,
+            "chancePct": 6,
             "eventWeights": [
               {
                 "value": "maelstrom",
@@ -8077,7 +7871,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 30,
+            "directionChangePct": 32,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -8156,86 +7950,82 @@
         },
         "eleint": {
           "temperature": {
-            "avgF": 50,
-            "lowF": 46,
-            "highF": 54
+            "avgF": 24,
+            "lowF": 15,
+            "highF": 33
           },
           "precipitation": {
-            "chancePct": 50,
-            "type": "rain",
+            "chancePct": 45,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
+              "light": 40,
               "moderate": 35,
-              "heavy": 20
+              "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 35
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 25
               },
               {
-                "value": "WSW",
+                "value": "ENE",
                 "weight": 20
               },
               {
-                "value": "NW",
+                "value": "E",
                 "weight": 15
               },
               {
-                "value": "S",
-                "weight": 10
+                "value": "NW",
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 8
-              },
-              {
                 "value": 25,
-                "weight": 17
+                "weight": 10
               },
               {
                 "value": 50,
-                "weight": 60
+                "weight": 65
               },
               {
                 "value": 75,
-                "weight": 15
+                "weight": 25
               }
             ]
           },
           "critical": {
-            "chancePct": 11,
+            "chancePct": 18,
             "eventWeights": [
               {
                 "value": "maelstrom",
-                "weight": 6
+                "weight": 9
               },
               {
                 "value": "toxic_fog",
-                "weight": 5
+                "weight": 7
               }
             ],
             "severityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 12,
-              "severe": 3
+              "light": 30,
+              "moderate": 35,
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
             "temperature": 2,
-            "precipitation": 2,
+            "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 42,
+            "directionChangePct": 56,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -8314,86 +8104,82 @@
         },
         "highharvestide": {
           "temperature": {
-            "avgF": 50,
-            "lowF": 46,
-            "highF": 54
+            "avgF": 24,
+            "lowF": 15,
+            "highF": 33
           },
           "precipitation": {
-            "chancePct": 50,
-            "type": "rain",
+            "chancePct": 45,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
+              "light": 40,
               "moderate": 35,
-              "heavy": 20
+              "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 35
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 25
               },
               {
-                "value": "WSW",
+                "value": "ENE",
                 "weight": 20
               },
               {
-                "value": "NW",
+                "value": "E",
                 "weight": 15
               },
               {
-                "value": "S",
-                "weight": 10
+                "value": "NW",
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 8
-              },
-              {
                 "value": 25,
-                "weight": 17
+                "weight": 10
               },
               {
                 "value": 50,
-                "weight": 60
+                "weight": 65
               },
               {
                 "value": 75,
-                "weight": 15
+                "weight": 25
               }
             ]
           },
           "critical": {
-            "chancePct": 11,
+            "chancePct": 18,
             "eventWeights": [
               {
                 "value": "maelstrom",
-                "weight": 6
+                "weight": 9
               },
               {
                 "value": "toxic_fog",
-                "weight": 5
+                "weight": 7
               }
             ],
             "severityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 12,
-              "severe": 3
+              "light": 30,
+              "moderate": 35,
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
             "temperature": 2,
-            "precipitation": 2,
+            "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 42,
+            "directionChangePct": 56,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -8472,86 +8258,82 @@
         },
         "marpenoth": {
           "temperature": {
-            "avgF": 50,
-            "lowF": 46,
-            "highF": 54
+            "avgF": 24,
+            "lowF": 15,
+            "highF": 33
           },
           "precipitation": {
-            "chancePct": 50,
-            "type": "rain",
+            "chancePct": 45,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
+              "light": 40,
               "moderate": 35,
-              "heavy": 20
+              "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 35
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 25
               },
               {
-                "value": "WSW",
+                "value": "ENE",
                 "weight": 20
               },
               {
-                "value": "NW",
+                "value": "E",
                 "weight": 15
               },
               {
-                "value": "S",
-                "weight": 10
+                "value": "NW",
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 8
-              },
-              {
                 "value": 25,
-                "weight": 17
+                "weight": 10
               },
               {
                 "value": 50,
-                "weight": 60
+                "weight": 65
               },
               {
                 "value": 75,
-                "weight": 15
+                "weight": 25
               }
             ]
           },
           "critical": {
-            "chancePct": 11,
+            "chancePct": 18,
             "eventWeights": [
               {
                 "value": "maelstrom",
-                "weight": 6
+                "weight": 9
               },
               {
                 "value": "toxic_fog",
-                "weight": 5
+                "weight": 7
               }
             ],
             "severityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 12,
-              "severe": 3
+              "light": 30,
+              "moderate": 35,
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
             "temperature": 2,
-            "precipitation": 2,
+            "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 42,
+            "directionChangePct": 56,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -8630,86 +8412,82 @@
         },
         "uktar": {
           "temperature": {
-            "avgF": 50,
-            "lowF": 46,
-            "highF": 54
+            "avgF": 24,
+            "lowF": 15,
+            "highF": 33
           },
           "precipitation": {
-            "chancePct": 50,
-            "type": "rain",
+            "chancePct": 45,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
+              "light": 40,
               "moderate": 35,
-              "heavy": 20
+              "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 35
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 25
               },
               {
-                "value": "WSW",
+                "value": "ENE",
                 "weight": 20
               },
               {
-                "value": "NW",
+                "value": "E",
                 "weight": 15
               },
               {
-                "value": "S",
-                "weight": 10
+                "value": "NW",
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 8
-              },
-              {
                 "value": 25,
-                "weight": 17
+                "weight": 10
               },
               {
                 "value": 50,
-                "weight": 60
+                "weight": 65
               },
               {
                 "value": 75,
-                "weight": 15
+                "weight": 25
               }
             ]
           },
           "critical": {
-            "chancePct": 11,
+            "chancePct": 18,
             "eventWeights": [
               {
                 "value": "maelstrom",
-                "weight": 6
+                "weight": 9
               },
               {
                 "value": "toxic_fog",
-                "weight": 5
+                "weight": 7
               }
             ],
             "severityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 12,
-              "severe": 3
+              "light": 30,
+              "moderate": 35,
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
             "temperature": 2,
-            "precipitation": 2,
+            "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 42,
+            "directionChangePct": 56,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -8788,86 +8566,82 @@
         },
         "feastofthemoon": {
           "temperature": {
-            "avgF": 50,
-            "lowF": 46,
-            "highF": 54
+            "avgF": 24,
+            "lowF": 15,
+            "highF": 33
           },
           "precipitation": {
-            "chancePct": 50,
-            "type": "rain",
+            "chancePct": 45,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
+              "light": 40,
               "moderate": 35,
-              "heavy": 20
+              "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 35
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 25
               },
               {
-                "value": "WSW",
+                "value": "ENE",
                 "weight": 20
               },
               {
-                "value": "NW",
+                "value": "E",
                 "weight": 15
               },
               {
-                "value": "S",
-                "weight": 10
+                "value": "NW",
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 8
-              },
-              {
                 "value": 25,
-                "weight": 17
+                "weight": 10
               },
               {
                 "value": 50,
-                "weight": 60
+                "weight": 65
               },
               {
                 "value": 75,
-                "weight": 15
+                "weight": 25
               }
             ]
           },
           "critical": {
-            "chancePct": 11,
+            "chancePct": 18,
             "eventWeights": [
               {
                 "value": "maelstrom",
-                "weight": 6
+                "weight": 9
               },
               {
                 "value": "toxic_fog",
-                "weight": 5
+                "weight": 7
               }
             ],
             "severityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 12,
-              "severe": 3
+              "light": 30,
+              "moderate": 35,
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
             "temperature": 2,
-            "precipitation": 2,
+            "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 42,
+            "directionChangePct": 56,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -8946,86 +8720,82 @@
         },
         "nightal": {
           "temperature": {
-            "avgF": 47,
-            "lowF": 43,
-            "highF": 51
+            "avgF": 16,
+            "lowF": 7,
+            "highF": 25
           },
           "precipitation": {
-            "chancePct": 58,
-            "type": "rain",
+            "chancePct": 50,
+            "type": "snow",
             "intensityWeights": {
-              "light": 45,
+              "light": 40,
               "moderate": 35,
-              "heavy": 20
+              "heavy": 25
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 30
+                "value": "N",
+                "weight": 40
               },
               {
-                "value": "WSW",
+                "value": "NNE",
                 "weight": 25
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 20
               },
               {
-                "value": "WNW",
-                "weight": 15
+                "value": "ENE",
+                "weight": 10
               },
               {
                 "value": "NW",
-                "weight": 10
+                "weight": 5
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
+                "value": 25,
                 "weight": 5
               },
               {
-                "value": 25,
-                "weight": 15
-              },
-              {
                 "value": 50,
-                "weight": 65
+                "weight": 55
               },
               {
                 "value": 75,
-                "weight": 15
+                "weight": 40
               }
             ]
           },
           "critical": {
-            "chancePct": 13,
+            "chancePct": 21,
             "eventWeights": [
               {
                 "value": "maelstrom",
-                "weight": 6
+                "weight": 10
               },
               {
                 "value": "toxic_fog",
-                "weight": 5
+                "weight": 8
               }
             ],
             "severityWeights": {
-              "light": 40,
+              "light": 30,
               "moderate": 35,
-              "heavy": 20,
-              "severe": 5
+              "heavy": 25,
+              "severe": 10
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 2,
             "skies": 1,
-            "wind": 1,
-            "directionChangePct": 46,
+            "wind": 2,
+            "directionChangePct": 60,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -9105,7 +8875,7 @@
       },
       "waterProfile": {
         "bodyType": "reef",
-        "totalDepthFeet": 130,
+        "totalDepthFeet": 150,
         "sampleMode": "fractional_depth",
         "sampleFractions": {
           "shallow": 0.2,
@@ -9168,54 +8938,46 @@
       "periods": {
         "hammer": {
           "temperature": {
-            "avgF": 51,
-            "lowF": 47,
-            "highF": 55
+            "avgF": 30,
+            "lowF": 22,
+            "highF": 38
           },
           "precipitation": {
-            "chancePct": 25,
+            "chancePct": 20,
             "type": "drip",
             "intensityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 15
+              "light": 70,
+              "moderate": 25,
+              "heavy": 5
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
+                "value": "N",
+                "weight": 50
               },
               {
-                "value": "SW",
+                "value": "NNE",
                 "weight": 25
               },
               {
-                "value": "S",
-                "weight": 20
-              },
-              {
-                "value": "NW",
+                "value": "NE",
                 "weight": 15
               },
               {
                 "value": "E",
-                "weight": 5
+                "weight": 10
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 15
-              },
-              {
                 "value": 25,
-                "weight": 30
+                "weight": 25
               },
               {
                 "value": 50,
-                "weight": 50
+                "weight": 70
               },
               {
                 "value": 75,
@@ -9224,30 +8986,30 @@
             ]
           },
           "critical": {
-            "chancePct": 6,
+            "chancePct": 15,
             "eventWeights": [
               {
                 "value": "cave_in",
-                "weight": 4
+                "weight": 8
               },
               {
                 "value": "toxic_fog",
-                "weight": 4
+                "weight": 6
               }
             ],
             "severityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 12,
-              "severe": 3
+              "light": 40,
+              "moderate": 35,
+              "heavy": 20,
+              "severe": 5
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 32,
+            "directionChangePct": 50,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -9326,54 +9088,46 @@
         },
         "midwinter": {
           "temperature": {
-            "avgF": 51,
-            "lowF": 47,
-            "highF": 55
+            "avgF": 30,
+            "lowF": 22,
+            "highF": 38
           },
           "precipitation": {
-            "chancePct": 25,
+            "chancePct": 20,
             "type": "drip",
             "intensityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 15
+              "light": 70,
+              "moderate": 25,
+              "heavy": 5
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
+                "value": "N",
+                "weight": 50
               },
               {
-                "value": "SW",
+                "value": "NNE",
                 "weight": 25
               },
               {
-                "value": "S",
-                "weight": 20
-              },
-              {
-                "value": "NW",
+                "value": "NE",
                 "weight": 15
               },
               {
                 "value": "E",
-                "weight": 5
+                "weight": 10
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 15
-              },
-              {
                 "value": 25,
-                "weight": 30
+                "weight": 25
               },
               {
                 "value": 50,
-                "weight": 50
+                "weight": 70
               },
               {
                 "value": 75,
@@ -9382,30 +9136,30 @@
             ]
           },
           "critical": {
-            "chancePct": 6,
+            "chancePct": 15,
             "eventWeights": [
               {
                 "value": "cave_in",
-                "weight": 4
+                "weight": 8
               },
               {
                 "value": "toxic_fog",
-                "weight": 4
+                "weight": 6
               }
             ],
             "severityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 12,
-              "severe": 3
+              "light": 40,
+              "moderate": 35,
+              "heavy": 20,
+              "severe": 5
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 32,
+            "directionChangePct": 50,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -9484,54 +9238,46 @@
         },
         "alturiak": {
           "temperature": {
-            "avgF": 51,
-            "lowF": 47,
-            "highF": 55
+            "avgF": 30,
+            "lowF": 22,
+            "highF": 38
           },
           "precipitation": {
-            "chancePct": 25,
+            "chancePct": 20,
             "type": "drip",
             "intensityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 15
+              "light": 70,
+              "moderate": 25,
+              "heavy": 5
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
+                "value": "N",
+                "weight": 50
               },
               {
-                "value": "SW",
+                "value": "NNE",
                 "weight": 25
               },
               {
-                "value": "S",
-                "weight": 20
-              },
-              {
-                "value": "NW",
+                "value": "NE",
                 "weight": 15
               },
               {
                 "value": "E",
-                "weight": 5
+                "weight": 10
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 15
-              },
-              {
                 "value": 25,
-                "weight": 30
+                "weight": 25
               },
               {
                 "value": 50,
-                "weight": 50
+                "weight": 70
               },
               {
                 "value": 75,
@@ -9540,30 +9286,30 @@
             ]
           },
           "critical": {
-            "chancePct": 6,
+            "chancePct": 15,
             "eventWeights": [
               {
                 "value": "cave_in",
-                "weight": 4
+                "weight": 8
               },
               {
                 "value": "toxic_fog",
-                "weight": 4
+                "weight": 6
               }
             ],
             "severityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 12,
-              "severe": 3
+              "light": 40,
+              "moderate": 35,
+              "heavy": 20,
+              "severe": 5
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 32,
+            "directionChangePct": 50,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -9642,12 +9388,12 @@
         },
         "ches": {
           "temperature": {
-            "avgF": 54,
-            "lowF": 50,
-            "highF": 58
+            "avgF": 34,
+            "lowF": 26,
+            "highF": 42
           },
           "precipitation": {
-            "chancePct": 20,
+            "chancePct": 16,
             "type": "drip",
             "intensityWeights": {
               "light": 70,
@@ -9658,47 +9404,39 @@
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
-              },
-              {
                 "value": "NW",
-                "weight": 25
+                "weight": 40
               },
               {
-                "value": "SW",
-                "weight": 25
+                "value": "W",
+                "weight": 30
               },
               {
-                "value": "S",
+                "value": "N",
+                "weight": 20
+              },
+              {
+                "value": "NE",
                 "weight": 10
-              },
-              {
-                "value": "E",
-                "weight": 5
               }
             ],
             "strengthWeights": [
-              {
-                "value": 0,
-                "weight": 20
-              },
               {
                 "value": 25,
                 "weight": 35
               },
               {
                 "value": 50,
-                "weight": 42
+                "weight": 63
               },
               {
                 "value": 75,
-                "weight": 3
+                "weight": 2
               }
             ]
           },
           "critical": {
-            "chancePct": 4,
+            "chancePct": 9,
             "eventWeights": [
               {
                 "value": "toxic_fog",
@@ -9717,7 +9455,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 28,
+            "directionChangePct": 38,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -9796,12 +9534,12 @@
         },
         "tarsakh": {
           "temperature": {
-            "avgF": 54,
-            "lowF": 50,
-            "highF": 58
+            "avgF": 34,
+            "lowF": 26,
+            "highF": 42
           },
           "precipitation": {
-            "chancePct": 20,
+            "chancePct": 16,
             "type": "drip",
             "intensityWeights": {
               "light": 70,
@@ -9812,47 +9550,39 @@
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
-              },
-              {
                 "value": "NW",
-                "weight": 25
+                "weight": 40
               },
               {
-                "value": "SW",
-                "weight": 25
+                "value": "W",
+                "weight": 30
               },
               {
-                "value": "S",
+                "value": "N",
+                "weight": 20
+              },
+              {
+                "value": "NE",
                 "weight": 10
-              },
-              {
-                "value": "E",
-                "weight": 5
               }
             ],
             "strengthWeights": [
-              {
-                "value": 0,
-                "weight": 20
-              },
               {
                 "value": 25,
                 "weight": 35
               },
               {
                 "value": 50,
-                "weight": 42
+                "weight": 63
               },
               {
                 "value": 75,
-                "weight": 3
+                "weight": 2
               }
             ]
           },
           "critical": {
-            "chancePct": 4,
+            "chancePct": 9,
             "eventWeights": [
               {
                 "value": "toxic_fog",
@@ -9871,7 +9601,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 28,
+            "directionChangePct": 38,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -9950,12 +9680,12 @@
         },
         "greengrass": {
           "temperature": {
-            "avgF": 54,
-            "lowF": 50,
-            "highF": 58
+            "avgF": 34,
+            "lowF": 26,
+            "highF": 42
           },
           "precipitation": {
-            "chancePct": 20,
+            "chancePct": 16,
             "type": "drip",
             "intensityWeights": {
               "light": 70,
@@ -9966,47 +9696,39 @@
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
-              },
-              {
                 "value": "NW",
-                "weight": 25
+                "weight": 40
               },
               {
-                "value": "SW",
-                "weight": 25
+                "value": "W",
+                "weight": 30
               },
               {
-                "value": "S",
+                "value": "N",
+                "weight": 20
+              },
+              {
+                "value": "NE",
                 "weight": 10
-              },
-              {
-                "value": "E",
-                "weight": 5
               }
             ],
             "strengthWeights": [
-              {
-                "value": 0,
-                "weight": 20
-              },
               {
                 "value": 25,
                 "weight": 35
               },
               {
                 "value": 50,
-                "weight": 42
+                "weight": 63
               },
               {
                 "value": 75,
-                "weight": 3
+                "weight": 2
               }
             ]
           },
           "critical": {
-            "chancePct": 4,
+            "chancePct": 9,
             "eventWeights": [
               {
                 "value": "toxic_fog",
@@ -10025,7 +9747,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 28,
+            "directionChangePct": 38,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -10104,12 +9826,12 @@
         },
         "mirtul": {
           "temperature": {
-            "avgF": 54,
-            "lowF": 50,
-            "highF": 58
+            "avgF": 34,
+            "lowF": 26,
+            "highF": 42
           },
           "precipitation": {
-            "chancePct": 20,
+            "chancePct": 16,
             "type": "drip",
             "intensityWeights": {
               "light": 70,
@@ -10120,47 +9842,39 @@
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
-              },
-              {
                 "value": "NW",
-                "weight": 25
+                "weight": 40
               },
               {
-                "value": "SW",
-                "weight": 25
+                "value": "W",
+                "weight": 30
               },
               {
-                "value": "S",
+                "value": "N",
+                "weight": 20
+              },
+              {
+                "value": "NE",
                 "weight": 10
-              },
-              {
-                "value": "E",
-                "weight": 5
               }
             ],
             "strengthWeights": [
-              {
-                "value": 0,
-                "weight": 20
-              },
               {
                 "value": 25,
                 "weight": 35
               },
               {
                 "value": 50,
-                "weight": 42
+                "weight": 63
               },
               {
                 "value": 75,
-                "weight": 3
+                "weight": 2
               }
             ]
           },
           "critical": {
-            "chancePct": 4,
+            "chancePct": 9,
             "eventWeights": [
               {
                 "value": "toxic_fog",
@@ -10179,7 +9893,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 28,
+            "directionChangePct": 38,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -10258,12 +9972,12 @@
         },
         "kythorn": {
           "temperature": {
-            "avgF": 58,
-            "lowF": 53,
-            "highF": 63
+            "avgF": 40,
+            "lowF": 34,
+            "highF": 46
           },
           "precipitation": {
-            "chancePct": 9,
+            "chancePct": 11,
             "type": "drip",
             "intensityWeights": {
               "light": 70,
@@ -10274,38 +9988,34 @@
           "wind": {
             "directionWeights": [
               {
-                "value": "NW",
-                "weight": 45
-              },
-              {
                 "value": "W",
-                "weight": 30
+                "weight": 40
               },
               {
                 "value": "SW",
+                "weight": 30
+              },
+              {
+                "value": "NW",
                 "weight": 20
               },
               {
-                "value": "S",
-                "weight": 5
+                "value": "N",
+                "weight": 10
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 35
-              },
-              {
                 "value": 25,
-                "weight": 35
+                "weight": 45
               },
               {
                 "value": 50,
-                "weight": 28
+                "weight": 54
               },
               {
                 "value": 75,
-                "weight": 2
+                "weight": 1
               }
             ]
           },
@@ -10412,12 +10122,12 @@
         },
         "flamerule": {
           "temperature": {
-            "avgF": 58,
-            "lowF": 53,
-            "highF": 63
+            "avgF": 40,
+            "lowF": 34,
+            "highF": 46
           },
           "precipitation": {
-            "chancePct": 9,
+            "chancePct": 11,
             "type": "drip",
             "intensityWeights": {
               "light": 70,
@@ -10428,38 +10138,34 @@
           "wind": {
             "directionWeights": [
               {
-                "value": "NW",
-                "weight": 45
-              },
-              {
                 "value": "W",
-                "weight": 30
+                "weight": 40
               },
               {
                 "value": "SW",
+                "weight": 30
+              },
+              {
+                "value": "NW",
                 "weight": 20
               },
               {
-                "value": "S",
-                "weight": 5
+                "value": "N",
+                "weight": 10
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 35
-              },
-              {
                 "value": 25,
-                "weight": 35
+                "weight": 45
               },
               {
                 "value": 50,
-                "weight": 28
+                "weight": 54
               },
               {
                 "value": 75,
-                "weight": 2
+                "weight": 1
               }
             ]
           },
@@ -10566,12 +10272,12 @@
         },
         "midsummer": {
           "temperature": {
-            "avgF": 58,
-            "lowF": 53,
-            "highF": 63
+            "avgF": 40,
+            "lowF": 34,
+            "highF": 46
           },
           "precipitation": {
-            "chancePct": 9,
+            "chancePct": 11,
             "type": "drip",
             "intensityWeights": {
               "light": 70,
@@ -10582,38 +10288,34 @@
           "wind": {
             "directionWeights": [
               {
-                "value": "NW",
-                "weight": 45
-              },
-              {
                 "value": "W",
-                "weight": 30
+                "weight": 40
               },
               {
                 "value": "SW",
+                "weight": 30
+              },
+              {
+                "value": "NW",
                 "weight": 20
               },
               {
-                "value": "S",
-                "weight": 5
+                "value": "N",
+                "weight": 10
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 35
-              },
-              {
                 "value": 25,
-                "weight": 35
+                "weight": 45
               },
               {
                 "value": 50,
-                "weight": 28
+                "weight": 54
               },
               {
                 "value": 75,
-                "weight": 2
+                "weight": 1
               }
             ]
           },
@@ -10720,12 +10422,12 @@
         },
         "shieldmeet": {
           "temperature": {
-            "avgF": 58,
-            "lowF": 53,
-            "highF": 63
+            "avgF": 40,
+            "lowF": 34,
+            "highF": 46
           },
           "precipitation": {
-            "chancePct": 9,
+            "chancePct": 11,
             "type": "drip",
             "intensityWeights": {
               "light": 70,
@@ -10736,38 +10438,34 @@
           "wind": {
             "directionWeights": [
               {
-                "value": "NW",
-                "weight": 45
-              },
-              {
                 "value": "W",
-                "weight": 30
+                "weight": 40
               },
               {
                 "value": "SW",
+                "weight": 30
+              },
+              {
+                "value": "NW",
                 "weight": 20
               },
               {
-                "value": "S",
-                "weight": 5
+                "value": "N",
+                "weight": 10
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 35
-              },
-              {
                 "value": 25,
-                "weight": 35
+                "weight": 45
               },
               {
                 "value": 50,
-                "weight": 28
+                "weight": 54
               },
               {
                 "value": 75,
-                "weight": 2
+                "weight": 1
               }
             ]
           },
@@ -10874,12 +10572,12 @@
         },
         "eleasis": {
           "temperature": {
-            "avgF": 58,
-            "lowF": 53,
-            "highF": 63
+            "avgF": 40,
+            "lowF": 34,
+            "highF": 46
           },
           "precipitation": {
-            "chancePct": 9,
+            "chancePct": 11,
             "type": "drip",
             "intensityWeights": {
               "light": 70,
@@ -10890,38 +10588,34 @@
           "wind": {
             "directionWeights": [
               {
-                "value": "NW",
-                "weight": 45
-              },
-              {
                 "value": "W",
-                "weight": 30
+                "weight": 40
               },
               {
                 "value": "SW",
+                "weight": 30
+              },
+              {
+                "value": "NW",
                 "weight": 20
               },
               {
-                "value": "S",
-                "weight": 5
+                "value": "N",
+                "weight": 10
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 35
-              },
-              {
                 "value": 25,
-                "weight": 35
+                "weight": 45
               },
               {
                 "value": 50,
-                "weight": 28
+                "weight": 54
               },
               {
                 "value": 75,
-                "weight": 2
+                "weight": 1
               }
             ]
           },
@@ -11028,9 +10722,9 @@
         },
         "eleint": {
           "temperature": {
-            "avgF": 55,
-            "lowF": 51,
-            "highF": 59
+            "avgF": 35,
+            "lowF": 27,
+            "highF": 43
           },
           "precipitation": {
             "chancePct": 18,
@@ -11044,51 +10738,43 @@
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
+                "value": "N",
+                "weight": 45
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 25
-              },
-              {
-                "value": "NW",
-                "weight": 25
-              },
-              {
-                "value": "S",
-                "weight": 10
               },
               {
                 "value": "E",
-                "weight": 5
+                "weight": 20
+              },
+              {
+                "value": "NW",
+                "weight": 10
               }
             ],
             "strengthWeights": [
-              {
-                "value": 0,
-                "weight": 20
-              },
               {
                 "value": 25,
                 "weight": 30
               },
               {
                 "value": 50,
-                "weight": 45
+                "weight": 67
               },
               {
                 "value": 75,
-                "weight": 5
+                "weight": 3
               }
             ]
           },
           "critical": {
-            "chancePct": 5,
+            "chancePct": 10,
             "eventWeights": [
               {
                 "value": "cave_in",
-                "weight": 4
+                "weight": 5
               },
               {
                 "value": "toxic_fog",
@@ -11107,7 +10793,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 30,
+            "directionChangePct": 40,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -11186,9 +10872,9 @@
         },
         "highharvestide": {
           "temperature": {
-            "avgF": 55,
-            "lowF": 51,
-            "highF": 59
+            "avgF": 35,
+            "lowF": 27,
+            "highF": 43
           },
           "precipitation": {
             "chancePct": 18,
@@ -11202,51 +10888,43 @@
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
+                "value": "N",
+                "weight": 45
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 25
-              },
-              {
-                "value": "NW",
-                "weight": 25
-              },
-              {
-                "value": "S",
-                "weight": 10
               },
               {
                 "value": "E",
-                "weight": 5
+                "weight": 20
+              },
+              {
+                "value": "NW",
+                "weight": 10
               }
             ],
             "strengthWeights": [
-              {
-                "value": 0,
-                "weight": 20
-              },
               {
                 "value": 25,
                 "weight": 30
               },
               {
                 "value": 50,
-                "weight": 45
+                "weight": 67
               },
               {
                 "value": 75,
-                "weight": 5
+                "weight": 3
               }
             ]
           },
           "critical": {
-            "chancePct": 5,
+            "chancePct": 10,
             "eventWeights": [
               {
                 "value": "cave_in",
-                "weight": 4
+                "weight": 5
               },
               {
                 "value": "toxic_fog",
@@ -11265,7 +10943,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 30,
+            "directionChangePct": 40,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -11344,9 +11022,9 @@
         },
         "marpenoth": {
           "temperature": {
-            "avgF": 55,
-            "lowF": 51,
-            "highF": 59
+            "avgF": 35,
+            "lowF": 27,
+            "highF": 43
           },
           "precipitation": {
             "chancePct": 18,
@@ -11360,51 +11038,43 @@
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
+                "value": "N",
+                "weight": 45
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 25
-              },
-              {
-                "value": "NW",
-                "weight": 25
-              },
-              {
-                "value": "S",
-                "weight": 10
               },
               {
                 "value": "E",
-                "weight": 5
+                "weight": 20
+              },
+              {
+                "value": "NW",
+                "weight": 10
               }
             ],
             "strengthWeights": [
-              {
-                "value": 0,
-                "weight": 20
-              },
               {
                 "value": 25,
                 "weight": 30
               },
               {
                 "value": 50,
-                "weight": 45
+                "weight": 67
               },
               {
                 "value": 75,
-                "weight": 5
+                "weight": 3
               }
             ]
           },
           "critical": {
-            "chancePct": 5,
+            "chancePct": 10,
             "eventWeights": [
               {
                 "value": "cave_in",
-                "weight": 4
+                "weight": 5
               },
               {
                 "value": "toxic_fog",
@@ -11423,7 +11093,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 30,
+            "directionChangePct": 40,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -11502,9 +11172,9 @@
         },
         "uktar": {
           "temperature": {
-            "avgF": 55,
-            "lowF": 51,
-            "highF": 59
+            "avgF": 35,
+            "lowF": 27,
+            "highF": 43
           },
           "precipitation": {
             "chancePct": 18,
@@ -11518,51 +11188,43 @@
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
+                "value": "N",
+                "weight": 45
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 25
-              },
-              {
-                "value": "NW",
-                "weight": 25
-              },
-              {
-                "value": "S",
-                "weight": 10
               },
               {
                 "value": "E",
-                "weight": 5
+                "weight": 20
+              },
+              {
+                "value": "NW",
+                "weight": 10
               }
             ],
             "strengthWeights": [
-              {
-                "value": 0,
-                "weight": 20
-              },
               {
                 "value": 25,
                 "weight": 30
               },
               {
                 "value": 50,
-                "weight": 45
+                "weight": 67
               },
               {
                 "value": 75,
-                "weight": 5
+                "weight": 3
               }
             ]
           },
           "critical": {
-            "chancePct": 5,
+            "chancePct": 10,
             "eventWeights": [
               {
                 "value": "cave_in",
-                "weight": 4
+                "weight": 5
               },
               {
                 "value": "toxic_fog",
@@ -11581,7 +11243,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 30,
+            "directionChangePct": 40,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -11660,9 +11322,9 @@
         },
         "feastofthemoon": {
           "temperature": {
-            "avgF": 55,
-            "lowF": 51,
-            "highF": 59
+            "avgF": 35,
+            "lowF": 27,
+            "highF": 43
           },
           "precipitation": {
             "chancePct": 18,
@@ -11676,51 +11338,43 @@
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
+                "value": "N",
+                "weight": 45
               },
               {
-                "value": "SW",
+                "value": "NE",
                 "weight": 25
-              },
-              {
-                "value": "NW",
-                "weight": 25
-              },
-              {
-                "value": "S",
-                "weight": 10
               },
               {
                 "value": "E",
-                "weight": 5
+                "weight": 20
+              },
+              {
+                "value": "NW",
+                "weight": 10
               }
             ],
             "strengthWeights": [
-              {
-                "value": 0,
-                "weight": 20
-              },
               {
                 "value": 25,
                 "weight": 30
               },
               {
                 "value": 50,
-                "weight": 45
+                "weight": 67
               },
               {
                 "value": 75,
-                "weight": 5
+                "weight": 3
               }
             ]
           },
           "critical": {
-            "chancePct": 5,
+            "chancePct": 10,
             "eventWeights": [
               {
                 "value": "cave_in",
-                "weight": 4
+                "weight": 5
               },
               {
                 "value": "toxic_fog",
@@ -11739,7 +11393,7 @@
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 30,
+            "directionChangePct": 40,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -11818,54 +11472,46 @@
         },
         "nightal": {
           "temperature": {
-            "avgF": 51,
-            "lowF": 47,
-            "highF": 55
+            "avgF": 30,
+            "lowF": 22,
+            "highF": 38
           },
           "precipitation": {
-            "chancePct": 25,
+            "chancePct": 20,
             "type": "drip",
             "intensityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 15
+              "light": 70,
+              "moderate": 25,
+              "heavy": 5
             }
           },
           "wind": {
             "directionWeights": [
               {
-                "value": "W",
-                "weight": 35
+                "value": "N",
+                "weight": 50
               },
               {
-                "value": "SW",
+                "value": "NNE",
                 "weight": 25
               },
               {
-                "value": "S",
-                "weight": 20
-              },
-              {
-                "value": "NW",
+                "value": "NE",
                 "weight": 15
               },
               {
                 "value": "E",
-                "weight": 5
+                "weight": 10
               }
             ],
             "strengthWeights": [
               {
-                "value": 0,
-                "weight": 15
-              },
-              {
                 "value": 25,
-                "weight": 30
+                "weight": 25
               },
               {
                 "value": 50,
-                "weight": 50
+                "weight": 70
               },
               {
                 "value": 75,
@@ -11874,30 +11520,30 @@
             ]
           },
           "critical": {
-            "chancePct": 6,
+            "chancePct": 15,
             "eventWeights": [
               {
                 "value": "cave_in",
-                "weight": 4
+                "weight": 8
               },
               {
                 "value": "toxic_fog",
-                "weight": 4
+                "weight": 6
               }
             ],
             "severityWeights": {
-              "light": 55,
-              "moderate": 30,
-              "heavy": 12,
-              "severe": 3
+              "light": 40,
+              "moderate": 35,
+              "heavy": 20,
+              "severe": 5
             }
           },
           "drift": {
-            "temperature": 2,
+            "temperature": 3,
             "precipitation": 1,
             "skies": 1,
             "wind": 1,
-            "directionChangePct": 32,
+            "directionChangePct": 50,
             "timeofdaySegments": {
               "earlypredawn": {
                 "temperatureSwingPct": 0,
@@ -12019,75 +11665,67 @@
     "periods": {
       "hammer": {
         "temperature": {
-          "avgF": 44,
-          "lowF": 34,
-          "highF": 54
+          "avgF": 12,
+          "lowF": -10,
+          "highF": 28
         },
         "precipitation": {
-          "chancePct": 70,
-          "type": "rain",
+          "chancePct": 60,
+          "type": "snow",
           "intensityWeights": {
-            "light": 35,
-            "moderate": 40,
+            "light": 40,
+            "moderate": 35,
             "heavy": 25
           }
         },
         "wind": {
           "directionWeights": [
             {
-              "value": "W",
+              "value": "N",
+              "weight": 45
+            },
+            {
+              "value": "NNE",
               "weight": 30
             },
             {
-              "value": "WSW",
-              "weight": 25
-            },
-            {
-              "value": "SW",
+              "value": "NE",
               "weight": 20
             },
             {
-              "value": "WNW",
-              "weight": 15
-            },
-            {
               "value": "NW",
-              "weight": 10
+              "weight": 5
             }
           ],
           "strengthWeights": [
             {
-              "value": 0,
-              "weight": 10
-            },
-            {
               "value": 25,
-              "weight": 20
+              "weight": 10
             },
             {
               "value": 50,
-              "weight": 35
-            },
-            {
-              "value": 75,
               "weight": 25
             },
             {
+              "value": 75,
+              "weight": 45
+            },
+            {
               "value": 100,
-              "weight": 10
+              "weight": 20
             }
           ]
         },
         "critical": {
-          "chancePct": 18,
+          "chancePct": 30,
           "eventWeights": [
             {
-              "value": "sea_storm",
-              "weight": 10
+              "value": "blizzard",
+              "weight": 12
             },
             {
-              "value": "toxic_fog",
-              "weight": 8
+              "value": "sea_storm",
+              "weight": 18
             }
           ],
           "severityWeights": {
@@ -12098,11 +11736,11 @@
           }
         },
         "drift": {
-          "temperature": 2,
+          "temperature": 3,
           "precipitation": 2,
           "skies": 1,
-          "wind": 1,
-          "directionChangePct": 56,
+          "wind": 2,
+          "directionChangePct": 60,
           "timeofdaySegments": {
             "earlypredawn": {
               "temperatureSwingPct": -80,
@@ -12180,17 +11818,17 @@
         },
         "climateControl": {
           "diurnal": {
-            "lowTimeHHMM": "0715",
-            "highTimeHHMM": "1430",
-            "riseCurve": 1.5,
-            "fallCurve": 1.1
+            "lowTimeHHMM": "0930",
+            "highTimeHHMM": "1300",
+            "riseCurve": 1.15,
+            "fallCurve": 0.95
           },
           "governor": {
-            "temperatureMaxDeltaF": 3,
+            "temperatureMaxDeltaF": 2,
             "rainMaxStep": 1,
             "skyMaxStep": 1,
             "windMaxStep": 1,
-            "currentStrengthMaxDeltaPct": 10,
+            "currentStrengthMaxDeltaPct": 8,
             "currentTemperatureMaxDeltaF": 2,
             "currentDirectionMaxStep": 1,
             "interpolateWindStrength": true,
@@ -12199,95 +11837,87 @@
           },
           "activation": {
             "skyLeadMinutes": {
-              "min": 60,
-              "max": 135
+              "min": 75,
+              "max": 150
             },
             "precipitationDurationMinutes": {
-              "min": 75,
-              "max": 240
+              "min": 90,
+              "max": 300
             },
             "eventStartOffsetMinutes": {
-              "min": 15,
-              "max": 40
+              "min": 20,
+              "max": 60
             },
             "eventTailBufferMinutes": {
-              "min": 15,
-              "max": 40
+              "min": 20,
+              "max": 60
             }
           }
         }
       },
       "midwinter": {
         "temperature": {
-          "avgF": 44,
-          "lowF": 34,
-          "highF": 54
+          "avgF": 12,
+          "lowF": -10,
+          "highF": 28
         },
         "precipitation": {
-          "chancePct": 70,
-          "type": "rain",
+          "chancePct": 60,
+          "type": "snow",
           "intensityWeights": {
-            "light": 35,
-            "moderate": 40,
+            "light": 40,
+            "moderate": 35,
             "heavy": 25
           }
         },
         "wind": {
           "directionWeights": [
             {
-              "value": "W",
+              "value": "N",
+              "weight": 45
+            },
+            {
+              "value": "NNE",
               "weight": 30
             },
             {
-              "value": "WSW",
-              "weight": 25
-            },
-            {
-              "value": "SW",
+              "value": "NE",
               "weight": 20
             },
             {
-              "value": "WNW",
-              "weight": 15
-            },
-            {
               "value": "NW",
-              "weight": 10
+              "weight": 5
             }
           ],
           "strengthWeights": [
             {
-              "value": 0,
-              "weight": 10
-            },
-            {
               "value": 25,
-              "weight": 20
+              "weight": 10
             },
             {
               "value": 50,
-              "weight": 35
-            },
-            {
-              "value": 75,
               "weight": 25
             },
             {
+              "value": 75,
+              "weight": 45
+            },
+            {
               "value": 100,
-              "weight": 10
+              "weight": 20
             }
           ]
         },
         "critical": {
-          "chancePct": 18,
+          "chancePct": 30,
           "eventWeights": [
             {
-              "value": "sea_storm",
-              "weight": 10
+              "value": "blizzard",
+              "weight": 12
             },
             {
-              "value": "toxic_fog",
-              "weight": 8
+              "value": "sea_storm",
+              "weight": 18
             }
           ],
           "severityWeights": {
@@ -12298,11 +11928,11 @@
           }
         },
         "drift": {
-          "temperature": 2,
+          "temperature": 3,
           "precipitation": 2,
           "skies": 1,
-          "wind": 1,
-          "directionChangePct": 56,
+          "wind": 2,
+          "directionChangePct": 60,
           "timeofdaySegments": {
             "earlypredawn": {
               "temperatureSwingPct": -80,
@@ -12380,17 +12010,17 @@
         },
         "climateControl": {
           "diurnal": {
-            "lowTimeHHMM": "0715",
-            "highTimeHHMM": "1430",
-            "riseCurve": 1.5,
-            "fallCurve": 1.1
+            "lowTimeHHMM": "0930",
+            "highTimeHHMM": "1300",
+            "riseCurve": 1.15,
+            "fallCurve": 0.95
           },
           "governor": {
-            "temperatureMaxDeltaF": 3,
+            "temperatureMaxDeltaF": 2,
             "rainMaxStep": 1,
             "skyMaxStep": 1,
             "windMaxStep": 1,
-            "currentStrengthMaxDeltaPct": 10,
+            "currentStrengthMaxDeltaPct": 8,
             "currentTemperatureMaxDeltaF": 2,
             "currentDirectionMaxStep": 1,
             "interpolateWindStrength": true,
@@ -12399,95 +12029,87 @@
           },
           "activation": {
             "skyLeadMinutes": {
-              "min": 60,
-              "max": 135
+              "min": 75,
+              "max": 150
             },
             "precipitationDurationMinutes": {
-              "min": 75,
-              "max": 240
+              "min": 90,
+              "max": 300
             },
             "eventStartOffsetMinutes": {
-              "min": 15,
-              "max": 40
+              "min": 20,
+              "max": 60
             },
             "eventTailBufferMinutes": {
-              "min": 15,
-              "max": 40
+              "min": 20,
+              "max": 60
             }
           }
         }
       },
       "alturiak": {
         "temperature": {
-          "avgF": 44,
-          "lowF": 34,
-          "highF": 54
+          "avgF": 12,
+          "lowF": -10,
+          "highF": 28
         },
         "precipitation": {
-          "chancePct": 70,
-          "type": "rain",
+          "chancePct": 60,
+          "type": "snow",
           "intensityWeights": {
-            "light": 35,
-            "moderate": 40,
+            "light": 40,
+            "moderate": 35,
             "heavy": 25
           }
         },
         "wind": {
           "directionWeights": [
             {
-              "value": "W",
+              "value": "N",
+              "weight": 45
+            },
+            {
+              "value": "NNE",
               "weight": 30
             },
             {
-              "value": "WSW",
-              "weight": 25
-            },
-            {
-              "value": "SW",
+              "value": "NE",
               "weight": 20
             },
             {
-              "value": "WNW",
-              "weight": 15
-            },
-            {
               "value": "NW",
-              "weight": 10
+              "weight": 5
             }
           ],
           "strengthWeights": [
             {
-              "value": 0,
-              "weight": 10
-            },
-            {
               "value": 25,
-              "weight": 20
+              "weight": 10
             },
             {
               "value": 50,
-              "weight": 35
-            },
-            {
-              "value": 75,
               "weight": 25
             },
             {
+              "value": 75,
+              "weight": 45
+            },
+            {
               "value": 100,
-              "weight": 10
+              "weight": 20
             }
           ]
         },
         "critical": {
-          "chancePct": 18,
+          "chancePct": 30,
           "eventWeights": [
             {
-              "value": "sea_storm",
-              "weight": 10
+              "value": "blizzard",
+              "weight": 12
             },
             {
-              "value": "toxic_fog",
-              "weight": 8
+              "value": "sea_storm",
+              "weight": 18
             }
           ],
           "severityWeights": {
@@ -12498,11 +12120,11 @@
           }
         },
         "drift": {
-          "temperature": 2,
+          "temperature": 3,
           "precipitation": 2,
           "skies": 1,
-          "wind": 1,
-          "directionChangePct": 56,
+          "wind": 2,
+          "directionChangePct": 60,
           "timeofdaySegments": {
             "earlypredawn": {
               "temperatureSwingPct": -80,
@@ -12580,17 +12202,17 @@
         },
         "climateControl": {
           "diurnal": {
-            "lowTimeHHMM": "0715",
-            "highTimeHHMM": "1430",
-            "riseCurve": 1.5,
-            "fallCurve": 1.1
+            "lowTimeHHMM": "0930",
+            "highTimeHHMM": "1300",
+            "riseCurve": 1.15,
+            "fallCurve": 0.95
           },
           "governor": {
-            "temperatureMaxDeltaF": 3,
+            "temperatureMaxDeltaF": 2,
             "rainMaxStep": 1,
             "skyMaxStep": 1,
             "windMaxStep": 1,
-            "currentStrengthMaxDeltaPct": 10,
+            "currentStrengthMaxDeltaPct": 8,
             "currentTemperatureMaxDeltaF": 2,
             "currentDirectionMaxStep": 1,
             "interpolateWindStrength": true,
@@ -12599,2830 +12221,62 @@
           },
           "activation": {
             "skyLeadMinutes": {
-              "min": 60,
-              "max": 135
+              "min": 75,
+              "max": 150
             },
             "precipitationDurationMinutes": {
-              "min": 75,
-              "max": 240
+              "min": 90,
+              "max": 300
             },
             "eventStartOffsetMinutes": {
-              "min": 15,
-              "max": 40
+              "min": 20,
+              "max": 60
             },
             "eventTailBufferMinutes": {
-              "min": 15,
-              "max": 40
+              "min": 20,
+              "max": 60
             }
           }
         }
       },
       "ches": {
         "temperature": {
-          "avgF": 52,
-          "lowF": 42,
-          "highF": 62
+          "avgF": 28,
+          "lowF": 5,
+          "highF": 42
         },
         "precipitation": {
-          "chancePct": 55,
-          "type": "rain",
+          "chancePct": 50,
+          "type": "sleet",
           "intensityWeights": {
-            "light": 45,
-            "moderate": 35,
-            "heavy": 20
-          }
-        },
-        "wind": {
-          "directionWeights": [
-            {
-              "value": "W",
-              "weight": 30
-            },
-            {
-              "value": "WNW",
-              "weight": 25
-            },
-            {
-              "value": "NW",
-              "weight": 20
-            },
-            {
-              "value": "SW",
-              "weight": 17
-            },
-            {
-              "value": "N",
-              "weight": 8
-            }
-          ],
-          "strengthWeights": [
-            {
-              "value": 0,
-              "weight": 15
-            },
-            {
-              "value": 25,
-              "weight": 25
-            },
-            {
-              "value": 50,
-              "weight": 35
-            },
-            {
-              "value": 75,
-              "weight": 20
-            },
-            {
-              "value": 100,
-              "weight": 5
-            }
-          ]
-        },
-        "critical": {
-          "chancePct": 10,
-          "eventWeights": [
-            {
-              "value": "sea_storm",
-              "weight": 6
-            },
-            {
-              "value": "toxic_fog",
-              "weight": 4
-            }
-          ],
-          "severityWeights": {
-            "light": 55,
-            "moderate": 30,
-            "heavy": 12,
-            "severe": 3
-          }
-        },
-        "drift": {
-          "temperature": 2,
-          "precipitation": 2,
-          "skies": 1,
-          "wind": 1,
-          "directionChangePct": 40,
-          "timeofdaySegments": {
-            "earlypredawn": {
-              "temperatureSwingPct": -80,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -6,
-              "directionChangePct": 18
-            },
-            "latepredawn": {
-              "temperatureSwingPct": -55,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -3,
-              "directionChangePct": 20
-            },
-            "earlymorning": {
-              "temperatureSwingPct": -15,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 0,
-              "directionChangePct": 22
-            },
-            "latemorning": {
-              "temperatureSwingPct": 18,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 4,
-              "directionChangePct": 26
-            },
-            "earlyafternoon": {
-              "temperatureSwingPct": 58,
-              "temperatureDelta": 1,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 12,
-              "directionChangePct": 32
-            },
-            "lateafternoon": {
-              "temperatureSwingPct": 42,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 10,
-              "directionChangePct": 30
-            },
-            "earlyevening": {
-              "temperatureSwingPct": 0,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 2,
-              "directionChangePct": 24
-            },
-            "lateevening": {
-              "temperatureSwingPct": -25,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -4,
-              "directionChangePct": 20
-            }
-          }
-        },
-        "climateControl": {
-          "diurnal": {
-            "lowTimeHHMM": "0600",
-            "highTimeHHMM": "1500",
-            "riseCurve": 1.9,
-            "fallCurve": 1.2
-          },
-          "governor": {
-            "temperatureMaxDeltaF": 3,
-            "rainMaxStep": 1,
-            "skyMaxStep": 1,
-            "windMaxStep": 1,
-            "currentStrengthMaxDeltaPct": 9,
-            "currentTemperatureMaxDeltaF": 2,
-            "currentDirectionMaxStep": 1,
-            "interpolateWindStrength": true,
-            "interpolateCurrentStrength": true,
-            "interpolateCurrentTemperature": true
-          },
-          "activation": {
-            "skyLeadMinutes": {
-              "min": 45,
-              "max": 105
-            },
-            "precipitationDurationMinutes": {
-              "min": 60,
-              "max": 195
-            },
-            "eventStartOffsetMinutes": {
-              "min": 10,
-              "max": 35
-            },
-            "eventTailBufferMinutes": {
-              "min": 10,
-              "max": 30
-            }
-          }
-        }
-      },
-      "tarsakh": {
-        "temperature": {
-          "avgF": 52,
-          "lowF": 42,
-          "highF": 62
-        },
-        "precipitation": {
-          "chancePct": 55,
-          "type": "rain",
-          "intensityWeights": {
-            "light": 45,
-            "moderate": 35,
-            "heavy": 20
-          }
-        },
-        "wind": {
-          "directionWeights": [
-            {
-              "value": "W",
-              "weight": 30
-            },
-            {
-              "value": "WNW",
-              "weight": 25
-            },
-            {
-              "value": "NW",
-              "weight": 20
-            },
-            {
-              "value": "SW",
-              "weight": 17
-            },
-            {
-              "value": "N",
-              "weight": 8
-            }
-          ],
-          "strengthWeights": [
-            {
-              "value": 0,
-              "weight": 15
-            },
-            {
-              "value": 25,
-              "weight": 25
-            },
-            {
-              "value": 50,
-              "weight": 35
-            },
-            {
-              "value": 75,
-              "weight": 20
-            },
-            {
-              "value": 100,
-              "weight": 5
-            }
-          ]
-        },
-        "critical": {
-          "chancePct": 10,
-          "eventWeights": [
-            {
-              "value": "sea_storm",
-              "weight": 6
-            },
-            {
-              "value": "toxic_fog",
-              "weight": 4
-            }
-          ],
-          "severityWeights": {
-            "light": 55,
-            "moderate": 30,
-            "heavy": 12,
-            "severe": 3
-          }
-        },
-        "drift": {
-          "temperature": 2,
-          "precipitation": 2,
-          "skies": 1,
-          "wind": 1,
-          "directionChangePct": 40,
-          "timeofdaySegments": {
-            "earlypredawn": {
-              "temperatureSwingPct": -80,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -6,
-              "directionChangePct": 18
-            },
-            "latepredawn": {
-              "temperatureSwingPct": -55,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -3,
-              "directionChangePct": 20
-            },
-            "earlymorning": {
-              "temperatureSwingPct": -15,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 0,
-              "directionChangePct": 22
-            },
-            "latemorning": {
-              "temperatureSwingPct": 18,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 4,
-              "directionChangePct": 26
-            },
-            "earlyafternoon": {
-              "temperatureSwingPct": 58,
-              "temperatureDelta": 1,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 12,
-              "directionChangePct": 32
-            },
-            "lateafternoon": {
-              "temperatureSwingPct": 42,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 10,
-              "directionChangePct": 30
-            },
-            "earlyevening": {
-              "temperatureSwingPct": 0,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 2,
-              "directionChangePct": 24
-            },
-            "lateevening": {
-              "temperatureSwingPct": -25,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -4,
-              "directionChangePct": 20
-            }
-          }
-        },
-        "climateControl": {
-          "diurnal": {
-            "lowTimeHHMM": "0600",
-            "highTimeHHMM": "1500",
-            "riseCurve": 1.9,
-            "fallCurve": 1.2
-          },
-          "governor": {
-            "temperatureMaxDeltaF": 3,
-            "rainMaxStep": 1,
-            "skyMaxStep": 1,
-            "windMaxStep": 1,
-            "currentStrengthMaxDeltaPct": 9,
-            "currentTemperatureMaxDeltaF": 2,
-            "currentDirectionMaxStep": 1,
-            "interpolateWindStrength": true,
-            "interpolateCurrentStrength": true,
-            "interpolateCurrentTemperature": true
-          },
-          "activation": {
-            "skyLeadMinutes": {
-              "min": 45,
-              "max": 105
-            },
-            "precipitationDurationMinutes": {
-              "min": 60,
-              "max": 195
-            },
-            "eventStartOffsetMinutes": {
-              "min": 10,
-              "max": 35
-            },
-            "eventTailBufferMinutes": {
-              "min": 10,
-              "max": 30
-            }
-          }
-        }
-      },
-      "greengrass": {
-        "temperature": {
-          "avgF": 52,
-          "lowF": 42,
-          "highF": 62
-        },
-        "precipitation": {
-          "chancePct": 55,
-          "type": "rain",
-          "intensityWeights": {
-            "light": 45,
-            "moderate": 35,
-            "heavy": 20
-          }
-        },
-        "wind": {
-          "directionWeights": [
-            {
-              "value": "W",
-              "weight": 30
-            },
-            {
-              "value": "WNW",
-              "weight": 25
-            },
-            {
-              "value": "NW",
-              "weight": 20
-            },
-            {
-              "value": "SW",
-              "weight": 17
-            },
-            {
-              "value": "N",
-              "weight": 8
-            }
-          ],
-          "strengthWeights": [
-            {
-              "value": 0,
-              "weight": 15
-            },
-            {
-              "value": 25,
-              "weight": 25
-            },
-            {
-              "value": 50,
-              "weight": 35
-            },
-            {
-              "value": 75,
-              "weight": 20
-            },
-            {
-              "value": 100,
-              "weight": 5
-            }
-          ]
-        },
-        "critical": {
-          "chancePct": 10,
-          "eventWeights": [
-            {
-              "value": "sea_storm",
-              "weight": 6
-            },
-            {
-              "value": "toxic_fog",
-              "weight": 4
-            }
-          ],
-          "severityWeights": {
-            "light": 55,
-            "moderate": 30,
-            "heavy": 12,
-            "severe": 3
-          }
-        },
-        "drift": {
-          "temperature": 2,
-          "precipitation": 2,
-          "skies": 1,
-          "wind": 1,
-          "directionChangePct": 40,
-          "timeofdaySegments": {
-            "earlypredawn": {
-              "temperatureSwingPct": -80,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -6,
-              "directionChangePct": 18
-            },
-            "latepredawn": {
-              "temperatureSwingPct": -55,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -3,
-              "directionChangePct": 20
-            },
-            "earlymorning": {
-              "temperatureSwingPct": -15,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 0,
-              "directionChangePct": 22
-            },
-            "latemorning": {
-              "temperatureSwingPct": 18,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 4,
-              "directionChangePct": 26
-            },
-            "earlyafternoon": {
-              "temperatureSwingPct": 58,
-              "temperatureDelta": 1,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 12,
-              "directionChangePct": 32
-            },
-            "lateafternoon": {
-              "temperatureSwingPct": 42,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 10,
-              "directionChangePct": 30
-            },
-            "earlyevening": {
-              "temperatureSwingPct": 0,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 2,
-              "directionChangePct": 24
-            },
-            "lateevening": {
-              "temperatureSwingPct": -25,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -4,
-              "directionChangePct": 20
-            }
-          }
-        },
-        "climateControl": {
-          "diurnal": {
-            "lowTimeHHMM": "0600",
-            "highTimeHHMM": "1500",
-            "riseCurve": 1.9,
-            "fallCurve": 1.2
-          },
-          "governor": {
-            "temperatureMaxDeltaF": 3,
-            "rainMaxStep": 1,
-            "skyMaxStep": 1,
-            "windMaxStep": 1,
-            "currentStrengthMaxDeltaPct": 9,
-            "currentTemperatureMaxDeltaF": 2,
-            "currentDirectionMaxStep": 1,
-            "interpolateWindStrength": true,
-            "interpolateCurrentStrength": true,
-            "interpolateCurrentTemperature": true
-          },
-          "activation": {
-            "skyLeadMinutes": {
-              "min": 45,
-              "max": 105
-            },
-            "precipitationDurationMinutes": {
-              "min": 60,
-              "max": 195
-            },
-            "eventStartOffsetMinutes": {
-              "min": 10,
-              "max": 35
-            },
-            "eventTailBufferMinutes": {
-              "min": 10,
-              "max": 30
-            }
-          }
-        }
-      },
-      "mirtul": {
-        "temperature": {
-          "avgF": 52,
-          "lowF": 42,
-          "highF": 62
-        },
-        "precipitation": {
-          "chancePct": 55,
-          "type": "rain",
-          "intensityWeights": {
-            "light": 45,
-            "moderate": 35,
-            "heavy": 20
-          }
-        },
-        "wind": {
-          "directionWeights": [
-            {
-              "value": "W",
-              "weight": 30
-            },
-            {
-              "value": "WNW",
-              "weight": 25
-            },
-            {
-              "value": "NW",
-              "weight": 20
-            },
-            {
-              "value": "SW",
-              "weight": 17
-            },
-            {
-              "value": "N",
-              "weight": 8
-            }
-          ],
-          "strengthWeights": [
-            {
-              "value": 0,
-              "weight": 15
-            },
-            {
-              "value": 25,
-              "weight": 25
-            },
-            {
-              "value": 50,
-              "weight": 35
-            },
-            {
-              "value": 75,
-              "weight": 20
-            },
-            {
-              "value": 100,
-              "weight": 5
-            }
-          ]
-        },
-        "critical": {
-          "chancePct": 10,
-          "eventWeights": [
-            {
-              "value": "sea_storm",
-              "weight": 6
-            },
-            {
-              "value": "toxic_fog",
-              "weight": 4
-            }
-          ],
-          "severityWeights": {
-            "light": 55,
-            "moderate": 30,
-            "heavy": 12,
-            "severe": 3
-          }
-        },
-        "drift": {
-          "temperature": 2,
-          "precipitation": 2,
-          "skies": 1,
-          "wind": 1,
-          "directionChangePct": 40,
-          "timeofdaySegments": {
-            "earlypredawn": {
-              "temperatureSwingPct": -80,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -6,
-              "directionChangePct": 18
-            },
-            "latepredawn": {
-              "temperatureSwingPct": -55,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -3,
-              "directionChangePct": 20
-            },
-            "earlymorning": {
-              "temperatureSwingPct": -15,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 0,
-              "directionChangePct": 22
-            },
-            "latemorning": {
-              "temperatureSwingPct": 18,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 4,
-              "directionChangePct": 26
-            },
-            "earlyafternoon": {
-              "temperatureSwingPct": 58,
-              "temperatureDelta": 1,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 12,
-              "directionChangePct": 32
-            },
-            "lateafternoon": {
-              "temperatureSwingPct": 42,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 10,
-              "directionChangePct": 30
-            },
-            "earlyevening": {
-              "temperatureSwingPct": 0,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 2,
-              "directionChangePct": 24
-            },
-            "lateevening": {
-              "temperatureSwingPct": -25,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -4,
-              "directionChangePct": 20
-            }
-          }
-        },
-        "climateControl": {
-          "diurnal": {
-            "lowTimeHHMM": "0600",
-            "highTimeHHMM": "1500",
-            "riseCurve": 1.9,
-            "fallCurve": 1.2
-          },
-          "governor": {
-            "temperatureMaxDeltaF": 3,
-            "rainMaxStep": 1,
-            "skyMaxStep": 1,
-            "windMaxStep": 1,
-            "currentStrengthMaxDeltaPct": 9,
-            "currentTemperatureMaxDeltaF": 2,
-            "currentDirectionMaxStep": 1,
-            "interpolateWindStrength": true,
-            "interpolateCurrentStrength": true,
-            "interpolateCurrentTemperature": true
-          },
-          "activation": {
-            "skyLeadMinutes": {
-              "min": 45,
-              "max": 105
-            },
-            "precipitationDurationMinutes": {
-              "min": 60,
-              "max": 195
-            },
-            "eventStartOffsetMinutes": {
-              "min": 10,
-              "max": 35
-            },
-            "eventTailBufferMinutes": {
-              "min": 10,
-              "max": 30
-            }
-          }
-        }
-      },
-      "kythorn": {
-        "temperature": {
-          "avgF": 60,
-          "lowF": 52,
-          "highF": 70
-        },
-        "precipitation": {
-          "chancePct": 20,
-          "type": "rain",
-          "intensityWeights": {
-            "light": 75,
-            "moderate": 20,
-            "heavy": 5
-          }
-        },
-        "wind": {
-          "directionWeights": [
-            {
-              "value": "NW",
-              "weight": 40
-            },
-            {
-              "value": "NNW",
-              "weight": 25
-            },
-            {
-              "value": "W",
-              "weight": 20
-            },
-            {
-              "value": "WNW",
-              "weight": 10
-            },
-            {
-              "value": "SW",
-              "weight": 5
-            }
-          ],
-          "strengthWeights": [
-            {
-              "value": 0,
-              "weight": 25
-            },
-            {
-              "value": 25,
-              "weight": 30
-            },
-            {
-              "value": 50,
-              "weight": 33
-            },
-            {
-              "value": 75,
-              "weight": 10
-            },
-            {
-              "value": 100,
-              "weight": 2
-            }
-          ]
-        },
-        "critical": {
-          "chancePct": 5,
-          "eventWeights": [
-            {
-              "value": "sea_storm",
-              "weight": 5
-            }
-          ],
-          "severityWeights": {
-            "light": 55,
-            "moderate": 30,
-            "heavy": 12,
-            "severe": 3
-          }
-        },
-        "drift": {
-          "temperature": 2,
-          "precipitation": 1,
-          "skies": 1,
-          "wind": 1,
-          "directionChangePct": 30,
-          "timeofdaySegments": {
-            "earlypredawn": {
-              "temperatureSwingPct": -80,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -6,
-              "directionChangePct": 18
-            },
-            "latepredawn": {
-              "temperatureSwingPct": -55,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -3,
-              "directionChangePct": 20
-            },
-            "earlymorning": {
-              "temperatureSwingPct": -15,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 0,
-              "directionChangePct": 22
-            },
-            "latemorning": {
-              "temperatureSwingPct": 18,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 4,
-              "directionChangePct": 26
-            },
-            "earlyafternoon": {
-              "temperatureSwingPct": 58,
-              "temperatureDelta": 1,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 12,
-              "directionChangePct": 32
-            },
-            "lateafternoon": {
-              "temperatureSwingPct": 42,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 10,
-              "directionChangePct": 30
-            },
-            "earlyevening": {
-              "temperatureSwingPct": 0,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 2,
-              "directionChangePct": 24
-            },
-            "lateevening": {
-              "temperatureSwingPct": -25,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -4,
-              "directionChangePct": 20
-            }
-          }
-        },
-        "climateControl": {
-          "diurnal": {
-            "lowTimeHHMM": "0600",
-            "highTimeHHMM": "1500",
-            "riseCurve": 1.9,
-            "fallCurve": 1.2
-          },
-          "governor": {
-            "temperatureMaxDeltaF": 3,
-            "rainMaxStep": 1,
-            "skyMaxStep": 1,
-            "windMaxStep": 1,
-            "currentStrengthMaxDeltaPct": 9,
-            "currentTemperatureMaxDeltaF": 2,
-            "currentDirectionMaxStep": 1,
-            "interpolateWindStrength": true,
-            "interpolateCurrentStrength": true,
-            "interpolateCurrentTemperature": true
-          },
-          "activation": {
-            "skyLeadMinutes": {
-              "min": 45,
-              "max": 105
-            },
-            "precipitationDurationMinutes": {
-              "min": 60,
-              "max": 195
-            },
-            "eventStartOffsetMinutes": {
-              "min": 10,
-              "max": 35
-            },
-            "eventTailBufferMinutes": {
-              "min": 10,
-              "max": 30
-            }
-          }
-        }
-      },
-      "flamerule": {
-        "temperature": {
-          "avgF": 60,
-          "lowF": 52,
-          "highF": 70
-        },
-        "precipitation": {
-          "chancePct": 20,
-          "type": "rain",
-          "intensityWeights": {
-            "light": 75,
-            "moderate": 20,
-            "heavy": 5
-          }
-        },
-        "wind": {
-          "directionWeights": [
-            {
-              "value": "NW",
-              "weight": 40
-            },
-            {
-              "value": "NNW",
-              "weight": 25
-            },
-            {
-              "value": "W",
-              "weight": 20
-            },
-            {
-              "value": "WNW",
-              "weight": 10
-            },
-            {
-              "value": "SW",
-              "weight": 5
-            }
-          ],
-          "strengthWeights": [
-            {
-              "value": 0,
-              "weight": 25
-            },
-            {
-              "value": 25,
-              "weight": 30
-            },
-            {
-              "value": 50,
-              "weight": 33
-            },
-            {
-              "value": 75,
-              "weight": 10
-            },
-            {
-              "value": 100,
-              "weight": 2
-            }
-          ]
-        },
-        "critical": {
-          "chancePct": 5,
-          "eventWeights": [
-            {
-              "value": "sea_storm",
-              "weight": 5
-            }
-          ],
-          "severityWeights": {
-            "light": 55,
-            "moderate": 30,
-            "heavy": 12,
-            "severe": 3
-          }
-        },
-        "drift": {
-          "temperature": 2,
-          "precipitation": 1,
-          "skies": 1,
-          "wind": 1,
-          "directionChangePct": 30,
-          "timeofdaySegments": {
-            "earlypredawn": {
-              "temperatureSwingPct": -80,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -6,
-              "directionChangePct": 18
-            },
-            "latepredawn": {
-              "temperatureSwingPct": -55,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -3,
-              "directionChangePct": 20
-            },
-            "earlymorning": {
-              "temperatureSwingPct": -15,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 0,
-              "directionChangePct": 22
-            },
-            "latemorning": {
-              "temperatureSwingPct": 18,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 4,
-              "directionChangePct": 26
-            },
-            "earlyafternoon": {
-              "temperatureSwingPct": 58,
-              "temperatureDelta": 1,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 12,
-              "directionChangePct": 32
-            },
-            "lateafternoon": {
-              "temperatureSwingPct": 42,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 10,
-              "directionChangePct": 30
-            },
-            "earlyevening": {
-              "temperatureSwingPct": 0,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 2,
-              "directionChangePct": 24
-            },
-            "lateevening": {
-              "temperatureSwingPct": -25,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -4,
-              "directionChangePct": 20
-            }
-          }
-        },
-        "climateControl": {
-          "diurnal": {
-            "lowTimeHHMM": "0515",
-            "highTimeHHMM": "1600",
-            "riseCurve": 2.1,
-            "fallCurve": 1.3
-          },
-          "governor": {
-            "temperatureMaxDeltaF": 2,
-            "rainMaxStep": 1,
-            "skyMaxStep": 1,
-            "windMaxStep": 1,
-            "currentStrengthMaxDeltaPct": 8,
-            "currentTemperatureMaxDeltaF": 2,
-            "currentDirectionMaxStep": 1,
-            "interpolateWindStrength": true,
-            "interpolateCurrentStrength": true,
-            "interpolateCurrentTemperature": true
-          },
-          "activation": {
-            "skyLeadMinutes": {
-              "min": 30,
-              "max": 75
-            },
-            "precipitationDurationMinutes": {
-              "min": 30,
-              "max": 105
-            },
-            "eventStartOffsetMinutes": {
-              "min": 5,
-              "max": 20
-            },
-            "eventTailBufferMinutes": {
-              "min": 5,
-              "max": 15
-            }
-          }
-        }
-      },
-      "midsummer": {
-        "temperature": {
-          "avgF": 60,
-          "lowF": 52,
-          "highF": 70
-        },
-        "precipitation": {
-          "chancePct": 20,
-          "type": "rain",
-          "intensityWeights": {
-            "light": 75,
-            "moderate": 20,
-            "heavy": 5
-          }
-        },
-        "wind": {
-          "directionWeights": [
-            {
-              "value": "NW",
-              "weight": 40
-            },
-            {
-              "value": "NNW",
-              "weight": 25
-            },
-            {
-              "value": "W",
-              "weight": 20
-            },
-            {
-              "value": "WNW",
-              "weight": 10
-            },
-            {
-              "value": "SW",
-              "weight": 5
-            }
-          ],
-          "strengthWeights": [
-            {
-              "value": 0,
-              "weight": 25
-            },
-            {
-              "value": 25,
-              "weight": 30
-            },
-            {
-              "value": 50,
-              "weight": 33
-            },
-            {
-              "value": 75,
-              "weight": 10
-            },
-            {
-              "value": 100,
-              "weight": 2
-            }
-          ]
-        },
-        "critical": {
-          "chancePct": 5,
-          "eventWeights": [
-            {
-              "value": "sea_storm",
-              "weight": 5
-            }
-          ],
-          "severityWeights": {
-            "light": 55,
-            "moderate": 30,
-            "heavy": 12,
-            "severe": 3
-          }
-        },
-        "drift": {
-          "temperature": 2,
-          "precipitation": 1,
-          "skies": 1,
-          "wind": 1,
-          "directionChangePct": 30,
-          "timeofdaySegments": {
-            "earlypredawn": {
-              "temperatureSwingPct": -80,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -6,
-              "directionChangePct": 18
-            },
-            "latepredawn": {
-              "temperatureSwingPct": -55,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -3,
-              "directionChangePct": 20
-            },
-            "earlymorning": {
-              "temperatureSwingPct": -15,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 0,
-              "directionChangePct": 22
-            },
-            "latemorning": {
-              "temperatureSwingPct": 18,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 4,
-              "directionChangePct": 26
-            },
-            "earlyafternoon": {
-              "temperatureSwingPct": 58,
-              "temperatureDelta": 1,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 12,
-              "directionChangePct": 32
-            },
-            "lateafternoon": {
-              "temperatureSwingPct": 42,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 10,
-              "directionChangePct": 30
-            },
-            "earlyevening": {
-              "temperatureSwingPct": 0,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 2,
-              "directionChangePct": 24
-            },
-            "lateevening": {
-              "temperatureSwingPct": -25,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -4,
-              "directionChangePct": 20
-            }
-          }
-        },
-        "climateControl": {
-          "diurnal": {
-            "lowTimeHHMM": "0515",
-            "highTimeHHMM": "1600",
-            "riseCurve": 2.1,
-            "fallCurve": 1.3
-          },
-          "governor": {
-            "temperatureMaxDeltaF": 2,
-            "rainMaxStep": 1,
-            "skyMaxStep": 1,
-            "windMaxStep": 1,
-            "currentStrengthMaxDeltaPct": 8,
-            "currentTemperatureMaxDeltaF": 2,
-            "currentDirectionMaxStep": 1,
-            "interpolateWindStrength": true,
-            "interpolateCurrentStrength": true,
-            "interpolateCurrentTemperature": true
-          },
-          "activation": {
-            "skyLeadMinutes": {
-              "min": 30,
-              "max": 75
-            },
-            "precipitationDurationMinutes": {
-              "min": 30,
-              "max": 105
-            },
-            "eventStartOffsetMinutes": {
-              "min": 5,
-              "max": 20
-            },
-            "eventTailBufferMinutes": {
-              "min": 5,
-              "max": 15
-            }
-          }
-        }
-      },
-      "shieldmeet": {
-        "temperature": {
-          "avgF": 60,
-          "lowF": 52,
-          "highF": 70
-        },
-        "precipitation": {
-          "chancePct": 20,
-          "type": "rain",
-          "intensityWeights": {
-            "light": 75,
-            "moderate": 20,
-            "heavy": 5
-          }
-        },
-        "wind": {
-          "directionWeights": [
-            {
-              "value": "NW",
-              "weight": 40
-            },
-            {
-              "value": "NNW",
-              "weight": 25
-            },
-            {
-              "value": "W",
-              "weight": 20
-            },
-            {
-              "value": "WNW",
-              "weight": 10
-            },
-            {
-              "value": "SW",
-              "weight": 5
-            }
-          ],
-          "strengthWeights": [
-            {
-              "value": 0,
-              "weight": 25
-            },
-            {
-              "value": 25,
-              "weight": 30
-            },
-            {
-              "value": 50,
-              "weight": 33
-            },
-            {
-              "value": 75,
-              "weight": 10
-            },
-            {
-              "value": 100,
-              "weight": 2
-            }
-          ]
-        },
-        "critical": {
-          "chancePct": 5,
-          "eventWeights": [
-            {
-              "value": "sea_storm",
-              "weight": 5
-            }
-          ],
-          "severityWeights": {
-            "light": 55,
-            "moderate": 30,
-            "heavy": 12,
-            "severe": 3
-          }
-        },
-        "drift": {
-          "temperature": 2,
-          "precipitation": 1,
-          "skies": 1,
-          "wind": 1,
-          "directionChangePct": 30,
-          "timeofdaySegments": {
-            "earlypredawn": {
-              "temperatureSwingPct": -80,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -6,
-              "directionChangePct": 18
-            },
-            "latepredawn": {
-              "temperatureSwingPct": -55,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -3,
-              "directionChangePct": 20
-            },
-            "earlymorning": {
-              "temperatureSwingPct": -15,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 0,
-              "directionChangePct": 22
-            },
-            "latemorning": {
-              "temperatureSwingPct": 18,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 4,
-              "directionChangePct": 26
-            },
-            "earlyafternoon": {
-              "temperatureSwingPct": 58,
-              "temperatureDelta": 1,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 12,
-              "directionChangePct": 32
-            },
-            "lateafternoon": {
-              "temperatureSwingPct": 42,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 10,
-              "directionChangePct": 30
-            },
-            "earlyevening": {
-              "temperatureSwingPct": 0,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 2,
-              "directionChangePct": 24
-            },
-            "lateevening": {
-              "temperatureSwingPct": -25,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -4,
-              "directionChangePct": 20
-            }
-          }
-        },
-        "climateControl": {
-          "diurnal": {
-            "lowTimeHHMM": "0515",
-            "highTimeHHMM": "1600",
-            "riseCurve": 2.1,
-            "fallCurve": 1.3
-          },
-          "governor": {
-            "temperatureMaxDeltaF": 2,
-            "rainMaxStep": 1,
-            "skyMaxStep": 1,
-            "windMaxStep": 1,
-            "currentStrengthMaxDeltaPct": 8,
-            "currentTemperatureMaxDeltaF": 2,
-            "currentDirectionMaxStep": 1,
-            "interpolateWindStrength": true,
-            "interpolateCurrentStrength": true,
-            "interpolateCurrentTemperature": true
-          },
-          "activation": {
-            "skyLeadMinutes": {
-              "min": 30,
-              "max": 75
-            },
-            "precipitationDurationMinutes": {
-              "min": 30,
-              "max": 105
-            },
-            "eventStartOffsetMinutes": {
-              "min": 5,
-              "max": 20
-            },
-            "eventTailBufferMinutes": {
-              "min": 5,
-              "max": 15
-            }
-          }
-        }
-      },
-      "eleasis": {
-        "temperature": {
-          "avgF": 60,
-          "lowF": 52,
-          "highF": 70
-        },
-        "precipitation": {
-          "chancePct": 20,
-          "type": "rain",
-          "intensityWeights": {
-            "light": 75,
-            "moderate": 20,
-            "heavy": 5
-          }
-        },
-        "wind": {
-          "directionWeights": [
-            {
-              "value": "NW",
-              "weight": 40
-            },
-            {
-              "value": "NNW",
-              "weight": 25
-            },
-            {
-              "value": "W",
-              "weight": 20
-            },
-            {
-              "value": "WNW",
-              "weight": 10
-            },
-            {
-              "value": "SW",
-              "weight": 5
-            }
-          ],
-          "strengthWeights": [
-            {
-              "value": 0,
-              "weight": 25
-            },
-            {
-              "value": 25,
-              "weight": 30
-            },
-            {
-              "value": 50,
-              "weight": 33
-            },
-            {
-              "value": 75,
-              "weight": 10
-            },
-            {
-              "value": 100,
-              "weight": 2
-            }
-          ]
-        },
-        "critical": {
-          "chancePct": 5,
-          "eventWeights": [
-            {
-              "value": "sea_storm",
-              "weight": 5
-            }
-          ],
-          "severityWeights": {
-            "light": 55,
-            "moderate": 30,
-            "heavy": 12,
-            "severe": 3
-          }
-        },
-        "drift": {
-          "temperature": 2,
-          "precipitation": 1,
-          "skies": 1,
-          "wind": 1,
-          "directionChangePct": 30,
-          "timeofdaySegments": {
-            "earlypredawn": {
-              "temperatureSwingPct": -80,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -6,
-              "directionChangePct": 18
-            },
-            "latepredawn": {
-              "temperatureSwingPct": -55,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -3,
-              "directionChangePct": 20
-            },
-            "earlymorning": {
-              "temperatureSwingPct": -15,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 0,
-              "directionChangePct": 22
-            },
-            "latemorning": {
-              "temperatureSwingPct": 18,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 4,
-              "directionChangePct": 26
-            },
-            "earlyafternoon": {
-              "temperatureSwingPct": 58,
-              "temperatureDelta": 1,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 12,
-              "directionChangePct": 32
-            },
-            "lateafternoon": {
-              "temperatureSwingPct": 42,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 10,
-              "directionChangePct": 30
-            },
-            "earlyevening": {
-              "temperatureSwingPct": 0,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 2,
-              "directionChangePct": 24
-            },
-            "lateevening": {
-              "temperatureSwingPct": -25,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -4,
-              "directionChangePct": 20
-            }
-          }
-        },
-        "climateControl": {
-          "diurnal": {
-            "lowTimeHHMM": "0515",
-            "highTimeHHMM": "1600",
-            "riseCurve": 2.1,
-            "fallCurve": 1.3
-          },
-          "governor": {
-            "temperatureMaxDeltaF": 2,
-            "rainMaxStep": 1,
-            "skyMaxStep": 1,
-            "windMaxStep": 1,
-            "currentStrengthMaxDeltaPct": 8,
-            "currentTemperatureMaxDeltaF": 2,
-            "currentDirectionMaxStep": 1,
-            "interpolateWindStrength": true,
-            "interpolateCurrentStrength": true,
-            "interpolateCurrentTemperature": true
-          },
-          "activation": {
-            "skyLeadMinutes": {
-              "min": 30,
-              "max": 75
-            },
-            "precipitationDurationMinutes": {
-              "min": 30,
-              "max": 105
-            },
-            "eventStartOffsetMinutes": {
-              "min": 5,
-              "max": 20
-            },
-            "eventTailBufferMinutes": {
-              "min": 5,
-              "max": 15
-            }
-          }
-        }
-      },
-      "eleint": {
-        "temperature": {
-          "avgF": 52,
-          "lowF": 42,
-          "highF": 62
-        },
-        "precipitation": {
-          "chancePct": 60,
-          "type": "rain",
-          "intensityWeights": {
-            "light": 45,
-            "moderate": 35,
-            "heavy": 20
-          }
-        },
-        "wind": {
-          "directionWeights": [
-            {
-              "value": "W",
-              "weight": 30
-            },
-            {
-              "value": "SW",
-              "weight": 25
-            },
-            {
-              "value": "WSW",
-              "weight": 20
-            },
-            {
-              "value": "NW",
-              "weight": 17
-            },
-            {
-              "value": "S",
-              "weight": 8
-            }
-          ],
-          "strengthWeights": [
-            {
-              "value": 0,
-              "weight": 12
-            },
-            {
-              "value": 25,
-              "weight": 23
-            },
-            {
-              "value": 50,
-              "weight": 35
-            },
-            {
-              "value": 75,
-              "weight": 22
-            },
-            {
-              "value": 100,
-              "weight": 8
-            }
-          ]
-        },
-        "critical": {
-          "chancePct": 14,
-          "eventWeights": [
-            {
-              "value": "sea_storm",
-              "weight": 14
-            }
-          ],
-          "severityWeights": {
             "light": 40,
             "moderate": 35,
-            "heavy": 20,
-            "severe": 5
-          }
-        },
-        "drift": {
-          "temperature": 2,
-          "precipitation": 2,
-          "skies": 1,
-          "wind": 1,
-          "directionChangePct": 48,
-          "timeofdaySegments": {
-            "earlypredawn": {
-              "temperatureSwingPct": -80,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -6,
-              "directionChangePct": 18
-            },
-            "latepredawn": {
-              "temperatureSwingPct": -55,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -3,
-              "directionChangePct": 20
-            },
-            "earlymorning": {
-              "temperatureSwingPct": -15,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 0,
-              "directionChangePct": 22
-            },
-            "latemorning": {
-              "temperatureSwingPct": 18,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 4,
-              "directionChangePct": 26
-            },
-            "earlyafternoon": {
-              "temperatureSwingPct": 58,
-              "temperatureDelta": 1,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 12,
-              "directionChangePct": 32
-            },
-            "lateafternoon": {
-              "temperatureSwingPct": 42,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 10,
-              "directionChangePct": 30
-            },
-            "earlyevening": {
-              "temperatureSwingPct": 0,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 2,
-              "directionChangePct": 24
-            },
-            "lateevening": {
-              "temperatureSwingPct": -25,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -4,
-              "directionChangePct": 20
-            }
-          }
-        },
-        "climateControl": {
-          "diurnal": {
-            "lowTimeHHMM": "0630",
-            "highTimeHHMM": "1430",
-            "riseCurve": 1.6,
-            "fallCurve": 1.2
-          },
-          "governor": {
-            "temperatureMaxDeltaF": 3,
-            "rainMaxStep": 1,
-            "skyMaxStep": 1,
-            "windMaxStep": 1,
-            "currentStrengthMaxDeltaPct": 10,
-            "currentTemperatureMaxDeltaF": 2,
-            "currentDirectionMaxStep": 1,
-            "interpolateWindStrength": true,
-            "interpolateCurrentStrength": true,
-            "interpolateCurrentTemperature": true
-          },
-          "activation": {
-            "skyLeadMinutes": {
-              "min": 60,
-              "max": 120
-            },
-            "precipitationDurationMinutes": {
-              "min": 75,
-              "max": 225
-            },
-            "eventStartOffsetMinutes": {
-              "min": 10,
-              "max": 35
-            },
-            "eventTailBufferMinutes": {
-              "min": 10,
-              "max": 30
-            }
-          }
-        }
-      },
-      "highharvestide": {
-        "temperature": {
-          "avgF": 52,
-          "lowF": 42,
-          "highF": 62
-        },
-        "precipitation": {
-          "chancePct": 60,
-          "type": "rain",
-          "intensityWeights": {
-            "light": 45,
-            "moderate": 35,
-            "heavy": 20
-          }
-        },
-        "wind": {
-          "directionWeights": [
-            {
-              "value": "W",
-              "weight": 30
-            },
-            {
-              "value": "SW",
-              "weight": 25
-            },
-            {
-              "value": "WSW",
-              "weight": 20
-            },
-            {
-              "value": "NW",
-              "weight": 17
-            },
-            {
-              "value": "S",
-              "weight": 8
-            }
-          ],
-          "strengthWeights": [
-            {
-              "value": 0,
-              "weight": 12
-            },
-            {
-              "value": 25,
-              "weight": 23
-            },
-            {
-              "value": 50,
-              "weight": 35
-            },
-            {
-              "value": 75,
-              "weight": 22
-            },
-            {
-              "value": 100,
-              "weight": 8
-            }
-          ]
-        },
-        "critical": {
-          "chancePct": 14,
-          "eventWeights": [
-            {
-              "value": "sea_storm",
-              "weight": 14
-            }
-          ],
-          "severityWeights": {
-            "light": 40,
-            "moderate": 35,
-            "heavy": 20,
-            "severe": 5
-          }
-        },
-        "drift": {
-          "temperature": 2,
-          "precipitation": 2,
-          "skies": 1,
-          "wind": 1,
-          "directionChangePct": 48,
-          "timeofdaySegments": {
-            "earlypredawn": {
-              "temperatureSwingPct": -80,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -6,
-              "directionChangePct": 18
-            },
-            "latepredawn": {
-              "temperatureSwingPct": -55,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -3,
-              "directionChangePct": 20
-            },
-            "earlymorning": {
-              "temperatureSwingPct": -15,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 0,
-              "directionChangePct": 22
-            },
-            "latemorning": {
-              "temperatureSwingPct": 18,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 4,
-              "directionChangePct": 26
-            },
-            "earlyafternoon": {
-              "temperatureSwingPct": 58,
-              "temperatureDelta": 1,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 12,
-              "directionChangePct": 32
-            },
-            "lateafternoon": {
-              "temperatureSwingPct": 42,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 10,
-              "directionChangePct": 30
-            },
-            "earlyevening": {
-              "temperatureSwingPct": 0,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 2,
-              "directionChangePct": 24
-            },
-            "lateevening": {
-              "temperatureSwingPct": -25,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -4,
-              "directionChangePct": 20
-            }
-          }
-        },
-        "climateControl": {
-          "diurnal": {
-            "lowTimeHHMM": "0630",
-            "highTimeHHMM": "1430",
-            "riseCurve": 1.6,
-            "fallCurve": 1.2
-          },
-          "governor": {
-            "temperatureMaxDeltaF": 3,
-            "rainMaxStep": 1,
-            "skyMaxStep": 1,
-            "windMaxStep": 1,
-            "currentStrengthMaxDeltaPct": 10,
-            "currentTemperatureMaxDeltaF": 2,
-            "currentDirectionMaxStep": 1,
-            "interpolateWindStrength": true,
-            "interpolateCurrentStrength": true,
-            "interpolateCurrentTemperature": true
-          },
-          "activation": {
-            "skyLeadMinutes": {
-              "min": 60,
-              "max": 120
-            },
-            "precipitationDurationMinutes": {
-              "min": 75,
-              "max": 225
-            },
-            "eventStartOffsetMinutes": {
-              "min": 10,
-              "max": 35
-            },
-            "eventTailBufferMinutes": {
-              "min": 10,
-              "max": 30
-            }
-          }
-        }
-      },
-      "marpenoth": {
-        "temperature": {
-          "avgF": 52,
-          "lowF": 42,
-          "highF": 62
-        },
-        "precipitation": {
-          "chancePct": 60,
-          "type": "rain",
-          "intensityWeights": {
-            "light": 45,
-            "moderate": 35,
-            "heavy": 20
-          }
-        },
-        "wind": {
-          "directionWeights": [
-            {
-              "value": "W",
-              "weight": 30
-            },
-            {
-              "value": "SW",
-              "weight": 25
-            },
-            {
-              "value": "WSW",
-              "weight": 20
-            },
-            {
-              "value": "NW",
-              "weight": 17
-            },
-            {
-              "value": "S",
-              "weight": 8
-            }
-          ],
-          "strengthWeights": [
-            {
-              "value": 0,
-              "weight": 12
-            },
-            {
-              "value": 25,
-              "weight": 23
-            },
-            {
-              "value": 50,
-              "weight": 35
-            },
-            {
-              "value": 75,
-              "weight": 22
-            },
-            {
-              "value": 100,
-              "weight": 8
-            }
-          ]
-        },
-        "critical": {
-          "chancePct": 14,
-          "eventWeights": [
-            {
-              "value": "sea_storm",
-              "weight": 14
-            }
-          ],
-          "severityWeights": {
-            "light": 40,
-            "moderate": 35,
-            "heavy": 20,
-            "severe": 5
-          }
-        },
-        "drift": {
-          "temperature": 2,
-          "precipitation": 2,
-          "skies": 1,
-          "wind": 1,
-          "directionChangePct": 48,
-          "timeofdaySegments": {
-            "earlypredawn": {
-              "temperatureSwingPct": -80,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -6,
-              "directionChangePct": 18
-            },
-            "latepredawn": {
-              "temperatureSwingPct": -55,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -3,
-              "directionChangePct": 20
-            },
-            "earlymorning": {
-              "temperatureSwingPct": -15,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 0,
-              "directionChangePct": 22
-            },
-            "latemorning": {
-              "temperatureSwingPct": 18,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 4,
-              "directionChangePct": 26
-            },
-            "earlyafternoon": {
-              "temperatureSwingPct": 58,
-              "temperatureDelta": 1,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 12,
-              "directionChangePct": 32
-            },
-            "lateafternoon": {
-              "temperatureSwingPct": 42,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 10,
-              "directionChangePct": 30
-            },
-            "earlyevening": {
-              "temperatureSwingPct": 0,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 2,
-              "directionChangePct": 24
-            },
-            "lateevening": {
-              "temperatureSwingPct": -25,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -4,
-              "directionChangePct": 20
-            }
-          }
-        },
-        "climateControl": {
-          "diurnal": {
-            "lowTimeHHMM": "0630",
-            "highTimeHHMM": "1430",
-            "riseCurve": 1.6,
-            "fallCurve": 1.2
-          },
-          "governor": {
-            "temperatureMaxDeltaF": 3,
-            "rainMaxStep": 1,
-            "skyMaxStep": 1,
-            "windMaxStep": 1,
-            "currentStrengthMaxDeltaPct": 10,
-            "currentTemperatureMaxDeltaF": 2,
-            "currentDirectionMaxStep": 1,
-            "interpolateWindStrength": true,
-            "interpolateCurrentStrength": true,
-            "interpolateCurrentTemperature": true
-          },
-          "activation": {
-            "skyLeadMinutes": {
-              "min": 60,
-              "max": 120
-            },
-            "precipitationDurationMinutes": {
-              "min": 75,
-              "max": 225
-            },
-            "eventStartOffsetMinutes": {
-              "min": 10,
-              "max": 35
-            },
-            "eventTailBufferMinutes": {
-              "min": 10,
-              "max": 30
-            }
-          }
-        }
-      },
-      "uktar": {
-        "temperature": {
-          "avgF": 52,
-          "lowF": 42,
-          "highF": 62
-        },
-        "precipitation": {
-          "chancePct": 60,
-          "type": "rain",
-          "intensityWeights": {
-            "light": 45,
-            "moderate": 35,
-            "heavy": 20
-          }
-        },
-        "wind": {
-          "directionWeights": [
-            {
-              "value": "W",
-              "weight": 30
-            },
-            {
-              "value": "SW",
-              "weight": 25
-            },
-            {
-              "value": "WSW",
-              "weight": 20
-            },
-            {
-              "value": "NW",
-              "weight": 17
-            },
-            {
-              "value": "S",
-              "weight": 8
-            }
-          ],
-          "strengthWeights": [
-            {
-              "value": 0,
-              "weight": 12
-            },
-            {
-              "value": 25,
-              "weight": 23
-            },
-            {
-              "value": 50,
-              "weight": 35
-            },
-            {
-              "value": 75,
-              "weight": 22
-            },
-            {
-              "value": 100,
-              "weight": 8
-            }
-          ]
-        },
-        "critical": {
-          "chancePct": 14,
-          "eventWeights": [
-            {
-              "value": "sea_storm",
-              "weight": 14
-            }
-          ],
-          "severityWeights": {
-            "light": 40,
-            "moderate": 35,
-            "heavy": 20,
-            "severe": 5
-          }
-        },
-        "drift": {
-          "temperature": 2,
-          "precipitation": 2,
-          "skies": 1,
-          "wind": 1,
-          "directionChangePct": 48,
-          "timeofdaySegments": {
-            "earlypredawn": {
-              "temperatureSwingPct": -80,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -6,
-              "directionChangePct": 18
-            },
-            "latepredawn": {
-              "temperatureSwingPct": -55,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -3,
-              "directionChangePct": 20
-            },
-            "earlymorning": {
-              "temperatureSwingPct": -15,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 0,
-              "directionChangePct": 22
-            },
-            "latemorning": {
-              "temperatureSwingPct": 18,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 4,
-              "directionChangePct": 26
-            },
-            "earlyafternoon": {
-              "temperatureSwingPct": 58,
-              "temperatureDelta": 1,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 12,
-              "directionChangePct": 32
-            },
-            "lateafternoon": {
-              "temperatureSwingPct": 42,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 10,
-              "directionChangePct": 30
-            },
-            "earlyevening": {
-              "temperatureSwingPct": 0,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 2,
-              "directionChangePct": 24
-            },
-            "lateevening": {
-              "temperatureSwingPct": -25,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -4,
-              "directionChangePct": 20
-            }
-          }
-        },
-        "climateControl": {
-          "diurnal": {
-            "lowTimeHHMM": "0630",
-            "highTimeHHMM": "1430",
-            "riseCurve": 1.6,
-            "fallCurve": 1.2
-          },
-          "governor": {
-            "temperatureMaxDeltaF": 3,
-            "rainMaxStep": 1,
-            "skyMaxStep": 1,
-            "windMaxStep": 1,
-            "currentStrengthMaxDeltaPct": 10,
-            "currentTemperatureMaxDeltaF": 2,
-            "currentDirectionMaxStep": 1,
-            "interpolateWindStrength": true,
-            "interpolateCurrentStrength": true,
-            "interpolateCurrentTemperature": true
-          },
-          "activation": {
-            "skyLeadMinutes": {
-              "min": 60,
-              "max": 120
-            },
-            "precipitationDurationMinutes": {
-              "min": 75,
-              "max": 225
-            },
-            "eventStartOffsetMinutes": {
-              "min": 10,
-              "max": 35
-            },
-            "eventTailBufferMinutes": {
-              "min": 10,
-              "max": 30
-            }
-          }
-        }
-      },
-      "feastofthemoon": {
-        "temperature": {
-          "avgF": 52,
-          "lowF": 42,
-          "highF": 62
-        },
-        "precipitation": {
-          "chancePct": 60,
-          "type": "rain",
-          "intensityWeights": {
-            "light": 45,
-            "moderate": 35,
-            "heavy": 20
-          }
-        },
-        "wind": {
-          "directionWeights": [
-            {
-              "value": "W",
-              "weight": 30
-            },
-            {
-              "value": "SW",
-              "weight": 25
-            },
-            {
-              "value": "WSW",
-              "weight": 20
-            },
-            {
-              "value": "NW",
-              "weight": 17
-            },
-            {
-              "value": "S",
-              "weight": 8
-            }
-          ],
-          "strengthWeights": [
-            {
-              "value": 0,
-              "weight": 12
-            },
-            {
-              "value": 25,
-              "weight": 23
-            },
-            {
-              "value": 50,
-              "weight": 35
-            },
-            {
-              "value": 75,
-              "weight": 22
-            },
-            {
-              "value": 100,
-              "weight": 8
-            }
-          ]
-        },
-        "critical": {
-          "chancePct": 14,
-          "eventWeights": [
-            {
-              "value": "sea_storm",
-              "weight": 14
-            }
-          ],
-          "severityWeights": {
-            "light": 40,
-            "moderate": 35,
-            "heavy": 20,
-            "severe": 5
-          }
-        },
-        "drift": {
-          "temperature": 2,
-          "precipitation": 2,
-          "skies": 1,
-          "wind": 1,
-          "directionChangePct": 48,
-          "timeofdaySegments": {
-            "earlypredawn": {
-              "temperatureSwingPct": -80,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -6,
-              "directionChangePct": 18
-            },
-            "latepredawn": {
-              "temperatureSwingPct": -55,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -3,
-              "directionChangePct": 20
-            },
-            "earlymorning": {
-              "temperatureSwingPct": -15,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 0,
-              "directionChangePct": 22
-            },
-            "latemorning": {
-              "temperatureSwingPct": 18,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 4,
-              "directionChangePct": 26
-            },
-            "earlyafternoon": {
-              "temperatureSwingPct": 58,
-              "temperatureDelta": 1,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 12,
-              "directionChangePct": 32
-            },
-            "lateafternoon": {
-              "temperatureSwingPct": 42,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 1,
-              "windStrengthDeltaPct": 10,
-              "directionChangePct": 30
-            },
-            "earlyevening": {
-              "temperatureSwingPct": 0,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": 0,
-              "windStrengthDeltaPct": 2,
-              "directionChangePct": 24
-            },
-            "lateevening": {
-              "temperatureSwingPct": -25,
-              "temperatureDelta": 0,
-              "precipitationDelta": 0,
-              "skiesDelta": 0,
-              "windDelta": -1,
-              "windStrengthDeltaPct": -4,
-              "directionChangePct": 20
-            }
-          }
-        },
-        "climateControl": {
-          "diurnal": {
-            "lowTimeHHMM": "0630",
-            "highTimeHHMM": "1430",
-            "riseCurve": 1.6,
-            "fallCurve": 1.2
-          },
-          "governor": {
-            "temperatureMaxDeltaF": 3,
-            "rainMaxStep": 1,
-            "skyMaxStep": 1,
-            "windMaxStep": 1,
-            "currentStrengthMaxDeltaPct": 10,
-            "currentTemperatureMaxDeltaF": 2,
-            "currentDirectionMaxStep": 1,
-            "interpolateWindStrength": true,
-            "interpolateCurrentStrength": true,
-            "interpolateCurrentTemperature": true
-          },
-          "activation": {
-            "skyLeadMinutes": {
-              "min": 60,
-              "max": 120
-            },
-            "precipitationDurationMinutes": {
-              "min": 75,
-              "max": 225
-            },
-            "eventStartOffsetMinutes": {
-              "min": 10,
-              "max": 35
-            },
-            "eventTailBufferMinutes": {
-              "min": 10,
-              "max": 30
-            }
-          }
-        }
-      },
-      "nightal": {
-        "temperature": {
-          "avgF": 44,
-          "lowF": 34,
-          "highF": 54
-        },
-        "precipitation": {
-          "chancePct": 70,
-          "type": "rain",
-          "intensityWeights": {
-            "light": 35,
-            "moderate": 40,
             "heavy": 25
           }
         },
         "wind": {
           "directionWeights": [
             {
-              "value": "W",
-              "weight": 30
-            },
-            {
-              "value": "WSW",
-              "weight": 25
-            },
-            {
-              "value": "SW",
-              "weight": 20
-            },
-            {
-              "value": "WNW",
-              "weight": 15
+              "value": "NNW",
+              "weight": 40
             },
             {
               "value": "NW",
+              "weight": 30
+            },
+            {
+              "value": "W",
+              "weight": 20
+            },
+            {
+              "value": "N",
               "weight": 10
             }
           ],
           "strengthWeights": [
             {
-              "value": 0,
-              "weight": 10
-            },
-            {
               "value": 25,
-              "weight": 20
+              "weight": 15
             },
             {
               "value": 50,
@@ -15430,7 +12284,7 @@
             },
             {
               "value": 75,
-              "weight": 25
+              "weight": 40
             },
             {
               "value": 100,
@@ -15439,11 +12293,11 @@
           ]
         },
         "critical": {
-          "chancePct": 18,
+          "chancePct": 20,
           "eventWeights": [
             {
               "value": "sea_storm",
-              "weight": 10
+              "weight": 12
             },
             {
               "value": "toxic_fog",
@@ -15461,8 +12315,8 @@
           "temperature": 2,
           "precipitation": 2,
           "skies": 1,
-          "wind": 1,
-          "directionChangePct": 56,
+          "wind": 2,
+          "directionChangePct": 60,
           "timeofdaySegments": {
             "earlypredawn": {
               "temperatureSwingPct": -80,
@@ -15540,9 +12394,9 @@
         },
         "climateControl": {
           "diurnal": {
-            "lowTimeHHMM": "0715",
+            "lowTimeHHMM": "0700",
             "highTimeHHMM": "1430",
-            "riseCurve": 1.5,
+            "riseCurve": 1.6,
             "fallCurve": 1.1
           },
           "governor": {
@@ -15551,8 +12405,1716 @@
             "skyMaxStep": 1,
             "windMaxStep": 1,
             "currentStrengthMaxDeltaPct": 10,
+            "currentTemperatureMaxDeltaF": 3,
+            "currentDirectionMaxStep": 2,
+            "interpolateWindStrength": true,
+            "interpolateCurrentStrength": true,
+            "interpolateCurrentTemperature": true
+          },
+          "activation": {
+            "skyLeadMinutes": {
+              "min": 60,
+              "max": 120
+            },
+            "precipitationDurationMinutes": {
+              "min": 60,
+              "max": 210
+            },
+            "eventStartOffsetMinutes": {
+              "min": 15,
+              "max": 45
+            },
+            "eventTailBufferMinutes": {
+              "min": 15,
+              "max": 35
+            }
+          }
+        }
+      },
+      "tarsakh": {
+        "temperature": {
+          "avgF": 28,
+          "lowF": 5,
+          "highF": 42
+        },
+        "precipitation": {
+          "chancePct": 50,
+          "type": "sleet",
+          "intensityWeights": {
+            "light": 40,
+            "moderate": 35,
+            "heavy": 25
+          }
+        },
+        "wind": {
+          "directionWeights": [
+            {
+              "value": "NNW",
+              "weight": 40
+            },
+            {
+              "value": "NW",
+              "weight": 30
+            },
+            {
+              "value": "W",
+              "weight": 20
+            },
+            {
+              "value": "N",
+              "weight": 10
+            }
+          ],
+          "strengthWeights": [
+            {
+              "value": 25,
+              "weight": 15
+            },
+            {
+              "value": 50,
+              "weight": 35
+            },
+            {
+              "value": 75,
+              "weight": 40
+            },
+            {
+              "value": 100,
+              "weight": 10
+            }
+          ]
+        },
+        "critical": {
+          "chancePct": 20,
+          "eventWeights": [
+            {
+              "value": "sea_storm",
+              "weight": 12
+            },
+            {
+              "value": "toxic_fog",
+              "weight": 8
+            }
+          ],
+          "severityWeights": {
+            "light": 30,
+            "moderate": 35,
+            "heavy": 25,
+            "severe": 10
+          }
+        },
+        "drift": {
+          "temperature": 2,
+          "precipitation": 2,
+          "skies": 1,
+          "wind": 2,
+          "directionChangePct": 60,
+          "timeofdaySegments": {
+            "earlypredawn": {
+              "temperatureSwingPct": -80,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -6,
+              "directionChangePct": 18
+            },
+            "latepredawn": {
+              "temperatureSwingPct": -55,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -3,
+              "directionChangePct": 20
+            },
+            "earlymorning": {
+              "temperatureSwingPct": -15,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 0,
+              "directionChangePct": 22
+            },
+            "latemorning": {
+              "temperatureSwingPct": 18,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 4,
+              "directionChangePct": 26
+            },
+            "earlyafternoon": {
+              "temperatureSwingPct": 58,
+              "temperatureDelta": 1,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 12,
+              "directionChangePct": 32
+            },
+            "lateafternoon": {
+              "temperatureSwingPct": 42,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 10,
+              "directionChangePct": 30
+            },
+            "earlyevening": {
+              "temperatureSwingPct": 0,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 2,
+              "directionChangePct": 24
+            },
+            "lateevening": {
+              "temperatureSwingPct": -25,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -4,
+              "directionChangePct": 20
+            }
+          }
+        },
+        "climateControl": {
+          "diurnal": {
+            "lowTimeHHMM": "0700",
+            "highTimeHHMM": "1430",
+            "riseCurve": 1.6,
+            "fallCurve": 1.1
+          },
+          "governor": {
+            "temperatureMaxDeltaF": 3,
+            "rainMaxStep": 1,
+            "skyMaxStep": 1,
+            "windMaxStep": 1,
+            "currentStrengthMaxDeltaPct": 10,
+            "currentTemperatureMaxDeltaF": 3,
+            "currentDirectionMaxStep": 2,
+            "interpolateWindStrength": true,
+            "interpolateCurrentStrength": true,
+            "interpolateCurrentTemperature": true
+          },
+          "activation": {
+            "skyLeadMinutes": {
+              "min": 60,
+              "max": 120
+            },
+            "precipitationDurationMinutes": {
+              "min": 60,
+              "max": 210
+            },
+            "eventStartOffsetMinutes": {
+              "min": 15,
+              "max": 45
+            },
+            "eventTailBufferMinutes": {
+              "min": 15,
+              "max": 35
+            }
+          }
+        }
+      },
+      "greengrass": {
+        "temperature": {
+          "avgF": 28,
+          "lowF": 5,
+          "highF": 42
+        },
+        "precipitation": {
+          "chancePct": 50,
+          "type": "sleet",
+          "intensityWeights": {
+            "light": 40,
+            "moderate": 35,
+            "heavy": 25
+          }
+        },
+        "wind": {
+          "directionWeights": [
+            {
+              "value": "NNW",
+              "weight": 40
+            },
+            {
+              "value": "NW",
+              "weight": 30
+            },
+            {
+              "value": "W",
+              "weight": 20
+            },
+            {
+              "value": "N",
+              "weight": 10
+            }
+          ],
+          "strengthWeights": [
+            {
+              "value": 25,
+              "weight": 15
+            },
+            {
+              "value": 50,
+              "weight": 35
+            },
+            {
+              "value": 75,
+              "weight": 40
+            },
+            {
+              "value": 100,
+              "weight": 10
+            }
+          ]
+        },
+        "critical": {
+          "chancePct": 20,
+          "eventWeights": [
+            {
+              "value": "sea_storm",
+              "weight": 12
+            },
+            {
+              "value": "toxic_fog",
+              "weight": 8
+            }
+          ],
+          "severityWeights": {
+            "light": 30,
+            "moderate": 35,
+            "heavy": 25,
+            "severe": 10
+          }
+        },
+        "drift": {
+          "temperature": 2,
+          "precipitation": 2,
+          "skies": 1,
+          "wind": 2,
+          "directionChangePct": 60,
+          "timeofdaySegments": {
+            "earlypredawn": {
+              "temperatureSwingPct": -80,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -6,
+              "directionChangePct": 18
+            },
+            "latepredawn": {
+              "temperatureSwingPct": -55,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -3,
+              "directionChangePct": 20
+            },
+            "earlymorning": {
+              "temperatureSwingPct": -15,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 0,
+              "directionChangePct": 22
+            },
+            "latemorning": {
+              "temperatureSwingPct": 18,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 4,
+              "directionChangePct": 26
+            },
+            "earlyafternoon": {
+              "temperatureSwingPct": 58,
+              "temperatureDelta": 1,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 12,
+              "directionChangePct": 32
+            },
+            "lateafternoon": {
+              "temperatureSwingPct": 42,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 10,
+              "directionChangePct": 30
+            },
+            "earlyevening": {
+              "temperatureSwingPct": 0,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 2,
+              "directionChangePct": 24
+            },
+            "lateevening": {
+              "temperatureSwingPct": -25,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -4,
+              "directionChangePct": 20
+            }
+          }
+        },
+        "climateControl": {
+          "diurnal": {
+            "lowTimeHHMM": "0700",
+            "highTimeHHMM": "1430",
+            "riseCurve": 1.6,
+            "fallCurve": 1.1
+          },
+          "governor": {
+            "temperatureMaxDeltaF": 3,
+            "rainMaxStep": 1,
+            "skyMaxStep": 1,
+            "windMaxStep": 1,
+            "currentStrengthMaxDeltaPct": 10,
+            "currentTemperatureMaxDeltaF": 3,
+            "currentDirectionMaxStep": 2,
+            "interpolateWindStrength": true,
+            "interpolateCurrentStrength": true,
+            "interpolateCurrentTemperature": true
+          },
+          "activation": {
+            "skyLeadMinutes": {
+              "min": 60,
+              "max": 120
+            },
+            "precipitationDurationMinutes": {
+              "min": 60,
+              "max": 210
+            },
+            "eventStartOffsetMinutes": {
+              "min": 15,
+              "max": 45
+            },
+            "eventTailBufferMinutes": {
+              "min": 15,
+              "max": 35
+            }
+          }
+        }
+      },
+      "mirtul": {
+        "temperature": {
+          "avgF": 28,
+          "lowF": 5,
+          "highF": 42
+        },
+        "precipitation": {
+          "chancePct": 50,
+          "type": "sleet",
+          "intensityWeights": {
+            "light": 40,
+            "moderate": 35,
+            "heavy": 25
+          }
+        },
+        "wind": {
+          "directionWeights": [
+            {
+              "value": "NNW",
+              "weight": 40
+            },
+            {
+              "value": "NW",
+              "weight": 30
+            },
+            {
+              "value": "W",
+              "weight": 20
+            },
+            {
+              "value": "N",
+              "weight": 10
+            }
+          ],
+          "strengthWeights": [
+            {
+              "value": 25,
+              "weight": 15
+            },
+            {
+              "value": 50,
+              "weight": 35
+            },
+            {
+              "value": 75,
+              "weight": 40
+            },
+            {
+              "value": 100,
+              "weight": 10
+            }
+          ]
+        },
+        "critical": {
+          "chancePct": 20,
+          "eventWeights": [
+            {
+              "value": "sea_storm",
+              "weight": 12
+            },
+            {
+              "value": "toxic_fog",
+              "weight": 8
+            }
+          ],
+          "severityWeights": {
+            "light": 30,
+            "moderate": 35,
+            "heavy": 25,
+            "severe": 10
+          }
+        },
+        "drift": {
+          "temperature": 2,
+          "precipitation": 2,
+          "skies": 1,
+          "wind": 2,
+          "directionChangePct": 60,
+          "timeofdaySegments": {
+            "earlypredawn": {
+              "temperatureSwingPct": -80,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -6,
+              "directionChangePct": 18
+            },
+            "latepredawn": {
+              "temperatureSwingPct": -55,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -3,
+              "directionChangePct": 20
+            },
+            "earlymorning": {
+              "temperatureSwingPct": -15,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 0,
+              "directionChangePct": 22
+            },
+            "latemorning": {
+              "temperatureSwingPct": 18,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 4,
+              "directionChangePct": 26
+            },
+            "earlyafternoon": {
+              "temperatureSwingPct": 58,
+              "temperatureDelta": 1,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 12,
+              "directionChangePct": 32
+            },
+            "lateafternoon": {
+              "temperatureSwingPct": 42,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 10,
+              "directionChangePct": 30
+            },
+            "earlyevening": {
+              "temperatureSwingPct": 0,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 2,
+              "directionChangePct": 24
+            },
+            "lateevening": {
+              "temperatureSwingPct": -25,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -4,
+              "directionChangePct": 20
+            }
+          }
+        },
+        "climateControl": {
+          "diurnal": {
+            "lowTimeHHMM": "0700",
+            "highTimeHHMM": "1430",
+            "riseCurve": 1.6,
+            "fallCurve": 1.1
+          },
+          "governor": {
+            "temperatureMaxDeltaF": 3,
+            "rainMaxStep": 1,
+            "skyMaxStep": 1,
+            "windMaxStep": 1,
+            "currentStrengthMaxDeltaPct": 10,
+            "currentTemperatureMaxDeltaF": 3,
+            "currentDirectionMaxStep": 2,
+            "interpolateWindStrength": true,
+            "interpolateCurrentStrength": true,
+            "interpolateCurrentTemperature": true
+          },
+          "activation": {
+            "skyLeadMinutes": {
+              "min": 60,
+              "max": 120
+            },
+            "precipitationDurationMinutes": {
+              "min": 60,
+              "max": 210
+            },
+            "eventStartOffsetMinutes": {
+              "min": 15,
+              "max": 45
+            },
+            "eventTailBufferMinutes": {
+              "min": 15,
+              "max": 35
+            }
+          }
+        }
+      },
+      "kythorn": {
+        "temperature": {
+          "avgF": 42,
+          "lowF": 28,
+          "highF": 58
+        },
+        "precipitation": {
+          "chancePct": 35,
+          "type": "rain",
+          "intensityWeights": {
+            "light": 60,
+            "moderate": 30,
+            "heavy": 10
+          }
+        },
+        "wind": {
+          "directionWeights": [
+            {
+              "value": "W",
+              "weight": 35
+            },
+            {
+              "value": "WNW",
+              "weight": 30
+            },
+            {
+              "value": "NW",
+              "weight": 25
+            },
+            {
+              "value": "SW",
+              "weight": 10
+            }
+          ],
+          "strengthWeights": [
+            {
+              "value": 25,
+              "weight": 30
+            },
+            {
+              "value": 50,
+              "weight": 50
+            },
+            {
+              "value": 75,
+              "weight": 18
+            },
+            {
+              "value": 100,
+              "weight": 2
+            }
+          ]
+        },
+        "critical": {
+          "chancePct": 8,
+          "eventWeights": [
+            {
+              "value": "sea_storm",
+              "weight": 8
+            }
+          ],
+          "severityWeights": {
+            "light": 55,
+            "moderate": 30,
+            "heavy": 12,
+            "severe": 3
+          }
+        },
+        "drift": {
+          "temperature": 2,
+          "precipitation": 1,
+          "skies": 1,
+          "wind": 1,
+          "directionChangePct": 36,
+          "timeofdaySegments": {
+            "earlypredawn": {
+              "temperatureSwingPct": -80,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -6,
+              "directionChangePct": 18
+            },
+            "latepredawn": {
+              "temperatureSwingPct": -55,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -3,
+              "directionChangePct": 20
+            },
+            "earlymorning": {
+              "temperatureSwingPct": -15,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 0,
+              "directionChangePct": 22
+            },
+            "latemorning": {
+              "temperatureSwingPct": 18,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 4,
+              "directionChangePct": 26
+            },
+            "earlyafternoon": {
+              "temperatureSwingPct": 58,
+              "temperatureDelta": 1,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 12,
+              "directionChangePct": 32
+            },
+            "lateafternoon": {
+              "temperatureSwingPct": 42,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 10,
+              "directionChangePct": 30
+            },
+            "earlyevening": {
+              "temperatureSwingPct": 0,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 2,
+              "directionChangePct": 24
+            },
+            "lateevening": {
+              "temperatureSwingPct": -25,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -4,
+              "directionChangePct": 20
+            }
+          }
+        },
+        "climateControl": {
+          "diurnal": {
+            "lowTimeHHMM": "0700",
+            "highTimeHHMM": "1430",
+            "riseCurve": 1.6,
+            "fallCurve": 1.1
+          },
+          "governor": {
+            "temperatureMaxDeltaF": 3,
+            "rainMaxStep": 1,
+            "skyMaxStep": 1,
+            "windMaxStep": 1,
+            "currentStrengthMaxDeltaPct": 10,
+            "currentTemperatureMaxDeltaF": 3,
+            "currentDirectionMaxStep": 2,
+            "interpolateWindStrength": true,
+            "interpolateCurrentStrength": true,
+            "interpolateCurrentTemperature": true
+          },
+          "activation": {
+            "skyLeadMinutes": {
+              "min": 60,
+              "max": 120
+            },
+            "precipitationDurationMinutes": {
+              "min": 60,
+              "max": 210
+            },
+            "eventStartOffsetMinutes": {
+              "min": 15,
+              "max": 45
+            },
+            "eventTailBufferMinutes": {
+              "min": 15,
+              "max": 35
+            }
+          }
+        }
+      },
+      "flamerule": {
+        "temperature": {
+          "avgF": 42,
+          "lowF": 28,
+          "highF": 58
+        },
+        "precipitation": {
+          "chancePct": 35,
+          "type": "rain",
+          "intensityWeights": {
+            "light": 60,
+            "moderate": 30,
+            "heavy": 10
+          }
+        },
+        "wind": {
+          "directionWeights": [
+            {
+              "value": "W",
+              "weight": 35
+            },
+            {
+              "value": "WNW",
+              "weight": 30
+            },
+            {
+              "value": "NW",
+              "weight": 25
+            },
+            {
+              "value": "SW",
+              "weight": 10
+            }
+          ],
+          "strengthWeights": [
+            {
+              "value": 25,
+              "weight": 30
+            },
+            {
+              "value": 50,
+              "weight": 50
+            },
+            {
+              "value": 75,
+              "weight": 18
+            },
+            {
+              "value": 100,
+              "weight": 2
+            }
+          ]
+        },
+        "critical": {
+          "chancePct": 8,
+          "eventWeights": [
+            {
+              "value": "sea_storm",
+              "weight": 8
+            }
+          ],
+          "severityWeights": {
+            "light": 55,
+            "moderate": 30,
+            "heavy": 12,
+            "severe": 3
+          }
+        },
+        "drift": {
+          "temperature": 2,
+          "precipitation": 1,
+          "skies": 1,
+          "wind": 1,
+          "directionChangePct": 36,
+          "timeofdaySegments": {
+            "earlypredawn": {
+              "temperatureSwingPct": -80,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -6,
+              "directionChangePct": 18
+            },
+            "latepredawn": {
+              "temperatureSwingPct": -55,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -3,
+              "directionChangePct": 20
+            },
+            "earlymorning": {
+              "temperatureSwingPct": -15,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 0,
+              "directionChangePct": 22
+            },
+            "latemorning": {
+              "temperatureSwingPct": 18,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 4,
+              "directionChangePct": 26
+            },
+            "earlyafternoon": {
+              "temperatureSwingPct": 58,
+              "temperatureDelta": 1,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 12,
+              "directionChangePct": 32
+            },
+            "lateafternoon": {
+              "temperatureSwingPct": 42,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 10,
+              "directionChangePct": 30
+            },
+            "earlyevening": {
+              "temperatureSwingPct": 0,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 2,
+              "directionChangePct": 24
+            },
+            "lateevening": {
+              "temperatureSwingPct": -25,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -4,
+              "directionChangePct": 20
+            }
+          }
+        },
+        "climateControl": {
+          "diurnal": {
+            "lowTimeHHMM": "0300",
+            "highTimeHHMM": "1630",
+            "riseCurve": 2.2,
+            "fallCurve": 1.4
+          },
+          "governor": {
+            "temperatureMaxDeltaF": 2,
+            "rainMaxStep": 1,
+            "skyMaxStep": 1,
+            "windMaxStep": 1,
+            "currentStrengthMaxDeltaPct": 8,
             "currentTemperatureMaxDeltaF": 2,
             "currentDirectionMaxStep": 1,
+            "interpolateWindStrength": true,
+            "interpolateCurrentStrength": true,
+            "interpolateCurrentTemperature": true
+          },
+          "activation": {
+            "skyLeadMinutes": {
+              "min": 45,
+              "max": 90
+            },
+            "precipitationDurationMinutes": {
+              "min": 45,
+              "max": 150
+            },
+            "eventStartOffsetMinutes": {
+              "min": 10,
+              "max": 30
+            },
+            "eventTailBufferMinutes": {
+              "min": 10,
+              "max": 25
+            }
+          }
+        }
+      },
+      "midsummer": {
+        "temperature": {
+          "avgF": 42,
+          "lowF": 28,
+          "highF": 58
+        },
+        "precipitation": {
+          "chancePct": 35,
+          "type": "rain",
+          "intensityWeights": {
+            "light": 60,
+            "moderate": 30,
+            "heavy": 10
+          }
+        },
+        "wind": {
+          "directionWeights": [
+            {
+              "value": "W",
+              "weight": 35
+            },
+            {
+              "value": "WNW",
+              "weight": 30
+            },
+            {
+              "value": "NW",
+              "weight": 25
+            },
+            {
+              "value": "SW",
+              "weight": 10
+            }
+          ],
+          "strengthWeights": [
+            {
+              "value": 25,
+              "weight": 30
+            },
+            {
+              "value": 50,
+              "weight": 50
+            },
+            {
+              "value": 75,
+              "weight": 18
+            },
+            {
+              "value": 100,
+              "weight": 2
+            }
+          ]
+        },
+        "critical": {
+          "chancePct": 8,
+          "eventWeights": [
+            {
+              "value": "sea_storm",
+              "weight": 8
+            }
+          ],
+          "severityWeights": {
+            "light": 55,
+            "moderate": 30,
+            "heavy": 12,
+            "severe": 3
+          }
+        },
+        "drift": {
+          "temperature": 2,
+          "precipitation": 1,
+          "skies": 1,
+          "wind": 1,
+          "directionChangePct": 36,
+          "timeofdaySegments": {
+            "earlypredawn": {
+              "temperatureSwingPct": -80,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -6,
+              "directionChangePct": 18
+            },
+            "latepredawn": {
+              "temperatureSwingPct": -55,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -3,
+              "directionChangePct": 20
+            },
+            "earlymorning": {
+              "temperatureSwingPct": -15,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 0,
+              "directionChangePct": 22
+            },
+            "latemorning": {
+              "temperatureSwingPct": 18,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 4,
+              "directionChangePct": 26
+            },
+            "earlyafternoon": {
+              "temperatureSwingPct": 58,
+              "temperatureDelta": 1,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 12,
+              "directionChangePct": 32
+            },
+            "lateafternoon": {
+              "temperatureSwingPct": 42,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 10,
+              "directionChangePct": 30
+            },
+            "earlyevening": {
+              "temperatureSwingPct": 0,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 2,
+              "directionChangePct": 24
+            },
+            "lateevening": {
+              "temperatureSwingPct": -25,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -4,
+              "directionChangePct": 20
+            }
+          }
+        },
+        "climateControl": {
+          "diurnal": {
+            "lowTimeHHMM": "0300",
+            "highTimeHHMM": "1630",
+            "riseCurve": 2.2,
+            "fallCurve": 1.4
+          },
+          "governor": {
+            "temperatureMaxDeltaF": 2,
+            "rainMaxStep": 1,
+            "skyMaxStep": 1,
+            "windMaxStep": 1,
+            "currentStrengthMaxDeltaPct": 8,
+            "currentTemperatureMaxDeltaF": 2,
+            "currentDirectionMaxStep": 1,
+            "interpolateWindStrength": true,
+            "interpolateCurrentStrength": true,
+            "interpolateCurrentTemperature": true
+          },
+          "activation": {
+            "skyLeadMinutes": {
+              "min": 45,
+              "max": 90
+            },
+            "precipitationDurationMinutes": {
+              "min": 45,
+              "max": 150
+            },
+            "eventStartOffsetMinutes": {
+              "min": 10,
+              "max": 30
+            },
+            "eventTailBufferMinutes": {
+              "min": 10,
+              "max": 25
+            }
+          }
+        }
+      },
+      "shieldmeet": {
+        "temperature": {
+          "avgF": 42,
+          "lowF": 28,
+          "highF": 58
+        },
+        "precipitation": {
+          "chancePct": 35,
+          "type": "rain",
+          "intensityWeights": {
+            "light": 60,
+            "moderate": 30,
+            "heavy": 10
+          }
+        },
+        "wind": {
+          "directionWeights": [
+            {
+              "value": "W",
+              "weight": 35
+            },
+            {
+              "value": "WNW",
+              "weight": 30
+            },
+            {
+              "value": "NW",
+              "weight": 25
+            },
+            {
+              "value": "SW",
+              "weight": 10
+            }
+          ],
+          "strengthWeights": [
+            {
+              "value": 25,
+              "weight": 30
+            },
+            {
+              "value": 50,
+              "weight": 50
+            },
+            {
+              "value": 75,
+              "weight": 18
+            },
+            {
+              "value": 100,
+              "weight": 2
+            }
+          ]
+        },
+        "critical": {
+          "chancePct": 8,
+          "eventWeights": [
+            {
+              "value": "sea_storm",
+              "weight": 8
+            }
+          ],
+          "severityWeights": {
+            "light": 55,
+            "moderate": 30,
+            "heavy": 12,
+            "severe": 3
+          }
+        },
+        "drift": {
+          "temperature": 2,
+          "precipitation": 1,
+          "skies": 1,
+          "wind": 1,
+          "directionChangePct": 36,
+          "timeofdaySegments": {
+            "earlypredawn": {
+              "temperatureSwingPct": -80,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -6,
+              "directionChangePct": 18
+            },
+            "latepredawn": {
+              "temperatureSwingPct": -55,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -3,
+              "directionChangePct": 20
+            },
+            "earlymorning": {
+              "temperatureSwingPct": -15,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 0,
+              "directionChangePct": 22
+            },
+            "latemorning": {
+              "temperatureSwingPct": 18,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 4,
+              "directionChangePct": 26
+            },
+            "earlyafternoon": {
+              "temperatureSwingPct": 58,
+              "temperatureDelta": 1,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 12,
+              "directionChangePct": 32
+            },
+            "lateafternoon": {
+              "temperatureSwingPct": 42,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 10,
+              "directionChangePct": 30
+            },
+            "earlyevening": {
+              "temperatureSwingPct": 0,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 2,
+              "directionChangePct": 24
+            },
+            "lateevening": {
+              "temperatureSwingPct": -25,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -4,
+              "directionChangePct": 20
+            }
+          }
+        },
+        "climateControl": {
+          "diurnal": {
+            "lowTimeHHMM": "0300",
+            "highTimeHHMM": "1630",
+            "riseCurve": 2.2,
+            "fallCurve": 1.4
+          },
+          "governor": {
+            "temperatureMaxDeltaF": 2,
+            "rainMaxStep": 1,
+            "skyMaxStep": 1,
+            "windMaxStep": 1,
+            "currentStrengthMaxDeltaPct": 8,
+            "currentTemperatureMaxDeltaF": 2,
+            "currentDirectionMaxStep": 1,
+            "interpolateWindStrength": true,
+            "interpolateCurrentStrength": true,
+            "interpolateCurrentTemperature": true
+          },
+          "activation": {
+            "skyLeadMinutes": {
+              "min": 45,
+              "max": 90
+            },
+            "precipitationDurationMinutes": {
+              "min": 45,
+              "max": 150
+            },
+            "eventStartOffsetMinutes": {
+              "min": 10,
+              "max": 30
+            },
+            "eventTailBufferMinutes": {
+              "min": 10,
+              "max": 25
+            }
+          }
+        }
+      },
+      "eleasis": {
+        "temperature": {
+          "avgF": 42,
+          "lowF": 28,
+          "highF": 58
+        },
+        "precipitation": {
+          "chancePct": 35,
+          "type": "rain",
+          "intensityWeights": {
+            "light": 60,
+            "moderate": 30,
+            "heavy": 10
+          }
+        },
+        "wind": {
+          "directionWeights": [
+            {
+              "value": "W",
+              "weight": 35
+            },
+            {
+              "value": "WNW",
+              "weight": 30
+            },
+            {
+              "value": "NW",
+              "weight": 25
+            },
+            {
+              "value": "SW",
+              "weight": 10
+            }
+          ],
+          "strengthWeights": [
+            {
+              "value": 25,
+              "weight": 30
+            },
+            {
+              "value": 50,
+              "weight": 50
+            },
+            {
+              "value": 75,
+              "weight": 18
+            },
+            {
+              "value": 100,
+              "weight": 2
+            }
+          ]
+        },
+        "critical": {
+          "chancePct": 8,
+          "eventWeights": [
+            {
+              "value": "sea_storm",
+              "weight": 8
+            }
+          ],
+          "severityWeights": {
+            "light": 55,
+            "moderate": 30,
+            "heavy": 12,
+            "severe": 3
+          }
+        },
+        "drift": {
+          "temperature": 2,
+          "precipitation": 1,
+          "skies": 1,
+          "wind": 1,
+          "directionChangePct": 36,
+          "timeofdaySegments": {
+            "earlypredawn": {
+              "temperatureSwingPct": -80,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -6,
+              "directionChangePct": 18
+            },
+            "latepredawn": {
+              "temperatureSwingPct": -55,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -3,
+              "directionChangePct": 20
+            },
+            "earlymorning": {
+              "temperatureSwingPct": -15,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 0,
+              "directionChangePct": 22
+            },
+            "latemorning": {
+              "temperatureSwingPct": 18,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 4,
+              "directionChangePct": 26
+            },
+            "earlyafternoon": {
+              "temperatureSwingPct": 58,
+              "temperatureDelta": 1,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 12,
+              "directionChangePct": 32
+            },
+            "lateafternoon": {
+              "temperatureSwingPct": 42,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 10,
+              "directionChangePct": 30
+            },
+            "earlyevening": {
+              "temperatureSwingPct": 0,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 2,
+              "directionChangePct": 24
+            },
+            "lateevening": {
+              "temperatureSwingPct": -25,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -4,
+              "directionChangePct": 20
+            }
+          }
+        },
+        "climateControl": {
+          "diurnal": {
+            "lowTimeHHMM": "0300",
+            "highTimeHHMM": "1630",
+            "riseCurve": 2.2,
+            "fallCurve": 1.4
+          },
+          "governor": {
+            "temperatureMaxDeltaF": 2,
+            "rainMaxStep": 1,
+            "skyMaxStep": 1,
+            "windMaxStep": 1,
+            "currentStrengthMaxDeltaPct": 8,
+            "currentTemperatureMaxDeltaF": 2,
+            "currentDirectionMaxStep": 1,
+            "interpolateWindStrength": true,
+            "interpolateCurrentStrength": true,
+            "interpolateCurrentTemperature": true
+          },
+          "activation": {
+            "skyLeadMinutes": {
+              "min": 45,
+              "max": 90
+            },
+            "precipitationDurationMinutes": {
+              "min": 45,
+              "max": 150
+            },
+            "eventStartOffsetMinutes": {
+              "min": 10,
+              "max": 30
+            },
+            "eventTailBufferMinutes": {
+              "min": 10,
+              "max": 25
+            }
+          }
+        }
+      },
+      "eleint": {
+        "temperature": {
+          "avgF": 30,
+          "lowF": 5,
+          "highF": 45
+        },
+        "precipitation": {
+          "chancePct": 55,
+          "type": "snow",
+          "intensityWeights": {
+            "light": 40,
+            "moderate": 35,
+            "heavy": 25
+          }
+        },
+        "wind": {
+          "directionWeights": [
+            {
+              "value": "N",
+              "weight": 40
+            },
+            {
+              "value": "NE",
+              "weight": 30
+            },
+            {
+              "value": "E",
+              "weight": 20
+            },
+            {
+              "value": "NW",
+              "weight": 10
+            }
+          ],
+          "strengthWeights": [
+            {
+              "value": 25,
+              "weight": 15
+            },
+            {
+              "value": 50,
+              "weight": 30
+            },
+            {
+              "value": 75,
+              "weight": 40
+            },
+            {
+              "value": 100,
+              "weight": 15
+            }
+          ]
+        },
+        "critical": {
+          "chancePct": 25,
+          "eventWeights": [
+            {
+              "value": "blizzard",
+              "weight": 10
+            },
+            {
+              "value": "sea_storm",
+              "weight": 15
+            }
+          ],
+          "severityWeights": {
+            "light": 30,
+            "moderate": 35,
+            "heavy": 25,
+            "severe": 10
+          }
+        },
+        "drift": {
+          "temperature": 3,
+          "precipitation": 2,
+          "skies": 1,
+          "wind": 2,
+          "directionChangePct": 60,
+          "timeofdaySegments": {
+            "earlypredawn": {
+              "temperatureSwingPct": -80,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -6,
+              "directionChangePct": 18
+            },
+            "latepredawn": {
+              "temperatureSwingPct": -55,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -3,
+              "directionChangePct": 20
+            },
+            "earlymorning": {
+              "temperatureSwingPct": -15,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 0,
+              "directionChangePct": 22
+            },
+            "latemorning": {
+              "temperatureSwingPct": 18,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 4,
+              "directionChangePct": 26
+            },
+            "earlyafternoon": {
+              "temperatureSwingPct": 58,
+              "temperatureDelta": 1,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 12,
+              "directionChangePct": 32
+            },
+            "lateafternoon": {
+              "temperatureSwingPct": 42,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 10,
+              "directionChangePct": 30
+            },
+            "earlyevening": {
+              "temperatureSwingPct": 0,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 2,
+              "directionChangePct": 24
+            },
+            "lateevening": {
+              "temperatureSwingPct": -25,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -4,
+              "directionChangePct": 20
+            }
+          }
+        },
+        "climateControl": {
+          "diurnal": {
+            "lowTimeHHMM": "0800",
+            "highTimeHHMM": "1330",
+            "riseCurve": 1.4,
+            "fallCurve": 1.0
+          },
+          "governor": {
+            "temperatureMaxDeltaF": 3,
+            "rainMaxStep": 1,
+            "skyMaxStep": 1,
+            "windMaxStep": 1,
+            "currentStrengthMaxDeltaPct": 10,
+            "currentTemperatureMaxDeltaF": 3,
+            "currentDirectionMaxStep": 2,
             "interpolateWindStrength": true,
             "interpolateCurrentStrength": true,
             "interpolateCurrentTemperature": true
@@ -15568,11 +14130,971 @@
             },
             "eventStartOffsetMinutes": {
               "min": 15,
-              "max": 40
+              "max": 45
             },
             "eventTailBufferMinutes": {
               "min": 15,
-              "max": 40
+              "max": 45
+            }
+          }
+        }
+      },
+      "highharvestide": {
+        "temperature": {
+          "avgF": 30,
+          "lowF": 5,
+          "highF": 45
+        },
+        "precipitation": {
+          "chancePct": 55,
+          "type": "snow",
+          "intensityWeights": {
+            "light": 40,
+            "moderate": 35,
+            "heavy": 25
+          }
+        },
+        "wind": {
+          "directionWeights": [
+            {
+              "value": "N",
+              "weight": 40
+            },
+            {
+              "value": "NE",
+              "weight": 30
+            },
+            {
+              "value": "E",
+              "weight": 20
+            },
+            {
+              "value": "NW",
+              "weight": 10
+            }
+          ],
+          "strengthWeights": [
+            {
+              "value": 25,
+              "weight": 15
+            },
+            {
+              "value": 50,
+              "weight": 30
+            },
+            {
+              "value": 75,
+              "weight": 40
+            },
+            {
+              "value": 100,
+              "weight": 15
+            }
+          ]
+        },
+        "critical": {
+          "chancePct": 25,
+          "eventWeights": [
+            {
+              "value": "blizzard",
+              "weight": 10
+            },
+            {
+              "value": "sea_storm",
+              "weight": 15
+            }
+          ],
+          "severityWeights": {
+            "light": 30,
+            "moderate": 35,
+            "heavy": 25,
+            "severe": 10
+          }
+        },
+        "drift": {
+          "temperature": 3,
+          "precipitation": 2,
+          "skies": 1,
+          "wind": 2,
+          "directionChangePct": 60,
+          "timeofdaySegments": {
+            "earlypredawn": {
+              "temperatureSwingPct": -80,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -6,
+              "directionChangePct": 18
+            },
+            "latepredawn": {
+              "temperatureSwingPct": -55,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -3,
+              "directionChangePct": 20
+            },
+            "earlymorning": {
+              "temperatureSwingPct": -15,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 0,
+              "directionChangePct": 22
+            },
+            "latemorning": {
+              "temperatureSwingPct": 18,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 4,
+              "directionChangePct": 26
+            },
+            "earlyafternoon": {
+              "temperatureSwingPct": 58,
+              "temperatureDelta": 1,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 12,
+              "directionChangePct": 32
+            },
+            "lateafternoon": {
+              "temperatureSwingPct": 42,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 10,
+              "directionChangePct": 30
+            },
+            "earlyevening": {
+              "temperatureSwingPct": 0,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 2,
+              "directionChangePct": 24
+            },
+            "lateevening": {
+              "temperatureSwingPct": -25,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -4,
+              "directionChangePct": 20
+            }
+          }
+        },
+        "climateControl": {
+          "diurnal": {
+            "lowTimeHHMM": "0800",
+            "highTimeHHMM": "1330",
+            "riseCurve": 1.4,
+            "fallCurve": 1.0
+          },
+          "governor": {
+            "temperatureMaxDeltaF": 3,
+            "rainMaxStep": 1,
+            "skyMaxStep": 1,
+            "windMaxStep": 1,
+            "currentStrengthMaxDeltaPct": 10,
+            "currentTemperatureMaxDeltaF": 3,
+            "currentDirectionMaxStep": 2,
+            "interpolateWindStrength": true,
+            "interpolateCurrentStrength": true,
+            "interpolateCurrentTemperature": true
+          },
+          "activation": {
+            "skyLeadMinutes": {
+              "min": 60,
+              "max": 135
+            },
+            "precipitationDurationMinutes": {
+              "min": 75,
+              "max": 240
+            },
+            "eventStartOffsetMinutes": {
+              "min": 15,
+              "max": 45
+            },
+            "eventTailBufferMinutes": {
+              "min": 15,
+              "max": 45
+            }
+          }
+        }
+      },
+      "marpenoth": {
+        "temperature": {
+          "avgF": 30,
+          "lowF": 5,
+          "highF": 45
+        },
+        "precipitation": {
+          "chancePct": 55,
+          "type": "snow",
+          "intensityWeights": {
+            "light": 40,
+            "moderate": 35,
+            "heavy": 25
+          }
+        },
+        "wind": {
+          "directionWeights": [
+            {
+              "value": "N",
+              "weight": 40
+            },
+            {
+              "value": "NE",
+              "weight": 30
+            },
+            {
+              "value": "E",
+              "weight": 20
+            },
+            {
+              "value": "NW",
+              "weight": 10
+            }
+          ],
+          "strengthWeights": [
+            {
+              "value": 25,
+              "weight": 15
+            },
+            {
+              "value": 50,
+              "weight": 30
+            },
+            {
+              "value": 75,
+              "weight": 40
+            },
+            {
+              "value": 100,
+              "weight": 15
+            }
+          ]
+        },
+        "critical": {
+          "chancePct": 25,
+          "eventWeights": [
+            {
+              "value": "blizzard",
+              "weight": 10
+            },
+            {
+              "value": "sea_storm",
+              "weight": 15
+            }
+          ],
+          "severityWeights": {
+            "light": 30,
+            "moderate": 35,
+            "heavy": 25,
+            "severe": 10
+          }
+        },
+        "drift": {
+          "temperature": 3,
+          "precipitation": 2,
+          "skies": 1,
+          "wind": 2,
+          "directionChangePct": 60,
+          "timeofdaySegments": {
+            "earlypredawn": {
+              "temperatureSwingPct": -80,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -6,
+              "directionChangePct": 18
+            },
+            "latepredawn": {
+              "temperatureSwingPct": -55,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -3,
+              "directionChangePct": 20
+            },
+            "earlymorning": {
+              "temperatureSwingPct": -15,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 0,
+              "directionChangePct": 22
+            },
+            "latemorning": {
+              "temperatureSwingPct": 18,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 4,
+              "directionChangePct": 26
+            },
+            "earlyafternoon": {
+              "temperatureSwingPct": 58,
+              "temperatureDelta": 1,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 12,
+              "directionChangePct": 32
+            },
+            "lateafternoon": {
+              "temperatureSwingPct": 42,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 10,
+              "directionChangePct": 30
+            },
+            "earlyevening": {
+              "temperatureSwingPct": 0,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 2,
+              "directionChangePct": 24
+            },
+            "lateevening": {
+              "temperatureSwingPct": -25,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -4,
+              "directionChangePct": 20
+            }
+          }
+        },
+        "climateControl": {
+          "diurnal": {
+            "lowTimeHHMM": "0800",
+            "highTimeHHMM": "1330",
+            "riseCurve": 1.4,
+            "fallCurve": 1.0
+          },
+          "governor": {
+            "temperatureMaxDeltaF": 3,
+            "rainMaxStep": 1,
+            "skyMaxStep": 1,
+            "windMaxStep": 1,
+            "currentStrengthMaxDeltaPct": 10,
+            "currentTemperatureMaxDeltaF": 3,
+            "currentDirectionMaxStep": 2,
+            "interpolateWindStrength": true,
+            "interpolateCurrentStrength": true,
+            "interpolateCurrentTemperature": true
+          },
+          "activation": {
+            "skyLeadMinutes": {
+              "min": 60,
+              "max": 135
+            },
+            "precipitationDurationMinutes": {
+              "min": 75,
+              "max": 240
+            },
+            "eventStartOffsetMinutes": {
+              "min": 15,
+              "max": 45
+            },
+            "eventTailBufferMinutes": {
+              "min": 15,
+              "max": 45
+            }
+          }
+        }
+      },
+      "uktar": {
+        "temperature": {
+          "avgF": 30,
+          "lowF": 5,
+          "highF": 45
+        },
+        "precipitation": {
+          "chancePct": 55,
+          "type": "snow",
+          "intensityWeights": {
+            "light": 40,
+            "moderate": 35,
+            "heavy": 25
+          }
+        },
+        "wind": {
+          "directionWeights": [
+            {
+              "value": "N",
+              "weight": 40
+            },
+            {
+              "value": "NE",
+              "weight": 30
+            },
+            {
+              "value": "E",
+              "weight": 20
+            },
+            {
+              "value": "NW",
+              "weight": 10
+            }
+          ],
+          "strengthWeights": [
+            {
+              "value": 25,
+              "weight": 15
+            },
+            {
+              "value": 50,
+              "weight": 30
+            },
+            {
+              "value": 75,
+              "weight": 40
+            },
+            {
+              "value": 100,
+              "weight": 15
+            }
+          ]
+        },
+        "critical": {
+          "chancePct": 25,
+          "eventWeights": [
+            {
+              "value": "blizzard",
+              "weight": 10
+            },
+            {
+              "value": "sea_storm",
+              "weight": 15
+            }
+          ],
+          "severityWeights": {
+            "light": 30,
+            "moderate": 35,
+            "heavy": 25,
+            "severe": 10
+          }
+        },
+        "drift": {
+          "temperature": 3,
+          "precipitation": 2,
+          "skies": 1,
+          "wind": 2,
+          "directionChangePct": 60,
+          "timeofdaySegments": {
+            "earlypredawn": {
+              "temperatureSwingPct": -80,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -6,
+              "directionChangePct": 18
+            },
+            "latepredawn": {
+              "temperatureSwingPct": -55,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -3,
+              "directionChangePct": 20
+            },
+            "earlymorning": {
+              "temperatureSwingPct": -15,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 0,
+              "directionChangePct": 22
+            },
+            "latemorning": {
+              "temperatureSwingPct": 18,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 4,
+              "directionChangePct": 26
+            },
+            "earlyafternoon": {
+              "temperatureSwingPct": 58,
+              "temperatureDelta": 1,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 12,
+              "directionChangePct": 32
+            },
+            "lateafternoon": {
+              "temperatureSwingPct": 42,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 10,
+              "directionChangePct": 30
+            },
+            "earlyevening": {
+              "temperatureSwingPct": 0,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 2,
+              "directionChangePct": 24
+            },
+            "lateevening": {
+              "temperatureSwingPct": -25,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -4,
+              "directionChangePct": 20
+            }
+          }
+        },
+        "climateControl": {
+          "diurnal": {
+            "lowTimeHHMM": "0800",
+            "highTimeHHMM": "1330",
+            "riseCurve": 1.4,
+            "fallCurve": 1.0
+          },
+          "governor": {
+            "temperatureMaxDeltaF": 3,
+            "rainMaxStep": 1,
+            "skyMaxStep": 1,
+            "windMaxStep": 1,
+            "currentStrengthMaxDeltaPct": 10,
+            "currentTemperatureMaxDeltaF": 3,
+            "currentDirectionMaxStep": 2,
+            "interpolateWindStrength": true,
+            "interpolateCurrentStrength": true,
+            "interpolateCurrentTemperature": true
+          },
+          "activation": {
+            "skyLeadMinutes": {
+              "min": 60,
+              "max": 135
+            },
+            "precipitationDurationMinutes": {
+              "min": 75,
+              "max": 240
+            },
+            "eventStartOffsetMinutes": {
+              "min": 15,
+              "max": 45
+            },
+            "eventTailBufferMinutes": {
+              "min": 15,
+              "max": 45
+            }
+          }
+        }
+      },
+      "feastofthemoon": {
+        "temperature": {
+          "avgF": 30,
+          "lowF": 5,
+          "highF": 45
+        },
+        "precipitation": {
+          "chancePct": 55,
+          "type": "snow",
+          "intensityWeights": {
+            "light": 40,
+            "moderate": 35,
+            "heavy": 25
+          }
+        },
+        "wind": {
+          "directionWeights": [
+            {
+              "value": "N",
+              "weight": 40
+            },
+            {
+              "value": "NE",
+              "weight": 30
+            },
+            {
+              "value": "E",
+              "weight": 20
+            },
+            {
+              "value": "NW",
+              "weight": 10
+            }
+          ],
+          "strengthWeights": [
+            {
+              "value": 25,
+              "weight": 15
+            },
+            {
+              "value": 50,
+              "weight": 30
+            },
+            {
+              "value": 75,
+              "weight": 40
+            },
+            {
+              "value": 100,
+              "weight": 15
+            }
+          ]
+        },
+        "critical": {
+          "chancePct": 25,
+          "eventWeights": [
+            {
+              "value": "blizzard",
+              "weight": 10
+            },
+            {
+              "value": "sea_storm",
+              "weight": 15
+            }
+          ],
+          "severityWeights": {
+            "light": 30,
+            "moderate": 35,
+            "heavy": 25,
+            "severe": 10
+          }
+        },
+        "drift": {
+          "temperature": 3,
+          "precipitation": 2,
+          "skies": 1,
+          "wind": 2,
+          "directionChangePct": 60,
+          "timeofdaySegments": {
+            "earlypredawn": {
+              "temperatureSwingPct": -80,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -6,
+              "directionChangePct": 18
+            },
+            "latepredawn": {
+              "temperatureSwingPct": -55,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -3,
+              "directionChangePct": 20
+            },
+            "earlymorning": {
+              "temperatureSwingPct": -15,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 0,
+              "directionChangePct": 22
+            },
+            "latemorning": {
+              "temperatureSwingPct": 18,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 4,
+              "directionChangePct": 26
+            },
+            "earlyafternoon": {
+              "temperatureSwingPct": 58,
+              "temperatureDelta": 1,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 12,
+              "directionChangePct": 32
+            },
+            "lateafternoon": {
+              "temperatureSwingPct": 42,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 10,
+              "directionChangePct": 30
+            },
+            "earlyevening": {
+              "temperatureSwingPct": 0,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 2,
+              "directionChangePct": 24
+            },
+            "lateevening": {
+              "temperatureSwingPct": -25,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -4,
+              "directionChangePct": 20
+            }
+          }
+        },
+        "climateControl": {
+          "diurnal": {
+            "lowTimeHHMM": "0800",
+            "highTimeHHMM": "1330",
+            "riseCurve": 1.4,
+            "fallCurve": 1.0
+          },
+          "governor": {
+            "temperatureMaxDeltaF": 3,
+            "rainMaxStep": 1,
+            "skyMaxStep": 1,
+            "windMaxStep": 1,
+            "currentStrengthMaxDeltaPct": 10,
+            "currentTemperatureMaxDeltaF": 3,
+            "currentDirectionMaxStep": 2,
+            "interpolateWindStrength": true,
+            "interpolateCurrentStrength": true,
+            "interpolateCurrentTemperature": true
+          },
+          "activation": {
+            "skyLeadMinutes": {
+              "min": 60,
+              "max": 135
+            },
+            "precipitationDurationMinutes": {
+              "min": 75,
+              "max": 240
+            },
+            "eventStartOffsetMinutes": {
+              "min": 15,
+              "max": 45
+            },
+            "eventTailBufferMinutes": {
+              "min": 15,
+              "max": 45
+            }
+          }
+        }
+      },
+      "nightal": {
+        "temperature": {
+          "avgF": 12,
+          "lowF": -10,
+          "highF": 28
+        },
+        "precipitation": {
+          "chancePct": 60,
+          "type": "snow",
+          "intensityWeights": {
+            "light": 40,
+            "moderate": 35,
+            "heavy": 25
+          }
+        },
+        "wind": {
+          "directionWeights": [
+            {
+              "value": "N",
+              "weight": 45
+            },
+            {
+              "value": "NNE",
+              "weight": 30
+            },
+            {
+              "value": "NE",
+              "weight": 20
+            },
+            {
+              "value": "NW",
+              "weight": 5
+            }
+          ],
+          "strengthWeights": [
+            {
+              "value": 25,
+              "weight": 10
+            },
+            {
+              "value": 50,
+              "weight": 25
+            },
+            {
+              "value": 75,
+              "weight": 45
+            },
+            {
+              "value": 100,
+              "weight": 20
+            }
+          ]
+        },
+        "critical": {
+          "chancePct": 30,
+          "eventWeights": [
+            {
+              "value": "blizzard",
+              "weight": 12
+            },
+            {
+              "value": "sea_storm",
+              "weight": 18
+            }
+          ],
+          "severityWeights": {
+            "light": 30,
+            "moderate": 35,
+            "heavy": 25,
+            "severe": 10
+          }
+        },
+        "drift": {
+          "temperature": 3,
+          "precipitation": 2,
+          "skies": 1,
+          "wind": 2,
+          "directionChangePct": 60,
+          "timeofdaySegments": {
+            "earlypredawn": {
+              "temperatureSwingPct": -80,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -6,
+              "directionChangePct": 18
+            },
+            "latepredawn": {
+              "temperatureSwingPct": -55,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -3,
+              "directionChangePct": 20
+            },
+            "earlymorning": {
+              "temperatureSwingPct": -15,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 0,
+              "directionChangePct": 22
+            },
+            "latemorning": {
+              "temperatureSwingPct": 18,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 4,
+              "directionChangePct": 26
+            },
+            "earlyafternoon": {
+              "temperatureSwingPct": 58,
+              "temperatureDelta": 1,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 12,
+              "directionChangePct": 32
+            },
+            "lateafternoon": {
+              "temperatureSwingPct": 42,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 1,
+              "windStrengthDeltaPct": 10,
+              "directionChangePct": 30
+            },
+            "earlyevening": {
+              "temperatureSwingPct": 0,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": 0,
+              "windStrengthDeltaPct": 2,
+              "directionChangePct": 24
+            },
+            "lateevening": {
+              "temperatureSwingPct": -25,
+              "temperatureDelta": 0,
+              "precipitationDelta": 0,
+              "skiesDelta": 0,
+              "windDelta": -1,
+              "windStrengthDeltaPct": -4,
+              "directionChangePct": 20
+            }
+          }
+        },
+        "climateControl": {
+          "diurnal": {
+            "lowTimeHHMM": "0930",
+            "highTimeHHMM": "1300",
+            "riseCurve": 1.15,
+            "fallCurve": 0.95
+          },
+          "governor": {
+            "temperatureMaxDeltaF": 2,
+            "rainMaxStep": 1,
+            "skyMaxStep": 1,
+            "windMaxStep": 1,
+            "currentStrengthMaxDeltaPct": 8,
+            "currentTemperatureMaxDeltaF": 2,
+            "currentDirectionMaxStep": 1,
+            "interpolateWindStrength": true,
+            "interpolateCurrentStrength": true,
+            "interpolateCurrentTemperature": true
+          },
+          "activation": {
+            "skyLeadMinutes": {
+              "min": 75,
+              "max": 150
+            },
+            "precipitationDurationMinutes": {
+              "min": 90,
+              "max": 300
+            },
+            "eventStartOffsetMinutes": {
+              "min": 20,
+              "max": 60
+            },
+            "eventTailBufferMinutes": {
+              "min": 20,
+              "max": 60
             }
           }
         }
@@ -15580,119 +15102,119 @@
     },
     "seasonalCurrents": {
       "winter": {
-        "direction": "W",
+        "direction": "N",
         "readings": {
           "surface": {
-            "direction": "W",
-            "temperatureF": 50,
-            "strengthPct": 42
-          },
-          "shallow": {
-            "direction": "W",
-            "temperatureF": 49,
-            "strengthPct": 62
-          },
-          "mid": {
-            "direction": "W",
-            "temperatureF": 47,
+            "direction": "N",
+            "temperatureF": 18,
             "strengthPct": 54
           },
+          "shallow": {
+            "direction": "N",
+            "temperatureF": 17,
+            "strengthPct": 74
+          },
+          "mid": {
+            "direction": "N",
+            "temperatureF": 16,
+            "strengthPct": 66
+          },
           "deep": {
-            "direction": "W",
-            "temperatureF": 42,
-            "strengthPct": 46
+            "direction": "N",
+            "temperatureF": 12,
+            "strengthPct": 58
           }
         }
       },
       "spring": {
-        "direction": "W",
+        "direction": "N",
         "readings": {
           "surface": {
-            "direction": "W",
-            "temperatureF": 53,
-            "strengthPct": 34
-          },
-          "shallow": {
-            "direction": "W",
-            "temperatureF": 52,
-            "strengthPct": 54
-          },
-          "mid": {
-            "direction": "W",
-            "temperatureF": 50,
+            "direction": "N",
+            "temperatureF": 25,
             "strengthPct": 46
           },
+          "shallow": {
+            "direction": "N",
+            "temperatureF": 24,
+            "strengthPct": 66
+          },
+          "mid": {
+            "direction": "N",
+            "temperatureF": 23,
+            "strengthPct": 58
+          },
           "deep": {
-            "direction": "W",
-            "temperatureF": 45,
-            "strengthPct": 38
+            "direction": "N",
+            "temperatureF": 19,
+            "strengthPct": 50
           }
         }
       },
       "summer": {
-        "direction": "NW",
-        "readings": {
-          "surface": {
-            "direction": "NW",
-            "temperatureF": 57,
-            "strengthPct": 25
-          },
-          "shallow": {
-            "direction": "NW",
-            "temperatureF": 56,
-            "strengthPct": 45
-          },
-          "mid": {
-            "direction": "NW",
-            "temperatureF": 54,
-            "strengthPct": 37
-          },
-          "deep": {
-            "direction": "NW",
-            "temperatureF": 49,
-            "strengthPct": 29
-          }
-        }
-      },
-      "autumn": {
         "direction": "W",
         "readings": {
           "surface": {
             "direction": "W",
-            "temperatureF": 53,
-            "strengthPct": 39
+            "temperatureF": 32,
+            "strengthPct": 36
           },
           "shallow": {
             "direction": "W",
-            "temperatureF": 52,
-            "strengthPct": 59
+            "temperatureF": 31,
+            "strengthPct": 56
           },
           "mid": {
             "direction": "W",
-            "temperatureF": 50,
-            "strengthPct": 51
+            "temperatureF": 30,
+            "strengthPct": 48
           },
           "deep": {
             "direction": "W",
-            "temperatureF": 45,
-            "strengthPct": 43
+            "temperatureF": 26,
+            "strengthPct": 40
+          }
+        }
+      },
+      "autumn": {
+        "direction": "N",
+        "readings": {
+          "surface": {
+            "direction": "N",
+            "temperatureF": 26,
+            "strengthPct": 49
+          },
+          "shallow": {
+            "direction": "N",
+            "temperatureF": 25,
+            "strengthPct": 69
+          },
+          "mid": {
+            "direction": "N",
+            "temperatureF": 24,
+            "strengthPct": 61
+          },
+          "deep": {
+            "direction": "N",
+            "temperatureF": 20,
+            "strengthPct": 53
           }
         }
       }
     },
     "climateControl": {
       "diurnal": {
-        "lowTimeHHMM": "0600",
-        "highTimeHHMM": "1500",
-        "riseCurve": 1.8,
-        "fallCurve": 1.2
+        "lowTimeHHMM": "0700",
+        "highTimeHHMM": "1430",
+        "riseCurve": 1.6,
+        "fallCurve": 1.1
       },
       "governor": {
-        "temperatureMaxDeltaF": 3,
+        "temperatureMaxDeltaF": 2,
         "rainMaxStep": 1,
         "skyMaxStep": 1,
         "windMaxStep": 1,
-        "currentStrengthMaxDeltaPct": 10,
+        "currentStrengthMaxDeltaPct": 8,
         "currentTemperatureMaxDeltaF": 2,
         "currentDirectionMaxStep": 1,
         "interpolateWindStrength": true,
@@ -15701,20 +15223,20 @@
       },
       "activation": {
         "skyLeadMinutes": {
-          "min": 45,
-          "max": 105
+          "min": 60,
+          "max": 135
         },
         "precipitationDurationMinutes": {
-          "min": 60,
-          "max": 210
+          "min": 75,
+          "max": 240
         },
         "eventStartOffsetMinutes": {
-          "min": 10,
-          "max": 35
+          "min": 15,
+          "max": 45
         },
         "eventTailBufferMinutes": {
-          "min": 10,
-          "max": 30
+          "min": 15,
+          "max": 45
         }
       }
     }
@@ -15743,53 +15265,17 @@
   ]
 };
 
-  function queueRegion(){
-    RT.ftsRegionQ = RT.ftsRegionQ || [];
-    var next = [];
-    for(var i=0;i<RT.ftsRegionQ.length;i++){
-      var item = RT.ftsRegionQ[i];
-      if(item && item.moduleName !== MODULE_NAME) next.push(item);
-    }
-    next.push({ entry: REGION_ENTRY, moduleName: MODULE_NAME, version: VERSION });
-    RT.ftsRegionQ = next;
-  }
-
   function registerRegion(){
     try{
-      if(RT.fts_weather && typeof RT.fts_weather.registerRegionEntry === 'function'){
-        RT.fts_weather.registerRegionEntry(REGION_ENTRY, MODULE_NAME, VERSION);
-      }else{
-        queueRegion();
+      if(!(RT.fts_weather && typeof RT.fts_weather.registerRegionEntry === 'function')){
+        log(MODULE_NAME + ' skipped registration: fts_weather is unavailable.');
+        return;
       }
+      RT.fts_weather.registerRegionEntry(REGION_ENTRY, MODULE_NAME, VERSION);
     }catch(e){
       log(MODULE_NAME + ' registration error: ' + e);
     }
   }
 
-  function registerStartupHooks(){
-    if(_startupRegistered) return;
-    _startupRegistered = true;
-
-    RT.ftsQ = RT.ftsQ || [];
-    RT.ftsQ.push(function(fts){
-      if(fts && typeof fts.registerStartup === 'function'){
-        fts.registerStartup(MODULE_NAME, function(){
-          registerRegion();
-        });
-      }
-    });
-
-    if(RT.fts && typeof RT.fts.registerStartup === 'function'){
-      RT.fts.registerStartup(MODULE_NAME, function(){
-        registerRegion();
-      });
-    }
-  }
-
-  function init(){
-    registerRegion();
-    registerStartupHooks();
-  }
-
-  on('ready', init);
+  on('ready', registerRegion);
 })();

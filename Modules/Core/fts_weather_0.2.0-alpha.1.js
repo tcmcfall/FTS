@@ -2,25 +2,26 @@
 // version:     0.2.0-alpha.1
 // description: Core-aware weather engine for the FTS (Fantasy Trade Simulator) Roll20 API suite.
 //              - Stores weather settings, metadata, current weather, and history beneath a single
-//                root fts_mule ability named weather.
-//              - Writes the module version to the root fts_mule ability named version.
-//              - Updates weather in Harptos timeofday segments (early/late predawn, morning, afternoon, evening).
-//              - Loads regional profiles from the shared fts_mule ability named regions.
+//                fts_mule character macro / ability named weather.
+//              - Writes the module version to the fts_mule character macro / ability named version.
+//              - Updates weather in Harptos timeOfDay segments (early/late predawn, morning, afternoon, evening).
+//              - Loads regional profiles from the shared fts_mule character macro / ability named regions.
 //              - Provides !fts --weather controls plus Tolkien-inspired weather quips for direct whisper use.
-// depends:     fts_core >= 0.1.0-alpha.1, fts_calendar >= 0.1.0-alpha.1 (state.fts.now), Roll20 API.
+// depends:     fts_core >= 0.2.0-alpha.1, fts_calendar >= 0.2.0-alpha.1 (state.fts.now), Roll20 API.
+// provides:    !fts --weather
 // author:      TC McFall (AI-assisted)
 // Semantic Versioning (SemVer) Policy:
 // - FTS uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
 // - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
-// - Increment PATCH for backward-compatible bug fixes.
-// - Increment MINOR for new backward-compatible functionality.
+// - Increment PATCH for non-breaking bug fixes.
+// - Increment MINOR for new non-breaking functionality.
 // - Increment MAJOR only when the public API becomes stable and/or incompatible breaking changes are introduced.
 // - Pre-release labels such as alpha, beta, or rc mark unstable builds and sort lower than the matching normal release.
 // - Once a version is released, its contents must not be changed; further edits require a new version.
 // - Header comments, internal VERSION constants, filenames, generated module text, and documentation references must stay aligned.
 // - Dependency notes should use SemVer-friendly wording such as ">= 0.1.0-alpha.1" rather than informal forms like "5.1.0+".
 
-var fts_weather = fts_weather || (function(){
+var fts_weather = (function(){
   'use strict';
 
   var RT = (typeof globalThis !== 'undefined') ? globalThis : this;
@@ -2206,7 +2207,6 @@ var fts_weather = fts_weather || (function(){
   }
 
   function loadRegionCatalog(mule){
-    drainRegionQueue();
     var root = loadRegionsRoot(mule);
     var payloads = regionPayloads(root);
     var profiles = {};
@@ -2278,20 +2278,6 @@ var fts_weather = fts_weather || (function(){
     saveRegionsRoot(mule, root);
     if(moduleName) mergeVersionEntry(mule, moduleName, moduleVersion || VERSION);
     return copy;
-  }
-
-  function drainRegionQueue(){
-    var queue = RT.ftsRegionQ || [];
-    if(!Array.isArray(queue) || !queue.length) return;
-    for(var i=0;i<queue.length;i++){
-      var item = queue[i] || {};
-      try{
-        if(item && item.entry) registerRegionEntry(item.entry, item.moduleName, item.version);
-      }catch(e){
-        log('fts_weather region registration err: '+e);
-      }
-    }
-    RT.ftsRegionQ = [];
   }
 
   // ----------------------------
@@ -3505,7 +3491,7 @@ var fts_weather = fts_weather || (function(){
   }
 
   function weatherShowKeyFromToken(token){
-    token = canonicalKey(token || '');
+    token = lower(token || '').trim();
     if(!token) return '';
     if(token === 'units') return 'units';
     if(token === 'temp') return 'temp';
@@ -5674,7 +5660,7 @@ var fts_weather = fts_weather || (function(){
       rlOverride = resolveFromPageId(opts.pageId);
     }
 
-    // Sync only the active page and live player pages to the exact current timeofday tick.
+    // Sync only the active page and live player pages to the exact current timeOfDay tick.
     var up = updateAllCalendarAware(mule, pid, opts);
     if(!up || up.ok===false){
       return { ok:false, error: up ? up.error : 'Weather update failed.' };
@@ -5984,7 +5970,7 @@ var fts_weather = fts_weather || (function(){
   }
 
   function isWeatherSetKey(tok){
-    tok = canonicalKey(tok||'');
+    tok = lower(tok||'').trim();
     return tok==='temp' || tok==='rainfall' || tok==='skies' || tok==='wind' || tok==='current' || tok==='chop';
   }
 
@@ -6018,6 +6004,18 @@ var fts_weather = fts_weather || (function(){
     }
 
     return null;
+  }
+
+  function readWeatherParsedValue(tokens, startIdx, parser, maxWords){
+    maxWords = Math.max(1, maxWords || 1);
+    for(var width=Math.min(maxWords, tokens.length - startIdx); width>=1; width--){
+      var raw = tokens.slice(startIdx, startIdx + width).join(' ').trim();
+      var parsed = parser(raw);
+      if(parsed){
+        return { raw:raw, value:parsed, width:width };
+      }
+    }
+    return { raw:String(tokens[startIdx] || '').trim(), value:null, width:0 };
   }
 
   function parseWeatherChopValue(v){
@@ -6328,11 +6326,11 @@ var fts_weather = fts_weather || (function(){
       }
 
       if(tokens[1] !== 'event'){
-        return { error:'Use !fts --weather roll or !fts --weather roll event [event_key] [light|moderate|heavy|severe].', changed:false };
+        return { error:'Use !fts --weather roll or !fts --weather roll event [eventKey] [light|moderate|heavy|severe].', changed:false };
       }
 
       if(tokens.length > 4){
-        return { error:'Use !fts --weather roll event [event_key] [light|moderate|heavy|severe].', changed:false };
+        return { error:'Use !fts --weather roll event [eventKey] [light|moderate|heavy|severe].', changed:false };
       }
 
       var eventKey = '';
@@ -6365,7 +6363,7 @@ var fts_weather = fts_weather || (function(){
 
     if(tokens[0]==='set'){
       if(tokens.length===1) return { error:'No weather set values provided.', changed:false };
-      if(canonicalKey(tokens[1]||'') === 'units'){
+      if(lower(tokens[1]||'').trim() === 'units'){
         if(tokens.length !== 3) return { error:'Use !fts --weather set units metric|imperial.', changed:false };
         return setWeatherUnitsForPlayer(mule, pid, settings, lower(tokens[2]||'').trim());
       }
@@ -6396,7 +6394,7 @@ var fts_weather = fts_weather || (function(){
       var skiesOrder = -1;
 
       for(var j=1;j<tokens.length;j++){
-        var key = canonicalKey(tokens[j]||'');
+        var key = lower(tokens[j]||'').trim();
         var value = tokens[j+1];
         if(!key) continue;
 
@@ -6432,24 +6430,27 @@ var fts_weather = fts_weather || (function(){
         }
 
         if(key==='skies'){
-          var skies = parseWeatherSkyValue(value||'');
+          var skiesRead = readWeatherParsedValue(tokens, j+1, parseWeatherSkyValue, 2);
+          var skies = skiesRead.value;
           if(!skies){
             return { error:'Invalid skies value.', changed:false };
           }
           pending.skies = skies;
           skiesSpecified = true;
           skiesOrder = j;
-          j++;
+          j += skiesRead.width;
           continue;
         }
 
         if(key==='wind'){
-          var windToken = String(value||'').trim();
-          if(!windToken){
+          var windRead = readWeatherParsedValue(tokens, j+1, parseWeatherWindValue, 2);
+          var windToken = windRead.raw;
+          if(!windRead.width){
             return { error:'Invalid wind value.', changed:false };
           }
-          var next = tokens[j+2];
-          var windValue = parseWeatherWindValue(windToken);
+          var nextIdx = j + 1 + windRead.width;
+          var next = tokens[nextIdx];
+          var windValue = windRead.value;
           var windDir = '';
 
           pending.windTouched = true;
@@ -6460,36 +6461,39 @@ var fts_weather = fts_weather || (function(){
 
             if(windValue.percent===0){
               if(next && !isWeatherSetKey(next)){
-                return { error:'dead_calm cannot include a wind direction.', changed:false };
+                return { error:'deadCalm cannot include a wind direction.', changed:false };
               }
               pending.windDir = 'N';
-              j++;
+              j = nextIdx - 1;
               continue;
             }
 
             if(next && !isWeatherSetKey(next)){
-              windDir = parseWindDirection(next);
+              var windDirRead = readWeatherParsedValue(tokens, nextIdx, parseWindDirection, 3);
+              windDir = windDirRead.value;
               if(!windDir){
                 return { error:'Invalid wind direction.', changed:false };
               }
-              j += 2;
+              j = nextIdx + windDirRead.width - 1;
             }else{
-              j++;
+              j = nextIdx - 1;
             }
             if(windDir) pending.windDir = windDir;
             continue;
           }
 
-          windDir = parseWindDirection(windToken);
+          var windDirOnlyRead = readWeatherParsedValue(tokens, j+1, parseWindDirection, 3);
+          windDir = windDirOnlyRead.value;
           if(!windDir){
             return { error:'Invalid wind value.', changed:false };
           }
+          next = tokens[j + 1 + windDirOnlyRead.width];
           if(next && !isWeatherSetKey(next)){
             return { error:'Use !fts --weather set wind <speed> [dir] or !fts --weather set wind <dir>.', changed:false };
           }
           pending.windDir = windDir;
           pending.windCritical = '';
-          j++;
+          j += windDirOnlyRead.width;
           continue;
         }
 
@@ -6508,12 +6512,14 @@ var fts_weather = fts_weather || (function(){
         }
 
         if(key==='current'){
-          var currentToken = String(value||'').trim();
-          if(!currentToken){
+          var currentRead = readWeatherParsedValue(tokens, j+1, parseWeatherWindValue, 2);
+          var currentToken = currentRead.raw;
+          if(!currentRead.width){
             return { error:'Invalid current value.', changed:false };
           }
-          var nextCurrent = tokens[j+2];
-          var currentValue = parseWeatherWindValue(currentToken);
+          var nextCurrentIdx = j + 1 + currentRead.width;
+          var nextCurrent = tokens[nextCurrentIdx];
+          var currentValue = currentRead.value;
           var currentDir = '';
 
           pending.currentTouched = true;
@@ -6523,35 +6529,38 @@ var fts_weather = fts_weather || (function(){
 
             if(currentValue.percent===0){
               if(nextCurrent && !isWeatherSetKey(nextCurrent)){
-                return { error:'dead_calm cannot include a current direction.', changed:false };
+                return { error:'deadCalm cannot include a current direction.', changed:false };
               }
               pending.currentDir = 'N';
-              j++;
+              j = nextCurrentIdx - 1;
               continue;
             }
 
             if(nextCurrent && !isWeatherSetKey(nextCurrent)){
-              currentDir = parseWindDirection(nextCurrent);
+              var currentDirRead = readWeatherParsedValue(tokens, nextCurrentIdx, parseWindDirection, 3);
+              currentDir = currentDirRead.value;
               if(!currentDir){
                 return { error:'Invalid current direction.', changed:false };
               }
-              j += 2;
+              j = nextCurrentIdx + currentDirRead.width - 1;
             }else{
-              j++;
+              j = nextCurrentIdx - 1;
             }
             if(currentDir) pending.currentDir = currentDir;
             continue;
           }
 
-          currentDir = parseWindDirection(currentToken);
+          var currentDirOnlyRead = readWeatherParsedValue(tokens, j+1, parseWindDirection, 3);
+          currentDir = currentDirOnlyRead.value;
           if(!currentDir){
             return { error:'Invalid current value.', changed:false };
           }
+          nextCurrent = tokens[j + 1 + currentDirOnlyRead.width];
           if(nextCurrent && !isWeatherSetKey(nextCurrent)){
             return { error:'Use !fts --weather set current <speed> [dir] or !fts --weather set current <dir>.', changed:false };
           }
           pending.currentDir = currentDir;
-          j++;
+          j += currentDirOnlyRead.width;
           continue;
         }
 
@@ -6670,33 +6679,33 @@ var fts_weather = fts_weather || (function(){
       '!fts --weather quip [short|medium|long]',
       '',
       'GM-Only Commands',
-      'Enable regional and locale-based seasonal weather patterns via fts_region.regionname modules. Pages may use region.locale.mapname, region.locale_depth.mapname, region.region, or mapname.global.',
+      'Enable regional and locale-based seasonal weather patterns via fts_regionRegionName modules. Pages may use region.locale.mapname, region.locale_depth.mapname, region.region, or mapname.global.',
       'Use bare depth values for feet/meters in the current weather units, append mi/km for large units, and prefix with a "+" for elevation. Case and spaces are ignored; canonical names are lower-case with no spaces.',
       '',
       'Whisper detailed climate control, governor, activation-window, current pattern, and active event information for the current map:',
       '!fts --weather detail',
-      'Sync only the exact current timeofday tick for the active page and any page that currently has players on it. Live temperature, wind, and current rendering still follow the exact clock inside the current band:',
+      'Sync only the exact current timeOfDay tick for the active page and any page that currently has players on it. Live temperature, wind, and current rendering still follow the exact clock inside the current band:',
       '!fts --weather update',
       'Verify the unified weather root and region catalog:',
       '!fts --weather verify',
-      'Roll one immediate governed weather step for the current map at the current timeofday tick:',
+      'Roll one immediate governed weather step for the current map at the current timeOfDay tick:',
       '!fts --weather roll',
-      'Roll or force an immediate critical event for the current map at the current timeofday tick:',
-      '!fts --weather roll event [event_key] [light|moderate|heavy|severe]',
+      'Roll or force an immediate critical event for the current map at the current timeOfDay tick:',
+      '!fts --weather roll event [eventKey] [light|moderate|heavy|severe]',
       'Set display units for weather output:',
       '!fts --weather set units metric|imperial',
-      'Set temperature band or exact temperature for the current map at the current timeofday tick. Exact clock time still drives the live diurnal reading:',
+      'Set temperature band or exact temperature for the current map at the current timeOfDay tick. Exact clock time still drives the live diurnal reading:',
       '!fts --weather set temp <number|frigid|cold|mild|warm|hot>',
-      'Set rainfall band for the current map at the current timeofday tick:',
+      'Set rainfall band for the current map at the current timeOfDay tick:',
       '!fts --weather set rainfall none|light|moderate|heavy',
-      'Set sky cover for the current map at the current timeofday tick:',
-      '!fts --weather set skies clear|partly_cloudy|cloudy|overcast|stormy',
-      'Set wind strength and/or direction for the current map at the current timeofday tick:',
-      '!fts --weather set wind <pct|dead_calm|crit_light|crit_moderate|crit_heavy|crit_severe> [dir]',
+      'Set sky cover for the current map at the current timeOfDay tick:',
+      '!fts --weather set skies clear|partlyCloudy|cloudy|overcast|stormy',
+      'Set wind strength and/or direction for the current map at the current timeOfDay tick:',
+      '!fts --weather set wind <pct|deadCalm|critLight|critModerate|critHeavy|critSevere> [dir]',
       'Set marine surface chop for the current map by dragging wind to the nearest compliant band:',
       '!fts --weather set chop none|light|moderate|heavy|severe',
-      'Set current strength and/or direction for the current map at the current timeofday tick when the locale uses seasonal currents:',
-      '!fts --weather set current <pct|dead_calm|crit_light|crit_moderate|crit_heavy|crit_severe> [dir]',
+      'Set current strength and/or direction for the current map at the current timeOfDay tick when the locale uses seasonal currents:',
+      '!fts --weather set current <pct|deadCalm|critLight|critModerate|critHeavy|critSevere> [dir]',
       'Show the current resolved weather value for the current map:',
       '!fts --weather show units|temp|rainfall|skies|wind|chop|current',
       'Page naming rule:',
@@ -6709,10 +6718,10 @@ var fts_weather = fts_weather || (function(){
       'Chop is modeled only on offshore and coastal surface locales. It represents local short-period wind waves, so dead calm always yields chop none, and setting chop raises or lowers wind to the nearest compliant wind band.',
       'Subsurface rule:',
       'Underwater pages sample current strength, direction, temperature shift, and visibility from the locale waterProfile and the active page depth. Underdark pages treat airflow as mostly dead-calm cave ventilation, with only brief drafts or critical events pushing the ud_* tiers.',
-      'Set keys may be stacked in a single command. The command writes the current map weather for the current timeofday tick and clears any active critical event on that map. Example:',
+      'Set keys may be stacked in a single command. The command writes the current map weather for the current timeOfDay tick and clears any active critical event on that map. Example:',
       '!fts --weather set temp cold rainfall light',
       'Manual weather rolls and automatic drift both obey the same governor caps. Temperature anomalies are capped in absolute degrees per segment, rain/skies/wind move one step per segment unless a critical event overrides them, and current direction/strength/temperature ease toward their targets.',
-      'Light rainfall requires partly_cloudy skies or better, and moderate and heavy rainfall require cloudy skies or better. If a rainfall command omits skies, the module raises skies to the minimum compatible state.',
+      'Light rainfall requires partlyCloudy skies or better, and moderate and heavy rainfall require cloudy skies or better. If a rainfall command omits skies, the module raises skies to the minimum compatible state.',
       '',
       'Temperature band ranges:',
       tempBullets[0],
@@ -6822,7 +6831,6 @@ var fts_weather = fts_weather || (function(){
   function moduleStartup(mule){
     mule = mule || ensureMule();
     ensureUnifiedRootHealth();
-    drainRegionQueue();
     ensureRegionCatalogHealth(mule);
     mirrorVersionToUnifiedRegistry();
   }
@@ -6830,14 +6838,7 @@ var fts_weather = fts_weather || (function(){
   function init(){
     var mule = ensureMule();
     moduleStartup(mule);
-
-    try{
-      RT.ftsQ = RT.ftsQ || [];
-      RT.ftsQ.push(function(fts){
-        registerWithCore(fts);
-      });
-      if(RT.fts) registerWithCore(RT.fts);
-    }catch(e){}
+    if(RT.fts) registerWithCore(RT.fts);
   }
 
   return {
@@ -6863,9 +6864,9 @@ try{
                       : (typeof self !== 'undefined')       ? self
                       : (typeof global !== 'undefined')     ? global
                       : this;
-  _ftsWeatherRoot.fts_weather = fts_weather;
   _ftsWeatherRoot.RT = _ftsWeatherRoot.RT || {};
   _ftsWeatherRoot.RT.fts_weather = fts_weather;
+  _ftsWeatherRoot.fts_weather = fts_weather;
 }catch(e){}
 
 on('ready', function(){

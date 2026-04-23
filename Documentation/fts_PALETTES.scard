@@ -1,0 +1,419 @@
+FTS palette templates for Roll20 ScriptCards
+Source palette definitions:
+- Modules/fts_core_0.2.0-alpha.1.js lines 397-505
+- The five named palettes come from PALETTES.
+- The "none" option is not a palette object; it comes from the cssVars() fallback branch.
+
+Usage:
+1. Copy one macro block into a Roll20 macro and run it once.
+2. The block previews the palette and saves reusable ScriptCards settings with --Ssettings.
+3. In later ScriptCards macros, load the saved style near the top with:
+   --Lsettings|fts_palette_dark
+   or
+   --Lsettings|fts_palette_active
+4. The updated core module also stores matching theme entries inside the `scriptcards` macro on `fts_mule`.
+   Each theme entry includes:
+   - the plain palette save label, such as `mint`
+   - the suite-scoped save label, such as `fts_palette_mint`
+   - the macro text used to apply and save the theme
+
+Mapping notes:
+- titleCardBackground uses the FTS accent color, or the fallback header color for none.
+- tableBorder uses the FTS outer border color.
+- titleCardBottomBorder uses the FTS inner tableBorder color.
+- odd/even rows use the FTS cell and card colors.
+- button settings use btnBg, btnText, and btnBorder.
+- today and todayText are shown in the final preview row after the reusable settings are saved.
+- note and subtle are listed in the preview rows, but ScriptCards has no direct global equivalent for them.
+
+============================================================
+PALETTE: none
+FTS source summary:
+- palette object: null
+- fallback link: #ba2e68
+- fallback card border: #d0d0d0
+- fallback header background: #f1f1f1
+- fallback body text: #111111
+- fallback card background: #ffffff
+
+!scriptcard {{
+  --/|FTS palette template: none
+  --/|Source path: Modules/fts_core_0.2.0-alpha.1.js lines 398 and 432-449.
+  --#titleFontFace|Georgia
+  --#titleFontSize|17px
+  --#subtitleFontFace|Georgia
+  --#subtitleFontSize|13px
+  --#bodyFontFace|Georgia
+  --#bodyFontSize|14px
+  --#buttonFontFace|Georgia
+  --#buttonFontSize|13px
+  --#titleCardBackground|#f1f1f1
+  --#titleFontColor|#111111
+  --#subtitleFontColor|#111111
+  --#tablebgcolor|#ffffff
+  --#tableBorder|1px solid #d0d0d0
+  --#titleCardBottomBorder|1px solid #d0d0d0
+  --#tableBorderRadius|0px;
+  --#tableShadow|0px 0px 0px 0px transparent;
+  --#oddRowBackground|#ffffff
+  --#oddRowFontColor|#111111
+  --#evenRowBackground|#f7f7f7
+  --#evenRowFontColor|#111111
+  --#buttonBackground|#ffffff
+  --#buttonTextColor|#ba2e68
+  --#buttonBorderColor|#d0d0d0
+  --Ssettings|none
+  --Ssettings|fts_palette_none
+  --Ssettings|fts_palette_active
+  --#title|FTS Palette Template
+  --#leftSub|Fantasy Trade Simulator
+  --#rightSub|none
+  --+Mapping|Neutral fallback derived from cssVars(), since PALETTES.none is null.
+  --+Background / Foreground|#ffffff / #111111
+  --+Header / Link|#f1f1f1 / #ba2e68
+  --+Border / Table Border|#d0d0d0 / #d0d0d0
+  --+Card / Cell|#ffffff / #f7f7f7
+  --+Today / Today Text|not defined / not defined
+  --+Note / Subtle|not defined / not defined
+  --+Button bg / text / border|#ffffff / #ba2e68 / #d0d0d0
+  --+Button preview|[button]Open FTS::!fts[/button]
+  --#oddRowBackground|#f1f1f1
+  --#oddRowFontColor|#111111
+  --#evenRowBackground|#f1f1f1
+  --#evenRowFontColor|#111111
+  --+Today highlight|none has no core today color, so this row uses the fallback header color.
+  --X|
+}}
+
+============================================================
+PALETTE: dark
+FTS source summary:
+- bg #222
+- fg #eee
+- border #111
+- tableBorder #555
+- cell #2a2a2a
+- today #4b8
+- accent #9b6dff
+- accentText #fff
+- note #ffe9a6
+- subtle #ccc
+- card #2f2f2f
+- btnBg transparent
+- btnText #9b6dff
+- btnBorder #9b6dff
+
+!scriptcard {{
+  --/|FTS palette template: dark
+  --/|Source path: Modules/fts_core_0.2.0-alpha.1.js lines 399-402 and 453-505.
+  --#titleFontFace|Georgia
+  --#titleFontSize|17px
+  --#subtitleFontFace|Georgia
+  --#subtitleFontSize|13px
+  --#bodyFontFace|Georgia
+  --#bodyFontSize|14px
+  --#buttonFontFace|Georgia
+  --#buttonFontSize|13px
+  --#titleCardBackground|#9b6dff
+  --#titleFontColor|#fff
+  --#subtitleFontColor|#fff
+  --#tablebgcolor|#222
+  --#tableBorder|3px solid #111
+  --#titleCardBottomBorder|1px solid #555
+  --#tableBorderRadius|0px;
+  --#tableShadow|0px 0px 0px 0px transparent;
+  --#oddRowBackground|#2a2a2a
+  --#oddRowFontColor|#eee
+  --#evenRowBackground|#2f2f2f
+  --#evenRowFontColor|#eee
+  --#buttonBackground|transparent
+  --#buttonTextColor|#9b6dff
+  --#buttonBorderColor|#9b6dff
+  --Ssettings|dark
+  --Ssettings|fts_palette_dark
+  --Ssettings|fts_palette_active
+  --#title|FTS Palette Template
+  --#leftSub|Fantasy Trade Simulator
+  --#rightSub|dark
+  --+Background / Foreground|#222 / #eee
+  --+Border / Table Border|#111 / #555
+  --+Card / Cell|#2f2f2f / #2a2a2a
+  --+Accent / Accent Text|#9b6dff / #fff
+  --+Today / Today Text|#4b8 / uses fg #eee
+  --+Note / Subtle|#ffe9a6 / #ccc
+  --+Button bg / text / border|transparent / #9b6dff / #9b6dff
+  --+Button preview|[button]Open FTS::!fts[/button]
+  --#oddRowBackground|#4b8
+  --#oddRowFontColor|#eee
+  --#evenRowBackground|#4b8
+  --#evenRowFontColor|#eee
+  --+Today highlight|This row uses the dark palette today color.
+  --X|
+}}
+
+============================================================
+PALETTE: mint
+FTS source summary:
+- bg #f4fff7
+- fg #1f3a28
+- border #9cd1b2
+- tableBorder #b6e2c6
+- cell #ecfbf0
+- today #2b6643
+- todayText #eaffef
+- accent #278251
+- accentText #eaffef
+- note #5ea87b
+- subtle #406b54
+- card #e3f9e8
+- btnBg #278251
+- btnText #eaffef
+- btnBorder #1c5e3c
+
+!scriptcard {{
+  --/|FTS palette template: mint
+  --/|Source path: Modules/fts_core_0.2.0-alpha.1.js lines 404-408 and 453-505.
+  --#titleFontFace|Georgia
+  --#titleFontSize|17px
+  --#subtitleFontFace|Georgia
+  --#subtitleFontSize|13px
+  --#bodyFontFace|Georgia
+  --#bodyFontSize|14px
+  --#buttonFontFace|Georgia
+  --#buttonFontSize|13px
+  --#titleCardBackground|#278251
+  --#titleFontColor|#eaffef
+  --#subtitleFontColor|#eaffef
+  --#tablebgcolor|#f4fff7
+  --#tableBorder|3px solid #9cd1b2
+  --#titleCardBottomBorder|1px solid #b6e2c6
+  --#tableBorderRadius|0px;
+  --#tableShadow|0px 0px 0px 0px transparent;
+  --#oddRowBackground|#ecfbf0
+  --#oddRowFontColor|#1f3a28
+  --#evenRowBackground|#e3f9e8
+  --#evenRowFontColor|#1f3a28
+  --#buttonBackground|#278251
+  --#buttonTextColor|#eaffef
+  --#buttonBorderColor|#1c5e3c
+  --Ssettings|mint
+  --Ssettings|fts_palette_mint
+  --Ssettings|fts_palette_active
+  --#title|FTS Palette Template
+  --#leftSub|Fantasy Trade Simulator
+  --#rightSub|mint
+  --+Background / Foreground|#f4fff7 / #1f3a28
+  --+Border / Table Border|#9cd1b2 / #b6e2c6
+  --+Card / Cell|#e3f9e8 / #ecfbf0
+  --+Accent / Accent Text|#278251 / #eaffef
+  --+Today / Today Text|#2b6643 / #eaffef
+  --+Note / Subtle|#5ea87b / #406b54
+  --+Button bg / text / border|#278251 / #eaffef / #1c5e3c
+  --+Button preview|[button]Open FTS::!fts[/button]
+  --#oddRowBackground|#2b6643
+  --#oddRowFontColor|#eaffef
+  --#evenRowBackground|#2b6643
+  --#evenRowFontColor|#eaffef
+  --+Today highlight|This row uses the mint palette today color.
+  --X|
+}}
+
+============================================================
+PALETTE: parchment
+FTS source summary:
+- bg #f8f1e1
+- fg #3b2f1a
+- border #5a472d
+- tableBorder #b79b74
+- cell #efe6cf
+- today #a36b2a
+- accent #5a3a17
+- accentText #f3e6c9
+- note #7a4a1f
+- subtle #6b5a44
+- card #efe3c7
+- btnBg #6f4215
+- btnText #f3e6c9
+- btnBorder #4c3113
+
+!scriptcard {{
+  --/|FTS palette template: parchment
+  --/|Source path: Modules/fts_core_0.2.0-alpha.1.js lines 410-413 and 453-505.
+  --#titleFontFace|Georgia
+  --#titleFontSize|17px
+  --#subtitleFontFace|Georgia
+  --#subtitleFontSize|13px
+  --#bodyFontFace|Georgia
+  --#bodyFontSize|14px
+  --#buttonFontFace|Georgia
+  --#buttonFontSize|13px
+  --#titleCardBackground|#5a3a17
+  --#titleFontColor|#f3e6c9
+  --#subtitleFontColor|#f3e6c9
+  --#tablebgcolor|#f8f1e1
+  --#tableBorder|3px solid #5a472d
+  --#titleCardBottomBorder|1px solid #b79b74
+  --#tableBorderRadius|0px;
+  --#tableShadow|0px 0px 0px 0px transparent;
+  --#oddRowBackground|#efe6cf
+  --#oddRowFontColor|#3b2f1a
+  --#evenRowBackground|#efe3c7
+  --#evenRowFontColor|#3b2f1a
+  --#buttonBackground|#6f4215
+  --#buttonTextColor|#f3e6c9
+  --#buttonBorderColor|#4c3113
+  --Ssettings|parchment
+  --Ssettings|fts_palette_parchment
+  --Ssettings|fts_palette_active
+  --#title|FTS Palette Template
+  --#leftSub|Fantasy Trade Simulator
+  --#rightSub|parchment
+  --+Background / Foreground|#f8f1e1 / #3b2f1a
+  --+Border / Table Border|#5a472d / #b79b74
+  --+Card / Cell|#efe3c7 / #efe6cf
+  --+Accent / Accent Text|#5a3a17 / #f3e6c9
+  --+Today / Today Text|#a36b2a / uses fg #3b2f1a
+  --+Note / Subtle|#7a4a1f / #6b5a44
+  --+Button bg / text / border|#6f4215 / #f3e6c9 / #4c3113
+  --+Button preview|[button]Open FTS::!fts[/button]
+  --#oddRowBackground|#a36b2a
+  --#oddRowFontColor|#3b2f1a
+  --#evenRowBackground|#a36b2a
+  --#evenRowFontColor|#3b2f1a
+  --+Today highlight|This row uses the parchment palette today color.
+  --X|
+}}
+
+============================================================
+PALETTE: powder
+FTS source summary:
+- bg #eef6ff
+- fg #1f2a44
+- border #7aa5ff
+- tableBorder #b6ccff
+- cell #f5f9ff
+- today #1b355c
+- todayText #eef6ff
+- accent #1b355c
+- accentText #eef6ff
+- note #3a567a
+- subtle #3a567a
+- card #f2f7ff
+- btnBg #1b355c
+- btnText #eef6ff
+- btnBorder #0b1b34
+
+!scriptcard {{
+  --/|FTS palette template: powder
+  --/|Source path: Modules/fts_core_0.2.0-alpha.1.js lines 415-419 and 453-505.
+  --#titleFontFace|Georgia
+  --#titleFontSize|17px
+  --#subtitleFontFace|Georgia
+  --#subtitleFontSize|13px
+  --#bodyFontFace|Georgia
+  --#bodyFontSize|14px
+  --#buttonFontFace|Georgia
+  --#buttonFontSize|13px
+  --#titleCardBackground|#1b355c
+  --#titleFontColor|#eef6ff
+  --#subtitleFontColor|#eef6ff
+  --#tablebgcolor|#eef6ff
+  --#tableBorder|3px solid #7aa5ff
+  --#titleCardBottomBorder|1px solid #b6ccff
+  --#tableBorderRadius|0px;
+  --#tableShadow|0px 0px 0px 0px transparent;
+  --#oddRowBackground|#f5f9ff
+  --#oddRowFontColor|#1f2a44
+  --#evenRowBackground|#f2f7ff
+  --#evenRowFontColor|#1f2a44
+  --#buttonBackground|#1b355c
+  --#buttonTextColor|#eef6ff
+  --#buttonBorderColor|#0b1b34
+  --Ssettings|powder
+  --Ssettings|fts_palette_powder
+  --Ssettings|fts_palette_active
+  --#title|FTS Palette Template
+  --#leftSub|Fantasy Trade Simulator
+  --#rightSub|powder
+  --+Background / Foreground|#eef6ff / #1f2a44
+  --+Border / Table Border|#7aa5ff / #b6ccff
+  --+Card / Cell|#f2f7ff / #f5f9ff
+  --+Accent / Accent Text|#1b355c / #eef6ff
+  --+Today / Today Text|#1b355c / #eef6ff
+  --+Note / Subtle|#3a567a / #3a567a
+  --+Button bg / text / border|#1b355c / #eef6ff / #0b1b34
+  --+Button preview|[button]Open FTS::!fts[/button]
+  --#oddRowBackground|#1b355c
+  --#oddRowFontColor|#eef6ff
+  --#evenRowBackground|#1b355c
+  --#evenRowFontColor|#eef6ff
+  --+Today highlight|This row uses the powder palette today color.
+  --X|
+}}
+
+============================================================
+PALETTE: rosebud
+FTS source summary:
+- bg #fff5f6
+- fg #3a1f1f
+- border #e3a3a9
+- tableBorder #e6b7bd
+- cell #ffeef0
+- today #b04c5f
+- todayText #fff7f8
+- accent #a73f55
+- accentText #fff7f8
+- note #c76270
+- subtle #7f4a4a
+- card #ffe8ea
+- btnBg #a73f55
+- btnText #fff7f8
+- btnBorder #7f2e3f
+
+!scriptcard {{
+  --/|FTS palette template: rosebud
+  --/|Source path: Modules/fts_core_0.2.0-alpha.1.js lines 421-425 and 453-505.
+  --#titleFontFace|Georgia
+  --#titleFontSize|17px
+  --#subtitleFontFace|Georgia
+  --#subtitleFontSize|13px
+  --#bodyFontFace|Georgia
+  --#bodyFontSize|14px
+  --#buttonFontFace|Georgia
+  --#buttonFontSize|13px
+  --#titleCardBackground|#a73f55
+  --#titleFontColor|#fff7f8
+  --#subtitleFontColor|#fff7f8
+  --#tablebgcolor|#fff5f6
+  --#tableBorder|3px solid #e3a3a9
+  --#titleCardBottomBorder|1px solid #e6b7bd
+  --#tableBorderRadius|0px;
+  --#tableShadow|0px 0px 0px 0px transparent;
+  --#oddRowBackground|#ffeef0
+  --#oddRowFontColor|#3a1f1f
+  --#evenRowBackground|#ffe8ea
+  --#evenRowFontColor|#3a1f1f
+  --#buttonBackground|#a73f55
+  --#buttonTextColor|#fff7f8
+  --#buttonBorderColor|#7f2e3f
+  --Ssettings|rosebud
+  --Ssettings|fts_palette_rosebud
+  --Ssettings|fts_palette_active
+  --#title|FTS Palette Template
+  --#leftSub|Fantasy Trade Simulator
+  --#rightSub|rosebud
+  --+Background / Foreground|#fff5f6 / #3a1f1f
+  --+Border / Table Border|#e3a3a9 / #e6b7bd
+  --+Card / Cell|#ffe8ea / #ffeef0
+  --+Accent / Accent Text|#a73f55 / #fff7f8
+  --+Today / Today Text|#b04c5f / #fff7f8
+  --+Note / Subtle|#c76270 / #7f4a4a
+  --+Button bg / text / border|#a73f55 / #fff7f8 / #7f2e3f
+  --+Button preview|[button]Open FTS::!fts[/button]
+  --#oddRowBackground|#b04c5f
+  --#oddRowFontColor|#fff7f8
+  --#evenRowBackground|#b04c5f
+  --#evenRowFontColor|#fff7f8
+  --+Today highlight|This row uses the rosebud palette today color.
+  --X|
+}}

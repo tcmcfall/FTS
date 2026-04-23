@@ -4,9 +4,9 @@ This document defines the target prose style for live weather narration in FTS.
 
 Source references:
 
-- [fts_QUIP_CANONICAL_STANDARD.md](V:\Programs\Git Repository\FTS\Documentation\fts_QUIP_CANONICAL_STANDARD.md)
-- [fts_WEATHER_NARRATIVE_PERMUTATIONS.md](V:\Programs\Git Repository\FTS\Documentation\fts_WEATHER_NARRATIVE_PERMUTATIONS.md)
-- [fts_WEATHER_NARRATIVE_REVIEW_PACKET.md](V:\Programs\Git Repository\FTS\Documentation\fts_WEATHER_NARRATIVE_REVIEW_PACKET.md)
+- [fts_QUIP_CANONICAL_STANDARD.md](./fts_QUIP_CANONICAL_STANDARD.md)
+- [fts_WEATHER_NARRATIVE_PERMUTATIONS.md](./fts_WEATHER_NARRATIVE_PERMUTATIONS.md)
+- [fts_WEATHER_NARRATIVE_REVIEW_PACKET.md](./fts_WEATHER_NARRATIVE_REVIEW_PACKET.md)
 
 ## Purpose
 

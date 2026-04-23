@@ -1,11 +1,13 @@
 // name:        fts_region.TEMPLATE.js
 // version:     0.1.0-alpha.1
 // description: Authoritative template for a FTS fts.region.v4 module.
+// depends:     fts_weather >= 0.2.0-alpha.1, Roll20 API.
+// provides:    fts_mule character macro / ability: regions (root JSON; regions.<regionKey>), version entry fts_regionRegionName_0.1.0-alpha.1
 // Semantic Versioning (SemVer) Policy:
 // - FTS uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
 // - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
-// - Increment PATCH for backward-compatible bug fixes.
-// - Increment MINOR for new backward-compatible functionality.
+// - Increment PATCH for non-breaking bug fixes.
+// - Increment MINOR for new non-breaking functionality.
 // - Increment MAJOR only when the public API becomes stable and/or incompatible breaking changes are introduced.
 // - Pre-release labels such as alpha, beta, or rc mark unstable builds and sort lower than the matching normal release.
 // - Once a version is released, its contents must not be changed; further edits require a new version.
@@ -13,9 +15,9 @@
 // - Dependency notes should use SemVer-friendly wording such as ">= 0.1.0-alpha.1" rather than informal forms like "5.1.0+".
 //
 // Copy this file to:
-//   Modules/Region Modules/fts_region.<regionKey>_0.1.0-alpha.1.js
+//   Modules/Region Modules/fts_regionRegionName_0.1.0-alpha.1.js
 //
-// Then replace REGION_KEY, MODULE_NAME, and REGION_ENTRY.
+// Then replace REGION_KEY, REGION_MODULE_NAME, MODULE_NAME, and REGION_ENTRY.
 //
 // Canonical climate references used by the shipped modules:
 //   - ECMWF ERA5 Reanalysis: https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5
@@ -44,9 +46,11 @@
 
   var RT = (typeof globalThis !== 'undefined') ? globalThis : this;
   var VERSION = '0.1.0-alpha.1';
+  // Keep REGION_KEY canonical and lower-case; this key maps regions.<regionKey>.
   var REGION_KEY = 'replacewithregionkey';
-  var MODULE_NAME = 'fts_region.' + REGION_KEY;
-  var _startupRegistered = false;
+  // REGION_MODULE_NAME is display-style CamelCase used only in module naming.
+  var REGION_MODULE_NAME = 'ReplaceWithRegionName';
+  var MODULE_NAME = 'fts_region' + REGION_MODULE_NAME;
 
   // Replace the object below with real data.
   // The template is intentionally explicit so every editable area is visible.
@@ -598,7 +602,7 @@
 
   // Replace PERIOD_BLOCK_HAMMER with concrete monthly data like this.
   // TIMEOFDAY_SEGMENTS_COASTAL, TIMEOFDAY_SEGMENTS_UNDERWATER, and TIMEOFDAY_SEGMENTS_UNDERDARK
-  // are placeholders here for full eight-entry maps keyed by:
+  // are authoring scaffolds for full eight-entry maps keyed by:
   // earlypredawn, latepredawn, earlymorning, latemorning,
   // earlyafternoon, lateafternoon, earlyevening, lateevening.
   //
@@ -634,42 +638,13 @@
   //   }
   // }
 
-  function queueRegion(){
-    RT.ftsRegionQ = RT.ftsRegionQ || [];
-    RT.ftsRegionQ.push({ entry: REGION_ENTRY, moduleName: MODULE_NAME, version: VERSION });
-  }
-
   function registerRegion(){
-    if(RT.fts_weather && typeof RT.fts_weather.registerRegionEntry === 'function'){
-      RT.fts_weather.registerRegionEntry(REGION_ENTRY, MODULE_NAME, VERSION);
+    if(!(RT.fts_weather && typeof RT.fts_weather.registerRegionEntry === 'function')){
+      log(MODULE_NAME + ' skipped registration: fts_weather is unavailable.');
       return;
     }
-    queueRegion();
+    RT.fts_weather.registerRegionEntry(REGION_ENTRY, MODULE_NAME, VERSION);
   }
 
-  function registerStartupHooks(){
-    if(_startupRegistered) return;
-    _startupRegistered = true;
-
-    RT.ftsQ = RT.ftsQ || [];
-    RT.ftsQ.push(function(fts){
-      if(fts && typeof fts.registerStartup === 'function'){
-        fts.registerStartup(MODULE_NAME, function(){
-          registerRegion();
-        });
-      }
-    });
-
-    if(RT.fts && typeof RT.fts.registerStartup === 'function'){
-      RT.fts.registerStartup(MODULE_NAME, function(){
-        registerRegion();
-      });
-    }
-  }
-
-  function init(){
-    registerStartupHooks();
-  }
-
-  on('ready', init);
+  on('ready', registerRegion);
 })();

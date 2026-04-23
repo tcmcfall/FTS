@@ -1,4 +1,4 @@
-# FTS
+﻿# FTS
 Fantasy Trade Simulator
 
 What It Is
@@ -18,9 +18,31 @@ What It Does
 5.	Captures active-page map metadata and stores it as JSON for reuse by other modules, including region and locale page metadata plus optional depth or elevation metadata on any unified locale page.
 6.	Builds named routes and static map locations from token positions and map metadata.
 
-Current shipped region modules live in `Modules/Region Modules/fts_region.<regionKey>_0.1.0-alpha.1.js`.
+Current shipped region modules live in `Modules/Regions/fts_regionRegionName_0.1.0-alpha.1.js` naming, while each module keeps the canonical lower-case region key inside `REGION_ENTRY.region`.
 
 Source verification: run `python Tools/verify_region_modules.py` to validate every shipped region module against the active `fts_weather` period set and required `fts.region.v4` structure.
+
+Repository layout:
+
+```text
+FTS/
+  Backups/
+  Documentation/
+  Modules/
+    Core/
+      fts_atlas_0.1.0-alpha.1.js
+      fts_calendar_0.2.0-alpha.1.js
+      fts_core_0.2.0-alpha.1.js
+      fts_mapMeta_0.2.0-alpha.1.js
+      fts_weather_0.2.0-alpha.1.js
+    Regions/
+      fts_region<RegionName>_0.1.0-alpha.1.js
+    Wizards/
+      fts_mapPointWizard_0.2.0-alpha.1.js
+      fts_wizards_0.1.0-alpha.1.js
+  Templates/
+  Tools/
+```
 
 Canonical weather/current sources used by the shipped modules:
 
@@ -37,3 +59,4 @@ Canonical weather/current sources used by the shipped modules:
 The underwater visibility bands are conservative body-type heuristics informed by NOAA light-depth and Kd490 guidance; FTS does not fetch live water-clarity grids at runtime.
 
 Surface `chop` is currently modeled only for offshore and coastal surface locales. It is treated as local wind-driven wave roughness, so `!fts --weather set chop none|light|moderate|heavy|severe` simply raises or lowers the live wind band to the nearest compliant state, and dead calm always yields chop `none`.
+

@@ -1,14 +1,24 @@
-// fts_template_popupDropdown.js
-// Purpose: Template module demonstrating a one-click pop-up (Roll Query) with dropdowns for Year / Month-or-Festival / Day / Time.
-// Relationship: Standalone FTS template. Integrates with fts_core if present (adds a card & help). Publishes selections to fts_mule_calendar.
-// Version: 1.0.0
-// Dependencies: Roll20 API sandbox. (Optional) fts_core (for palette + log/help registry). (Optional) Meta-Toolbox for broader mule usage.
+// name:        fts_TEMPLATE_popupdropdown.js
+// version:     0.2.0-alpha.1
+// description: Template module demonstrating a one-click Roll Query with dropdowns for Year, Month-or-Festival, Day, and Time.
+// depends:     Roll20 API sandbox. Optional: fts_core >= 0.2.0-alpha.1 for palette, log-card, and help integration.
+// provides:    !fts_tpl
+// Semantic Versioning (SemVer) Policy:
+// - FTS uses SemVer in the form MAJOR.MINOR.PATCH[-PRERELEASE].
+// - Pre-release versions stay in 0.y.z. Anything may change and the API is not yet considered stable.
+// - Increment PATCH for non-breaking bug fixes.
+// - Increment MINOR for new non-breaking functionality.
+// - Increment MAJOR only when the public API becomes stable and/or incompatible breaking changes are introduced.
+// - Pre-release labels such as alpha, beta, or rc mark unstable builds and sort lower than the matching normal release.
+// - Once a version is released, its contents must not be changed; further edits require a new version.
+// - Header comments, internal VERSION constants, filenames, generated module text, and documentation references must stay aligned.
+// - Dependency notes should use SemVer-friendly wording such as ">= 0.1.0-alpha.1" rather than informal forms like "5.1.0+".
 //
 // === Help & Config (Template Reference)
 // Category: Pop-up Dropdown Pattern
 // Purpose: Provide a "Set Date" button that, with a single click, opens Roll Query dropdowns for Year, Month/Festival, Day, and Time.
 //          On submit, selections are validated (festival/day exclusivity; Shieldmeet leap-year requirement), written to state.fts.now,
-//          and mirrored to the mule `fts_mule`. The mule is auto-healed (created if missing).
+//          and mirrored to the mule `fts_mule` character macro / attribute surface. The mule is auto-healed (created if missing).
 // ===
 
 (function(){
@@ -16,7 +26,7 @@
 
   // === Constants & Version ====================================================
   var SCRIPT = 'fts_tpl';              // command namespace
-  var VERSION = '1.0.0';
+  var VERSION = '0.2.0-alpha.1';
   var CORE_MULE = 'fts_mule';
   var CAL_MULE  = 'fts_mule';
   var TITLE     = 'Set Date';
@@ -52,8 +62,6 @@
   function clampYear(y){ return Math.max(MIN_YEAR, Math.min(MAX_YEAR, y)); }
   function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
   function hrefAttr(s){ return String(s||'').replace(/"/g,'&quot;'); }
-  function isGM(pid){ try{ return typeof playerIsGM==='function' && playerIsGM(pid); }catch(e){ return false; } }
-  function say(html){ sendChat('fts', html); }
   function whisperTo(pid, html){ var p=getObj('player',pid), who=p?(p.get('displayname')||'GM'):'GM'; sendChat('fts', '/w \"'+who+'\" '+html); }
 
   // === Core-awareness (palette) ==============================================
@@ -71,14 +79,14 @@
   }
   var PALETTES = {
     none: null,
-    dark: { bg:'#222', fg:'#eee', border:'#111', tableBorder:'#555', card:'#2f2f2f', accent:'#3a7' },
+    dark: { bg:'#222', fg:'#eee', border:'#111', tableBorder:'#555', card:'#2f2f2f', accent:'#9b6dff' },
     parchment: { bg:'#f8f1e1', fg:'#3b2f1a', border:'#111', tableBorder:'#b79b74', card:'#efe3c7', accent:'#9a6e37' },
     contrast: { bg:'#000', fg:'#fff', border:'#111', tableBorder:'#888', card:'#111', accent:'#0aa' },
     powder:{ bg:'#eef6ff', fg:'#1f2a44', border:'#7aa7d9', tableBorder:'#9ec3ea', card:'#f2f7ff', accent:'#9ec3ea' }
   };
   function cssVars(){
     var pal = PALETTES[currentPalette()];
-    if(!pal){ return { container:'', title:'', card:'', link:'text-decoration:none; color:#4ea3ff;' }; }
+    if(!pal){ return { container:'', title:'', card:'', link:'text-decoration:none; color:#ba2e68;' }; }
     return {
       container:'display:block;width:80%;margin:0 auto;border:3px solid '+pal.border+';padding:10px 12px;background:'+pal.bg+';color:'+pal.fg+';font:14px/1.32 Georgia,serif;',
       title:'font-weight:bold;font-size:17px;margin-bottom:6px;color:'+pal.fg+';',

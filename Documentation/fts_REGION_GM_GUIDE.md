@@ -1,12 +1,12 @@
-# FTS Region Module Guide
+﻿# FTS Region Module Guide
 
 This guide covers the `fts.region.v4` format used by `fts_weather`, `fts_mapMeta`, and the shipped regional modules.
 
 ## Overview
 
-Each region module now writes one authoritative entry into the `fts_mule` character ability named `regions`.
+Each region module now writes one authoritative entry into the `fts_mule` character macro / ability named `regions`.
 
-- Module key: `fts_region.<regionKey>`
+- Module key naming: `fts_regionRegionName` (for module/version identity), while `region` remains the canonical lower-case lookup key used in page parsing.
 - Storage path: `root.regions[<regionKey>]`
 - Schema: `fts.region.v4`
 
@@ -40,7 +40,7 @@ The shipped modules do not rely on a single global dataset, because no one offic
 
 ## Installation
 
-Load the shipped regional modules you want to use from `Modules/Region Modules/fts_region.<regionKey>_0.1.0-alpha.1.js`, restart the Roll20 API sandbox, and run `!fts --weather verify`.
+Load the shipped regional modules you want to use from `Modules/Regions/fts_regionRegionName_0.1.0-alpha.1.js`, restart the Roll20 API sandbox, and run `!fts --weather verify`.
 
 ## Page Naming
 
@@ -355,7 +355,7 @@ Useful manual-table fields:
 
 ## Authoring Workflow
 
-1. Start from [fts_TEMPLATE_region.js](/V:/Programs/Git Repository/FTS/Documentation/fts_TEMPLATE_region.js) or `!fts --mapRegionWizard template`.
+1. Start from [fts_TEMPLATE_region.js](../Templates/fts_TEMPLATE_region.js).
 2. Set `referenceSources` and `sourceNotes` first so the analogue, climatology source, water-current source, underwater visibility source, and cave-climate source are explicit.
 3. Set `weather.climateControl` so low/high times, governor caps, and activation windows are explicit before you tune the monthly data.
 4. Choose the regional default locale first and fill `weather.periods` around that climate.
@@ -395,3 +395,4 @@ Useful manual-table fields:
 6. Run `!fts --mapMeta`.
 7. Run `python Tools/verify_region_modules.py`.
 8. Advance time and confirm the active band reuses its stored snapshot while live temperature still moves with the exact clock.
+

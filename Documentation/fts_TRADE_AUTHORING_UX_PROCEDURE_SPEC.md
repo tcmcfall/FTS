@@ -723,7 +723,7 @@ The advanced controls should remain grouped under:
 
 ## Procedure B: Create A Market / Map Point Trade Profile
 
-This flow assumes the map point already exists in geo.
+This flow assumes the map point already exists in mapMeta map records.
 
 The trade flow attaches economic meaning to that point.
 
@@ -743,7 +743,7 @@ The flow should display:
 Purpose:
 
 - prevents duplicate location authoring
-- keeps geo authoritative for location identity
+- keeps mapMeta authoritative for location identity
 
 ### Step B2: Settlement Profile
 
@@ -993,7 +993,7 @@ These must remain grouped under:
 
 This flow attaches trade and interaction meaning to an existing route.
 
-Geo remains authoritative for route identity and geometry.
+mapMeta remains authoritative for route identity and geometry.
 
 ### Step D1: Bind To Existing Route
 
@@ -1168,7 +1168,7 @@ The future UX should not:
 - expose simulation internals without explanation
 - bury critical meaning in free-text notes
 - require giant multi-purpose forms
-- require backward-compatible support for weaker legacy authoring shapes
+- require support for weaker historical authoring shapes
 - generate objects whose behavior cannot be summarized in one short review block
 
 ## Immediate Follow-On Specification Work
