@@ -1761,6 +1761,17 @@
     delete ensureState().lastSelection[String(pid || '')];
   }
 
+  function clearMapRecordSelection(pid){
+    try{
+      var mapRecords = getMapRecordsState();
+      if(mapRecords && mapRecords.lastSelection){
+        delete mapRecords.lastSelection[String(pid || '')];
+      }
+    }catch(e){
+      log('fts_mapPointWizard clearMapRecordSelection err: ' + e);
+    }
+  }
+
   function shouldIgnoreRapidRepeat(pid, content){
     var stateRoot = ensureState();
     var recent = stateRoot.recentMessages || {};
@@ -4521,6 +4532,7 @@
       setView(pid, 'bind');
       clearStatus(pid);
       clearCachedSelection(pid);
+      clearMapRecordSelection(pid);
       whisper(pid, '<div>' + esc('Saved Map Point Wizard settings to ' + tokenDisplayName(finished.token) + '.') + '</div>');
       whisperCampaignMenu(pid);
       return;
@@ -4621,6 +4633,11 @@
       if(isSelfChatMessage(msg)) return;
       var content = String(msg.content || '').trim();
       if(!isWizardCommandContent(content) && !/^!fts(\b|$)/i.test(content)) return;
+      var tail = extractWizardCommandTail(content);
+      if(tail !== null){
+        var parsed = parseInnerCommand(tail);
+        if(normalizeWizardAction(parsed.action) === 'finish') return;
+      }
       cacheSelection(msg.playerid, msg);
     }catch(e){
       log('fts_mapPointWizard selection cache err: ' + e);
