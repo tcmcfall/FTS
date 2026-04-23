@@ -2662,9 +2662,9 @@
 
   function gridLinkStyle(selected){
     return linkStyle(selected)
-      + 'display:flex;align-items:center;justify-content:center;'
+      + 'display:flex;align-items:center;justify-content:flex-start;'
       + 'min-height:56px;height:100%;margin-top:0;padding:10px 12px;box-sizing:border-box;'
-      + 'line-height:1.2;text-align:center;white-space:normal;';
+      + 'line-height:1.2;text-align:left;white-space:normal;';
   }
 
   function gridActionLink(href, label, selected){
@@ -3340,7 +3340,7 @@
     var tone = compactToggleTone(selected);
     var style = 'display:block;margin-top:4px;padding:4px 6px;text-decoration:none;line-height:1.25;'
       + 'border:1px solid ' + tone.border + ';background:' + tone.background + ';color:' + tone.color + ';'
-      + 'border-radius:4px;';
+      + 'border-radius:4px;text-align:left;';
     style += selected ? 'font-weight:bold;' : '';
     var attrs = ' href="' + hrefAttr(href) + '" style="' + style + '"';
     if(String(href || '').charAt(0) !== '#' && RT.fts && typeof RT.fts.actionLinkAttrs === 'function'){
