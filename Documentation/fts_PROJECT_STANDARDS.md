@@ -254,6 +254,7 @@ Accepted source families currently ingested by FTS include:
 - NOAA CoastWatch Kd490 for water clarity and light attenuation.
 - National Park Service cave climate references for subterranean patterns.
 - USGS streamflow references for river and current assumptions.
+- S. John Ross, `medieval-demographics-made-easy.pdf`, for settlement-density, population-spread, and support-value demographic heuristics used by location templates and wizard authoring guidance.
 
 When source data is adapted into fantasy geography, document the source analogue and the design transformation.
 

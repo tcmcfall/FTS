@@ -44,7 +44,7 @@ FTS/
   Tools/
 ```
 
-Canonical weather/current sources used by the shipped modules:
+Canonical sources used by the shipped modules:
 
 - ECMWF ERA5 for monthly air temperature, precipitation, and prevailing-wind climatology
 - Copernicus Marine Global Ocean Physics for seasonal current direction, strength, and subsurface temperature structure
@@ -55,6 +55,7 @@ Canonical weather/current sources used by the shipped modules:
 - NOAA Ocean Service light-depth guidance plus NOAA CoastWatch Kd490 clarity guidance for underwater visibility falloff
 - U.S. National Park Service cave-climate guidance for near-constant underdark temperatures and mostly dead-calm airflow
 - USGS streamflow-measurement guidance for 20/60/80% inland and coastal water-column sampling
+- S. John Ross, `medieval-demographics-made-easy.pdf`, for settlement-density, population-spread, service-support, and location-template demographic heuristics used in wizard and template planning
 
 The underwater visibility bands are conservative body-type heuristics informed by NOAA light-depth and Kd490 guidance; FTS does not fetch live water-clarity grids at runtime.
 
