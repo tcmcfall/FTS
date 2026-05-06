@@ -617,6 +617,19 @@ var fts_mapMeta = (function () {
   }
 
   function loadRegionsRoot(mule) {
+    try {
+      if (RT.fts_weather && typeof RT.fts_weather.getUnifiedRegionsRoot === 'function') {
+        var weatherRoot = RT.fts_weather.getUnifiedRegionsRoot();
+        if (weatherRoot && typeof weatherRoot === 'object' && !Array.isArray(weatherRoot)) {
+          if (!weatherRoot.regions || typeof weatherRoot.regions !== 'object' || Array.isArray(weatherRoot.regions)) {
+            weatherRoot.regions = {};
+          }
+          if (weatherRoot.schema !== 'fts.regions.root.v1') weatherRoot.schema = 'fts.regions.root.v1';
+          return weatherRoot;
+        }
+      }
+    } catch (e0) {}
+
     var raw = getAbilityAction(mule, ROOT_ABILITY);
     if (!raw) return { schema: 'fts.regions.root.v1', regions: {} };
     try {

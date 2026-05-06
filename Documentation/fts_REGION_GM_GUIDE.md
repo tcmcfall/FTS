@@ -366,7 +366,7 @@ Useful manual-table fields:
 9. Tune critical-event weights and manual tables.
 10. Upload the script and run `!fts --weather verify`.
 11. Confirm that locale pages like `region.locale.mapname`, region overview pages like `region.region`, and global overview pages like `mapname.global` resolve appropriately in map metadata and weather.
-12. Run `python Tools/verify_region_modules.py` in the repo to verify every shipped region module against the live weather-module period set and required `fts.region.v4` structure.
+12. Complete the validation checklist in this guide and resolve any remaining warnings before release.
 
 ## Validation Checklist
 
@@ -393,6 +393,6 @@ Useful manual-table fields:
 4. Run `!fts --weather detail`.
 5. Run `!fts --weather roll`.
 6. Run `!fts --mapMeta`.
-7. Run `python Tools/verify_region_modules.py`.
+7. Run `!fts --weather verify` again after map metadata checks.
 8. Advance time and confirm the active band reuses its stored snapshot while live temperature still moves with the exact clock.
 

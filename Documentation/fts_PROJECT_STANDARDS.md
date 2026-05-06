@@ -227,7 +227,7 @@ Depth and elevation:
 
 ### Region schema
 
-Region modules must use the `fts.region.v4` shape and must pass `Tools/verify_region_modules.py`.
+Region modules must use the `fts.region.v4` shape and must pass `!fts --weather verify`.
 
 Required weather profile areas include:
 
@@ -378,7 +378,7 @@ Current supporting standards and references include:
 Before considering a standards-related change complete:
 
 - Run JavaScript syntax checks for all files under `Modules`.
-- Run `Tools/verify_region_modules.py`.
+- Run `!fts --weather verify`.
 - Run `git diff --check`.
 - Search for stale public command spellings in modules and documentation.
 - Confirm generated help text uses canonical spellings.

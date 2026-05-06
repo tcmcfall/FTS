@@ -1,0 +1,21 @@
+{
+  "schema": "fts.mapEntity.v1",
+  "key": "oakbottom",
+  "name": "Oakbottom",
+  "entityType": "mapPoint",
+  "region": "landsOfIntrigue",
+  "locale": "inland",
+  "politics": { "government": "villageCouncil", "stability": 4, "lawLevel": 3, "corruptionLevel": 1 },
+  "majorFactions": [],
+  "majorReligions": ["chauntea", "waukeen"],
+  "powerProfile": { "offense": 1, "defense": 2, "aggression": 0, "projection": "local", "mobility": 1 },
+  "tradeProfile": {
+    "spring": { "has": ["whiskey"], "wants": ["tools"], "needs": ["grain"] },
+    "summer": { "has": ["whiskey"], "wants": [], "needs": [] },
+    "autumn": { "has": ["whiskey"], "wants": ["barrels"], "needs": [] },
+    "winter": { "has": ["whiskey"], "wants": ["coal"], "needs": ["grain"] }
+  },
+  "relationships": { "allies": [], "enemies": [] },
+  "tags": ["halfling", "whiskey", "village"],
+  "mapPointProfile": { "population": 420, "development": 2, "wealth": 3, "security": 2 }
+}

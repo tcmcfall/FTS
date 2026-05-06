@@ -43,13 +43,44 @@ CREATE TABLE IF NOT EXISTS fts_exports (
     ON DELETE SET NULL,
   CONSTRAINT fk_exports_user
     FOREIGN KEY (generated_by_user_id) REFERENCES fts_users(id)
-    ON DELETE SET NULL,
-  CONSTRAINT chk_export_target CHECK (
-    (export_kind = 'entity' AND entity_id IS NOT NULL AND content_pack_id IS NULL)
-    OR
-    (export_kind = 'contentPack' AND content_pack_id IS NOT NULL)
-  )
+    ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DELIMITER $$
+
+DROP TRIGGER IF EXISTS trg_fts_exports_validate_insert$$
+CREATE TRIGGER trg_fts_exports_validate_insert
+BEFORE INSERT ON fts_exports
+FOR EACH ROW
+BEGIN
+  IF NEW.export_kind = 'entity' AND (NEW.entity_id IS NULL OR NEW.content_pack_id IS NOT NULL) THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'fts_exports entity export requires entity_id and null content_pack_id';
+  END IF;
+
+  IF NEW.export_kind = 'contentPack' AND NEW.content_pack_id IS NULL THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'fts_exports contentPack export requires content_pack_id';
+  END IF;
+END$$
+
+DROP TRIGGER IF EXISTS trg_fts_exports_validate_update$$
+CREATE TRIGGER trg_fts_exports_validate_update
+BEFORE UPDATE ON fts_exports
+FOR EACH ROW
+BEGIN
+  IF NEW.export_kind = 'entity' AND (NEW.entity_id IS NULL OR NEW.content_pack_id IS NOT NULL) THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'fts_exports entity export requires entity_id and null content_pack_id';
+  END IF;
+
+  IF NEW.export_kind = 'contentPack' AND NEW.content_pack_id IS NULL THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'fts_exports contentPack export requires content_pack_id';
+  END IF;
+END$$
+
+DELIMITER ;
 
 CREATE TABLE IF NOT EXISTS fts_audit_log (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -93,4 +124,3 @@ CREATE TABLE IF NOT EXISTS fts_audit_log (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;
-
