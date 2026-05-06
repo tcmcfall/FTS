@@ -32,6 +32,7 @@ var fts_weather = (function(){
   var WEATHER_ROOT_SCHEMA = 'fts.weather.root.v2';
   var WEATHER_CURRENT_SCHEMA = 'fts.weather.current.v3';
   var WEATHER_TICK_SCHEMA = 'fts.harptos.tick.v2';
+  var RUNTIME_REGIONS_REGISTRY_KEY = '__ftsUnifiedRegionsRuntimeV1';
   var HARPTOS_BASE_YEAR = 1300;
 
   // ---------------------------------------------------------------------------
@@ -1622,11 +1623,49 @@ var fts_weather = (function(){
     return root;
   }
 
+  function ensureRuntimeRegionsRoot(){
+    if(!RT[RUNTIME_REGIONS_REGISTRY_KEY] || typeof RT[RUNTIME_REGIONS_REGISTRY_KEY] !== 'object' || Array.isArray(RT[RUNTIME_REGIONS_REGISTRY_KEY])){
+      RT[RUNTIME_REGIONS_REGISTRY_KEY] = defaultRegionsRoot();
+    }
+    return normalizeRegionsRoot(RT[RUNTIME_REGIONS_REGISTRY_KEY]);
+  }
+
+  function mergeRegionsIntoRoot(targetRoot, sourceRoot){
+    targetRoot = normalizeRegionsRoot(targetRoot);
+    sourceRoot = normalizeRegionsRoot(sourceRoot);
+    var source = regionPayloads(sourceRoot);
+    var keys = Object.keys(source);
+    for(var i=0;i<keys.length;i++){
+      var payload = source[keys[i]];
+      if(!payload || typeof payload !== 'object' || Array.isArray(payload)) continue;
+      var region = canonicalKey(payload.region || keys[i]);
+      if(!region) continue;
+      targetRoot.regions[region] = deepCloneJSON(payload);
+    }
+    return targetRoot;
+  }
+
+  function mirrorPersistedRegionsIntoRuntime(root){
+    mergeRegionsIntoRoot(ensureRuntimeRegionsRoot(), root);
+  }
+
   function loadRegionsRoot(mule){
     var raw = (getAbilityAction(mule, 'regions')||'').trim();
-    if(!raw) return defaultRegionsRoot();
+    var root = defaultRegionsRoot();
+    if(raw){
+      try{
+        root = normalizeRegionsRoot(JSON.parse(raw));
+      }catch(e){
+        root = defaultRegionsRoot();
+      }
+    }
+    mirrorPersistedRegionsIntoRuntime(root);
+    return mergeRegionsIntoRoot(root, ensureRuntimeRegionsRoot());
+  }
+
+  function getUnifiedRegionsRoot(){
     try{
-      return normalizeRegionsRoot(JSON.parse(raw));
+      return deepCloneJSON(loadRegionsRoot(ensureMule()));
     }catch(e){
       return defaultRegionsRoot();
     }
@@ -1637,7 +1676,9 @@ var fts_weather = (function(){
   }
 
   function saveRegionsRoot(mule, root){
-    upsertAbility(mule, 'regions', JSON.stringify(normalizeRegionsRoot(root)));
+    var normalizedRoot = normalizeRegionsRoot(root);
+    mirrorPersistedRegionsIntoRuntime(normalizedRoot);
+    upsertAbility(mule, 'regions', JSON.stringify(normalizedRoot));
   }
 
   function canonicalPeriodKey(v){
@@ -2273,6 +2314,7 @@ var fts_weather = (function(){
     var issues = [];
     appendRegionProfileIssues(region, copy, issues);
     if(issues.length) throw new Error(issues.join(' | '));
+    ensureRuntimeRegionsRoot().regions[region] = deepCloneJSON(copy);
     var root = loadRegionsRoot(mule);
     root.regions[region] = copy;
     saveRegionsRoot(mule, root);
@@ -6845,6 +6887,7 @@ var fts_weather = (function(){
     init:init,
     registerRegionEntry:registerRegionEntry,
     loadedRegions:loadedRegions,
+    getUnifiedRegionsRoot:getUnifiedRegionsRoot,
     _renderLogCard:renderLogCard,
     _weatherLine:weatherLine,
     _weatherQuipLine:weatherQuipLine,

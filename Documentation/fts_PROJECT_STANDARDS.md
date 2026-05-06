@@ -227,7 +227,7 @@ Depth and elevation:
 
 ### Region schema
 
-Region modules must use the `fts.region.v4` shape and must pass `Tools/verify_region_modules.py`.
+Region modules must use the `fts.region.v4` shape and must pass `!fts --weather verify`.
 
 Required weather profile areas include:
 
@@ -254,6 +254,7 @@ Accepted source families currently ingested by FTS include:
 - NOAA CoastWatch Kd490 for water clarity and light attenuation.
 - National Park Service cave climate references for subterranean patterns.
 - USGS streamflow references for river and current assumptions.
+- S. John Ross, `medieval-demographics-made-easy.pdf`, for settlement-density, population-spread, and support-value demographic heuristics used by location templates and wizard authoring guidance.
 
 When source data is adapted into fantasy geography, document the source analogue and the design transformation.
 
@@ -377,7 +378,7 @@ Current supporting standards and references include:
 Before considering a standards-related change complete:
 
 - Run JavaScript syntax checks for all files under `Modules`.
-- Run `Tools/verify_region_modules.py`.
+- Run `!fts --weather verify`.
 - Run `git diff --check`.
 - Search for stale public command spellings in modules and documentation.
 - Confirm generated help text uses canonical spellings.

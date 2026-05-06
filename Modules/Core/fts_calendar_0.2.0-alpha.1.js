@@ -294,21 +294,33 @@ function festivalBgLayout(key){
   }
 
   function loadCalendarRegionEntries(){
-    var raw = String(getAbilityAction(getOrCreateMule(), 'regions') || '').trim();
-    if(!raw) return [];
+    var parsed = null;
     try{
-      var parsed = JSON.parse(raw);
-      var regions = (parsed && parsed.regions && typeof parsed.regions === 'object' && !Array.isArray(parsed.regions)) ? parsed.regions : {};
-      var out = [];
-      var keys = Object.keys(regions);
-      for(var i=0;i<keys.length;i++){
-        var entry = regions[keys[i]];
-        if(entry && typeof entry === 'object' && !Array.isArray(entry)) out.push(entry);
+      if(RT.fts_weather && typeof RT.fts_weather.getUnifiedRegionsRoot === 'function'){
+        parsed = RT.fts_weather.getUnifiedRegionsRoot();
       }
-      return out;
-    }catch(e){
-      return [];
+    }catch(e0){
+      parsed = null;
     }
+
+    if(!parsed || typeof parsed !== 'object' || Array.isArray(parsed)){
+      var raw = String(getAbilityAction(getOrCreateMule(), 'regions') || '').trim();
+      if(!raw) return [];
+      try{
+        parsed = JSON.parse(raw);
+      }catch(e1){
+        return [];
+      }
+    }
+
+    var regions = (parsed && parsed.regions && typeof parsed.regions === 'object' && !Array.isArray(parsed.regions)) ? parsed.regions : {};
+    var out = [];
+    var keys = Object.keys(regions);
+    for(var i=0;i<keys.length;i++){
+      var entry = regions[keys[i]];
+      if(entry && typeof entry === 'object' && !Array.isArray(entry)) out.push(entry);
+    }
+    return out;
   }
 
   var CALENDAR_QUIPS = {
