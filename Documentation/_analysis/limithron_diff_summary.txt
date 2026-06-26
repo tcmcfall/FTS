@@ -1,0 +1,7 @@
+docx_paragraphs=173
+docx_long_paragraphs_missing_in_pdf=75
+pdf_blocks_considered=126
+pdf_blocks_missing_in_docx=61
+credits_foreword_contents=3
+appendix_or_cards=3
+other=55

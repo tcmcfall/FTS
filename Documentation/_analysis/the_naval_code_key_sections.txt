@@ -1,0 +1,365 @@
+
+
+===== #### Tiers of Rules (line 331) =====
+
+#### Tiers of Rules
+
+The Naval Code is a modular ruleset. The rules are designed so that any combination of them should result in a rewarding naval experience. 
+
+Throughout the document, alternative rules are given in yellow boxes. These rules may simplify the game or add an extra level of complexity. A summary of tiers and a collection of their exact changes can be found in the reference section. The Tiers are as follows:
+
+- **Captain Hook:** Which ignores or simplifies many rules, and is best for quickly adding ships to a game. If you think this may be the route you are interested in, I recommend checking out "The Naval Code: Abridged." It made no sense to have to hunt through rules you were unlikely to use, so I compiled the essential ones in this shorter version.
+- **Pirates of the Caribbean:** The guide in its natural state
+- **Documentary:** For players who wish for gritty sea life.
+
+
+<div class="footnote"> 
+
+</div>
+
+\pagebreakNum
+
+
+<div class='partpage'>
+
+
+
+===== # Ship Properties (line 365) =====
+
+# Ship Properties
+
+
+
+===== #### Damage Threshold (line 404) =====
+
+#### Damage Threshold
+Ships are hardy structures which require a considerable attack to take damage. The damage of a single attack must be greater than the damage threshold or have no effect at all on the ship or rigging. This number is not subtracted from damage, it is all or nothing. <br>
+**Siege Weapons ignore the Damage Threshold of ships.**
+
+
+
+===== ##### Base Ship Statistics (line 438) =====
+
+##### Base Ship Statistics
+______
+| Class | Base Price | Size| Speed | Number of Masts | Davit Slots | AC | Damage Threshold | HP |Effective Hp| Cannons <br> (Min/Max)| Skeleton Crew | Max Crew| Storage Capacity|
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| 1st Rate | 35k  | 125 x 30ft| 2 | 3 | 10| 8  | 25 | 700 | 50 | 10/26 | 40 | 70 | 6,000 lbs.|
+| 2nd Rate | 20k  | 80 x 25ft | 3 | 2 | 6 | 10 | 20 | 500 | 25 | 4/8   | 15 | 40 | 4,000 lbs.|
+| Unrated  | 10k  | 40 x 20ft | 3 | 1 | 2 | 13 | 15 | 400 | 25 | 3/4   | 5  | 15 | 3,200 lbs.|
+
+</div>
+
+
+
+===== ## Officers (line 505) =====
+
+## Officers
+Every ship has several Officers who share the responsibility of leadership. Player characters or other skilled characters may take up to **2** Officer Positions each, benefiting from the features and actions of both simultaneously. Many positions are unique and may be taken by only one person at a time. Some have restrictions, requiring the ability to cast spells or certain proficiencies. Printable reference cards for officer positions are available at [r/5eNavalCampaigns](https://www.reddit.com/r/5eNavalCampaigns/)<br>
+The positions and their focus are:
+___
+-   **Captain, First Mate, and Quartermaster:** Leadership and Support
+-  	**Helmsman:** Piloting the Ship
+-	**Cannoneer:** Making Attacks with Siege Weapons
+-	**Master Gunner:** The Head Cannonneer
+-	**Surgeon:** Recovering Casualties
+-	**Boatswain:** Repairing the Ship and Weapons
+-	**Arcanist / Militant:** Spell Casters or Martial Fighters
+
+All Officers share a position of authority, and as such may give orders to crew (Charisma checks if applicable).
+
+Officer Positions are not restrictions, although some may require constant attention. 
+
+During Naval Combat, ships take initiative, and every member of ship acts as one cohesive unit. Rather than taking full individual turns, Officers may only take a single action each on their ship's turn. For information on how this works, see ["Officer Locations"](#p23). Each Officer Position offers additional actions on top of any other actions you can normally take. These actions are Naval-Combat specific, such as firing cannons or piloting the ship.
+
+\columnbreak
+
+<p style="font-size:12px"><b>Features and Actions granted by officer positions are only available during Naval Combat.</b>
+
+Each Position also comes linked a Travel Role; a responsibility you are trusted with while making journeys on the sea, such as navigating or keeping a lookout. The implementation of these roles are further discussed in "Making A Journey". A quick guide to these roles is available in the "Printable" section.
+
+Officer Positions can be taken or swapped as an action but carry over across non-combat scenarios. There is no need to re-take officer positions.
+
+If initiative is called and you do not have an officer position, or wish for a different one, an action will need to be taken to have it swapped / assigned to you.
+
+
+
+===== ##### Turn - By - Turn (line 770) =====
+
+##### Turn - By - Turn
+A turn-by-turn example of an Arcanist <br> (With the second officer position of First Mate) <br>to help illustrate the Arcanist's feature:
+___
+-	**Turn 1:** Begins in the crow’s nest- *Action:* “Firebolt”. *Movement:* move down the ladder to the deck (Full movement)
+-	___	___
+-	___
+-	___
+-	___
+-	**Turn 2:** *Movement:* Moves to the wheel. *Action:* “Guidance” on the pilot. *Movement:* Begin moving back to Mast.
+-	___	___
+-	___
+-	___
+___
+-	**Turn 3:** *Action:* “Arcane Well”, *Movement:* Begin climbing ladder. Saves on Overboard Save from *About Face*.
+-	___	___
+-	___
+-	___
+-	___
+-	
+___
+-	**Turn 4:** Arcane Well grants a 3rd level spell slot. *Movement:* Reaches the top of the mast. *Action:* Casts “Magic Missile” at 3rd level.
+-	___	___
+-	___
+-	___
+-	___
+-	**Turn 5:** *Movement:* Climbs back down Mast- *Action:* Dash, making it halfway to the lower deck.
+-	___	___
+-	___
+-	___
+-	___
+-	**Turn 6:** *Movement:* Finishes climbing down the deck, *Action:* “Rallies” (First Mate) the Master Gunner.
+-	___
+-	___
+-	___
+-	___
+-	**Turn 7:** *Action:* Medicine check to assist Surgeon (Success). *Movement:* Back up to the main deck.
+
+<div class="footnote">
+
+</div>
+
+\pagebreakNum
+
+> #### Variant Arcanist: ***Militant*** <br>
+> Militants are Martial Combat Officers who share all the same features and rules as Arcanists, but do not require the ability to cast spells. *Arcane Well* is replaced with *Warrior's Focus*. <br>
+> **Variant Action:** ***Warrior's Focus:*** As an action, begin concentrating on an attack, with the same concentration rules as Arcane Well. If, by the start of your next turn, your Concentration has not been broken, your next weapon attack has Advantage on both the Attack and Damage rolls. This bonus does not apply to Siege Weapons. You may use this action a number of times equal to your proficiency bonus per long rest.
+
+
+
+
+
+===== ## Making a Journey (line 837) =====
+
+## Making a Journey
+
+In a setting which revolves vehicles, traveling from place to place is a key part of the game. No one buys a ship to let it sit in the harbor! These journeys are exciting and often as fruitful as the goal itself. It is between locations that the joys and discoveries of a naval campaign come to life.
+
+
+
+===== ## Siege Weapon Properties (line 952) =====
+
+## Siege Weapon Properties
+
+The following rules replace the ones given for siege weapons in the DMG. They introduce slightly modified mechanics to range and damage.
+
+
+
+
+===== #### Attacks and Damage (line 964) =====
+
+#### Attacks and Damage 
+**Siege Weapons do not add any modifiers to their attacks or damage** with the exception of Carronades, which add the highest dexterity modifier of those manning it to its damage.
+
+\columnbreak
+
+
+
+===== ## Ship Enhancements (line 1311) =====
+
+## Ship Enhancements
+
+The following section offers customizable options for ships and cannons. Both can have as many upgrades / enhancements as can be afforded, but some upgrades cannot be added to the same unit. Build Time is 1 day for every 2,000-gold value.
+
+
+
+===== ## Combat Overview (line 1670) =====
+
+## Combat Overview
+Naval Combat is designed to take place on **25 ft. Hexes**. One round of Naval Combat takes 6 seconds, the same as standard combat.
+
+> **Naval Combat refers to ship - to - ship combat, when officers’ positions are active, and ships have initiative. Standard combat refers to classic combat when initiative is taken per the individual.**
+	
+
+
+===== ## Movement (line 1758) =====
+
+## Movement
+Movement is considered as “From the Bow”. You drive the front of the ship, no matter the size. Movement is performed one hex at a time, up to the speed of the ship.
+
+A ship must move at least ½ speed every round, unless it moved ½ speed the previous round, in which case it can stop. (Oars and some enhancements offer immediate stopping)
+
+\columnbreak
+
+
+
+===== ### Spell Effects on Movement (line 1842) =====
+
+### Spell Effects on Movement
+In order for wind spells to have an affect on the movement of ships, over half the number of masts must be affected by spells cast at level 2 or higher. Each mast does not need to be affected by the same spell or by the same caster, since many spells only affect enough space to impact one mast at a time. Spells cast at higher level give increasing bonuses, and each bonus compounds on the ones before it.
+
+-   A spell cast at Second Level grants the effects of moving with the wind.
+-	Cast At 3rd level, wind spells help to reduce the effects of the "Strong Wind" weather condition.
+-	At 5th level, they may allow a ship to move against the wind at no penalty. The travel speed of a ship increases by 1 for every 2 hours of use.
+-	At 7th level, the spell is sufficient regardless of the number of masts it affects.
+
+Spells which affect water, such as control water, produce the same effects at the same levels, without the need for sails. The spells "Tidal Wave" and "Tsunami" are apt to cause overboard saving throws, but also cause immediate movement effects.
+
+
+
+===== ## Damage (line 1941) =====
+
+## Damage
+
+
+
+===== ## Hit Points (line 2031) =====
+
+## Hit Points
+
+Ships possess 2 Hit point pools: **Ship** and **Rigging**. There is also the **Casualty Damage**.
+
+Ship HP describes the status of the ship, and act much like the HP of a creature. When it hits 0, the ship begins sinking. One half of the damage dealt to the ship is added to the casualty damage for the turn.
+Ships also contain a value known as the **Effective HP**. While they aren't sinking, ships below this value have been nearly destroyed, and their functions are limited. 
+
+Rigging HP describes the masts, sails, and steering units of a ship. Damaging these do not cause the ship to sink, but as the HP drops, sanctions are put on the ship to represent its limited sailing capabilities. Unlike creature HP, Rigging HP has a series of effects based on the amount remaining, besides just hitting 0.
+
+
+
+===== ### Ship Hit points (line 2040) =====
+
+### Ship Hit points
+
+
+===== ### Rigging Hit Points (line 2063) =====
+
+### Rigging Hit Points
+Each ship has associated with it a Rigging HP value, representing the masts, sails, and steering units. Each Mast on a ship adds **40** total Rigging HP. As these take damage, movement effects occur based on amount of HP remaining. This HP can be repaired the same as Ship HP.
+
+| HP Remaining | Condition|
+|:---:|:-----------:|
+|51% or More| Full Effectiveness |
+| 50% - 26%| No bonus with wind |  
+| 25% - 11% | No bonus or penalties from wind <br> 1/2 Speed, 1/2 Travel Speed|
+| 10% or Lower |No Bonus or penalty from Wind. <br> Speed equals  1, Travel Speed equals 1 |
+
+
+
+===== ### Casualties (line 2073) =====
+
+### Casualties
+At the end of each turn, causalities must be calculated for every ship based on the Casualty Damage they took that turn. 
+
+You begin every turn with 0 Casualty Damage, which increases after every hit which adds damage to it. Attacks that target the ship add an amount of damage equal to half the damage they dealt to the ship, while attacks which target the crew have their full damage added. The casualty damage is the sum total over a single turn. 
+
+Some attacks specify that they do not affect this total, and some others cause immediate casualties and are therefore not considered a second time. At the end of the turn, consult the following chart to determine the results:
+
+
+
+===== #### Officer Casualties (line 2099) =====
+
+#### Officer Casualties
+If an attack that was targeting the ship or crew scores a critical hit, it hits a PC/ Skilled Hireling/ Combat Unit on that ship for damage equal to their level. If they do not have a level, their CR can be used. Who is hit is decided by the DM or rolled randomly. The attack does damage to its intended target as normal, but no damage from the attack, regardless of its target, is considered for casualty damage.
+
+
+
+===== ## Boarding (line 2230) =====
+
+## Boarding
+***Boarding*** describes the specific strategy of forcing standard combat by coming side by side another ship and grappling it using a "Boarding Bonus" as the modifier for the contest.
+
+**Boarding is not the only means of invading another ship**, despite other methods still resulting in a ship being "boarded". [Leaving the ship](p24#) gives more information on what occurs using other tactics.
+
+As in Naval Combat, Unskilled Hirelings are not to participate in any part of boarding. Boarding and assisting it are restricted to those who can take actions in Naval Combat, such as officers and combat units.
+
+
+
+===== ### Boarding Procedure (line 2237) =====
+
+### Boarding Procedure
+
+1.   **On their ship's turn, The Captain, Quartermaster, or First Mate takes the 'Board' free action** To take the boarding action, the two ships must be side by side and facing the same direction. Their ship becomes the "Offensive" ship, and the targeted ship becomes "Defensive"
+
+
+2.   **Officers participate in the boarding.** Offensive ship Officers, except the Helmsman, may take actions as normal, including actions which help raise the boarding bonus or actions to leave the ship. The helmsman must save their action to make the boarding check at the end of the turn.
+<br>   The goal of those assisting is to increase the **Boarding Bonus** by using grappling hooks, harpoons or spells. **A bonus of at least +1 is needed or else the boarding automatically fails.**
+<br>   Here is a collection of what may give a boarding bonus, and a reminder of what offensive boarding bonus they give. The location of the mechanics is also given.
+
+| Action |  Source | Bonus |
+|:---:|:---:|:---:|
+| Grappling Hook|  Items | +1 |
+| Harpoon | Ammunition| +3 |
+| Hooked Gangplank | Ship Items,<br> Gangplank Upgrade| +1 |
+| Hooked Ram| Ship Enhancements| +5 |
+
+Below are examples of spells that may increase the boarding bonus. This is not an exhaustive list, and the listed bonuses are suggestions which may differ on a case by case basis. Some spells may not add a direct bonus but influence the check in other ways.
+
+| Spell | Bonus | 
+|:---:|:---:|
+| Grasping Vine| +1 | 
+| Web |  +2 | 
+| Bigby’s Hand| +3 |
+| Arcane Hand |  +3 |
+
+\columnbreak
+
+  Instead of helping, you may wish to immediately move onto the targeted ship. The "Boarding Party" should take the "Ready" action to move across using their method of choice with the trigger "when the boarding succeeds". Using them immediately, instead of holding them, could result in being stranded. 
+
+-  Those using rope swings, jumping, etc. will make acrobatics checks. On a success, you choose where to land (must be within 10 feet of the side boarded over) and move onto the boarded ship.  On a failure, you may not make it, swing back, or even fall. 
+-   If using a gangplank, laying it down is an action- moving across it will requires movement on your turn.
+
+
+
+===== ##### The Boarding Check (line 2269) =====
+
+##### The Boarding Check
+
+3.   **The "Boarding Check" is made by the Offensive Helmsman, contested with a pilot check from the Defensive Helmsman.** At the end of the ship's turn, the offensive ship needs at least +1 to their boarding bonus. If not, their turn ends. If they do, the Helmsman makes a "Boarding Check" as their action, adding their proficiency bonus and the Boarding Bonus to the roll. This check is contested by a pilot check from the helmsman of the defensive ship, using an ability modifier of their choice.
+<br>  On a failure, the ships are not grappled. The offensive ship's turn ends, and Naval Combat continues. You may continue to attempt to board on your ship's turns so long as the conditions are met.
+<br>  On a successful boarding check, the boarding succeeds and both ships are in a modified grapple, detailed in "The Boarding". If an action was held to move onto the ship, it is taken now. <br>
+  Naval Combat ends and individual initiative is rolled for everyone. Begin Standard Combat.
+
+
+
+===== ### The Boarding (line 2276) =====
+
+### The Boarding
+
+While in this variant grapple, the speed of both ships drops to 0. Instead, they each move forward one hex at a time in the direction they were heading, potentially listing. The ships stay 10ft away from each other, and neither is able to move freely until the grapple is broken (the boarding bonus reduced to 0), at which point both ships may move freely. As long as the grapple is maintained, neither ship has access to officer actions except the Helmsman. Cannons and other features of the ships are still functional but must be manned or used on an individual basis since unskilled hirelings are not considered present during standard combat.
+
+Each round, the offensive helmsman must keep the grapple active using either their Action or Bonus Action. The ships drift apart 5 ft. each round on Initiative count 1 if this bonus action was not taken. This drifting does not occur if the Boarding Bonus is greater than or equal to **+ 5**, as the ships are assumed to stay together. The ships start at 10ft away from each other and move apart from there. Gangplanks are destroyed if the distance between ships is longer then their length. Grappling hooks and harpoons are likewise rendered ineffective if the ships drift apart further than their normal range. 
+
+<div class="footnote">
+
+</div>
+
+\pagebreakNum
+
+
+
+===== ### Breaking the Boarding (line 2288) =====
+
+### Breaking the Boarding
+**The grapple ends if the boarding bonus is reduced to 0.**<br>
+Aboard the defensive ship, the "use object" action can be taken on the wheel of a ship to attempt to immediately break the grapple as an action, or as a bonus action if performed by the Helmsman. This pilot check follows the guidelines in the "Helmsman" section, including being at disadvantage if a non - pilot action was already taken that same turn. If the offensive ship remains piloted, this may be contested the same as the initial check. Otherwise, it is a pilot check with a DC of **10 + the offensive boarding bonus.** On a success, you are able to wrestle the ship out of the range of whatever methods the opponent used to achieve their boarding bonus, breaking ropes and snapping gangplanks, automatically reducing the bonus to 0. Only one check to break the boarding maybe taken per round.
+
+The defending or offensive ship may also end the grapple by manually reducing the boarding bonus to 0. This can be done by directly negating the means the offensive ship is using to increase their bonus. Possibilities, depending on what the offensive ship has in place, include removing the grappling hooks, cutting ropes connecting the ships, pushing the ships far enough that these break, etc. These actions may also be held during Naval Combat so they can be done as a reaction as soon as standard combat begins. Many spells hold potential to affect the boarding state, offensive or defensively, such as pushing a ship or controlling the opposing pilot.
+
+\columnbreak
+
+
+
+===== ## Ship Blocks (line 2315) =====
+
+## Ship Blocks
+
+<div class= 'wide'>
+
+
+
+===== ## Tiers of Rules: (line 3087) =====
+
+## Tiers of Rules:
+
+As a shortcut to deciding which rules to use, I have defined different tiers of rules. Each tier adds more complexity and realism to the game.  
+
+These groupings are suggestions. Mix and match to find the things in which you are most interested!
+ 

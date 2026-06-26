@@ -1,0 +1,506 @@
+
+
+=== PAGE 1 ===
+L
+
+=== PAGE 2 ===
+ 
+  
+
+
+=== PAGE 3 ===
+CreditsCredits
+If you enjoy this supplement, you can become a Limithron
+patron to get ship token, upgrades, ammo types, more
+ship stats, ship cards, art handouts, encounter building
+guidelines, ship customization options, terrain, and large
+scale battlemaps: www.limithron.com
+Designed and Illustrated by: Luke Stratton | Limithron 
+ 
+ 
+On the Cover & Page 10: The Battle of Trafalgar by
+William Clarkson Stanfield, 1836, Public Doman (PD-US-
+expired), Courtesy of Wikimedia.org. 
+ 
+ 
+Playtesting and Feedback Provided By: 
+Tyler "Blackwood" Stratton, Scott "Tezomoc" Sesko, Ryan
+"La Chance" Zanger, Kevin "The Alderman" Campbell, Tad
+Edwards, Drakon Vines, Morrie, Bilge Goblin 
+ 
+ 
+The following sources have provided inspiration: 
+ 
+Little, Benerson. The Sea Rover's Practice. 2005. 
+Lambert, Andrew. War at Sea in the Age of Sail. 2000.
+Assassin's Creed IV: Black Flag, Ubisoft, 2013. 
+Sid Meier's Pirates!, Firaxis Games/Atari, 2004. 
+Tuñez, Mike. Oak & Iron, Firelock Games, 2020. 
+Pirates of the Spanish Main, WizKids, Inc. 2004. 
+ 
+© 2021 Luke Stratton DBA Limithron. All Rights Reserved.
+ 
+v1.2r
+ForewordForeword
+This supplement is intended as a jumping off point for
+making ship to ship combat in 5e fun, exciting, fast, and
+most of all engaging. No ones want to just sit there while
+one player commands the ship, but at the same time
+getting bogged down in sailing rules can be cumbersome
+and boring. Spellcasters should be able to affect naval
+combat, but the barbarian shouldn’t be able to sink a ship
+with their axe without a lot of effort. And if the bard wants
+to swing across to the enemy ship and launch a full-on
+assault on the enemy captain’s feelings, well, then I think
+he “can certainly try”.
+After years of playing pirate miniature games and video
+games, and several more years running my own RPG
+campaign, Tales from the Caribbean, I think I’ve finally
+cracked the code. With ships, it’s really easy to be too
+complicated. Too many dice, too many ship stats and hit
+points, too many rules about wind and speed, complicated
+boarding rules... no thank you! The ships in the guide aren’t
+any more complicated than skeletons. Well, enormous
+skeletons with 100 passengers, movement that depends
+on the wind, and attacks that deal over 80 damage a turn.
+But, yeah, skeletons.
+So let your players blow stuff up and steal some booty.
+Let them capture five huge ships and learn first hand why
+that's a bad idea. Make them fear for their lives by chasing
+them with overpowered pirate hunting vessels. Create your
+own enchanted Man of War with wings for sails and fire
+breath attacks. You are the captain now. 
+ 
+Yo, Ho, Ho and Happy Sailing,
+Luke Stratton 
+March 2021
+ 
+ContentsContents
+Naval Combat Rules
+Appendix A: Ships
+Open Game License v 1.0a Copyright 2000, Wizards of
+the Coast, LLC. System Reference Document 5.1
+Copyright 2016, Wizards of the Coast, Inc.; Authors Mike
+Mearls, Jeremy Crawford, Chris Perkins, Rodney Thompson,
+Peter Lee, James Wyatt, Robert J. Schwalb, Bruce R.
+Cordell, Chris Sims, and Steve Townshend, based on
+original material by E. Gary Gygax and Dave Arneson.
+3
+
+=== PAGE 4 ===
+
+
+=== PAGE 5 ===
+IntroductionIntroduction
+T
+his supplement is designed to provide an
+easy to learn, adaptable rules set for ship to
+ship combat in 5th edition. While these
+rules and ship stats are designed with
+gunpowder and cannons in mind, they can
+easily be adapted to any fantasy setting by
+rebranding or modifying attacks.
+The BasicsThe Basics
+Ships are based on monster stat blocks. They have their
+own CR number to aid the DM in balancing encounters.
+HP and damage are scaled down for speed and
+simplicity by a factor of 1:5.
+Combat is on a hex grid (1 hex =50ft).
+Wind matters, but it’s simple and optional.
+Ships may turn, and typically they must move at least 1
+space.
+Initiative is rolled each round, but only ships and solo
+creatures roll. Passengers act on their ship's initiative.
+Each ship has a Captain. That captain assigns Action
+Points for their ship at the top of each round.
+Most actions require the ship to make an ability or skill
+check; characters can choose Action Stations on their
+turn to help with these checks.
+Customizing ships is easy and fun!
+Ship StatisticsShip Statistics
+Ship statistics are adapted from 5e monsters, but they
+have been mutated to be more applicable for inanimate
+vehicles. Some stats, like Constitution, represent a ship's
+physical construction, while others represent the crew’s
+skill (like Charisma).
+Strength. The potency of a ship’s attacks. This could
+represent the size of its siege weapons or the precise aim
+of a well trained crew. Uses: damage roll modifier.
+Dexterity. How maneuverable a ship. Smaller ships are
+more dexterous.Uses: initiative modifier, “Coming About”
+action.
+Constitution. Construction quality and fortitude of a
+ship. Uses: hit point calculation.
+Charisma. Represents the quality of the crew and their
+leadership. Henceforth referred to as Skill.Uses: To Hit,
+“Full Sail” action.
+AC. Represents the resilience of the ship’s hull or its
+small size and agility.
+Speed. The number of 50ft spaces the ship can move a
+turn with favorable winds. Also the maximum number of
+50 mile spaces a ship can travel a day. See the section on
+“Wind and Movement.”
+Hit Points and Formula. The amount of damage a ship
+can take before it is Derelict. This number is scaled down
+by a factor 1:5 when compared to creature-scale
+encounters. See the section on “Dice and Scaling”.
+Crew. The minimum number of crew needed to operate
+the ship without being Stressed. Crew numbers are not
+tracked for the purposes of ship combat but can be used
+for boarding, Mob Combat, and roleplaying.
+Max Crew. The maximum number of crew and
+passengers this ship can carry comfortably on long
+voyages. Most ships can carry double this number on short
+voyages such as raids or refugee operations.
+Cargo. The number of cargo "slots" the ship has,
+ranging from 0-6. Cargo might have different value in
+different ports.
+SizeSize
+Ships have their own scale separate from creatures.  
+Uses: hit point calculation, ramming.
+Ship Sizes
+Size Space Hit Die Example Ships
+Tiny <30ft d4 Rowboat, canoe
+Small <50ft d6 Longboat
+Medium <75 d8 Sloop
+Large <100ft d10 Brigantine
+Huge <125ft d12 Man of War
+Gargantuan >125ft d20 Ship of the Line
+Dice and ScalingDice and Scaling
+The dice rolls and statistics in this supplement are scaled
+by a factor of 1:5 when compared to creature scale
+combat. For example, a ship that has 10hp and deals 1d6
+damage would have 50hp if attacked by a creature, and it
+would deal 1d6 x 5 damage. Any damage dealt to ships by
+creatures should be rounded down to the nearest 5, or you
+can track exact ship hit points by multiplying their base
+value by five. A fireball spell could hypothetically sink a
+rowboat or canoe in one shot, but a 1st Rate Ship of the
+Line could have 1,000hp!
+Skill and Ability Test DiﬃcultySkill and Ability Test Diﬃculty
+The default difficulty for skill and ability checks during ship
+combat is DC12. Checks are rolled by the acting Captain
+unless another character is at a corresponding Action
+Station. The DM can modify the DC based on conditions
+like rough seas, weather, surprise, terrain, or a crew that is
+inexperienced, wounded, or frightened.
+Limithron's Guide to Naval Combat | www.limithron.com
+ 5
+
+=== PAGE 6 ===
+Movement and PositionMovement and Position
+Ship combat is played on a 1” hex grid where each hex
+represents 50ft from center to center. Most ships will
+take up 1 to 3 hexes. They should be orientated with the
+center of the ship on the center of a hex with the bow and
+stern crossing perpendicular edges. Generally, a ship’s bow
+will only face one of 6 different hex directions, though the
+DM may allow “half-turns” in certain instances like
+boarding or navigating terrain. All turns are 60 degree
+rotations (one hex face) from the center of the ship.
+Moving a ShipMoving a Ship
+A ship may move up to its full movement each turn
+after adjusting for the wind.
+All ships must move at least 1” (exceptions: In Irons,
+Anchored)
+A ship must move directly forward to the space in
+front of its bow.
+A ship may rotate twice (rotate one hex face or 60º) at
+any point before, during, or after its movement, but no
+ship may turn more than once per space.
+Ships that are In Irons may not move forward but may
+still rotate once.
+Ships that are Anchored cannot move or turn.
+Wind and MovementWind and Movement
+The wind direction is an important part of sailing. Some
+groups might find using rules for wind cumbersome, while
+others might find a thrill in the extra element of strategy it
+add, especially when a spell caster may be able to alter
+conditions. Use the following option rules if you want to
+use wind in your encounters.
+W ind Direction
+d6 Flat Top Hexes Pointy Top Hexes
+1 North Northeast
+2 Northeast East
+3 Southeast Southeast
+4 South Southwest
+5 Southwest West
+6 Northwest Northwest
+Points of SailPoints of Sail
+Ship sailing speeds depend on the angle of the wind. A
+ship's point of sail is determined at the start of its turn
+and does not change during its turn. If a ship starts its turn
+With the Wind and then turns Close to the Wind, it still
+gets its full movement that turn.
+Points of Sail
+Point of Sail Ship Speed
+With the wind Full speed
+Close to the wind Half speed rounded down (min. 1”)
+In Irons Speed 0” (can still turn once)
+ 
+Example: If the wind is coming from 1 (North), this ship is
+In Irons and cannot move (but may still turn once). If the
+wind is coming from 2 or 6, it is sailing Close to the wind
+and may only move half of its normal speed; at 3, 4, and 5
+it would be With the Wind and can move its full
+movement.
+Ramming
+A ship may attempt to Ram another ship. At thebeginning of the turn, the captain may spend all ofthe ship’s Action Points to declare a ram. On theship's turn, if it ends its movement with any of itsforward three sides touching another ship it mayattempt to ram. Both ships roll a die equal to theirbase hit die. The ramming ship adds +1 to its roll foreach space it traveled this turn. The winning shipdeals damage to the losing ship as though it hadjust dealt a critical hit with its primary attack.Example. A brigantine (7d10+14 hp) rams into asloop (6d8+6 hp). The brigantine travels 3 spacesbefore making contact. It will roll 1d10+3 versusthe sloops 1d8. If the brigantine wins it will dealcritical hit damage (2d10+3 ) to the sloop.If for some reason the ramming ship cannot getto a space adjacent to another ship, it does not ramand its Action Points are lost.
+Limithron's Guide to Naval Combat | www.limithron.com
+6
+
+=== PAGE 7 ===
+Anchoring a Ship
+A ship that is Anchored cannot move or turn, andhas a max speed of 0. In an emergency the crewcan Cut and Run.Drop Anchor. Cost: All of a ship's action points.The crew lowers the anchor(s) and the ship's speedis reduced to 0.Weighing Anchor. Cost: All of a ship's actionpoints. The crew raises the ship's anchor(s). Theship's max speed is deduced to half for this turn.Cut and Run. (Cost: 0 Action Points) The ship isno longer anchored, but will drift until new anchorsare acquired! The ship's max speed is reduced tohalf for this turn.
+ 
+The Order of CombatThe Order of Combat
+Like creature combat, ship combat is organized into turns
+and rounds. Initiative is rolled for each ship, and the
+creatures on that ship all act on their ship’s turn.
+Independent creatures like sea monsters or characters that
+are not on a ship roll their own initiative.
+Sailing is slow, and weapons take time to reload, but
+these rules are designed to be fast and fun. For the
+purposes of rules and action economy, a round of
+combat represents 6 seconds in the game world, though
+30 seconds to 1 minute is a more thematic
+representation.
+Combat Round Step by StepCombat Round Step by Step
+1. Captain Phase. Captains choose their ship’s actions,
+and they may roll to Push the Crew.
+2. Initiative. Declare any Lookouts. Lookouts (or
+Captains) roll initiative.
+3. Take turns. Each ship takes a turn in initiative order.
+On a ship’s turn, characters may go in any order they
+see fit. Each may choose an Action Station based on
+the Captains chosen actions, and they may choose a
+different station each turn. They may also choose
+another action like casting a spell. Ships and characters
+may Ready actions to trigger anytime before the ship’s
+next turn.
+4. Begin the next round. Repeat the steps until the
+combat is over.
+Captain’s PhaseCaptain’s Phase
+During this phase, each ship’s Captain decides what
+actions the ship will take. Each ship has a set number of
+Action Points and the Captain can spend any of these to
+assign actions for the characters and crew on board to
+carry out later in the turn. Any actions not carried out by
+the other characters will be rolled by the Captain.
+Push the CrewPush the Crew
+During a time of need the Captain may decide to push the
+crew to their limits. If the Captain makes a successful
+Intimidation or Persuasion check, the ship gains one extra
+action point this turn but loses one action point next turn.
+A Captain cannot Push the Crew if they succeed in doing
+so the previous round.
+Initiative PhaseInitiative Phase
+Initiative is rerolled each round of combat. After all
+Captains have decided their ships’ actions for the turn,
+each ship rolls a d20 and adds its DEX modifier. This roll is
+made by the Captain unless the ship has a Lookout. See
+the section on “Action Stations”.
+A Ship’s TurnA Ship’s Turn
+On a ship’s turn, the Pilot or Captain may move a
+distance up to the ship’s speed and make two
+rotations. The characters may take any actions that the
+Captain chose at the beginning of the round, plus any
+other actions like the Bosun’s Raise Morale ability or
+casting a spell. After the characters have gone, the Captain
+rolls for any actions the characters didn’t take. These
+actions may be taken before, after, or at any point along
+the ship’s movement. Characters may also Ready actions
+(i.e. wait for a target to be in range.)  
+ 
+Arc of Fire
+ In the age of gunpowder weapons, most shipscarried the majority of their arsenal along the sideof the ship, requiring the vessel to maneuver to thesides for most cannons to have a shot, requiringthem to turn to hit a target they were chasing.Broadside refers to this area. Other attacks, like the1st Rate’s Chase Guns, can only fire Fore & Aft.
+Limithron's Guide to Naval Combat | www.limithron.com
+ 7
+
+=== PAGE 8 ===
+Ship Actions
+Action Point Cost Description Action Station
+Attack (Broadside) 1 Attack with primary attack at a target in the ship's Broadside arc. Gunner
+Attack (Fore/Aft) 2 Attack with secondary attack: roll one die rank lower  (ie. d4 instead of d6, d6 instead of d8, etc.) Gunner
+Repair All Recover hit points equal to primary attack damage  or remove the Derelict condition. Carpenter
+Full Sail 2 Move one extra space this turn. Rigger
+Come About * Rotate one extra rotation this turn. Cost is ship dependent (default 2). Pilot
+Ram All Ram if any forward faces of its main hex touch another ship. Roll 1 hit die plus distance traveled vs. opponents hit die. Winner deals a critical hit. -
+Drop Anchor All Speed 0 and Anchored. -
+Weigh Anchor All Speed 1/2 and no longer Anchored. -
+Cut and Run 0 Speed 1/2, no longer Anchored, but will drift when stopped. -
+Change Ammo Type 0 Change ammo (round shot, chain shot, grape shot, etc.) See Appendix B. -
+Character ActionsCharacter Actions
+Each turn, a character may spend their action to claim any
+of the available Action Stations detailed below. All are
+optional and can be chosen each round. Any actions that
+are not covered by a PC are rolled for by the Captain using
+the ship’s stats but without any Sailing Dice.
+Sailing DiceSailing Dice
+Most Actions Stations allow each character to add a d4
+Sailing Die to one of the ship’s checks.
+Action StationsAction Stations
+CaptainCaptain
+Limit 1/ship, required
+Each ship must have an assigned Captain. If a ship
+doesn't have a PC captain the DM can let one act as
+Captain. At the beginning of the round, the captain
+chooses actions for each of the ship’s action points.
+Being the captain takes a character's action. Captains that
+choose the attack action only need to decide how many
+points to allocate when choosing the action. The weapons
+used and their targets may be chosen on the ship's turn.
+Push the Crew. During a time of need the Captain may
+to push the crew to their limits. As a bonus action, the
+Captain may attempt an Intimidation or Persuasion check.
+On a success, the ship gains one extra action point this
+turn but loses one action point next turn. A Captain may
+not attempt to push the crew two turns in a row.
+PilotPilot
+Limit 1/ship  
+The Pilot moves the ship's token, and makes the roll if the
+ship is attempting to Come About using the ship’s DEX
+and adding their Sailing Die. The Pilot also makes any
+checks required to navigate terrain or obstacles.
+LookoutLookout
+Limit 1/ship  
+Before initiative is rolled each round, any character may
+spend their action to become the Lookout. The Lookout
+rolls initiative for the ship, and they may add or
+subtract their Sailing Die from the result. In addition, any
+ship with a Lookout has +1 AC.
+BosunBosun
+Limit 1/ship  
+This station may be claimed at any time, including before
+initiative has been rolled.
+Raise Morale. May make an Intimidation or Persuasion
+skill check to choose one of the following: give all of the
+ship’s attacks and skill check rolls +1 this turn, or
+temporarily remove the Stressed condition from the ship
+for one turn.
+GunnerGunner
+Limit 1 per attack  
+The gunners choose weapons and targets, and roll any
+attacks using the ship’s Skill, adding their Sailing Die to
+the first attack roll. If there is more than one gunner, they
+take turns rolling attacks until there are no attacks left.
+CarpenterCarpenter
+No Limit  
+The Carpenter rolls to Repair the ship using the ship’s
+Skill, adding their Sailing Die to the result. If there are
+multiple Carpenters, choose one to make the roll, but each
+may add their Sailing Die to the total.
+RiggerRigger
+No Limit  
+The Rigger rolls to go Full Sail using the ship’s Skill,
+adding their Sailing Die to the result. If there are multiple
+Riggers, choose one to make the roll, but each may add
+their Sailing Die to the total.
+Limithron's Guide to Naval Combat | www.limithron.com
+8
+
+=== PAGE 9 ===
+Other ActionsOther Actions
+Characters may take other actions like casting a spell,
+attacking another creature, swinging from the rigging,
+diving from a ship, etc.
+Leveling Up Sailing AbilitiesLeveling Up Sailing Abilities
+While characters can choose any action station, it can be
+fun to have characters “level up” and gain experience at
+certain stations. Here are some ideas for exploring this
+concept:
+Increase the value of a Sailing Die (d6, d8, etc.)
+Adding modifiers to Sailing Dice (+1, +2)
+Exploding Sailing Dice (reroll and add when rolling the
+max value)
+Giving Advantage to sailing die rolls
+Covering two action stations at once
+Increasing Gunners’ damage
+Giving the Bosun a larger bonus
+Giving an experienced Captain a Sailing Die that they
+can include in any roll
+New ConditionsNew Conditions
+StressedStressed
+A ship is Stressed when it has less than half of its starting
+hit points. A ship is also Stressed if it has less than the
+required crew. A stressed ship has Disadvantage on all
+attacks and skill checks. The Bosun action station can
+take the Raise Morale action to attempt to temporarily
+remove this condition.
+DerelictDerelict
+A ship is Derelict when it has 0 hit points. Its speed is 0,
+and it may only spend its Action Points on the Repair
+action.
+Drifting. The DM may choose to have a Derelict ship
+drift one space each turn depending on weather
+conditions.
+Sinking. Every time a Derelict ship takes additional
+damage, it must make a sinking saving throw. Roll a d20. If
+the roll is 10 or higher, the ship does not sink. Otherwise
+it fails and the ship sinks into the water. If a Derelict ship is
+hit with a critical hit, it immediately fails its sinking saving
+throw.
+Repairing. The only action a Derelict ship may take is
+Repair, which must be made at Disadvantage. If the Repair
+action is successful, the ship loses the Derelict condition
+and regains 1 hit point (instead of the normal amount
+recovered by the Repair action).
+Boarding & Close CombatBoarding & Close Combat
+After ships are close enough to engage in close combat or
+creature scale combat, DMs are encouraged to switch to a
+5ft square grid maps. Mass combat and Mob combat rules
+can be used to deal with the crew, but, like any good story,
+it's the heroes and not the extras that matter! 
+ 
+Limithron's Guide to Naval Combat | www.limithron.com
+ 9
+
+=== PAGE 10 ===
+Appendix A: ShipsAppendix A: Ships
+Ship Stats
+Vessel  CR Size Speed AC  HD  HP STRDEXCONCHRATKDamage Abilities Crew Cargo Actions
+Raft 1/8 Tiny 2 16 2 3 +2 +4 -1 +0 1 - 1/2 0 1
+Rowboat 1/4 Tiny 2 16 4 6 +1 +5 -1 +2 1 1d4+1 Oars 1/3 0 1
+Longboat 1/2 Small 3 15 5 17 +2 +2 +0 +3 1 2d4+2 Oars 2/4 0 1
+Sloop 1 Medium 6 12 6 33 +2 +0 +1 +3 2 1d8+2 Weatherly 3/9 2 2
+Brigantine 2 Large 5 13 7 52 +3 -2 +2 +3 2 1d10+3 15/30 3 2
+Frigate 3 Large 5 14 8 60 +2 -2 +2 +4 3 1d10+2 24/48 4 3
+6th Rate Man o' War 4 Large 5 14 9 76 +2 -3 +3 +5 4 1d10+2 24/48 4 4
+5th Rate Man o' War 5 Large 5 15 10 85 +3 -3 +3 +6 4 1d10+3 24/48 4 4
+4th Rate Ship of the Line 6 Huge 4 15 11 115 +3 -4 +4 +6 5 1d10+3 Sluggish 60/120 4 5
+3rd Rate Ship of the Line 7 Huge 4 16 12 126 +4 -4 +4 +7 5 1d10+4 Sluggish 70/150 4 5
+2nd Rate Ship of the Line 8 Gargan. 3 17 12 174 +4 -5 +4 +7 5 1d12+4 Sluggish, Heavy Armor 100/300 5 5
+1st Rate Ship of the Line 9 Gargan. 3 18 12 186 +5 -6 +5 +7 5 2d6+5 Sluggish, Heavy Armor 150/400 5 5
+Ship AbilitiesShip Abilities
+Below are descriptions for abilities listed in the Ship Stats
+table.
+Weatherly. This ship does not decrease its max speed
+when sailing Close to the Wind.
+Oars. This ship may spend half of its action points
+(rounded down) to travel 2 spaces in any direction. This is
+in addition to its normal movement and is not affected by
+wind.
+Sluggish. This ship may only rotate once per turn
+(unless taking the Come About action).
+Heavy Armor. This ship has Resistance against attacks
+that deal 10 damage or less.
+
+
+=== PAGE 11 ===
+Crowd on everyCrowd on everyCrowd on everyCrowd on everyCrowd on every
+inch of sail!inch of sail!inch of sail!inch of sail!inch of sail!
+Weigh anchor, hoist the mains, and set sail...
+rough seas lie head!
+Crew up a nimble sloop and tack into the wind.
+Load a Man of War with enough cannons to
+scare ever captain in these water. Wage all out
+war with the largest fleet to ever set sail. Capture
+a magical ship with legendary abilities. Do all this
+& more with Limithron's Guide to Naval Combat.
+An easy to use rules supplement for the 5th
+edition of the world's greatest roleplaying game
+Become a Limithron patron to get ship token,
+upgrades, ammo types, more ship stats, ship
+cards, art handouts, encounter building
+guidelines, ship customization options, terrain,
+and large scale battlemaps.

@@ -19,6 +19,34 @@ def prompt_csv(label: str, normalize: bool = True) -> list[str]:
     return values
 
 
+def prompt_tier_0_5(label: str, default: int = 3) -> int:
+    return IntPrompt.ask(label, default=default, choices=["0", "1", "2", "3", "4", "5"])
+
+
+def _normalize_choice_token(value: str) -> str:
+    return str(value or "").strip().lower().replace("-", "_").replace(" ", "_")
+
+
+def prompt_multi_choice(label: str, choices: list[str], default: str = "") -> list[str]:
+    normalized_map = {_normalize_choice_token(choice): choice for choice in choices}
+    raw = Prompt.ask(f"{label} (comma-separated)", default=default)
+    out: list[str] = []
+    invalid: list[str] = []
+    for item in raw.split(","):
+        token = _normalize_choice_token(item)
+        if not token:
+            continue
+        if token in normalized_map:
+            value = normalized_map[token]
+            if value not in out:
+                out.append(value)
+        else:
+            invalid.append(str(item).strip())
+    if invalid:
+        console.print(f"[yellow]Ignored unknown {label} values:[/yellow] {', '.join(invalid)}")
+    return out
+
+
 def prompt_shared_fields() -> dict:
     name = Prompt.ask("Display name")
     key = normalize_key(Prompt.ask("Key", default=normalize_key(name)))

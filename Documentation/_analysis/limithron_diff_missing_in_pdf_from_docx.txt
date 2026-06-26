@@ -1,0 +1,315 @@
+This supplement is designed to provide an easy to learn, adaptable rules set for ship to ship combat in 5th edition. While these rules and ship stats are designed with gunpowder and cannons in mind, they can easily be adapted to any fantasy setting by rebranding or modifying attacks.
+
+---
+
+Charisma. Represents the quality of the crew and their leadership. Henceforth referred to as Skill. Uses: To Hit, “Full Sail” action, "Repair" action.
+
+---
+
+Speed. The number of 50ft spaces the ship can move a turn with favorable winds. Also the maximum number of 25 mile spaces a ship can travel a day at a normal travel speed. See the section on “Wind and Movement.”
+
+---
+
+The damages rolls and hit points in this supplement are scaled by a factor of 1:5 when compared to creature scale combat. For example, a ship that has 10hp and deals 1d6 damage would have 50hp if attacked by a creature, and it would deal 1d6 x 5 damage. Any damage dealt to ships by creatures should be rounded down to the nearest 5, or you can track exact ship hit points by multiplying their base value by five. A fireball spell could hypothetically sink a rowboat or canoe in one shot, but a 1st Rate Ship of the Line could have 1,000 hp!
+
+---
+
+Skill and Ability Test Difficulty
+
+---
+
+Ship sailing speeds depend on the angle of the wind. A ship's point of sail is determined at the start of its turnand does not change during its turn. If a ship starts its turn With the Wind and then turns Close to the Wind, it still gets its full movement that turn.
+
+---
+
+Example: If the wind is coming from 1 (North), this ship is In Irons and cannot move (but may still turn once). If the wind is coming from 2 or 6, it is sailing Close to the windand may only move half of its normal speed; at 3, 4, and 5 it would be With the Wind and can move its full movement.
+
+---
+
+A ship that is Anchored cannot move or turn, and has a max speed of 0. In an emergency the crew can Cut and Run.
+
+---
+
+Drop Anchor. Cost: All of a ship's action points. The crew lowers the anchor(s) and the ship's speed is reduced to 0.
+
+---
+
+Weighing Anchor. Cost: All of a ship's action points. The crew raises the ship's anchor(s). The ship's max speed is deduced to half for this turn.
+
+---
+
+Cut and Run. (Cost: 0 Action Points) The ship is no longer anchored, but will drift until new anchors are acquired! The ship's max speed is reduced to half for this turn.
+
+---
+
+In the age of gunpowder weapons, most ships carried the majority of their arsenal along the side of the ship, requiring the vessel to maneuver to port or starboard in order for most cannons to have a shot a target they were chasing. Broadside refers to this area. Some other attacks, like the 1st Rate’s Chase Guns, can only fire Fore & Aft.
+
+---
+
+Declare Lookout & Bosuns. Any PCs may declare these stations now. Bosuns may try to Raise Morale.
+
+---
+
+Roll Initiative. Lookouts (or Captains) roll initiative, then apply Lookout & Bosun modifiers.
+
+---
+
+Take turns. Each ship takes a turn in initiative order. On a ship’s turn, characters may take actions in any order they see fit. Each may claim an Action Station based on the Captains chosen action points, and they may choose a different station each turn. They may also choose another action like casting a spell. Ships and characters may Ready actions to trigger anytime before the ship’s next turn.
+
+---
+
+During this phase, each ship’s Captain decides what actions the ship will take. Each ship has a set number of Action Points and the Captain can spend any of these to assign actions for the characters and crew on board to carry out later in the turn. Any actions not carried out by the other characters will be rolled by the Captain. The captain may also roll to push the Crew (see the section on the Captain Action Station).
+
+---
+
+On a ship’s turn, the Pilot or Captain may move a distance up to the ship’s speed and make two rotations. The characters may take any actions that the Captain spent action points on at the beginning of the round, plus any other actions or bonus actions like the Bosun’s Raise Morale ability or casting a spell. After the characters have gone, the Captain rolls for any actions the characters didn’t complete. These actions may be taken before, after, or at any point along the ship’s movement.
+
+---
+
+Characters may also Ready actions (i.e. wait for a target to be in range.) If the ship holds any Attack actions, it may make all of its attacks when the Ready action is triggered, not just one attack (as you would during character combat).
+
+---
+
+Action Point actions are optional and the characters and crew do not have to take actions unless they or the captain want to, but the ship make not change what actions it choose until the beginning of the next round.
+
+---
+
+Ramming
+At the beginning of the turn, a captain may spend all of a ship’s Action Points to declare a ram. On that ship's turn, if it ends its movement with any of its forward three sides touching another ship it rams. Both ships roll their base hit die and add +1 to their roll for each space traveled since the beginning of its last turn. Deal that much damage to the other ship. In addition, each ship that was part of a Ram since the start of its last turn is considered to be Anchored (speed 0, can't turn) for 1 turn.
+
+---
+
+If for some reason the ramming ship cannot get to a space adjacent to another ship, it does not ram and its Action Points are lost.
+
+---
+
+Another test for whether a ship can ram is this: if the hex directly in front of the ramming ship overlaps with another ship's hex or the hex in front of or behind the target ship then the ship can ram.
+
+---
+
+Example. A brigantine (7d10+14 hp) rams into a sloop (6d8+6 hp). The brigantine travels 3 spaces before making contact, so it will deal 1d10+3 damage to the sloop. The sloop moved 5 spaces on its last turn, so it will deal 1d8+5 damage to the brigantine. Both ships are considered Anchored for their next turn. 
+
+Collisions
+If a ship collides with something (shoals, a large rock or island, another ship unintentionally) it will take damage equal to one of its hit dice plus the distance it traveled since the start of its last turn. In addition, each ship that was part of a Collision since the start of its last turn is considered to be Anchored for 1 turn. The DM might also deal damage to the object the ship collided with, and might impose other effects like the ship being stuck until a Repair action is taken.
+
+---
+
+Each turn, a character may spend their action to claim an Action Station (PCs still get a bonus action, free action, and reaction). Choosing a station is optional and they can be chosen again each round. Any actions that are not covered by a PC are rolled for by the Captain using the ship’s stats (but without any Sailing Dice).
+
+---
+
+Each ship must have an assigned Captain. If a ship doesn't have a PC captain the DM can let one act as Captain. At the beginning of the round, the captain chooses actions for each of the ship’s action points. Captains that choose the attack action only need to decide how many points to allocate when choosing the action. The attacks used and their targets may be chosen on the ship's turn.
+
+---
+
+Limit 1 PC/ship 
+The Pilot moves the ship's token, and makes the roll if the ship is attempting to Come About using the ship’s DEXand adding their Sailing Die. The Pilot also makes any checks required to navigate terrain or obstacles.
+
+---
+
+Limit 1 PC/ship 
+Before initiative is rolled each round, any PC may spend their action to become the Lookout. The Lookouts roll initiative for the ship, and add or subtract their Sailing Die from the result. Ships with Lookouts get +1 AC.
+
+---
+
+Limit 1 PC/ship 
+This station may be claimed at any time, including before initiative has been rolled.
+
+---
+
+Raise Morale. As a bonus action, the bosun may make an Intimidation or Persuasion skill check to choose one of the following: give all of the ship’s attacks and skill check rolls +1 this turn, or temporarily remove the Stressed condition from the ship for one turn (ship can still Repair).
+
+---
+
+Limit 1 PC per Ship's attack 
+The gunners choose weapons and targets, and roll any attacks using the ship’s Skill, adding their Sailing Die to their first attack roll. If there is more than one gunner, they take turns rolling attacks until there are no attacks left.
+
+---
+
+No Limit 
+The Carpenter rolls to Repair the ship using the ship’s Skill (at disadvantage due to the Stressed condition), and adds their Sailing Die to the result. If there are multiple Carpenters, only one makes the Skill roll but each adds their Sailing Die to the total.
+
+---
+
+Adding modifiers to Sailing Dice (+1, +2, a PCs Proficiency modifier )
+
+---
+
+Exploding Sailing Dice (reroll and add again when rolling the max value)
+
+---
+
+Increasing Gunners’ damage or "to hit"modifier
+
+---
+
+Giving the Lookout advantage or disadvantage on Initiative
+
+---
+
+A ship is Stressed when it has less than half of its starting hit points. A ship is also Stressed if it has less than the required crew. A stressed ship has Disadvantage on all attacks and skill checks. Only Stressed ships may take the Repair action. The Bosun action station can take the Raise Morale action to attempt to temporarily remove this condition (the ship make still take the Repair action).
+
+---
+
+A ship is Derelict when it has 0 hit points. Its speed is 0, it cannot rotate, and it may only spend its Action Points on the Repair action.
+
+---
+
+The ships in this supplement are intended as a jumping off point. A tough warship might have more hit points. An old pirate sloop might be in need of repair and move very slow. Perhaps the characters have acquired a living ship that can cast a gust of wind spell several times a day. The sky's the limit.
+
+---
+
+You can give ships extra abilities just by borrowing them from existing monsters. Have a haunted ghost ship? How about adding a Ghost’s Etherealness and Horrifying Visage to a ships stat block. Is the flagship in the fleet issuing commands? Use the Leadership ability from a Knight. Here are some jumping off points for:
+
+---
+
+Aggressive. Upgraded cannons.
+
+---
+
+Breath Weapon. Unique or upgrade ship weapons.
+
+---
+
+Damage Resistance. Armor plating, flame resistant.
+
+---
+
+Damage Vulnerabilities. Old, weak ships.
+
+---
+
+Elementals. Magical wind, water, and fire ships.
+
+---
+
+Etherealness. Ghost or Fey ships.
+
+---
+
+Feats. Character feats like Lucky, Savage Attacker, or Inspiring Leader.
+
+---
+
+Flying Speed. Steampunk airship, Hot Air Vessels.
+
+---
+
+Incorporeal Movement. Ghost or Spirit ships.
+
+---
+
+Invisibility. Fog bank ability or a mage on board.
+
+---
+
+Leadership. Flag ships, military vessels.
+
+---
+
+Legendary Resistance. Tough, boss level ships.
+
+---
+
+Legendary Actions. Ships with extra crew.
+
+---
+
+Magic Resistance. Enchantments and protection runes.
+
+---
+
+Martial Advantage. Well armed marines or buccaneers shoot muskets at close by enemies.
+
+---
+
+Pack Tactics. Fleets of canoes or small warships.
+
+---
+
+Parry. Evasive maneuvers, skilled pilot.
+
+---
+
+Ram. Battering ram: advantage on ram actions.
+
+---
+
+Reel. Grappling hooks, magic tractor beams.
+
+---
+
+Regeneration. Skilled carpenters.
+
+---
+
+Relentless. Armor plating, reinforced hull.
+
+---
+
+Spellcasting. Mage on board, living ships.
+
+---
+
+Swallow. Mimic ships, sea monsters.
+
+---
+
+Teleport. Magic or haunted ships, alien vessels.
+
+---
+
+Undead Fortitude. Undead ships.
+
+---
+
+Ships typically carry round shot (cannon balls), by default, but other types of ammo may be purchased from shipwrights. Additional ammunition ideas: canister shot, heated shot, spider shot, smoke bombs, poisonous canisters, random cargo (fork and knives), bones, and magical ammo.
+
+---
+
+Round shot, or simply "cannon balls", are accurate and deadly at long range. They can cause massive damage against their targets and are used in all types of naval warfare, especially when the primary objective is sinking the enemy.
+Range. As listed on ship card (typically 6"/12")
+Critical Hit. Critical hits function as normal: roll damage dice twice.
+Exploding Critical Hits. For an added level of chance and excitement, DMs may consider "exploding" critical hit damage dice to represent a ship taking extreme damage (ex. hitting the gunpowder magazine). When damage dice are rolled, any dice that roll the maximum value are rolled again, adding their value to the total. Repeat until no maximum values are rolled.
+
+---
+
+Chain shot is made by attaching two cannonballs—or two halves of a single cannonball—together with a chain. It is designed to attack a ship's masts and rigging and is typically used to slow ships down.
+Range. 3”/6”
+Target Masts & Rigging. Attacks made with Chain Shot deal half damage, rounded down. Any ship that has taken damage from Chain Shot moves at half speed (rounded down, minimum of 1) until the end of its next turn.
+Critical Hit. When a Chain Shot attack scores a critical hit, the target ship’s speed is 0 until the end of its next turn.
+
+---
+
+Grapeshot is made by filling a bag or hollow ball with small round metal balls, similar to shotgun shells. It is very effective against creatures but less so against a ship's hull.
+Range. 3”/6”
+Target Crew. Attacks made with Grapeshot deal half damage rounded down. Any ship that has taken any damage from Grape Shot has disadvantage on Skill checks and has -1 action point (minimum of 1) until the end of its next turn.
+Critical Hit. When a Grapeshot attack scores a critical hit, the target ship loses half of its action points (rounded down to a minimum of 1) until the end of its next turn.
+
+---
+
+Ship Challenge Rating Ratio Table
+
+---
+
+The above table can be used to quickly balance naval encounters, though it is intended as a very rough guide. For example, if the characters control a CR3 Frigate, 3 to 8 CR1 Sloops should be a balanced encounter mathematically, while a CR4 or higher vessel might out gun them.
+
+---
+
+Note that ships with characters on board will undoubtedly have advantages—both strategically and statistically—when compared to NPC ships, and factors like positioning, wind, and ship condition can quickly swing the outcome of an encounter.
+
+---
+
+When running naval encounters, DMs are encouraged to keep in mind that a losing naval battle is much harder for characters to escape from than a typical creature scale encounter. Alternative to TPKs include:
+
+---
+
+Surrender and capture (and a jailbreak!)
+
+---
+
+Sinking the ship and having character search for floating debris (to then wash ashore, be rescued, or be swallowed by a dragon turtle)
+
+---
+
+“Deus ex machina” style events like a ally's ship arriving to save the day, inclement weather moving in, or massive sea monsters attacking mid battle

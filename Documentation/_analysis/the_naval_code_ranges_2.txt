@@ -1,0 +1,640 @@
+
+
+===== LINES 830-1020 =====
+
+0830:     -	Help pull lines, handle ropes, etc. (+1 Pilot Check)
+0831:     -	Assist Surgeon: Surgeon can make an additional medicine check for +1 crew. This check is made at disadvantage unless you have medicine proficiency, or another means of healing available.
+0832:     -	Assist Boatswain: +1 to Check, add your Intelligence Score to the HP gained
+0833: -	Leave the Ship: Whether by Small Craft, Rope Swings, Jumping Overboard, Etc. See [Leaving the Ship](#p.24) for more information.
+0834: 
+0835: 
+0836: 
+0837: ## Making a Journey
+0838: 
+0839: In a setting which revolves vehicles, traveling from place to place is a key part of the game. No one buys a ship to let it sit in the harbor! These journeys are exciting and often as fruitful as the goal itself. It is between locations that the joys and discoveries of a naval campaign come to life.
+0840: 
+0841: ### **Starting**
+0842: At the onset of a journey, a destination, however tentative, must be decided. A location on a map, following a series of directions, a known location, or a basic direction are all acceptable.
+0843: 
+0844: \columnbreak
+0845: 
+0846: Making Ready a ship takes 10 Minutes, decreased by 1 minute for every person proficient in water vehicles involved. Making ready involves untethering from the dock, prepping lines and sails, organizing crew, etc. Remember, a ship must have above its Skeleton Crew  to make a journey without risking exhaustion.
+0847: 
+0848: ### **Travel**
+0849: Based off the *Darker Dungeons Homebrew*, traveling on ships is based around Travel Roles- the responsibilities each Officer has available to take on. It is recommended to see the source for any questions regarding traveling. 
+0850: 
+0851: At the beginning of the adventuring day, you may choose to fulfill **one** of the roles granted by your officer positions, assist another in their role (granting a +1 to their rolls), or neither. Fulfilling a role is an all day commitment. 
+0852: 
+0853: As a group, you must also decide on the pace of travel - the speeds of each class of ship are given in the [Travel Speed](#p5) Section.
+0854: 
+0855: Your Officer Position defines what roles are available to you. You may elect to change one of your officer positions to gain a certain role. This can be done easily out of combat. Be wary though - once initiative is called, if you want to switch back, it will require an action to do so.
+0856: 
+0857: When fulfilling a role, consider it the equivalent of traveling over land – you can’t participate in downtime activities while actively scouting for danger. Over the day, rolls are made by the DM to discover if anything happens- and what that thing may be.
+0858: 
+0859: You may not rest while fulfilling a traveling role. It is not required for every party member to take a role, but to make a journey at all you must have a Pilot. If you do not take a role, you may spend the day as you please- downtime activities, resting, etc.- but know that others may not look kindly at too many days off.
+0860: 
+0861: 
+0862: Many of the roles echo the originals outlined in the source material, with some additions due to the necessities of life on the high sea. For more information on how to use this traveling mechanic, please reference the Darker Dungeons PDF @ [r/darkerdungeons5e](https://www.reddit.com/r/darkerdungeons5e/)
+0863: 
+0864: #### Night Shift
+0865: While ships traditionally do not travel during the night, the ship still requires at least one person to keep her steady.
+0866: 
+0867: For each portion of watch, a pilot check is made to keep the ship under control on top of a traditional perception check (Pilot DC: 5).
+0868: 
+0869: The ship makes very little progress over night, as sails are generally up. If the crew wishes to travel through the night, a number equal to skeleton crew will need to have not worked or fought over the day and will not be able to participate in anything until a potential night shift comes again. Navigation checks are made with disadvantage at night.
+0870: 
+0871: ### **Arrival**
+0872: Upon reaching the destination, there are several options on how to proceed. If the water is deep enough, the ship can be pulled right to land. Should there be a dock, the ship could be tied there. If the water is too shallow, or the area unsavory, boats can be taken ashore. When this second option is taken, the ship generally sits around 600 ft. from shore, and one or more capable crew are left aboard to look after it.
+0873: 
+0874: <div class="footnote">
+0875: 
+0876: </div>
+0877: 
+0878: \pagebreakNum
+0879: 
+0880: <div class='descriptive'> <b><u>Captain Hook Mode:</b></u> Officer Positions and their travel roles do not have to be linked. Instead, players are allowed to choose from any of the roles to fulfill throughout the day. These work exactly the same, and this style is closer to the original source.
+0881: 
+0882: </div>
+0883: 
+0884: 
+0885: 
+0886: ## Crew
+0887: 
+0888: Non-Officers; Crew are skilled and unskilled NPC’s who assist on the ship. Crew are key to sailing the ship (See [Skeleton Crew](#p6)) and manning cannons in Naval Combat. Crew take care of menial tasks so that the officers don't have to. Larger ships require more crew in order to be functional.
+0889: 
+0890: Most crew are "Unskilled", in that they have a commoner's stat block and no proficiencies. These crew cannot be officers but are cheap to hire. Being unskilled does not mean that they are not competent: these men are seamen who are able to carry out the various aspects of seafaring. They are dependable workers, not prone to poor decisions or failure at basic tasks. Being unskilled just denotes their **inability to       take officer position**, their lack of specialization,       and their inclusion in things such              as [Casualty Rolls](#p29).
+0891: 
+0892: \columnbreak
+0893: 
+0894: "Skilled" Crew refers to crew who are proficient in a skill (and receive a +5 to checks with it). These are professionals, and their price reflects that. While you can find unskilled crew at any harbor or tavern, Skilled crew are less common and may need to be sought out. Skilled hirelings come in a variety, so prices may vary. Someone with a single proficiency in a low-demand skill may ask 5 gp a day, while a caster who will be asked to fight will likely ask for more than 100 gp (and may haggle for a cut of the profit).
+0895: 
+0896: Unskilled Crew are, by default, non-combative. For this reason, **they should not be considered during Standard Combat**. Fighting a large ship does not mean fighting against 50+ people, but only the combat units the ship keeps. It is up to the DM to respect this, or to warn their players if they plan for the crew to be involved. The crew are not on battle maps nor take up space in the environment. They are ignored until after combat is resolved.
+0897: 
+0898: ### Traits
+0899: To better characterize crew, each of them have 3 secret traits, which may be low, medium, or high. These traits don't affect any mechanics (unless you want them to), but help create meaningful characters with potential to be more:
+0900: 
+0901: #### **Naval Ability:** 
+0902: Their skill at doing their job, knowledge of seafaring, etc. <br> 
+0903: 
+0904: Crew High in Naval Ability will be respected for their work, and often complete their job to excess. With training, they may be able to be become a Skilled Hireling and be able to assist the pilot or navigator, and eventually take on those responsibilities themselves.
+0905: 
+0906: Being low in Naval Ability makes a crew member a ready target by the other crew. They may be used as a scapegoat or given extra duties. They don't have a lot of potential on the sea.
+0907: 
+0908: #### **Demeanor:** 
+0909: 
+0910: A basic idea of the agreeableness of a crew member. A summary of their social skills, this has a large impact in their role on the ship, and how they respond to orders or conditions on the ship.
+0911: 
+0912: Crew High in demeanor are well liked among the crew, and likely the officers as well. They may be chosen as a sort of mouthpiece for the crew, communicating to the officers the state of things. They will likely seek out and quell trouble on the ship. They raise general moral and take problems and issues in positive ways. If anything happens to them, morale could take quite a toll. 
+0913: 
+0914: Low Demeanor crew are disliked and unwelcome by many- but not all. They may be sneaky or rude, or simply untrusted. Low demeanor crew may interpret things in the worst way, loath orders, and are quick to resort to extreme measure. Have you ever heard of a mutiny?
+0915: 
+0916: 
+0917: 
+0918: 
+0919: <img src='https://cdn.shopify.com/s/files/1/0279/6573/products/4b69d19481a58a8cb73c83323e0094f0.jpg?v=1538506510' style='position:absolute;bottom: 100px;left:0px;width:100%;transform:scalex(-1.55)scaleY(1.55);z-index:-1'/>
+0920: 
+0921: 
+0922: <img src='https://drive.google.com/uc?id=176AHiQZFj_z79S6-Bzut_bJ1lLfm-3zr' style='position:absolute;top:0px;Left:0px;width:100%;transform:scalex(-1);z-index:-1'/>
+0923: 
+0924: <div class="footnote">
+0925: 
+0926: </div>
+0927: 
+0928: \pagebreakNum
+0929: 
+0930: #### **Martial Ability** 
+0931: 
+0932: While most crew don't take part in standard combat, you may consider using crew high in Martial Ability in the flavor of things: While they don't enter the battle as a combatant, they may help influence things in other ways. Crew high in martial Ability may eventually develop into combat units.
+0933: 
+0934: Crew who are low in Martial Ability are unable or unwilling to fight- this may be respected, or it may be seen as a sign of weakness by the crew.
+0935: 
+0936: #### Prices
+0937: 
+0938: | Crew  | Price (Per Day) |
+0939: |:---:|:-----------:|:----:|
+0940: |  Unskilled Crew | 1 gp |
+0941: |  Skilled Crew  | 5 - 200 gp |
+0942: 
+0943: Whenever you make landfall, it's time to even up.
+0944: Add up the total salaries of your crew and pay them for each day they were with you since last you landed.
+0945: 
+0946: <div class='descriptive'> <b><u>Documentary:</b></u> Since crew are on call even while ashore, you must pay them half their price on the outset of your next journey for the days spent on land. </div>
+0947: 
+0948: 
+0949: 
+0950: ## <p style="font-size:30px"> <u> Weapons </u>
+0951: 
+0952: ## Siege Weapon Properties
+0953: 
+0954: The following rules replace the ones given for siege weapons in the DMG. They introduce slightly modified mechanics to range and damage.
+0955: 
+0956: 
+0957: #### Gunners
+0958: 
+0959: Each cannon requires a certain number of gunners in order to load, aim, and fire them. There are no proficiencies required to act as a gunner, but acting as one renders you unable to take other actions. The "Required Gunners" is the minimum number that must be assigned for that cannon to be operable. Remember that this number is not compared to the total number of crew, but that crew is a finite resource assigned to cannons. Cannoneers and the Master Gunner (who doubles as a cannoneer) each count as 1 Gunner.
+0960: -	So, if you have 4 gunners (including your canoneers), and 3 Light Cannons (Required Gunners: 2), only 2 of the cannons may be active at the same time.
+0961: 
+0962: Out of combat, you may assign people however you like to siege weapons- when initiative is rolled, it is assumed that they take their positions. Once in combat, an “Assign Position” Action is required to change their locations. Be sure to note if you have enough crew assigned to man a cannon “**Efficiently**”.
+0963: 
+0964: #### Attacks and Damage 
+0965: **Siege Weapons do not add any modifiers to their attacks or damage** with the exception of Carronades, which add the highest dexterity modifier of those manning it to its damage.
+0966: 
+0967: \columnbreak
+0968: 
+0969: #### Physical Locations
+0970: 
+0971: In Naval Combat, the location of siege weapons are not tracked except their side of the ship, port or starboard. If you have more than 2 Cannoneers, you may wish to further track which deck ships are on for the sake of control. 
+0972: 
+0973: It takes 5 minutes to change the side a weapon is positioned on.
+0974: 
+0975: #### Ammunition
+0976: The Ammunition property is the same as in 5e.
+0977: 
+0978: <div class='descriptive'> <b><u>Documentary Mode:</b></u> Each cannon requires a different ammunition stock, an each shot utilizes black powder (BP).
+0979: 
+0980: - **Carronade:** 1 lb. Cannonball, 1 unit BP
+0981: - **Light Cannon:** 4 lb. Cannonball, 1 unit BP
+0982: - **Medium Cannon:** 15 lb. cannonball, 2 units BP
+0983: - **Heavy Cannon:** 32 lb. cannonball, 3 units BP
+0984: - **Culverin:** 15 lb. cannonball, 2 units BP
+0985: </div>
+0986: 
+0987: ##### HP
+0988: At 0hp, a siege weapon becomes broken. A broken weapon cannot be fixed using tinker's tools. Smith's tools, and a furnace are required to repair it at 1/4 the cost of the weapon (for materials). These repairs take one hour. Weapons are immune to Psychic and Poison damage.
+0989:     
+0990: ##### Range
+0991: 
+0992: While similar to normal ranged attacks, siege weapons gain a bonus to hit huge or larger targets (such as all ship) that are within first range listed. The second and third numbers are the same as those for any other ranged weapon (normal and maximum range, respectively). Due to the length of their barrels or size of the machine, no siege weapon can attack targets within 5 ft of them. 
+0993:  
+0994: <img src='https://wallpapertag.com/wallpaper/middle/d/f/3/208259-free-pirate-ship-wallpaper-2630x1200.jpg' style='position:absolute;bottom: 29px;left:0px;width:70%;transform:scalex(-2)scaleY(2);z-index:-1'/>
+0995: 
+0996: 
+0997: <img src='https://www.gmbinder.com/images/W28lQRf.png' style='position:absolute;top:0px;right:-0px;width:100%;transform:scalex(-1)scaleY(1);z-index:-1'/>
+0998: 
+0999: <div class="footnote">
+1000: 
+1001: </div>
+1002: 
+1003: \pagebreakNum
+1004: 
+1005: 
+1006: 
+1007: <div class='wide'>
+1008: 
+1009: ##### Siege Weapons
+1010: ______
+1011: | Type | Cost | <small>Required Gunners </small> | HP  | Damage |Properties|
+1012: |:---:|:---:|:---:|:---:|:---:|:----:|
+1013: | Ballista   (Ba)  | 500 gp     | 2 | 50  |  2d10 |Ammunition (range: 50/225/500), Loading (2), Misfire 1, Efficient,  Siege
+1014: | Catapult  (Cat)   | 550 gp     | 3 | 80 |  2d10 | Ammunition (range: 50/325/600) , Loading (2), Misfire 1, Efficient, Siege
+1015: | Carronade   (Car) | 500 gp     | 1 | 60  | 2d6+Dex |  Ammunition (range: 25/125/275), Loading (1), Misfire 2, <br>  Efficient, Crew Targeting, Siege, Loud, Mobile
+1016: | Light Cannon (L)| 1,500 gp   | 2 | 120 |2d10| Ammunition (range: 100/400/725), Loading (1),  <br> Misfire 1, Efficient, Siege, Loud
+1017: | Medium Cannon (M)| 2,500 gp   | 2 | 120 |4d10| Ammunition (range: 100/275/550), Loading (2),  <br> Misfire 1, Siege, Loud
+1018: | Heavy Cannon (H)| 3,500 gp   | 3 | 150  | 7d10| Ammunition (range: 50/125/225), Loading (2),  <br>  Misfire 1, Siege, Loud 
+1019: | Culverin (Cu)| 4,000 gp   | 2 | 120 |5d10| Ammunition (range: 0/700),  Loading (3),  <br> Misfire 1, Siege, Loud, Artillery 
+1020: | Flamethrower | Legendary| 4 | 120 |  3d8 | Ammunition (25 ft Cone), Loading (4),  <br> Misfire 1, Fire, Siege, Loud
+
+
+===== LINES 1660-1890 =====
+
+1660: 
+1661: </style>
+1662: 
+1663: <div class="footnote">
+1664: 
+1665: </div>
+1666: 
+1667: \pagebreakNum
+1668: 
+1669: 
+1670: ## Combat Overview
+1671: Naval Combat is designed to take place on **25 ft. Hexes**. One round of Naval Combat takes 6 seconds, the same as standard combat.
+1672: 
+1673: > **Naval Combat refers to ship - to - ship combat, when officers’ positions are active, and ships have initiative. Standard combat refers to classic combat when initiative is taken per the individual.**
+1674: 	
+1675: #### Before Initiative 
+1676: 1.	Determine ship headings and locations
+1677: 	- Encounters generally won’t start if ships are more than 600ft apart (24 hexes)
+1678: 2.	Weather Condition is determined including wave severity and obscurity (night, rain, fog, clear, etc.)
+1679: 	- The Conditions of the sea can affect pilot checks and some actions.
+1680: 3.	Wind Direction
+1681: 	- If a wind direction was previously decided, use that. If not, you can roll it randomly
+1682: 4.  Clarify Officer Positions
+1683:       - These positions are central to the design of Naval Combat, giving players authority and actions to take during their ship’s turn. Players' officer positions are locked in when initiative is called. 
+1684:       - It is discouraged to allow switching at this point due to it requiring an action to do so.
+1685: 
+1686: #### Ships Roll initiative
+1687: 5.	Add the initiative bonus from the Helmsman 
+1688:     -  If you had a Lookout, +1 initiative
+1689: 6.	Every Turn, each Officer may take **One Action**. *No individual turns are taken*, instead each officer may take a single action during the ship’s initiative, either a general action or one granted from one of their two officer positions. Players who have the [Arcanist / Militant](#P10) position are an exception and are free to take full turns on the ship’s initiative.
+1690:     - Officers are free to discuss, plan, and intersperse their actions as they wish. While each officer is responsible for their actions, and have the final say, each action is intended to be a group effort.
+1691: 7.	Besides actions, the ship may use its movement (controlled by the Helmsman). A Pilot Check is made to ensure proper steering.
+1692: 8.	At the end of the turn, [Casualties](#p29) are calculated for any ships that were damaged 
+1693: 9. Then, the next ship in the initiative goes.
+1694: Turns continue in this manner until an end condition is reached: <br>
+1695:     - One side surrenders, or a cease fire is called (these only stop combat if they are accepted). <br>
+1696:     - A ship is [Boarded](#p32). <br>
+1697:     - A ship falls below its [Effective HP](#p28). Battle is paused at this point. Similarly to surrender, the winner may choose to drop combat or continue. <br>
+1698:     - A ship reaches 0 HP [(Sinking)](#p28). Naval Combat may continue here, individual initiative rolled, or something else. It depends on the circumstances, and is up to the DM.
+1699: 
+1700: \columnbreak
+1701: 
+1702: ##### Officer Locations
+1703: 
+1704: **Officers and crew do not have physical locations in Naval Combat** <br>
+1705: Naval Combat takes on a collaborative - discovery style of narrative, where every possible option is always available, and the entire ship acts together as a single unit.
+1706: 
+1707: In Standard Combat, your physical location defines what you can do. You must move to a lever in order to pull it. In Naval Combat, it is the other way around. Your "location" is defined by the things you do or what happens to you. You take an action, or an action happens to you, and you create an explanation for it.
+1708: 
+1709: You do not stay in a "location" that is defined after such an event, but move back to a neutral space until something else happens to you or you act on something. Examples:
+1710: 
+1711: - Any officer can assist any other, even if one is a cannoneer and the other is piloting
+1712: - Any officer could get hit by any cannonball- no matter where you could have been. If casualties are rolled and you receive damage, then you were in the location a cannonball hit.
+1713: - You do not move to a casualty to make a medicine check- by making the check, the casualty is understood to have been next to you or it is assumed you moved to them.
+1714: 
+1715: You create a collaborative story from the actions that occur during a turn. Despite not technically being in any location, you can still imagine your character in these places and form a narrative.
+1716: 
+1717: The exception to this style of play are the Arcanists / Militants, who follow normal rules. See the [Arcanist](#p10) section for more information.
+1718: ___
+1719: ***<div><p style="font-size:12px"> Player 1 (Cannoneer / First Mate):** Ok, I'm going to fire the starboard light cannons at the Navy Ship.*<br>
+1720: ***Player 2 (Boatswain / Helmsman):** Wait, we have 2 movement left this turn. Let me bring us in closer so you can get advantage to hit.*<br>
+1721: ***Player 3 (Arcanist / Surgeon):** DM, I used my action to recover a casualty, but I want to use guidance on Player 2 next round. Can I use my movement to make it to the side he was repairing?* <br>
+1722: ***DM:** You can, but since he's just used his pilot action you'll actually need to go to the Helm. You can make it this turn. As you climb to the top of the deck you see the Navy ship getting quickly larger, as your pilot madly turns the wheel toward it. A thunder of cannons erupts, filling the air with smoke. Roll for the attacks, Player 1.*
+1723: </p>
+1724: 
+1725: ___
+1726: ##### Associated Locations in Naval Combat
+1727: Arcanists and Militants retain physical locations in Naval Combat. Associated Locations are where you may find other officers, and where you must be located to perform actions granted by that position. Use the "Associated Location" table to determine where you find an officer based on the last officer action they took. An officer who took the pilot action last is at the helm.
+1728: 
+1729: <div class='footnote'></div>
+1730: 
+1731: \pagebreakNum
+1732: 
+1733: However, if that same officer took an action granted by the Boatswain position last, they are instead found on the side of the ship last damaged, and fore / aft closest to the enemy ship. Taking a General action does not move the officer and they are found at the last officer action they took.
+1734: 
+1735: 
+1736: 
+1737: ##### Associated Location Table
+1738: | Last Officer Action taken| Location |
+1739: |:---:|:-----------|
+1740: | Captain, First Mate, and Quartermaster| Poop Deck |
+1741: | Helmsman | The Helm
+1742: |Master Gunner| At the cannons they preside over|
+1743: |Cannoneer| At the cannons they preside over or currently man|
+1744: | Surgeon| Side of Ship last damaged, center|
+1745: | Boatswain| Side of ship last damaged, fore / aft based on location of enemy ship|
+1746: |Arcanist / Militant| Actual location
+1747: | Crew | Cannon side they are manning, or main deck if sailing |
+1748: 
+1749: > <b><u>Alternate Location Rules:</b></u>
+1750: >You can use the associated location table to instead track the physical locations of all Officers. They must be in the Associated Location of the position to take an action granted by that position. You should track where shots damage the ship, and where casualties fall. Depending on where a shot hits, certain members may or may not be more likely to take damage should a casualty be rolled.
+1751: 
+1752: #### Leaving the Ship
+1753: 
+1754: During Naval Combat, there are several scenarios in which you may leave your ship. As a result of overboard or displacement saving throws, embarking another ship, abandoning a sinking ship or taking a small craft. Leaving the ship during Naval Combat by any means causes you to become your own entity. Roll an initiative and take turns as you would in standard combat. While on your own initiative, you do not have access to Officer Actions. If you rejoin an allied ship, you regain your officer actions and follow normal Naval Combat procedures.
+1755: 
+1756: If you go aboard another ship during Naval Combat, they gain individual initiatives and locations same as yourself. However, as they are still on their own ship, they also have access to their Officer Actions.
+1757: 
+1758: ## Movement
+1759: Movement is considered as “From the Bow”. You drive the front of the ship, no matter the size. Movement is performed one hex at a time, up to the speed of the ship.
+1760: 
+1761: A ship must move at least ½ speed every round, unless it moved ½ speed the previous round, in which case it can stop. (Oars and some enhancements offer immediate stopping)
+1762: 
+1763: \columnbreak
+1764: 
+1765: ##### Turning
+1766: Ships must move forward on their turn unless they have stopped. They may move straight forward or forward diagonally. The bow of the ship never moves laterally, only entering hexes that are “Forward” of it from the orientation of the ship (Due to the hex pattern, there will generally be 2 to 3 possible options). 
+1767: 
+1768: The Aft of the ship follows the bow: the last hex of the ship always inhabiting a hex that ship inhabited prior to the move.  In the figure below, the ship inhabits both hexes in the middle when it is diagonal, giving the aft two legal options. If there are multiple possibilities, as when turning in the figure, the aft portion should inhabit the hex opposite the direction of the turn (as illustrated).
+1769: 
+1770: Unranked Ships (2-hex long) cannot end a movement facing a vertex – each move, their aft always inhabits the hex their prow began. This allows for tight turns and adds to their high mobility.
+1771: 
+1772: 
+1773: 
+1774: <img src='https://www.gmbinder.com/images/KGJ6v5M.png' style="width:320px;position:absolute:float;left:px;Top:200px;"/>
+1775: 
+1776: <br>
+1777: 
+1778: #### Pilot Checks
+1779: Pilot checks are made by the Helmsman to successfully maneuver the ship. These Bonus Actions incur disadvantage if the Helmsman has already preformed a non-pilot action on this turn. Pilot checks can use a variety of abilities based on the situation. A table of abilities and examples as to when a DM may call for each is below:
+1780: 
+1781: | |  |
+1782: |:---:|:-----------:|
+1783: |Dexterity | Base Skill: Reacting to things, adjusting course |
+1784: | Strength  | Fighting strong waves or current, fighting the forceful displacement of a ship, fighting or keeping a boarding grapple check |
+1785: |  Intelligence  |Planning a route through sharp rocks, intercepting another ship|
+1786: | Wisdom |Riding with the wind, determining tides |
+1787: 
+1788: The base DC of these checks is 8, with modifiers due to conditions. Failing a check in Naval Combat will generally cause the hex to cost twice the movement, but sometimes causes the ship to enter a hex adjacent to the one you were moving towards (often with the wind / waves). In other scenarios, the ship may take damage from impacting obstacles or you may fail to gain an advantage you were seeking.
+1789: 
+1790: <div class='footnote'></div>
+1791: 
+1792: \pagebreakNum
+1793: 
+1794: 
+1795: #### Evasive Maneuver: Come About
+1796: 
+1797: When the Helmsman takes this action, A pilot check (as a part of the action) is made for the success of the maneuver (DC 10 + situational modifiers), and a second bonus action pilot check (DC: 10) is made to avoid invoking Overboard Saves. This maneuver uses the full speed of the ship for this turn, and the ship must move ½ speed next turn after the attempt. On a success, the aft most section of ship moves to inhabit the hex forward to the one the bow was previously in, and the bow moves in a straight line over so that the ship extends perpendicular to its former orientation.
+1798: 
+1799: Consecutive about faces gain Disadvantage on both pilot checks, and the DC to avoid Overboard Saves is raised by 3 each time.  A failure on the initial pilot check causes the maneuver to fail and raises the DC of overboard saves caused by it by 3.
+1800: 
+1801: <img src='https://www.gmbinder.com/images/cXXoqtw.png' style="width:320px;Height:170px;position:absolute:float;right:px;bottom:200px"/>
+1802: <br><br>
+1803: 
+1804: Unrated ships instead rotate 180 degrees when they Come About, so that their stern inhabits the hex directly forward of its starting position, and the bow flips its position in relationship to it. However, attempting the maneuver automatically invokes Overboard Saves on the crew, and the DC for the save gains a +5 (+2 for each consecutive maneuver).
+1805: 
+1806: ### Wind
+1807: ___
+1808: - **Favorable:** Ships gain a bonus of 1 to their speed when sailing with the wind.
+1809: - **Unfavorable:** Movement directly into the wind costs twice the Speed (Difficult Terrain)
+1810:     -   This penalty is ignored by Unrated and smaller craft
+1811: 
+1812: <div class='descriptive'> <b><u>Documentary:</b></u> Ships cannot move directly against the wind and moving upwind (180° half) is treated as difficult terrain.
+1813: 
+1814: </div>
+1815: 
+1816: Wind direction can be determined randomly by rolling **1d12**:
+1817: ##### Wind
+1818: <div style='column-count:2'>
+1819: 
+1820: | d12| Direction |
+1821: |:---:|:-----------:|
+1822: | 1| North → South |
+1823: | 2| NE → SW
+1824: | 3| E → W|
+1825: | 4| SE → NW|
+1826: | 5| Favorable |
+1827: | 6| No Wind Bonus 
+1828: 
+1829: | d12| Direction |
+1830: |:---:|:-----------:|
+1831: | 7| No Wind Bonus
+1832: | 8| Unfavorable |
+1833: | 9| S → N |
+1834: |10|  SW → N|
+1835: |11| EW → E|
+1836: |12| NW → SE|
+1837: 
+1838: </div>
+1839: 
+1840: \columnbreak
+1841: 
+1842: ### Spell Effects on Movement
+1843: In order for wind spells to have an affect on the movement of ships, over half the number of masts must be affected by spells cast at level 2 or higher. Each mast does not need to be affected by the same spell or by the same caster, since many spells only affect enough space to impact one mast at a time. Spells cast at higher level give increasing bonuses, and each bonus compounds on the ones before it.
+1844: 
+1845: -   A spell cast at Second Level grants the effects of moving with the wind.
+1846: -	Cast At 3rd level, wind spells help to reduce the effects of the "Strong Wind" weather condition.
+1847: -	At 5th level, they may allow a ship to move against the wind at no penalty. The travel speed of a ship increases by 1 for every 2 hours of use.
+1848: -	At 7th level, the spell is sufficient regardless of the number of masts it affects.
+1849: 
+1850: Spells which affect water, such as control water, produce the same effects at the same levels, without the need for sails. The spells "Tidal Wave" and "Tsunami" are apt to cause overboard saving throws, but also cause immediate movement effects.
+1851: 
+1852: ### Conditions
+1853: 
+1854: Many weather conditions on the sea have effects on movement and combat. Here are some examples with suggested consequences. These, of course, may be combined in situations- the worst storms often cause several at once
+1855: 
+1856: ##### Weather / Ocean Conditions
+1857: 
+1858: | Condition| Effect |
+1859: |:---:|:-----------:|
+1860: |Fog | 	<p style="font-size:11px"> +1 DC of Int. based pilot checks, <br> Disadvantage on Asses actions|
+1861: | Heavy Fog  |<p style="font-size:11px"> Disv. On Int and Dex based pilot checks <br> Disadvantage on assess actions <br>  Disadvantage on attack rolls further than 100ft 
+1862: | Heavy Rain  |Disadvantage on Overboard Saves|
+1863: | Heavy Wind |<p style="font-size:11px">  + 2 speed when sailing with wind <br> Failed Pilot checks cause ship to move downwind <br> Disadvantage on evasive maneuvers <br> Pilot checks may use STR. |
+1864: |Choppy Waves | +1 to Pilot checks |
+1865: | Large Waves|<p style="font-size:11px"> Str Pilot checks common <br> Lair action: Pilot check to avoid  Overboard Saves <br> Disadvantage on Boarding and acrobatics to board.|
+1866: | Tidal Wave |<p style="font-size:11px"> Overboard Saving Throws. Ship is immediately moved up to 300ft. in the direction of the wave
+1867: | Whirlpool |  <p style="font-size:11px"> Pilot check DC is +5, failures or no check cause the ship to drift toward the center. Moving Counter to the whirlpool is Difficult Terrain, while moving with <br> it gives +3 speed.
+1868: 
+1869: <div class='footnote'></div>
+1870: 
+1871: \pagebreakNum
+1872: 
+1873: ## Overboard
+1874: 
+1875: Some actions and interactions have a chance to require dexterity saves from the crew to avoid losing their footing or, at worst, falling overboard. These "Overboard Saves" follow a Beat-By Scale, where the higher you roll than the DC, the better your result, while rolling further beneath the DC produces worse results.
+1876: 
+1877: If you have more than 5 crew (non-officers), instead of rolling separately for each of them, a crew check should be made on the "Crew Overboard Save Chart", while Officers still roll individually. Spells or other effects / actions which displace people follow a slightly altered system, which can be found in the "Magic" section [(p. 31)](#p31).
+1878: 
+1879: ##### What may cause overboard Saving Throws:
+1880:  - "Come About" Action, Evasive Maneuver Action, Ramming/Being Rammed
+1881:  - Weather Conditions (Strong Waves, Heavy Rain)
+1882:  - Broadsides
+1883:  - And more. Don't be afraid to rock the boat!
+1884: 
+1885: <div class='descriptive'> <b><u>Captain Hook Mode:</b></u> <br>
+1886: - Naval Combat: Failures always result in disadvantage on any action taken next turn <br> - Crew is assumed to save unless a Natural 1 was the cause of this check, in which case 1 crew member falls overboard. 
+1887: 
+1888: </div>
+1889: 
+1890: 
+
+
+===== LINES 1935-2140 =====
+
+1935: <div class="footnote">
+1936: 
+1937: </div>
+1938: 
+1939: \pagebreakNum
+1940: 
+1941: ## Damage
+1942: 
+1943: ### Targets
+1944: In Naval Combat, all types of damage - may it be cannons, spells, or individual attacks - have a specific selection of targets.  Dealing damage to the ship or rigging deals damage to the associated HP and may also cause casualties among the crew. If an attack might affect more than one target (Such as an AoE spell), then ½ damage is dealt to anything other than the intended target. The same target cannot be affected more than once from a single attack. The targets are as follows:
+1945: 
+1946: ___
+1947: - **The Ship:** Targeting the ship deals damage to the ship's HP. <br> The Hull is the target of any attack against the ship. Damage done to the hull must succeed the damage threshold of the ship (per attack). Attacks which target the ship add to the Casualty Damage an amount equal to half of what they dealt to the ship. With the exception "Raking Fire", attacks to the hull always hit the side closest to the attack, either port or starboard. The deck is the same as the hull in all respects, but attacks against the crew or specific targets might damage it specifically.
+1948: ___
+1949: -	**The Rigging** describes the sails, masts, and other aspects of the ship related to movement. Attacks against the rigging are made with disadvantage **and** -3 to the attack roll. Damage to the rigging impacts the [Rigging HP](#p29), affecting the movement of the ship as it decreases. There is no damage threshold to attacking the rigging, but no damage done to it is considered in the casualty roll.
+1950: ___
+1951: -	**The Crew:** The Crew uses the AC of the ship. Attacks against the crew are made with disadvantage, and the crew cannot be targeted if you already have disadvantage on the attack. With some exceptions, attacks targeting the crew do not deal damage to the Ship’s HP, but add their full damage to the Casualty Damage, which might increase the number of casualties rolled at the end of the turn.
+1952: ___
+1953: -	**A Specific Target:** Targeting specific targets incurs disadvantage on the attack roll and may incur cover penalties at DM’s discretion.  A specific target is anything not listed above, including specific people or things. In this case, the AC and HP are that of the target, and in most cases does not affect casualty rolls, Ship HP, or Rigging Hp.
+1954: 
+1955: ### Field of Fire
+1956: 
+1957: In Naval Combat, the only physical location siege weapons are given is which side they are on- their position forward to aft is not tracked. Siege Weapons installed on ships are large installments which cannot easily be moved and have a limited turning radius. Due to the location of a target, the ship may not be able to fire on a target, or not do it well. The area a ship is able to fire on is known as it's Field of Fire.  
+1958: 
+1959: Ships have two parts to their Field of Fire: A central cone in which all cannons of a side have a clear shot on a target, known as the **Full Field**, and a second field, slightly larger, in which the cannons may not have as clear of a shot. In this area, the **Half Field**, the target has Half-Cover (+2 AC).
+1960: 
+1961: \columnbreak
+1962: 
+1963: These cones follow similar rules to magic: if a majority of a hex is in a field, it counts as being within it. And if part of the target also inhabits that hex, it counts as being within it. Having a clear shot on any part of a target removes the bonus it might otherwise receive from the half field. Outside of the Field of Fire, the target has Full Cover and cannot be targeted.
+1964: ___
+1965: - **Examples:**
+1966: -	If a ship is only touching the Half Field on the port side, it has Half Cover from all cannon attacks from port, and full cover from cannons on the starboard side.
+1967: -	If a ship is touching the Half Field on both sides of the ship, then both sides will be able to fire (but target benefits from Half Cover)
+1968: 
+1969: #### Field Templates
+1970: Each ship has a slightly different field due to their size. Use the templates provided in the "References" section to determine the range at different orientations. Blue Signifies Full Field, while orange indicates the Half Field.
+1971: 
+1972: To use a template, align the sides with the bow and stern of the ship (or the edges of the hexes the ship inhabits) and align the origin of the template at the midline of the ship. Below are examples of how the templates work with each class of ship.
+1973: 
+1974: These Templates are only guidelines! If the DM feels confident with the fields, there is no need to use them.
+1975: ___
+1976: ##### ***Unrated:***
+1977: <img src='https://www.gmbinder.com/images/UDjdTaA.png' style="position:relative;Left:15%;width:205px"/>
+1978: 
+1979: ___
+1980: ##### ***2nd Rate:*** 
+1981: 
+1982: Second Rate ships have a similar origin as Unrated with a slightly wider spread, Full field starts at 2 hexes wide. Again, the half field is a single row of hexes beside the full field.
+1983: ______
+1984: <img src='https://www.gmbinder.com/images/pScsgue.png' style="width:205px;position:relative;Left:15%;"/>
+1985: 
+1986: <div class="footnote">
+1987: 
+1988: </div>
+1989: 
+1990: \pagebreakNum
+1991: 
+1992: ##### ***1st Rate:*** 
+1993: First Rate ships have an even larger field as their half field is 2 rows wide.
+1994: ______
+1995: ______
+1996: ______
+1997: ______
+1998: 
+1999: <img src='https://www.gmbinder.com/images/Nhm0kIx.png' style="width:205px;position:relative;Left:15%;"/>
+2000: 
+2001: ##### **Bow / Stern Cannons** 
+2002: 
+2003: One Enhancement offered to ships is the installation of Bow / Stern Cannon Ports. Should these be installed it counts as it's own side. Weapons and cannoneers must be appropriately allocated to them. The hexes directly fore or aft of the ship are fully covered by the cannons, and they use the "unrated" template regardless of ship class.
+2004: 
+2005: ### Broadside
+2006: As an action, The Master Gunner can call for a Broadside (Recharge 5-6).
+2007: 
+2008: ***Broadside:*** Choose one side of the ship. Each siege weapon on that side may immediately attack, at disadvantage, a single target sized large or larger that is within its normal range. They may make this attack *even if they are in the middle of loading.* For every "1" that is rolled on a damage die, you may roll an additional damage die of that weapon ("Exploding Dice"). You may choose to use "Special Shot" within a broadside, but extra damage from these do not gain the "Exploding Dice" property.
+2009: 
+2010: Siege Weapons on other sides have disadvantage to hit on the turn this action is used.
+2011: 
+2012: After this action, every weapon that participated must restart it's load time. The side chosen cannot broadside again until every cannon that fired has naturally gone through a their load time, regardless of broadside's recharge state.
+2013: 
+2014: The broadside also affects the ship as a whole. The Helmsman has disadvantage on their next pilot check. When either taking or receiving a broadside action, there may be a Pilot Check Save called. On a fail, Overboard Saves may be called for (DC = 6 + Modifiers).
+2015: 
+2016: \columnbreak
+2017: 
+2018: ### Raking Fire
+2019: 
+2020: When your location is fore or aft of a ship and outside its Port and Starboard Fields of Fire, you target either the Bow (if you're ahead) or Stern (if you're astern) with ranged weapon attacks. "Raking Fire" are attacks fired at these locations, longways down a ship and have potential to inflict greater damage. The damage bonus is only ever awarded when in the appropriate location (specifically targeting the bow or stern normally does not suffice).
+2021: 
+2022: As long as you are in the appropriate location, you may roll one additional weapon damage die when determining the damage from ranged weapon attacks which target the ship. This bonus applies to any ranged weapon attacks, including those as a part of broadsides or using special shots. The bonus damage does not apply to attacks made against any targets other than "The Ship" (see "Targeting"), and may be denied by certain ship enhancements. Below, Ship "A" has gained the raking fire damage bonus by targeting the bow of ship "B".
+2023: 
+2024: ___
+2025: ___
+2026: 
+2027: <img src='https://drive.google.com/uc?id=15zVxZAbswo_Zq8x4IzZP1nrb3d6gW0tp' style="width:225px;position:relative;Left:10%;"/>
+2028: 
+2029: <br>
+2030: 
+2031: ## Hit Points
+2032: 
+2033: Ships possess 2 Hit point pools: **Ship** and **Rigging**. There is also the **Casualty Damage**.
+2034: 
+2035: Ship HP describes the status of the ship, and act much like the HP of a creature. When it hits 0, the ship begins sinking. One half of the damage dealt to the ship is added to the casualty damage for the turn.
+2036: Ships also contain a value known as the **Effective HP**. While they aren't sinking, ships below this value have been nearly destroyed, and their functions are limited. 
+2037: 
+2038: Rigging HP describes the masts, sails, and steering units of a ship. Damaging these do not cause the ship to sink, but as the HP drops, sanctions are put on the ship to represent its limited sailing capabilities. Unlike creature HP, Rigging HP has a series of effects based on the amount remaining, besides just hitting 0.
+2039: 
+2040: ### Ship Hit points
+2041: #### Going Beneath Effective HP
+2042: As long as a ship's hit points are below its Effective HP, the following penalties are incurred:
+2043: 
+2044: -	Disadvantage on all rolls related to Officer Actions
+2045: -	Disadvantage on all Siege Weapon Attacks
+2046: 
+2047: <div class="footnote">
+2048: 
+2049: </div>
+2050: 
+2051: \pagebreakNum
+2052: 
+2053: #### Sinking
+2054: 
+2055: When a ship is brought to 0 hit points, it is considered sinking. The ship's speed and travel speed become 0. It is recommended to roll initiative regardless of combat status.
+2056: 
+2057: All penalties from being beneath effective HP persist, and actions to repair the ship automatically fail. 
+2058: 
+2059: The ship becomes completely submerged in 1d6+2 rounds. Once submerged, the ship sinks 120 feet per round.
+2060: 
+2061: While Sinking, the ship is considered difficult terrain. On initiative count 20, everyone must make an overboard saving throw. Besides the normal failure results, characters may take bludgeoning damage, be restrained be debris, or other ill effects unique to the situation.
+2062: 
+2063: ### Rigging Hit Points
+2064: Each ship has associated with it a Rigging HP value, representing the masts, sails, and steering units. Each Mast on a ship adds **40** total Rigging HP. As these take damage, movement effects occur based on amount of HP remaining. This HP can be repaired the same as Ship HP.
+2065: 
+2066: | HP Remaining | Condition|
+2067: |:---:|:-----------:|
+2068: |51% or More| Full Effectiveness |
+2069: | 50% - 26%| No bonus with wind |  
+2070: | 25% - 11% | No bonus or penalties from wind <br> 1/2 Speed, 1/2 Travel Speed|
+2071: | 10% or Lower |No Bonus or penalty from Wind. <br> Speed equals  1, Travel Speed equals 1 |
+2072: 
+2073: ### Casualties
+2074: At the end of each turn, causalities must be calculated for every ship based on the Casualty Damage they took that turn. 
+2075: 
+2076: You begin every turn with 0 Casualty Damage, which increases after every hit which adds damage to it. Attacks that target the ship add an amount of damage equal to half the damage they dealt to the ship, while attacks which target the crew have their full damage added. The casualty damage is the sum total over a single turn. 
+2077: 
+2078: Some attacks specify that they do not affect this total, and some others cause immediate casualties and are therefore not considered a second time. At the end of the turn, consult the following chart to determine the results:
+2079: 
+2080: ##### Casualty Chart
+2081: | Tier| Casualty Damage| Casualties |
+2082: |:---:|:-----------:|:---:|
+2083: |0 | <30 | No Casualties |
+2084: |1 | 30 - 39 | 1 Casualty|
+2085: |2 | 40 - 69  |1d4-1 (minimum 1)|  
+2086: |3 | 70 - 119  | 1d4 (minimum 1)|
+2087: |4 | 120 - 159 | 1d4+1 |
+2088: |5 | 160 - 199 | 1d4+2 |
+2089: |6 |  ≥200 | 1d4+3 |
+2090: 
+2091: <p style="font-size:11px"> <b>Example:</b> <font color="333333">In a turn, a ship is hit by 3 Light cannon hits (11 dmg each) and a medium cannon (25 dmg) targeting the hull, while a javelin hits targeting the crew (6 dmg). The the ship takes 58 HP damage, and 35 casualty damage, so 1 casualty occurs. </font></p>
+2092: 
+2093: \columnbreak
+2094: 
+2095: For every casualty, a non-skilled crew member becomes unconscious but stable, and is no longer able to be used to man cannons, sail, etc. The DM selects (or randomly determines) who this is, and it should be noted that they cannot be used. After determining casualties for a turn, your casualty damage resets to 0 for the next one. 
+2096: 
+2097: You have a chance to recover casualties during combat through certain actions including the Surgeon's "Medical Intervention" or general healing spells, as well as the Casualty Recovery roll at the end of combat.
+2098: 
+2099: #### Officer Casualties
+2100: If an attack that was targeting the ship or crew scores a critical hit, it hits a PC/ Skilled Hireling/ Combat Unit on that ship for damage equal to their level. If they do not have a level, their CR can be used. Who is hit is decided by the DM or rolled randomly. The attack does damage to its intended target as normal, but no damage from the attack, regardless of its target, is considered for casualty damage.
+2101: 
+2102: #### Crewless Casualty Rolls
+2103: If you have  **6** or fewer people available and no unskilled hirelings available, end of round casualties are replaced with Officer Casualties. If you take casualty damage during a round, roll a 1d6. If the number rolled is lower than the tier of damage the ship took that round (see the Casualty Chart), an officer or combat unit takes damage equal to their level.
+2104: 
+2105: ### Casualty Recovery
+2106: Casualties are assumed to remain “stable” until the end of combat. At that point, a medicine check can be made to attempt to save them (must be proficient in Medicine and have a Healer’s kit or another combination of an appropriate skill and kit). Crew who went overboard are not counted in this roll and need to be dealt with on a case by case basis.
+2107: 
+2108: This check is made at the end of all combats that string together- So if Naval Combat transforms into standard combat, it is to be made at the end of standard. While the roll must be made then, the implications as to time and space (whether you must be on the ship, how long this takes, etc.) are up to the DM. For every Crew you succeed on, remove one use of your Kit. The medicine check DC is equal to **8 + the number of casualties** and is rolled on the degree of success "Casualty Recovery" table. 
+2109: 
+2110: To use the help action on this check, you must have proficiency with Medicine or an Applicable Skill. Each additional helper past the first gives a +1 to the roll. 
+2111: 
+2112: You may take disadvantage on the roll to gain a second check, with advantage, to save a specific casualty. Those who took the help action may choose which roll to help, but can only grant their bonus to one.
+2113: 
+2114: <div class="footnote">
+2115: 
+2116: </div>
+2117: 
+2118: \pagebreakNum
+2119: 
+2120: ##### Casualty Recovery
+2121: | Roll | Result |
+2122: |:---:|:-----------:|
+2123: |Succeed by 10 or more| You masterfully save all casualties. <br> They are incapacitated for 2 hours <br> and suffer no exhaustion.|
+2124: | Succeed by less than 10 | You save all the casualties: They are incapacitated for 6 hours, and upon <br> awakening suffer 1 point of exhaustion |  
+2125: | Fail | One crew member is unable to <br> be saved for every number below the DC you rolled, maximum loss of 5. You decide whom.<br> Survivors are incapacitated for 18 hours, <br> and upon waking suffer 2 points of exhaustion.|
+2126: | Fail with a Nat. 1 |There are no survivors: Shaken, you and anyone who assisted take 1 point of exhaustion.|
+2127: 
+2128: <ul style="list-style: none;"> <div class='descriptive'> <b><u>Documentary Mode:</b></u> DC = 10 + Number of Casualties </div> </ul>
+2129: 
+2130: 
+2131: ## <p style="font-size:28px"> <u> Magic </u>
+2132: With the multitude of interactions and new mechanics introduced when fighting on or between ships, some additional rules needed to be in place to expedite magic and create situations with predictable outcomes.
+2133: 
+2134: #### General Rulings:
+2135: ___
+2136: - **Ground**: Water is **NOT** considered ground. Exceptions can of course be made per DM fiat. The deck of a ship **IS** considered ground, but not “earth", "soil", "stone", etc.
+2137:     -  **Exceptions:** *Erupting Earth* and *Bones of the Earth* cannot target ships.
+2138: - A ship, and any part affixed to it permanently like a mast is considered one huge / gargantuan water vehicle, and not an object for most cases.
+2139: - For how spells can affect the movement of ships, see [Spell Effects on Movement](#p25)
+2140: 

@@ -101,6 +101,22 @@ Projection values:
 - `multiRegional`
 - `global`
 
+## MapAgent 5e-Adjacent Profile
+
+`mapAgent` now captures a 5e-adjacent baseline:
+
+- AC, HP, Hit Dice, Proficiency Bonus, CR, Initiative, Passive Perception
+- STR/DEX/CON/INT/WIS/CHA ability scores
+- Walk/Swim/Fly speeds
+- Optional ship capacity fields (crew/passengers/cargo, damage threshold)
+
+It also captures controlled `0-5` posture tiers and multi-select behavior tags:
+
+- risk and threat posture
+- enforcement/weather sensitivity
+- route preferences
+- role/cargo intent/threat sources
+
 ## Seasonal Trade Profile
 
 Trade is organized by season:
